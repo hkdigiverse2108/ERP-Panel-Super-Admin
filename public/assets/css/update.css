@@ -1,0 +1,73 @@
+/* ************ Date Range Calendar Start *********** */
+
+.MuiDateRangeCalendar-root > div:first-child {
+  display: none !important;
+}
+
+.MuiDivider-root.MuiDivider-fullWidth {
+  @apply m-0!;
+}
+
+.dark .MuiPopper-root > div {
+  @apply dark:bg-gray-800!;
+}
+.dark .MuiPopover-root.MuiModal-root .MuiPaper-root {
+  @apply dark:bg-gray-800!;
+  --Paper-overlay: none !important;
+}
+
+/* ************ Date Range Calendar End *********** */
+
+/* ************ Table Start *********** */
+
+.MuiDataGrid-toolbar,
+.MuiDataGrid-filler,
+.MuiDataGrid-scrollbarFiller,
+.MuiDataGrid-columnHeader {
+  @apply bg-gray-50! dark:bg-gray-900! dark:border-gray-700!;
+}
+
+.dark .MuiDataGrid-withBorderColor,
+.dark .MuiDataGrid-cell{
+  @apply dark:border-gray-700!;
+}
+
+.dark .MuiDataGrid-row:hover{
+  @apply dark:bg-gray-800!;
+}
+
+.dark .MuiDataGrid-root {
+  @apply dark:bg-gray-dark! dark:border-gray-700!;
+  --Paper-overlay: none !important;
+}
+
+.dark .MuiDataGrid-columnHeader .MuiDataGrid-sortButton {
+  @apply dark:bg-gray-700!;
+}
+
+.dark .MuiPopper-root.MuiDataGrid-menu .MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1 ,
+.dark .MuiPopper-root.MuiDataGrid-panel .MuiDataGrid-paper {
+  @apply dark:bg-gray-800!;
+  --Paper-overlay: none !important;
+}
+
+.dark .MuiDataGrid-columnsManagementRow .MuiFormControlLabel-label.Mui-disabled {
+  @apply dark:text-gray-400!;
+}
+
+.dark .MuiFormControlLabel-label {
+  @apply dark:text-gray-300!;
+}
+
+/* ************ Table End *********** */
+
+/* ************ Input Start *********** */
+.MuiFormLabel-asterisk{
+  @apply text-red-500!;
+}
+
+.MuiButtonBase-root.MuiButton-root{
+  @apply rounded-md!;
+}
+
+/* ************ Input End *********** */
