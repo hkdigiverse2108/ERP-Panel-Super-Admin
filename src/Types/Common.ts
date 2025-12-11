@@ -4,6 +4,8 @@ import type { Dayjs } from "dayjs";
 import type { ReactNode } from "react";
 import * as Yup from "yup";
 
+type GridType = number | object | "auto" | "grow";
+
 // ************ Drawer Start ***********
 
 export interface CommonDrawerProps extends Omit<DrawerProps, "anchor" | "title"> {
@@ -32,10 +34,14 @@ export interface CommonSelectProps {
   options: SelectOptionType[];
   value: string[];
   onChange: (values: string[]) => void;
-  BoxClassName?: string;
   multiple?: boolean;
   limitTags?: number;
   size?: "small" | "medium";
+  grid?: GridType;
+}
+
+export interface CommonValidationSelectProps extends CommonSelectProps {
+  name: string;
 }
 
 // ************ Select End ***********
@@ -204,3 +210,23 @@ export interface CommonDataType {
 }
 
 // ************ Common Api Data Type End ***********
+
+// ************ Common Switch Start ***********
+
+export interface CommonValidationSwitchProps {
+  name: string;
+  label?: string;
+  required?: boolean;
+  disabled?: boolean;
+  isFormLabel?: boolean;
+  grid?: GridType;
+  switchPlacement?: "start" | "between";
+}
+
+export interface CommonSwitchProps extends CommonValidationSwitchProps {
+  // For NON-FORMIK switch
+  value?: boolean;
+  onChange?: (val: boolean) => void;
+}
+
+// ************ Common Switch End ***********

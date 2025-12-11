@@ -62,8 +62,9 @@
 /* ************ Table End *********** */
 
 /* ************ Input Start *********** */
+.MuiFormControlLabel-asterisk,
 .MuiFormLabel-asterisk{
-  @apply text-red-500!;
+  @apply text-red-600!;
 }
 
 .MuiButtonBase-root.MuiButton-root{

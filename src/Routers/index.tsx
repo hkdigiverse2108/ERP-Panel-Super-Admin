@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
-// import PrivateRoutes from "./PrivateRoutes";
-// import PublicRoutes from "./PublicRoutes";
+import PrivateRoutes from "./PrivateRoutes";
+import PublicRoutes from "./PublicRoutes";
 
 import Layout from "../Layout";
 import { AuthRoutes, PageRoutes } from "./PageRoutes";
@@ -8,7 +8,7 @@ import { AuthRoutes, PageRoutes } from "./PageRoutes";
 
 export const Router = createBrowserRouter([
   {
-    // element: <PrivateRoutes />,
+    element: <PrivateRoutes />,
     children: [
       {
         element: <Layout />,
@@ -17,7 +17,7 @@ export const Router = createBrowserRouter([
     ],
   },
   {
-    // element: <PublicRoutes />,
+    element: <PublicRoutes />,
     children: AuthRoutes,
   },
   // { path: "*", element: <PageNotFound /> },

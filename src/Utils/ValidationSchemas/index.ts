@@ -3,7 +3,7 @@ import { Validation } from "./Validation.ts";
 
 // ---------- Reusable helpers ----------
 
-const ImageSchema = (label: string, required = true) => Validation("array", label, required ? { minItems: 1 } : { required: false });
+// const ImageSchema = (label: string, required = true) => Validation("array", label, required ? { minItems: 1 } : { required: false });
 
 // Signin
 export const SigninSchema = Yup.object({
