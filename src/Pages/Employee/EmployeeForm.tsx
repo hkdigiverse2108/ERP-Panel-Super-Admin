@@ -2,11 +2,10 @@ import { Box, Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
-import { CommonPhoneNumber, CommonValidationTextField, CommonValidationSelect, CommonValidationSwitch } from "../../Attribute";
+import { CommonPhoneNumber, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
 import { BREADCRUMBS, CityOptionsByState, CountryOptions, StateOptions } from "../../Data";
-import { useAppSelector } from "../../Store/hooks";
 import type { EmployeeFormValues } from "../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { EmployeeFormSchema } from "../../Utils/ValidationSchemas";
@@ -16,9 +15,8 @@ const EmployeeForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
-  const { company } = useAppSelector((state) => state.company);
 
-  const { data: rolesData } = Queries.useGetRoles({ activeFilter: true });
+  // const { data: rolesData } = Queries.useGetRoles({ activeFilter: true });
   const { data: branchData } = Queries.useGetBranch({ activeFilter: true });
   const { mutate: addEmployee, isPending: isAddLoading } = Mutations.useAddEmployee();
   const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditEmployee();
@@ -65,7 +63,7 @@ const EmployeeForm = () => {
 
   const handleSubmit = async (values: EmployeeFormValues, { resetForm }: FormikHelpers<EmployeeFormValues>) => {
     const { _submitAction, ...rest } = values;
-    const payload = { ...rest, companyId: company!._id };
+    const payload = { ...rest };
 
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
@@ -93,7 +91,7 @@ const EmployeeForm = () => {
                     <CommonValidationTextField name="fullName" label="Full Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="username" label="User Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="designation" label="User designation" grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationSelect name="role" label="role" options={GenerateOptions(rolesData?.data?.role_data)} grid={{ xs: 12, md: 4 }} />
+                    {/* <CommonValidationSelect name="role" label="role" options={GenerateOptions(rolesData?.data?.role_data)} grid={{ xs: 12, md: 4 }} /> */}
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="panNumber" label="PAN No." grid={{ xs: 12, md: 4 }} />

@@ -1,7 +1,7 @@
 import type { BranchBase } from "./Branch";
 import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
 import type { CompanyBase } from "./Company";
-import type { RolesBase } from "./Roles";
+// import type { RolesBase } from "./Roles";
 
 export interface Address {
   address?: string;
@@ -46,7 +46,7 @@ export type EditEmployeePayload = AddEmployeePayload & { userId: string };
 
 export interface EmployeeBase extends Omit<EmployeeFormValues, "branchId" | "role" | "companyId">, CommonDataType {
   branchId: BranchBase;
-  role: RolesBase;
+  // role: RolesBase;
   companyId: CompanyBase;
 }
 

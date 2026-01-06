@@ -12,7 +12,7 @@ export const KEYS = {
 
   USER: {
     BASE: "user",
-    EDIT: "user-edit"
+    EDIT: "user-edit",
   },
 
   COMPANY: {
@@ -41,13 +41,6 @@ export const KEYS = {
     DELETE: "brand-delete",
   },
 
-  ROLES: {
-    BASE: "role",
-    ADD: "role-add",
-    EDIT: "role-edit",
-    DELETE: "role-delete",
-  },
-
   ANNOUNCEMENT: {
     BASE: "announcement",
   },
@@ -58,25 +51,8 @@ export const KEYS = {
     EDIT: "product-edit",
     DELETE: "product-delete",
   },
-  STOCK: {
-    ROOT: ["stock"],
-    ALL: ["stock", "all"],
-    DETAILS: (id: string) => ["stock", "detail", id],
-  },
   CALL_REQUEST: {
-    ROOT: ["call-request"],
-    ADD: "call-request",
-  },
-  BANK: {
-    BASE: "bank",
-    ADD: "bank-add",
-    EDIT: "bank-edit",
-    DELETE: "bank-delete",
-  },
-  PAYMENT: {
-    BASE: ["payment"],
-    ADD: ["payment", "add"],
-    EDIT: ["payment", "edit"],
-    DELETE: ["payment", "delete"],
+    BASE: "call-request",
+    ADD: "call-request-add",
   },
 };

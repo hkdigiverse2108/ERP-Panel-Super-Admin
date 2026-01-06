@@ -4,7 +4,6 @@ import type { Dayjs } from "dayjs";
 import type { MuiTelInputProps } from "mui-tel-input";
 import type { FocusEvent, ReactNode } from "react";
 import * as Yup from "yup";
-import type { CustomerFormValues } from "./Customer";
 import type { BrandBase } from "./Brand";
 
 type GridType = number | object | "auto" | "grow";
@@ -363,23 +362,7 @@ export interface ModalStateSlice {
   isUploadModal: { open: boolean; type: UploadType };
   selectedFiles: string[];
   isModalVideoPlay: { open: boolean; link: string };
-  isCustomerModal: { open: boolean; data: CustomerFormValues | null };
   isBrandModal: { open: boolean; data: BrandBase | null };
-  isPaymentListModal: boolean;
-  isAddPaymentModal: boolean;
-  isRedeemLoyaltyModal: boolean;
-  isCreditNoteModal: boolean;
-  isOrderModal: boolean;
-  isCashControlModal: boolean;
-  isCouponModal: boolean;
-  isRedeemCreditModal: boolean;
-  isCardModal: boolean;
-  isApplyCouponModal: boolean;
-  isPayLaterModal: boolean;
-  isCashModal: boolean;
-  isAdditionalChargeModal: boolean;
-  isProductDetailsModal: { open: boolean; data: any | null };
-  isQtyCountModal: { open: boolean; data: any | null };
 }
 
 // ************ Modal End ***********

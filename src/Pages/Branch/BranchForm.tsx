@@ -6,7 +6,6 @@ import { CommonValidationTextField, CommonValidationSwitch } from "../../Attribu
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
-import { useAppSelector } from "../../Store/hooks";
 import type { BranchFormValues } from "../../Types";
 import { GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { BranchFormSchema } from "../../Utils/ValidationSchemas";
@@ -16,7 +15,7 @@ const BranchForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
-  const { company } = useAppSelector((state) => state.company);
+  // const { company } = useAppSelector((state) => state.company);
 
   const { mutate: addBranch, isPending: isAddLoading } = Mutations.useAddBranch();
   const { mutate: editBranch, isPending: isEditLoading } = Mutations.useEditBranch();
@@ -32,7 +31,7 @@ const BranchForm = () => {
 
   const handleSubmit = async (values: BranchFormValues, { resetForm }: FormikHelpers<BranchFormValues>) => {
     const { _submitAction, ...rest } = values;
-    const payload = { ...rest, companyId: company!._id };
+    const payload = { ...rest};
 
     const onSuccessHandler = () => {
       if (_submitAction === "saveAndNew") resetForm({ values: initialValues });

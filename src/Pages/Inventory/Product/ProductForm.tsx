@@ -1,58 +1,52 @@
-import { Box, Grid, IconButton } from "@mui/material";
-import { FieldArray, Form, Formik, type FormikHelpers } from "formik";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Mutations } from "../../../Api";
+import { Box, Grid } from "@mui/material";
+import { Form, Formik } from "formik";
+import { useLocation } from "react-router-dom";
 import { CommonSelect, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BRAND_OPTIONS, BREADCRUMBS, CATEGORY_OPTIONS, DEPARTMENT_OPTIONS, PRODUCT_TYPE_OPTIONS, SUB_BRAND_OPTIONS, SUB_CATEGORY_OPTIONS, TAX_OPTIONS } from "../../../Data";
-import { useAppSelector } from "../../../Store/hooks";
-import { GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { ProductFormSchema } from "../../../Utils/ValidationSchemas";
 // import { IconButton} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { CommonButton } from "../../../Attribute";
 import type { ProductFormValues } from "../../../Types";
 
 const ProductForm = () => {
   const location = useLocation();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const { data } = location.state || {};
-  const { company } = useAppSelector((state) => state.company);
 
-  const { mutate: addProduct, isPending: isAddLoading } = Mutations.useAddProduct();
-  const { mutate: editProduct, isPending: isEditLoading } = Mutations.useEditProduct();
+  // const { mutate: addProduct, isPending: isAddLoading } = Mutations.useAddProduct();
+  // const { mutate: editProduct, isPending: isEditLoading } = Mutations.useEditProduct();
 
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
 
   const initialValues: ProductFormValues = {
-    variants: [
-      {
-        name: "",
-        nutrition: [
-          {
-            label: "",
-            value: "",
-          },
-        ],
-      },
-    ],
+    // variants: [
+    //   {
+    //     name: "",
+    //     nutrition: [
+    //       {
+    //         label: "",
+    //         value: "",
+    //       },
+    //     ],
+    //   },
+    // ],
 
-    companyId: data?.companyId || "",
+    // companyId: data?.companyId || "",
 
     itemCode: data?.itemCode || "",
     name: data?.name || "",
     printName: data?.printName || "",
-    slug: data?.slug || "",
+    // slug: data?.slug || "",
 
     productType: data?.productType || "",
     categoryId: data?.categoryId || "",
     subCategoryId: data?.subCategoryId || "",
     brandId: data?.brandId || "",
     subBrandId: data?.subBrandId || "",
-    departmentId: data?.departmentId || "",
+    // departmentId: data?.departmentId || "",
     uomId: data?.uomId || "",
 
     purchaseTaxId: data?.purchaseTaxId || "",
@@ -65,45 +59,45 @@ const ProductForm = () => {
 
     hsnCode: data?.hsnCode || "",
     expiryDays: data?.expiryDays || "",
-    expiryType: data?.expiryType || "",
+    // expiryType: data?.expiryType || "",
 
     shortDescription: data?.shortDescription || "",
     description: data?.description || "",
 
     netWeight: data?.netWeight || "",
-    nutritionInfo: data?.nutritionInfo || "",
+    // nutritionInfo: data?.nutritionInfo || "",
     ingredients: data?.ingredients || "",
-    image: data?.image || "",
+    // image: data?.image || "",
 
-    isPurchaseTaxInclusive: data?.isPurchaseTaxInclusive || false,
-    isSalesTaxInclusive: data?.isSalesTaxInclusive || false,
+    // isPurchaseTaxInclusive: data?.isPurchaseTaxInclusive || false,
+    // isSalesTaxInclusive: data?.isSalesTaxInclusive || false,
     cessPercentage: data?.cessPercentage || 0,
 
-    manageBatch: data?.manageBatch || false,
+    // manageBatch: data?.manageBatch || false,
     hasExpiry: data?.hasExpiry || false,
 
-    status: data?.status || "active",
+    // status: data?.status || "active",
   };
 
-  const handleSubmit = async (values: ProductFormValues, { resetForm }: FormikHelpers<ProductFormValues>) => {
-    const { _submitAction, ...rest } = values;
+  const handleSubmit =  () => {
+    // const { _submitAction, ...rest } = values;
 
-    const payload = {
-      ...rest,
-      variants: values.variants.filter((v:any) => v.name.trim() !== ""),
-      companyId: company?._id,
-    };
-    const handleSuccess = () => {
-      if (_submitAction === "saveAndNew") resetForm();
-      else navigate(-1);
-    };
+    // const payload = {
+    //   ...rest,
+    //   // variants: values.variants.filter((v:any) => v.name.trim() !== ""),
+    //   // companyId: company?._id,
+    // };
+    // const handleSuccess = () => {
+    //   if (_submitAction === "saveAndNew") resetForm();
+    //   else navigate(-1);
+    // };
 
-    if (isEditing) {
-      const changedFields = GetChangedFields(payload, data);
-      await editProduct({ ...changedFields, variants: payload.variants, productId: data._id }, { onSuccess: handleSuccess });
-    } else {
-      await addProduct({ ...RemoveEmptyFields(payload) }, { onSuccess: handleSuccess });
-    }
+    // if (isEditing) {
+    //   const changedFields = GetChangedFields(payload, data);
+    //   await editProduct({ ...changedFields, variants: payload.variants, productId: data._id }, { onSuccess: handleSuccess });
+    // } else {
+    //   await addProduct({ ...RemoveEmptyFields(payload) }, { onSuccess: handleSuccess });
+    // }
   };
   return (
     <>
@@ -132,7 +126,7 @@ const ProductForm = () => {
                     <CommonValidationTextField name="net weight" label="Net Weight" grid={{ xs: 12, md: 6 }} />
                     <CommonValidationTextField name="description" label="Description" multiline rows={4} grid={{ xs: 12 }} />
                     <CommonValidationTextField name="shortNote" label="Short Note" multiline rows={4} grid={{ xs: 12 }} />
-                    <CommonCard title="Nutrition" grid={{ xs: 12 }}>
+                    {/* <CommonCard title="Nutrition" grid={{ xs: 12 }}>
                       <Grid spacing={2} sx={{ p: 2 }}>
                         <FieldArray name="variants">
                           {({ push, remove }) => (
@@ -145,7 +139,6 @@ const ProductForm = () => {
                                         <>
                                           {variant.nutrition.map((_, nIndex) => (
                                             <Grid key={nIndex}>
-                                              {/* Nutrition Name */}
                                               <Grid container spacing={2} sx={{ xs: 12, md: 5 }}>
                                                 <CommonValidationTextField name={`variants.${vIndex}.nutrition.${nIndex}.label`} label="Nutrition Name" grid={{ xs: 12, md: 6 }} />
                                                 <CommonValidationTextField name={`variants.${vIndex}.nutrition.${nIndex}.value`} label="Nutrition Value" grid={{ xs: 12, md: 5.5 }} />
@@ -163,8 +156,6 @@ const ProductForm = () => {
                                   </Box>
                                 </Grid>
                               ))}
-
-                              {/* ADD  BUTTON  */}
                               <Grid className="flex flex-start!">
                                 <CommonButton
                                   variant="contained"
@@ -182,7 +173,7 @@ const ProductForm = () => {
                           )}
                         </FieldArray>
                       </Grid>
-                    </CommonCard>
+                    </CommonCard> */}
                   </Grid>
                 </CommonCard>
 
@@ -200,7 +191,7 @@ const ProductForm = () => {
                 </CommonCard>
                 {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                 {/* ---------- ACTION BAR ---------- */}
-                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isAddLoading || isEditLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={false} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}

@@ -3,7 +3,6 @@ import { Validation } from "./Validation";
 
 // ---------- Reusable helpers ----------
 
-// const ImageSchema = (label: string, required = true) => Validation("array", label, required ? { minItems: 1 } : { required: false });
 export const PhoneValidation = (label = "Phone No", options?: { requiredCountryCode?: boolean; requiredNumber?: boolean }) =>
   Yup.object({
     countryCode: Validation("string", "Country code", {
@@ -66,18 +65,6 @@ export const BrandFormSchema = Yup.object({
   isActive: Validation("boolean", "is Active", { required: false }),
 });
 
-export const RolesFormSchema = Yup.object({
-  name: Validation("string", "Roles name"),
-  isActive: Yup.boolean(),
-});
-
-export const CallRequestFormSchema = Yup.object({
-  businessName: Validation("string", "Business Name"),
-  contactName: Validation("string", "Contact Name"),
-  contactNo: PhoneValidation("Contact No"),
-  note: Validation("string", "note"),
-});
-
 // ---------- Product Form Schema ----------
 export const ProductFormSchema = Yup.object({
   itemCode: Validation("string", "Item Code"),
@@ -109,99 +96,4 @@ export const ProductFormSchema = Yup.object({
   salesTaxId: Validation("string", "Sales Tax", { required: false }),
   nutritionalFacts: Validation("string", "Nutritional Facts", { required: false }),
   status: Validation("string", "Status"),
-});
-
-export const CompanyFormSchemas = Yup.object({
-  name: Validation("string", "Company Name"),
-  displayName: Validation("string", "display Name"),
-  contactName: Validation("string", "contact Name"),
-  email: Validation("string", "Email", { extraRules: (s) => s.trim().email("Invalid email address") }),
-  supportEmail: Validation("string", "support Email", { extraRules: (s) => s.trim().email("Invalid email address") }),
-  customerCareNumber: Validation("string", "customer Care Number"),
-  phoneNo: PhoneValidation(),
-  ownerNo: PhoneValidation(),
-
-  address: Validation("string", "address"),
-  city: Validation("string", "city"),
-  state: Validation("string", "State"),
-  country: Validation("string", "country"),
-  pinCode: Validation("string", "pinCode", { extraRules: (s) => s.trim().matches(/^[0-9]{6}$/, "Pin code must be 6 digits") }),
-  timeZone: Validation("string", "timeZone", { required: false }),
-
-  upiId: Validation("string", "upiId", { required: false }),
-
-  userName: Validation("string", "userName", { required: false }),
-  GSTRegistrationType: Validation("string", "GSTRegistrationType", { required: false }),
-  GSTIdentificationNumber: Validation("string", "GSTIdentificationNumber", { required: false }),
-  PanNo: Validation("string", "PanNo", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid Pan Number") }),
-  taxDeductionAndCollectionAccountNumber: Validation("string", "taxDeductionAndCollectionAccountNumber", { required: false }),
-  webSite: Validation("string", "webSite", { required: false }),
-  financialYear: Validation("string", "financialYear", { required: false }),
-  corporateIdentificationNumber: Validation("string", "corporateIdentificationNumber", { required: false }),
-  letterOfUndertaking: Validation("string", "letterOfUndertaking", { required: false }),
-  importerExporterCode: Validation("string", "importerExporterCode", { required: false }),
-  outletSize: Validation("string", "outletSize", { required: false }),
-  fssaiNo: Validation("string", "fssaiNo", { required: false, extraRules: (s) => s.trim().matches(/^[0-9]{14}$/, "FSSAI number must be exactly 14 digits") }),
-  currency: Validation("string", "currency", { required: false }),
-  printDateFormat: Validation("string", "printDateFormat", { required: false }),
-  decimalPoint: Validation("string", "decimalPoint", { required: false }),
-
-  allowRoundOff: Validation("boolean", "allowRoundOff", { required: false }),
-  enableFeedbackModule: Validation("boolean", "enableFeedbackModule", { required: false }),
-
-  logo: Validation("string", "Logo", { required: false }),
-  waterMark: Validation("string", "Water Mark", { required: false }),
-  reportFormatLogo: Validation("string", "Report Format Logo", { required: false }),
-  authorizedSignature: Validation("string", "Authorized Signature", { required: false }),
-});
-
-export const WeightScaleFormSchema = Yup.object({
-  baudRate: Validation("string", "Baud Rate"),
-  dataBits: Validation("string", "Data Bits"),
-  stopBits: Validation("string", "Stop Bits"),
-  parity: Validation("string", "Parity"),
-  flowControl: Validation("string", "Flow Control"),
-  precision: Validation("string", "Precision"),
-});
-
-export const CustomerFormSchema = Yup.object({
-  baudRate: Validation("string", "Baud Rate"),
-  dataBits: Validation("string", "Data Bits"),
-  stopBits: Validation("string", "Stop Bits"),
-  parity: Validation("string", "Parity"),
-  flowControl: Validation("string", "Flow Control"),
-  precision: Validation("string", "Precision"),
-});
-
-export const MultiplePaySchema = Yup.object({
-  payments: Yup.array()
-    .of(
-      Yup.object({
-        amount: Yup.number().typeError("Amount must be a number").positive("Amount must be greater than 0").required("Received Amount is required"),
-        paymentMode: Validation("string", "Payment Method"),
-        paymentAccount: Yup.string().when("paymentMode", ([paymentMode], schema) => (["card", "upi", "wallet", "bank", "cheque"].includes(paymentMode) ? Validation("string", "Payment Account") : schema.nullable())),
-        cardHolderName: Yup.string().when("paymentMode", ([paymentMode], schema) => (paymentMode === "card" ? Validation("string", "Card Holder Name") : schema.nullable())),
-        cardTxnNo: Yup.string().when("paymentMode", ([paymentMode], schema) => (paymentMode === "card" ? Validation("string", "Card Transaction No") : schema.nullable())),
-        upiId: Yup.string().when("paymentMode", ([paymentMode], schema) => (paymentMode === "upi" ? Validation("string", "UPI ID") : schema.nullable())),
-        bankAccountNo: Yup.string().when("paymentMode", ([paymentMode], schema) => (paymentMode === "bank" ? Validation("string", "Bank Account No") : schema.nullable())),
-        chequeNo: Yup.string().when("paymentMode", ([paymentMode], schema) => (paymentMode === "cheque" ? Validation("string", "Cheque No") : schema.nullable())),
-      })
-    )
-    .min(1, "At least one payment is required"),
-});
-
-export const BankFormSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
-  branchName: Yup.string().required("Branch Name is required"),
-  ifscCode: Yup.string()
-    .required("IFSC Code is required")
-    .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, "Invalid IFSC Code format"),
-  swiftCode: Yup.string().nullable(),
-  accountHolderName: Yup.string().required("Account Holder Name is required"),
-  bankAccountNumber: Yup.string().required("Account Number is required").min(9, "Account number too short").max(18, "Account number too long"),
-  zipCode: Yup.number().typeError("Must be a number").nullable(),
-  addressLine1: Yup.string().nullable(),
-});
-export const EditBankFormSchema = BankFormSchema.shape({
-  bankId: Yup.string().required("Bank ID is required"),
 });

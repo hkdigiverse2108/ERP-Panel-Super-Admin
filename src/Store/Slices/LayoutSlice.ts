@@ -6,7 +6,6 @@ type LayoutState = {
   isMobile: boolean;
   isHovered: boolean;
   isApplicationMenuOpen: boolean;
-  openSubmenu: string | null;
   isToggleTheme: string;
 };
 
@@ -16,7 +15,6 @@ const initialState: LayoutState = {
   isMobile: false,
   isHovered: false,
   isApplicationMenuOpen: false,
-  openSubmenu: null,
   isToggleTheme: "light",
 };
 
@@ -48,9 +46,6 @@ const layoutSlice = createSlice({
       state.isApplicationMenuOpen = !state.isApplicationMenuOpen;
     },
 
-    setToggleSubmenu: (state, action) => {
-      state.openSubmenu = state.openSubmenu === action.payload ? null : action.payload;
-    },
     setToggleTheme: (state, action) => {
       state.isToggleTheme = action.payload;
       if (action.payload === "dark") document.documentElement.classList.add("dark");
@@ -59,6 +54,6 @@ const layoutSlice = createSlice({
   },
 });
 
-export const { setIsMobile, setToggleSidebar, setToggleMobileSidebar, setIsHovered, setApplicationMenuOpen, setToggleSubmenu, setToggleTheme, setSidebarOpen } = layoutSlice.actions;
+export const { setIsMobile, setToggleSidebar, setToggleMobileSidebar, setIsHovered, setApplicationMenuOpen, setToggleTheme, setSidebarOpen } = layoutSlice.actions;
 
 export default layoutSlice.reducer;
