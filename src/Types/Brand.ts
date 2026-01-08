@@ -7,7 +7,6 @@ export interface BrandFormValues {
   parentBrandId?: string;
   image?: string | File | null;
   isActive?: boolean;
-  _submitAction?: "save" | "saveAndNew";
 }
 
 export type AddBrandPayload = BrandFormValues & { companyId?: string };

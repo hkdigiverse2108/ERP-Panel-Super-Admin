@@ -10,3 +10,5 @@ export * from "./Product";
 export * from "./Customer";
 export * from "./Brand";
 export * from "./Company";
+export * from "./Category";
+export * from "./ProductRequest";

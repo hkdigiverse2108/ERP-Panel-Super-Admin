@@ -27,6 +27,8 @@ const Product = () => {
     { field: "mrp", headerName: "MRP", width: 150 },
     { field: "sellingPrice", headerName: "Selling Price", width: 150 },
     { field: "hsnCode", headerName: "HSN", width: 150 },
+    { field: "additionalInfo", headerName: "additionalInfo", width: 150 },
+    { field: "shortDescription", headerName: "shortDescription", width: 150 },
     { field: "openingQty", headerName: "Opening Qty", flex: 1, minWidth: 150 },
   ];
 
@@ -49,7 +51,7 @@ const Product = () => {
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.PRODUCT.BASE} />
-      <Box sx={{ p: { xs: 2, md: 3 } }}>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid"}}>
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

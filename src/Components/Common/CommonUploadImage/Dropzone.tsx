@@ -75,20 +75,20 @@ const DropzoneWithPreview = () => {
     <div>
       {/* DROPZONE */}
       <div
-        className="w-full h-[350px] rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-brand-500 dark:hover:border-brand-500 flex flex-col items-center justify-center text-center cursor-pointer bg-white dark:bg-gray-900"
+        className="w-full h-87.5 rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-brand-500 dark:hover:border-brand-500 flex flex-col items-center justify-center text-center cursor-pointer bg-white dark:bg-gray-900"
         onClick={() => fileRef.current?.click()}
         onDragOver={(e) => e.preventDefault()} // IMPORTANT
         onDrop={handleDrop} // IMPORTANT
       >
         {/* PREVIEW GRID */}
-        <Grid container spacing={2} className="flex flex-wrap custom-scrollbar overflow-y-auto p-3">
+        <Grid container spacing={2} className="flex flex-wrap custom-scrollbar overflow-y-auto p-3 w-full">
           {files.map((file, index) => (
             <Grid size={{ xs: 6, sm: 4, md: 3 }} key={index} className="relative border rounded-lg overflow-hidden">
               {isImageMode ? (
                 <img src={previews[index]} className="w-full h-full object-cover" />
               ) : (
                 /* PDF Preview Box */
-                <div className="w-full! flex flex-col items-center justify-center p-2">
+                <div className="w-full! flex flex-col items-center justify-center p-5">
                   <PictureAsPdfIcon sx={{ fontSize: 40 }} className="mb-2 opacity-80 text-gray-800 dark:text-gray-300" />
                   <p className="text-xs text-gray-700 dark:text-gray-300 text-center truncate w-full">{file.name}</p>
                 </div>
@@ -112,7 +112,7 @@ const DropzoneWithPreview = () => {
           <div className="flex flex-col items-center justify-center flex-1 text-center">
             <CloudUploadIcon className="text-gray-500" sx={{ fontSize: 40 }} />
             <h4 className="mb-3 font-semibold text-gray-800 dark:text-white/90">Drop Files Here, Paste</h4>
-            <span className="text-center block w-full max-w-[290px] text-sm text-gray-700 dark:text-gray-400">{`Drag and drop your ${isUploadModal.type === "image" ? "PNG, JPG, WEBP, JPEG images" : "PDF"}  here or browse`}</span>
+            <span className="text-center block w-full max-w-72.5 text-sm text-gray-700 dark:text-gray-400">{`Drag and drop your ${isUploadModal.type === "image" ? "PNG, JPG, WEBP, JPEG images" : "PDF"}  here or browse`}</span>
             <p className="mt-2 text-gray-500">Or</p>
             <p className="mt-2 text-brand-500 font-semibold">Browse Files</p>
           </div>

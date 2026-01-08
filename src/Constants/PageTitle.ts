@@ -18,11 +18,21 @@ export const PAGE_TITLE = {
       BASE: "product",
       ADD: "Add Product",
       EDIT: "Edit Product",
+      REQUEST: {
+        BASE:"Product Request",
+        ADD: "Add Product Request",
+        EDIT: "Edit Product Request",
+      },
     },
     BRAND: {
       BASE: "brand",
       ADD: "Add brand",
       EDIT: "Edit brand",
+    },
+    CATEGORY: {
+      BASE: "category",
+      ADD: "Add category",
+      EDIT: "Edit category",
     },
   },
   CUSTOMER: {

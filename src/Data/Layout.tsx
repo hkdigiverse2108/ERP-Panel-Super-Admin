@@ -13,7 +13,9 @@ export const NavItems: NavItem[] = [
     icon: <SettingsIcon />,
     subItems: [
       { name: PAGE_TITLE.INVENTORY.PRODUCT.BASE, path: ROUTES.PRODUCT.BASE, pro: false },
+      { name: PAGE_TITLE.INVENTORY.PRODUCT.REQUEST.BASE, path: ROUTES.PRODUCT_REQUEST.BASE, pro: false },
       { name: PAGE_TITLE.INVENTORY.BRAND.BASE, path: ROUTES.BRAND.BASE, pro: false },
+      { name: PAGE_TITLE.INVENTORY.CATEGORY.BASE, path: ROUTES.CATEGORY.BASE, pro: false },
     ],
   },
 ];

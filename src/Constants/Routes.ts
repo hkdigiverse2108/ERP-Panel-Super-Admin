@@ -12,9 +12,17 @@ export const ROUTES = {
     BASE: "/product",
     ADD_EDIT: "/product/add-edit",
   },
+  PRODUCT_REQUEST: {
+    BASE: "/product-request",
+    ADD_EDIT: "/product-request/add-edit",
+  },
   BRAND: {
     BASE: "/brand",
     ADD_EDIT: "/brand/add-edit",
+  },
+  CATEGORY: {
+    BASE: "/category",
+    ADD_EDIT: "/category/add-edit",
   },
   BRANCH: {
     BASE: "/branch",

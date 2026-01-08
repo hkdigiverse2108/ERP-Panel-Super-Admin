@@ -5,6 +5,7 @@ import type { MuiTelInputProps } from "mui-tel-input";
 import type { FocusEvent, ReactNode } from "react";
 import * as Yup from "yup";
 import type { BrandBase } from "./Brand";
+import type { CategoryBase } from "./Category";
 
 type GridType = number | object | "auto" | "grow";
 
@@ -142,6 +143,7 @@ export interface CommonDataGridProps {
   pageSizeOptions?: number[];
   defaultHidden?: string[];
   BoxClass?: string;
+  isExport?: boolean;
 }
 
 export interface CustomToolbarProps {
@@ -152,6 +154,7 @@ export interface CustomToolbarProps {
   handleAdd?: () => void;
   isActive?: boolean;
   setActive?: (active: boolean) => void;
+  isExport?: boolean;
 }
 
 export interface ExportToExcelProps<T extends GridValidRowModel> {
@@ -363,6 +366,7 @@ export interface ModalStateSlice {
   selectedFiles: string[];
   isModalVideoPlay: { open: boolean; link: string };
   isBrandModal: { open: boolean; data: BrandBase | null };
+  isCategoryModal: { open: boolean; data: CategoryBase |  null };
 }
 
 // ************ Modal End ***********
@@ -374,7 +378,7 @@ export type RadioOptionType = {
   value: string;
 };
 export type ImageSyncProps = {
-  activeKey: "image" | null;
+  activeKey: "image" | null | string;
   clearActiveKey: () => void;
 };
 

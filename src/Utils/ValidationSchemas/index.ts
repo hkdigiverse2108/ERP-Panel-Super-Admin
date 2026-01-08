@@ -97,3 +97,26 @@ export const ProductFormSchema = Yup.object({
   nutritionalFacts: Validation("string", "Nutritional Facts", { required: false }),
   status: Validation("string", "Status"),
 });
+
+export const CategoryFormSchema = Yup.object({
+  name: Validation("string", "Category name"),
+  code: Validation("string", "code"),
+  description: Validation("string", "Description", { required: false }),
+  parentCategoryId: Validation("string", "Parent Category", { required: false }),
+  isActive: Validation("boolean", "is Active", { required: false }),
+});
+
+// ---------- Product Request Form Schema ----------
+export const ProductRequestFormSchema = Yup.object({
+  name: Validation("string", "Product Name"),
+  printName: Validation("string", "Print Name", { required: false }),
+  category: Validation("string", "Category"),
+  subCategory: Validation("string", "Sub Category", { required: false }),
+  brand: Validation("string", "Brand"),
+  subBrand: Validation("string", "Sub Brand", { required: false }),
+  productType: Validation("string", "Product Type"),
+  hasExpiry: Validation("boolean", "Has Expiry", { required: false }),
+  description: Validation("string", "Description", { required: false }),
+  images: Yup.array().of(Yup.mixed().required("Image is required")).min(2, "At least two image is required"),
+  isActive: Yup.boolean(),
+});

@@ -41,6 +41,13 @@ export const KEYS = {
     DELETE: "brand-delete",
   },
 
+  CATEGORY: {
+    BASE: "category",
+    ADD: "category-add",
+    EDIT: "category-edit",
+    DELETE: "category-delete",
+  },
+
   ANNOUNCEMENT: {
     BASE: "announcement",
   },
@@ -51,6 +58,14 @@ export const KEYS = {
     EDIT: "product-edit",
     DELETE: "product-delete",
   },
+
+  PRODUCT_REQUEST: {
+    BASE: "product-request",
+    ADD: "product-request-add",
+    EDIT: "product-request-edit",
+    DELETE: "product-request-delete",
+  },
+
   CALL_REQUEST: {
     BASE: "call-request",
     ADD: "call-request-add",

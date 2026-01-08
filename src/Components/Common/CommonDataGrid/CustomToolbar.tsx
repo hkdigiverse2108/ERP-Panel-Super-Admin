@@ -13,7 +13,7 @@ import type { CustomToolbarProps } from "../../../Types";
 import { ExportDataGridToExcel } from "./ExportDataGridToExcel";
 import { ExportDataGridToPDF } from "./ExportDataGridToPDF";
 
-const CustomToolbar: FC<CustomToolbarProps> = ({ apiRef, columns, rows, rowCount, handleAdd, isActive, setActive }) => {
+const CustomToolbar: FC<CustomToolbarProps> = ({ isExport = true, apiRef, columns, rows, rowCount, handleAdd, isActive, setActive }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   return (
@@ -41,11 +41,13 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ apiRef, columns, rows, rowCount
           </Tooltip>
 
           {/* EXPORT */}
-          <Tooltip title="Export">
-            <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-              <DownloadIcon />
-            </IconButton>
-          </Tooltip>
+          {isExport && (
+            <Tooltip title="Export">
+              <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
+                <DownloadIcon />
+              </IconButton>
+            </Tooltip>
+          )}
 
           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
             {/* EXCEL */}
