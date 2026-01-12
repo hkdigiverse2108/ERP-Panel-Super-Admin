@@ -1,7 +1,8 @@
 import type { BranchBase } from "./Branch";
+import type { RolesBase } from "./Roles";
 import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
 import type { CompanyBase } from "./Company";
-// import type { RolesBase } from "./Roles";
+
 
 export interface Address {
   address?: string;
@@ -20,7 +21,8 @@ export interface BankDetails {
   IFSCCode?: string;
 }
 
-export interface EmployeeFormValues {
+export interface UserFormValues {
+  password?: string;
   fullName?: string;
   username?: string;
   designation?: string;
@@ -40,20 +42,20 @@ export interface EmployeeFormValues {
   companyId?: string;
 }
 
-export type AddEmployeePayload = EmployeeFormValues;
+export type AddUserPayload = UserFormValues;
 
-export type EditEmployeePayload = AddEmployeePayload & { userId: string };
+export type EditUserPayload = AddUserPayload & { userId: string };
 
-export interface EmployeeBase extends Omit<EmployeeFormValues, "branchId" | "role" | "companyId">, CommonDataType {
+export interface UserBase extends Omit<UserFormValues, "branchId" | "role" | "companyId">, CommonDataType {
   branchId: BranchBase;
-  // role: RolesBase;
+   role: RolesBase;
   companyId: CompanyBase;
 }
 
-export interface EmployeeDataResponse extends PageStatus {
-  user_data: EmployeeBase[];
+export interface UserDataResponse extends PageStatus {
+  user_data: UserBase[];
 }
 
-export interface EmployeeApiResponse extends MessageStatus {
-  data: EmployeeDataResponse;
+export interface UserApiResponse extends MessageStatus {
+  data: UserDataResponse;
 }

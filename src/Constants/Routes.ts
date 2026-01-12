@@ -4,9 +4,9 @@ export const ROUTES = {
   AUTH: {
     SIGNIN: "/auth/signin",
   },
-  EMPLOYEE: {
-    BASE: "/employee",
-    ADD_EDIT: "/employee/add-edit",
+  USER: {
+    BASE: "/user",
+    ADD_EDIT: "/user/add-edit",
   },
   PRODUCT: {
     BASE: "/product",

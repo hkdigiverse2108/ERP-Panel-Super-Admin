@@ -8,21 +8,19 @@ export const URL_KEYS = {
     ALL_IMAGE: "/upload/images",
     ALL_PDF: "/upload/pdf",
   },
-  USER: {
-    BASE: "/user",
-    EDIT: "/user/edit",
-  },
+ 
   COMPANY: {
     BASE: "/company",
     ALL: "/company/all",
     ADD: "/company/add",
     EDIT: "/company/edit",
   },
-  EMPLOYEE: {
+  USER: {
     BASE: "/user",
     ALL: "/user/all",
     ADD: "/user/add",
     EDIT: "/user/edit",
+    ROLE: "/roles/all",
   },
   BRANCH: {
     BASE: "/branch",
@@ -60,5 +58,8 @@ export const URL_KEYS = {
   CALL_REQUEST: {
     BASE: "/call-request",
     ADD: "/call-request/add",
+  },
+  ROLES: {
+    ALL: "/roles/all",
   },
 } as const;

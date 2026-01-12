@@ -6,7 +6,7 @@ import type { NavItem } from "../Types";
 
 export const NavItems: NavItem[] = [
   { icon: <GridViewRoundedIcon />, name: PAGE_TITLE.DASHBOARD, path: ROUTES.DASHBOARD },
-  { icon: <PeopleIcon />, name: PAGE_TITLE.EMPLOYEE.BASE, path: ROUTES.EMPLOYEE.BASE },
+  { icon: <PeopleIcon />, name: PAGE_TITLE.USER.BASE, path: ROUTES.USER.BASE },
   { icon: <GridViewRoundedIcon />, name: PAGE_TITLE.BRANCH.BASE, path: ROUTES.BRANCH.BASE },
   {
     name: PAGE_TITLE.INVENTORY.BASE,

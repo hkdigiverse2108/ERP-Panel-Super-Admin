@@ -4,8 +4,8 @@ import SignInForm from "../Pages/Auth/SignInForm";
 import Branch from "../Pages/Branch";
 import BranchForm from "../Pages/Branch/BranchForm";
 import Dashboard from "../Pages/Dashboard";
-import Employees from "../Pages/Employee";
-import EmployeeForm from "../Pages/Employee/EmployeeForm";
+import Users from "../Pages/User";
+import UserForm from "../Pages/User/UserForm";
 import Brand from "../Pages/Inventory/Brand";
 import BrandForm from "../Pages/Inventory/Brand/BrandForm";
 import Product from "../Pages/Inventory/Product";
@@ -20,8 +20,8 @@ export const PageRoutes = [
 
   { path: ROUTES.DASHBOARD, element: <Dashboard /> },
 
-  { path: ROUTES.EMPLOYEE.BASE, element: <Employees /> },
-  { path: ROUTES.EMPLOYEE.ADD_EDIT, element: <EmployeeForm /> },
+  { path: ROUTES.USER.BASE, element: <Users /> },
+  { path: ROUTES.USER.ADD_EDIT, element: <UserForm /> },
 
   { path: ROUTES.BRANCH.BASE, element: <Branch /> },
   { path: ROUTES.BRANCH.ADD_EDIT, element: <BranchForm /> },

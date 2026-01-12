@@ -5,55 +5,55 @@ import { Mutations, Queries } from "../../Api";
 import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonPhoneColumns } from "../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../Constants";
 import { BREADCRUMBS, PRODUCT_TYPE_OPTIONS } from "../../Data";
-import type { AppGridColDef, EmployeeBase } from "../../Types";
+import type { AppGridColDef, UserBase } from "../../Types";
 import { useDataGrid } from "../../Utils/Hooks";
 import { CommonSelect } from "../../Attribute";
 
-const Employee = () => {
+const User = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
   const [value, setValue] = useState<string[]>([]);
 
-  const { data: employeeData, isLoading: employeeDataLoading, isFetching: employeeDataFetching } = Queries.useGetEmployee(params);
-  const { mutate: deleteEmployeeMutate } = Mutations.useDeleteEmployee();
-  const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditEmployee();
+  const { data: userData, isLoading: userDataLoading, isFetching: userDataFetching } = Queries.useGetUser(params);
+  const { mutate: deleteUserMutate } = Mutations.useDeleteUser();
+  const { mutate: editUser, isPending: isEditLoading } = Mutations.useEditUser();
 
-  const allEmployee = useMemo(() => employeeData?.data?.user_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [employeeData]);
-  const totalRows = employeeData?.data?.totalData || 0;
+  const allUser = useMemo(() => userData?.data?.user_data.map((user) => ({ ...user, id: user?._id })) || [], [userData]);
+  const totalRows = userData?.data?.totalData || 0;
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
-    deleteEmployeeMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
+    deleteUserMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
   };
 
-  const handleAdd = () => navigate(ROUTES.EMPLOYEE.ADD_EDIT);
+  const handleAdd = () => navigate(ROUTES.USER.ADD_EDIT);
 
-  const columns: AppGridColDef<EmployeeBase>[] = [
+  const columns: AppGridColDef<UserBase>[] = [
     { field: "username", headerName: "User Name", type: "string", width: 170 },
     { field: "fullName", headerName: "Full Name", width: 170 },
     { field: "designation", headerName: "designation", width: 170 },
     { field: "email", headerName: "Email", width: 240 },
-    CommonPhoneColumns<EmployeeBase>(),
+    CommonPhoneColumns<UserBase>(),
     { field: "panNumber", headerName: "PAN Number", width: 150 },
     { field: "wages", headerName: "Wages", type: "number", width: 150 },
     { field: "extraWages", headerName: "Extra Wages", type: "number", width: 150 },
     { field: "commission", headerName: "Commission", type: "number", flex: 1, minWidth: 150 },
     CommonActionColumn({
-      active: (row) => editEmployee({ userId: row?._id, companyId: row?.companyId?._id, isActive: !row.isActive }),
-      editRoute: ROUTES.EMPLOYEE.ADD_EDIT,
+      active: (row) => editUser({ userId: row?._id, companyId: row?.companyId?._id, isActive: !row.isActive }),
+      editRoute: ROUTES.USER.ADD_EDIT,
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.username }),
     }),
   ];
 
   const CommonDataGridOption = {
     columns,
-    rows: allEmployee,
+    rows: allUser,
     rowCount: totalRows,
-    loading: employeeDataLoading || employeeDataFetching || isEditLoading,
+    loading: userDataLoading || userDataFetching || isEditLoading,
     isActive,
     setActive,
     handleAdd,
-    paginationModel,
+    paginationModel, 
     onPaginationModelChange: setPaginationModel,
     sortModel,
     onSortModelChange: setSortModel,
@@ -63,7 +63,7 @@ const Employee = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.EMPLOYEE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.EMPLOYEE.BASE} />
+      <CommonBreadcrumbs title={PAGE_TITLE.USER.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.USER.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <AdvancedSearch>
           <Grid size={{ xs: 12, xsm: 6, sm: 3, xxl: 2 }}>
@@ -79,4 +79,4 @@ const Employee = () => {
   );
 };
 
-export default Employee;
+export default User;
