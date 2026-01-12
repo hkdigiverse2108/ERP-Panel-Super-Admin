@@ -9,7 +9,7 @@ export interface BrandFormValues {
   isActive?: boolean;
 }
 
-export type AddBrandPayload = BrandFormValues & { companyId?: string };
+export type AddBrandPayload = BrandFormValues;
 
 export type EditBrandPayload = AddBrandPayload & { brandId?: string };
 

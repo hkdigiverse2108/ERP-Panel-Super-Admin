@@ -6,7 +6,7 @@ import { useField, type FieldHookConfig } from "formik";
 import { useCallback, useMemo, useState, type FC, type ReactNode } from "react";
 import type { CommonTextFieldProps, CommonValidationTextFieldProps } from "../../Types";
 
-export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({currencyDisabled, label, name, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, isCurrency, onCurrencyLog, ...props }) => {
+export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ currencyDisabled, label, name, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, isCurrency, onCurrencyLog, ...props }) => {
   const fieldConfig: FieldHookConfig<string> = { name };
   const [field, meta, helpers] = useField(fieldConfig);
   const [isFocused, setFocused] = useState(false);
@@ -89,6 +89,11 @@ export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({c
         field.onBlur(e);
         props.onBlur?.(e);
       }}
+      onKeyDown={(e) => {
+        if (inputType === "number") {
+          if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
+        }
+      }}
       error={meta.touched && Boolean(meta.error)}
       helperText={meta.touched && meta.error ? meta.error : props.helperText}
       slotProps={{
@@ -112,7 +117,7 @@ export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({c
         </FormLabel>
       )}
       {isCurrency ? (
-        <Box display="flex" alignItems="center">
+        <Box display="flex" alignItems="start">
           <IconButton
             disabled={disabled || currencyDisabled}
             className="currency-btn"
@@ -218,6 +223,11 @@ export const CommonTextField: FC<CommonTextFieldProps> = ({ label, value, onChan
           inputMode: isCurrency ? "decimal" : undefined,
         },
       }}
+      onKeyDown={(e) => {
+        if (inputType === "number") {
+          if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
+        }
+      }}
       sx={{
         "& .MuiOutlinedInput-root": { borderRadius: isCurrency ? "0 4px 4px 0" : "4px" },
       }}
@@ -232,7 +242,7 @@ export const CommonTextField: FC<CommonTextFieldProps> = ({ label, value, onChan
         </FormLabel>
       )}
       {isCurrency ? (
-        <Box display="flex" alignItems="center">
+        <Box display="flex" alignItems="start">
           <IconButton
             disabled={disabled}
             className="currency-btn"

@@ -58,9 +58,8 @@ const CategoryForm = () => {
     dispatch(setUploadModal({ open: true, type: "image" }));
   };
 
-  const closeModal = () => {
-    dispatch(setCategoryModal({ open: false, data: null }));
-  };
+  const closeModal = () => dispatch(setCategoryModal({ open: false, data: null }));
+
   const handleSubmit = (values: CategoryFormValues, { resetForm }: FormikHelpers<CategoryFormValues>) => {
     const onSuccessHandler = () => {
       resetForm();

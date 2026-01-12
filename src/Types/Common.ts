@@ -6,6 +6,8 @@ import type { FocusEvent, ReactNode } from "react";
 import * as Yup from "yup";
 import type { BrandBase } from "./Brand";
 import type { CategoryBase } from "./Category";
+import type { TaxBase } from "./Tax";
+import type { UomBase } from "./Uom";
 
 type GridType = number | object | "auto" | "grow";
 
@@ -53,6 +55,9 @@ export interface CommonSelectProps {
   required?: boolean;
   disabled?: boolean;
   variant?: "standard" | "outlined" | "filled";
+  placeholder?: string;
+  syncFieldName?: string;
+  isLoading?: boolean;
 }
 
 export interface CommonValidationSelectProps extends Omit<CommonSelectProps, "onChange" | "value"> {
@@ -301,6 +306,7 @@ export interface CommonValidationSwitchProps {
   isFormLabel?: boolean;
   grid?: GridType;
   switchPlacement?: "start" | "between";
+  syncFieldName?: string;
 }
 
 export interface CommonSwitchProps extends CommonValidationSwitchProps {
@@ -363,11 +369,13 @@ export interface CommonModalProps {
 type UploadType = "image" | "pdf";
 
 export interface ModalStateSlice {
-  isUploadModal: { open: boolean; type: UploadType };
+  isUploadModal: { open: boolean; type: UploadType; multiple?: boolean };
   selectedFiles: string[];
   isModalVideoPlay: { open: boolean; link: string };
   isBrandModal: { open: boolean; data: BrandBase | null };
-  isCategoryModal: { open: boolean; data: CategoryBase |  null };
+  isUomModal: { open: boolean; data: UomBase | null };
+  isTaxModal: { open: boolean; data: TaxBase | null };
+  isCategoryModal: { open: boolean; data: CategoryBase | null };
 }
 
 // ************ Modal End ***********

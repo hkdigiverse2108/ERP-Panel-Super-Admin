@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
 import { Form, Formik, useFormikContext, type FormikHelpers, type FormikValues } from "formik";
-import { useEffect, useState, type FC } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Mutations, Queries } from "../../../Api";
 import { CommonButton, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
@@ -13,12 +13,16 @@ import type { BrandFormValues, ImageSyncProps } from "../../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { BrandFormSchema } from "../../../Utils/ValidationSchemas";
 
-const BrandForm: FC = () => {
+const BrandForm = () => {
   const { mutate: addBrand, isPending: isAddLoading } = Mutations.useAddBrand();
   const { mutate: editBrand, isPending: isEditLoading } = Mutations.useEditBrand();
+
+  const [activeImageKey, setActiveImageKey] = useState<"image" | null>(null);
   const { data: brandData } = Queries.useGetBrand();
-  const dispatch = useDispatch();
   const { isBrandModal } = useAppSelector((state) => state.modal);
+
+  const dispatch = useDispatch();
+
   const isEdit = isBrandModal.data;
   const openModal = isBrandModal.open;
   const isEditing = Boolean(isEdit?._id);
@@ -32,7 +36,6 @@ const BrandForm: FC = () => {
     parentBrandId: isEdit?.parentBrandId?._id || "",
     isActive: isEdit?.isActive ?? true,
   };
-  const [activeImageKey, setActiveImageKey] = useState<"image" | null>(null);
 
   const FormikImageSync = <T extends FormikValues>({ activeKey, clearActiveKey }: ImageSyncProps) => {
     const { selectedFiles } = useAppSelector((state) => state.modal);
@@ -56,9 +59,8 @@ const BrandForm: FC = () => {
     dispatch(setUploadModal({ open: true, type: "image" }));
   };
 
-  const closeModal = () => {
-    dispatch(setBrandModal({ open: false, data: null }));
-  };
+  const closeModal = () => dispatch(setBrandModal({ open: false, data: null }));
+
   const handleSubmit = (values: BrandFormValues, { resetForm }: FormikHelpers<BrandFormValues>) => {
     const onSuccessHandler = () => {
       resetForm();

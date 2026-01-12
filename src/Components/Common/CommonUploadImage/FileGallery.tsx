@@ -1,13 +1,13 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { IconButton, Skeleton } from "@mui/material";
-import { useState, type FC } from "react";
+import { useState } from "react";
 import { Mutations, Queries } from "../../../Api";
 import { CommonButton } from "../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
 import { setSelectedFiles, setUploadModal } from "../../../Store/Slices/ModalSlice";
 
-const FileGallery: FC<{ multiple?: boolean }> = ({ multiple = false }) => {
+const FileGallery = () => {
   const { isUploadModal } = useAppSelector((state) => state.modal);
   const dispatch = useAppDispatch();
 
@@ -28,10 +28,11 @@ const FileGallery: FC<{ multiple?: boolean }> = ({ multiple = false }) => {
   /* ---------------------------------- */
   const toggleSelect = (file: string) => {
     setSelected((prev) => {
-      if (!multiple) {
+      if (isUploadModal.multiple) {
+        return prev.includes(file) ? prev.filter((i) => i !== file) : [...prev, file];
+      } else {
         return prev[0] === file ? [] : [file];
       }
-      return prev.includes(file) ? prev.filter((i) => i !== file) : [...prev, file];
     });
   };
   /* ---------------------------------- */
@@ -70,7 +71,7 @@ const FileGallery: FC<{ multiple?: boolean }> = ({ multiple = false }) => {
 
   return (
     <>
-      <div className="flex flex-col gap-4 custom-scrollbar h-[327px] overflow-y-auto">
+      <div className="flex flex-col gap-4 custom-scrollbar h-81.75 overflow-y-auto">
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {isLoadingImages || isLoadingPdf
             ? [...Array(10)].map((_, i) => <Skeleton key={i} variant="rectangular" width="100%" height={140} sx={{ borderRadius: "10px" }} />)
@@ -86,9 +87,9 @@ const FileGallery: FC<{ multiple?: boolean }> = ({ multiple = false }) => {
 
                   {/* Preview */}
                   {isUploadModal.type === "image" ? (
-                    <img src={file} alt="file" className="w-full h-[140px] object-cover rounded-md" />
+                    <img src={file} alt="file" className="w-full h-35 object-cover rounded-md" />
                   ) : (
-                    <div className="flex flex-col items-center justify-center h-[140px]">
+                    <div className="flex flex-col items-center justify-center h-35">
                       <PictureAsPdfIcon sx={{ fontSize: 40 }} />
                     </div>
                   )}

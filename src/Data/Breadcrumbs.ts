@@ -11,10 +11,6 @@ export const BREADCRUMBS = {
     BASE: [{ label: PAGE_TITLE.INVENTORY.PRODUCT.BASE }],
     ADD: [{ label: PAGE_TITLE.INVENTORY.PRODUCT.BASE, href: ROUTES.PRODUCT.BASE }, { label: PAGE_TITLE.INVENTORY.PRODUCT.ADD }],
     EDIT: [{ label: PAGE_TITLE.INVENTORY.PRODUCT.BASE, href: ROUTES.PRODUCT.BASE }, { label: PAGE_TITLE.INVENTORY.PRODUCT.EDIT }],
-    REQUEST: {
-      BASE: [{ label: PAGE_TITLE.INVENTORY.PRODUCT.REQUEST.BASE }],
-      ADD: [{ label: PAGE_TITLE.INVENTORY.PRODUCT.REQUEST.BASE, href: ROUTES.PRODUCT_REQUEST.BASE }, { label: PAGE_TITLE.INVENTORY.PRODUCT.REQUEST.ADD }],
-    },
   },
   BRANCH: {
     BASE: [{ label: PAGE_TITLE.BRANCH.BASE }],
@@ -23,18 +19,14 @@ export const BREADCRUMBS = {
   },
   BRAND: {
     BASE: [{ label: PAGE_TITLE.INVENTORY.BRAND.BASE }],
-    ADD: [{ label: PAGE_TITLE.INVENTORY.BRAND.BASE, href: ROUTES.BRAND.BASE }, { label: PAGE_TITLE.INVENTORY.BRAND.ADD }],
-    EDIT: [{ label: PAGE_TITLE.INVENTORY.BRAND.BASE, href: ROUTES.BRAND.BASE }, { label: PAGE_TITLE.INVENTORY.BRAND.EDIT }],
+  },
+  UOM: {
+    BASE: [{ label: PAGE_TITLE.INVENTORY.UOM.BASE }],
+  },
+  TAX: {
+    BASE: [{ label: PAGE_TITLE.INVENTORY.TAX.BASE }],
   },
   CATEGORY: {
     BASE: [{ label: PAGE_TITLE.INVENTORY.CATEGORY.BASE }],
-    ADD: [{ label: PAGE_TITLE.INVENTORY.CATEGORY.BASE, href: ROUTES.CATEGORY.BASE }, { label: PAGE_TITLE.INVENTORY.CATEGORY.ADD }],
-    EDIT: [{ label: PAGE_TITLE.INVENTORY.BRAND.BASE, href: ROUTES.BRAND.BASE }, { label: PAGE_TITLE.INVENTORY.BRAND.EDIT }],
   },
 };
-
-export const BranchFormBreadcrumbs = [{ label: ROUTES.BRANCH.ADD_EDIT }];
-export const ProductBreadcrumbs = [{ label: ROUTES.PRODUCT.BASE }];
-export const ProductFormBreadcrumbs = [{ label: ROUTES.PRODUCT.ADD_EDIT }];
-export const BrandBreadcrumbs = [{ label: ROUTES.BRAND.BASE }];
-export const BrandFormBreadcrumbs = [{ label: ROUTES.BRAND.ADD_EDIT }];

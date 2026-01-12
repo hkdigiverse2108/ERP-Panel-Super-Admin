@@ -38,6 +38,20 @@ export const KEYS = {
     DELETE: "brand-delete",
   },
 
+  UOM: {
+    BASE: "uom",
+    ADD: "uom-add",
+    EDIT: "uom-edit",
+    DELETE: "uom-delete",
+  },
+
+  TAX: {
+    BASE: "tax",
+    ADD: "tax-add",
+    EDIT: "tax-edit",
+    DELETE: "tax-delete",
+  },
+
   CATEGORY: {
     BASE: "category",
     ADD: "category-add",
@@ -54,13 +68,6 @@ export const KEYS = {
     ADD: "product-add",
     EDIT: "product-edit",
     DELETE: "product-delete",
-  },
-
-  PRODUCT_REQUEST: {
-    BASE: "product-request",
-    ADD: "product-request-add",
-    EDIT: "product-request-edit",
-    DELETE: "product-request-delete",
   },
 
   CALL_REQUEST: {

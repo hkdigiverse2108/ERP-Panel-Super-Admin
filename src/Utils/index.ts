@@ -1,5 +1,6 @@
 export * from "./FormHelpers";
 export * from "./DateFormatted";
+export * from "./DateConfig";
 import { STORAGE_KEYS } from "../Constants";
 import type { Params } from "../Types";
 

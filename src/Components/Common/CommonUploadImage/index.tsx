@@ -12,7 +12,7 @@ const CommonUpload = () => {
   const dispatch = useAppDispatch();
 
   return (
-    <CommonModal isOpen={isUploadModal.open} title={`Upload ${isUploadModal.type === "image" ? "Image" : "PDF"}`} onClose={() => dispatch(setUploadModal({ open: false, type: "image" }))} className="max-w-[900px] m-2 sm:m-5">
+    <CommonModal isOpen={isUploadModal.open} title={`Upload ${isUploadModal.type === "image" ? "Image" : "PDF"}`} onClose={() => dispatch(setUploadModal({ open: false, type: "image" }))} className="max-w-225 m-2 sm:m-5">
       <div className="flex flex-col gap-5">
         <Tabs value={tab} onChange={(_, v) => setTab(v)} className="border-b border-gray-200 dark:border-gray-800">
           <Tab label="Select File" />

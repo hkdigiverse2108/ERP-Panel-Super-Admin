@@ -4,16 +4,14 @@ import SignInForm from "../Pages/Auth/SignInForm";
 import Branch from "../Pages/Branch";
 import BranchForm from "../Pages/Branch/BranchForm";
 import Dashboard from "../Pages/Dashboard";
-import Users from "../Pages/User";
-import UserForm from "../Pages/User/UserForm";
 import Brand from "../Pages/Inventory/Brand";
-import BrandForm from "../Pages/Inventory/Brand/BrandForm";
+import Category from "../Pages/Inventory/Category";
 import Product from "../Pages/Inventory/Product";
 import ProductForm from "../Pages/Inventory/Product/ProductForm";
-import Category from "../Pages/Inventory/Category";
-import CategoryForm from "../Pages/Inventory/Category/CategoryForm";
-import ProductRequest from "../Pages/Inventory/ProductRequest";
-import ProductRequestForm from "../Pages/Inventory/ProductRequest/ProductRequestForm";
+import Users from "../Pages/User";
+import UserForm from "../Pages/User/UserForm";
+import Uom from "../Pages/Inventory/Uom";
+import Tax from "../Pages/Inventory/Tax";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -29,14 +27,13 @@ export const PageRoutes = [
   { path: ROUTES.PRODUCT.BASE, element: <Product /> },
   { path: ROUTES.PRODUCT.ADD_EDIT, element: <ProductForm /> },
 
-  { path: ROUTES.PRODUCT_REQUEST.BASE, element: <ProductRequest /> },
-  { path: ROUTES.PRODUCT_REQUEST.ADD_EDIT, element: <ProductRequestForm /> },
-
   { path: ROUTES.BRAND.BASE, element: <Brand /> },
-  { path: ROUTES.BRAND.ADD_EDIT, element: <BrandForm /> },
+  
+  { path: ROUTES.UOM.BASE, element: <Uom /> },
+
+  { path: ROUTES.TAX.BASE, element: <Tax /> },
 
   { path: ROUTES.CATEGORY.BASE, element: <Category /> },
-  { path: ROUTES.CATEGORY.ADD_EDIT, element: <CategoryForm /> },
 ];
 
 export const AuthRoutes = [

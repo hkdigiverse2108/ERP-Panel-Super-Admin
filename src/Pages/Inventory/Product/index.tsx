@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Queries } from "../../../Api";
-import { CommonBreadcrumbs, CommonCard, CommonDataGrid } from "../../../Components/Common";
+import { Mutations, Queries } from "../../../Api";
+import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, ProductBase } from "../../../Types";
@@ -13,6 +13,7 @@ const Product = () => {
   const navigate = useNavigate();
 
   const { data: productData, isLoading: productDataLoading, isFetching: productDataFetching } = Queries.useGetProduct(params);
+  const { mutate: editProduct, isPending: isEditLoading } = Mutations.useEditProduct();
 
   const allProduct = useMemo(() => productData?.data?.product_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [productData]);
   const totalRows = productData?.data?.totalData || 0;
@@ -30,13 +31,18 @@ const Product = () => {
     { field: "additionalInfo", headerName: "additionalInfo", width: 150 },
     { field: "shortDescription", headerName: "shortDescription", width: 150 },
     { field: "openingQty", headerName: "Opening Qty", flex: 1, minWidth: 150 },
+    CommonActionColumn({
+      active: (row) => editProduct({ productId: row?._id, isActive: !row.isActive }),
+      editRoute: ROUTES.PRODUCT.ADD_EDIT,
+      // onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
+    }),
   ];
 
   const CommonDataGridOption = {
     columns,
     rows: allProduct,
     rowCount: totalRows,
-    loading: productDataLoading || productDataFetching,
+    loading: productDataLoading || productDataFetching || isEditLoading,
     isActive,
     setActive,
     handleAdd,
@@ -51,7 +57,7 @@ const Product = () => {
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.PRODUCT.BASE} />
-      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid"}}>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

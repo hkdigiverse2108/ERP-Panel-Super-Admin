@@ -34,6 +34,18 @@ export const URL_KEYS = {
     ADD: "/brand/add",
     EDIT: "/brand/edit",
   },
+  UOM: {
+    BASE: "/uom",
+    ALL: "/uom/all",
+    ADD: "/uom/add",
+    EDIT: "/uom/edit",
+  },
+  TAX: {
+    BASE: "/tax",
+    ALL: "/tax/all",
+    ADD: "/tax/add",
+    EDIT: "/tax/edit",
+  },
   CATEGORY: {
     BASE: "/category",
     ALL: "/category/all",
@@ -48,12 +60,6 @@ export const URL_KEYS = {
     ADD: "/product/add",
     ALL: "/product/all",
     EDIT: "/product/edit",
-  },
-  PRODUCT_REQUEST: {
-    BASE: "/product-request",
-    ALL: "/product-request/all",
-    ADD: "/product-request/add",
-    EDIT: "/product-request/edit",
   },
   CALL_REQUEST: {
     BASE: "/call-request",

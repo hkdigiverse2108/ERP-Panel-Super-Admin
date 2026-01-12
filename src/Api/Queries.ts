@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BrandApiResponse, CategoryApiResponse, CompanyApiResponse, UserApiResponse, Params, ProductApiResponse, ProductRequestApiResponse, UploadResponse, RolesApiResponse } from "../Types";
+import type { AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BrandApiResponse, CategoryApiResponse, CompanyApiResponse, Params, ProductApiResponse, RolesApiResponse, TaxApiResponse, UomApiResponse, UploadResponse, UserApiResponse } from "../Types";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 
@@ -26,6 +26,14 @@ export const Queries = {
 
   useGetBrand: (params?: Params) => useQueries<BrandApiResponse>([KEYS.BRAND.BASE, params], () => Get(URL_KEYS.BRAND.ALL, params)),
 
+  // ************ Uom ***********
+
+  useGetUom: (params?: Params) => useQueries<UomApiResponse>([KEYS.UOM.BASE, params], () => Get(URL_KEYS.UOM.ALL, params)),
+
+  // ************ Tax ***********
+
+  useGetTax: (params?: Params) => useQueries<TaxApiResponse>([KEYS.TAX.BASE, params], () => Get(URL_KEYS.TAX.ALL, params)),
+
   // ************ Category ***********
   useGetCategory: (params?: Params) => useQueries<CategoryApiResponse>([KEYS.CATEGORY.BASE, params], () => Get(URL_KEYS.CATEGORY.ALL, params)),
 
@@ -35,8 +43,4 @@ export const Queries = {
 
   //***************product**************** */
   useGetProduct: (params?: Params) => useQueries<ProductApiResponse>([KEYS.PRODUCT.BASE, params], () => Get(URL_KEYS.PRODUCT.ALL, params)),
-
-  useGetProductRequest: (params?: Params) => useQueries<ProductRequestApiResponse>([KEYS.PRODUCT_REQUEST.BASE, params], () => Get(URL_KEYS.PRODUCT_REQUEST.ALL, params)),
-
-
 };

@@ -26,13 +26,9 @@ const Brand = () => {
     deleteBrandsMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
   };
 
-  const handleAdd = () => {
-    dispatch(setBrandModal({ open: true, data: null }));
-  };
+  const handleAdd = () => dispatch(setBrandModal({ open: true, data: null }));
 
-  const handleEdit = (row: BrandBase) => {
-    dispatch(setBrandModal({ open: true, data: row }));
-  };
+  const handleEdit = (row: BrandBase) => dispatch(setBrandModal({ open: true, data: row }));
 
   const columns: AppGridColDef<BrandBase>[] = [
     {
@@ -48,7 +44,7 @@ const Brand = () => {
       field: "parentBrandId",
       headerName: "Parent Brand",
       flex: 1,
-      minWidth:200,
+      minWidth: 200,
       renderCell: ({ value }) => (typeof value === "object" ? value?.name || "-" : value),
       exportFormatter: (value) => (typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-"),
     },
@@ -79,7 +75,7 @@ const Brand = () => {
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.BRAND.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.BRAND.BASE} />
-      <Box sx={{ p: { xs: 2, md: 3 } , display: "grid"}}>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

@@ -18,30 +18,17 @@ const Category = () => {
   const { mutate: deleteCategoryMutate } = Mutations.useDeleteCategory();
   const { mutate: editCategory, isPending: isEditLoading } = Mutations.useEditCategory();
 
-  const allCategory = useMemo(
-    () =>
-      CategoryData?.data?.category_data.map((Category) => ({
-        ...Category,
-        id: Category?._id,
-      })) || [],
-    [CategoryData]
-  );
+  const allCategory = useMemo(() => CategoryData?.data?.category_data.map((Category) => ({ ...Category, id: Category?._id })) || [], [CategoryData]);
   const totalRows = CategoryData?.data?.totalData || 0;
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
-    deleteCategoryMutate(rowToDelete?._id as string, {
-      onSuccess: () => setRowToDelete(null),
-    });
+    deleteCategoryMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
   };
 
-  const handleAdd = () => {
-    dispatch(setCategoryModal({ open: true, data: null }));
-  };
+  const handleAdd = () => dispatch(setCategoryModal({ open: true, data: null }));
 
-  const handleEdit = (row: CategoryBase) => {
-    dispatch(setCategoryModal({ open: true, data: row }));
-  };
+  const handleEdit = (row: CategoryBase) => dispatch(setCategoryModal({ open: true, data: row }));
 
   const columns: AppGridColDef<CategoryBase>[] = [
     {
