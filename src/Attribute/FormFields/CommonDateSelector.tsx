@@ -11,6 +11,7 @@ export const CommonValidationDatePicker: FC<CommonValidationDatePickerProps> = (
     <FormControl fullWidth error={meta.touched && Boolean(meta.error)}>
       <DatePicker
         {...props}
+        className="capitalize"
         label={label}
         value={field.value || null}
         onChange={(value) => helpers.setValue(value)}
@@ -39,6 +40,7 @@ export const CommonDatePicker: FC<CommonDatePickerProps> = ({ label, value, onCh
     <FormControl fullWidth>
       <DatePicker
         {...props}
+        className="capitalize"
         label={label}
         value={value || null}
         onChange={onChange}

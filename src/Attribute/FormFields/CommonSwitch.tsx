@@ -18,7 +18,7 @@ export const CommonValidationSwitch: FC<CommonValidationSwitchProps> = ({ switch
         </FormLabel>
       )}
 
-      <FormControlLabel className={placementClass} required={isFormLabel ? false : required} label={isFormLabel ? "" : label} control={<Switch id={name} checked={field.value} onChange={(e) => helpers.setValue(e.target.checked)} disabled={disabled} />} />
+      <FormControlLabel className={`capitalize ${placementClass}`} required={isFormLabel ? false : required} label={isFormLabel ? "" : label} control={<Switch id={name} checked={field.value} onChange={(e) => helpers.setValue(e.target.checked)} disabled={disabled} />} />
 
       {meta.touched && meta.error && <p className="text-red-600 text-xs -mt-1">{meta.error}</p>}
     </div>
@@ -38,7 +38,7 @@ export const CommonSwitch: FC<CommonSwitchProps> = ({ switchPlacement, name, lab
         </FormLabel>
       )}
 
-      <FormControlLabel className={placementClass} required={isFormLabel ? false : required} label={isFormLabel ? "" : label} control={<Switch id={name} name={name} checked={!!value} onChange={(e) => onChange?.(e.target.checked)} disabled={disabled} />} />
+      <FormControlLabel className={`capitalize ${placementClass}`} required={isFormLabel ? false : required} label={isFormLabel ? "" : label} control={<Switch id={name} name={name} checked={!!value} onChange={(e) => onChange?.(e.target.checked)} disabled={disabled} />} />
     </div>
   );
 

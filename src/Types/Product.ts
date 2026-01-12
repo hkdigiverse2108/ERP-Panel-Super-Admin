@@ -4,7 +4,7 @@ export interface NutritionInfo {
   value: string;
 }
 export interface ProductFormValues {
-  itemCode: string;
+  itemCode?: string;
   name: string;
   printName?: string;
 
