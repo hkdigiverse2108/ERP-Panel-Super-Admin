@@ -17,7 +17,6 @@ export const EMPLOYEE_STATUS = ["active", "inactive"] as const;
 export const INVOICE_PAYMENT_STATUS = ["paid", "unpaid", "partial"] as const;
 export const LOYALTY_STATUS = ["active", "inactive"] as const;
 export const LOYALTY_TYPE = ["points", "cashback"] as const;
-export const PRODUCT_EXPIRY_TYPE = ["MFG", "expiry"] as const;
 export const SUPPLIER_PAYMENT_STATUS = ["paid", "unpaid", "partial"] as const;
 export const VOUCHAR_TYPE = ["journal", "payment", "receipt", "expense", "contra"] as const;
 
@@ -39,10 +38,13 @@ export const DEPARTMENT_OPTIONS = [{ label: "Grocery", value: "679a1c6f8f4e1a001
 
 export const UOM_OPTIONS = [{ label: "KG", value: "679a1c7f8f4e1a001234abd2" }];
 
+export const TOOLBAR_OPTIONS = [["bold", "italic", "underline"], ["blockquote", "code-block"], [{ header: 1 }, { header: 2 }], [{ list: "ordered" }, { list: "bullet" }, { list: "check" }], [{ script: "sub" }, { script: "super" }], [{ indent: "-1" }, { indent: "+1" }], [{ direction: "rtl" }], [{ size: ["small", false, "large", "huge"] }], [{ header: [1, 2, 3, 4, 5, 6, false] }], [{ color: [] }, { background: [] }], [{ align: [] }]];
+export const CHAT_TOOLBAR_OPTIONS = [["bold", "italic"], ["blockquote"], ["link"], [{ header: 1 }, { header: 2 }], [{ list: "ordered" }, { list: "bullet" }, { list: "check" }], [{ script: "sub" }, { script: "super" }], [{ indent: "-1" }, { indent: "+1" }], [{ header: [1, 2, 3, 4, 5, 6, false] }], [{ align: [] }], ["clean"]];
+
 export const TAX_OPTIONS = [
-  { label: "NON GST 0", value: "NON_GST_0" },
-  { label: "EXEMPT 0", value: "EXEMPT_0" },
-  { label: "GST 0", value: "GST_0" },
+  { label: "NON GST 0%", value: "NON_GST_0" },
+  { label: "EXEMPT 0%", value: "EXEMPT_0" },
+  { label: "GST 0%", value: "GST_0" },
   { label: "GST 5%", value: "GST_5" },
   { label: "GST 12%", value: "GST_12" },
   { label: "GST 18%", value: "GST_18" },
@@ -165,4 +167,9 @@ export const PAYMENT_TERMS = [
 export const SEND_REMINDER = [
   { label: "Yes", value: "yes" },
   { label: "No", value: "no" },
+];
+
+export const PRODUCT_EXPIRY_TYPE = [
+  { label: "MFG", value: "mfg" },
+  { label: "EXP", value: "exp" },
 ];

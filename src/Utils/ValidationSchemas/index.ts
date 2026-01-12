@@ -67,7 +67,6 @@ export const BrandFormSchema = Yup.object({
 
 // ---------- Product Form Schema ----------
 export const ProductFormSchema = Yup.object({
-  itemCode: Validation("string", "Item Code"),
   productType: Validation("string", "Product Type"),
   name: Validation("string", "Product Name"),
   printName: Validation("string", "Print Name", { required: false }),
@@ -84,7 +83,7 @@ export const ProductFormSchema = Yup.object({
 
   tags: Validation("string", "Tags", { required: false }),
 
-  description: Validation("string", "Description", { required: false }),
+  description: Validation("string", "Description"),
   shortNote: Validation("string", "Short Note", { required: false }),
 
   mrp: Validation("number", "MRP"),

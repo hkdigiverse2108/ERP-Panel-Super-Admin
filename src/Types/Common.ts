@@ -188,6 +188,7 @@ export interface CommonValidationTextFieldProps {
   endIcon?: ReactNode;
   showPasswordToggle?: boolean;
   disabled?: boolean;
+  currencyDisabled?: boolean;
   onFocus?: (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => void;
   onBlur?: (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => void;
   helperText?: string;
@@ -398,3 +399,17 @@ export interface CommonValidationRadioProps extends Omit<CommonRadioProps, "valu
 }
 
 // ************ Radio End ***********
+
+// ************ Quill Input Start ***********
+
+export interface CommonValidationQuillInputProps {
+  label?: string;
+  name: string;
+  required?: boolean;
+  placeholder?: string;
+  disabled?: boolean;
+  grid?: number | object;
+  modules?: any;
+}
+
+// ************ Quill Input End ***********

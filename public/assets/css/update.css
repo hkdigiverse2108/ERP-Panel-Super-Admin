@@ -84,6 +84,37 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
+.ql-container {
+  @apply h-[100px]! custom-scrollbar! border border-gray-200 dark:border-gray-600!;
+}
+
+.ql-editor {
+  @apply h-full! custom-scrollbar!;
+}
+
+.ql-toolbar.ql-snow,
+.ql-container.ql-snow {
+  @apply border border-gray-300 dark:border-gray-600! rounded-sm;
+}
+
+.ql-snow .ql-picker {
+  @apply text-gray-800 dark:text-gray-400!;
+}
+
+.ql-snow .ql-stroke {
+  @apply stroke-gray-800 dark:stroke-gray-400!;
+}
+
+.ql-snow .ql-fill,
+.ql-snow .ql-stroke.ql-fill {
+  @apply fill-gray-800 dark:fill-gray-400!;
+}
+
+.is-invalid .ql-toolbar.ql-snow,
+.is-invalid .ql-container.ql-snow {
+  @apply border-red-500!;
+}
+
 /* ************ Input End *********** */
 
 .advanced-search.MuiPaper-elevation {
@@ -97,6 +128,6 @@ input[type="number"] {
   @apply rounded-s-sm! rounded-e-none! w-9! h-10! bg-brand-600! text-white! text-xl! hover:bg-brand-600!;
 }
 
-.currency-btn.Mui-disabled{
+.currency-btn.Mui-disabled {
   @apply bg-gray-200! text-gray-400! dark:bg-gray-700! dark:text-gray-400!;
 }
