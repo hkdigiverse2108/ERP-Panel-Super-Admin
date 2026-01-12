@@ -173,6 +173,7 @@ export const PRODUCT_EXPIRY_TYPE = [
   { label: "MFG", value: "mfg" },
   { label: "EXP", value: "exp" },
 ];
+
 export const COMPANY = [
   { label: "Dhruvi Bakery", value: "Dhruvi Bakery" },
   { label: "Rakesh Enterprises", value: "Rakesh Enterprises" },

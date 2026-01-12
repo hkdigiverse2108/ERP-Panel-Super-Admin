@@ -1,4 +1,4 @@
-import type { CommonDataType, MessageStatus, PhoneNumberType } from "./Common";
+import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
 
 export interface CompanyFormValues {
   name?: string;
@@ -52,6 +52,14 @@ export type EditCompanyPayload = CompanyFormValues & { companyId: string };
 
 export type CompanyBase = CompanyFormValues & CommonDataType;
 
+export interface CompanyDataResponse extends PageStatus {
+  company_data: CompanyBase[];
+}
+
 export interface CompanyApiResponse extends MessageStatus {
+  data: CompanyDataResponse;
+}
+
+export interface SingleCompanyApiResponse extends MessageStatus {
   data: CompanyBase;
 }

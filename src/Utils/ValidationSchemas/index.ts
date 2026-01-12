@@ -31,16 +31,16 @@ export const SigninSchema = Yup.object({
 
 export const UserFormSchema = Yup.object({
   // ---------- BASIC DETAILS ----------
-  companyName: Validation("string", "Company Name"),
+  companyId: Validation("string", "Company Name"),    
   fullName: Validation("string", "FullName"),
   username: Validation("string", "Username"),
-  // designation: Validation("string", "Designation", { required: false }),
-  // role: Validation("string", "Role", { required: false }),
+  designation: Validation("string", "Designation", { required: false }),
+  role: Validation("string", "Role"),
   phoneNo: PhoneValidation(),
   email: Validation("string", "Email", { required: false, extraRules: (s) => s.trim().email("Invalid email address") }),
   branchId: Validation("string", "Branch Name", { required: false }),
   panNumber: Validation("string", "PAN Number", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
-  password: Validation("string", "Password"),
+  password: Validation("string", "Password", { required: false, extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
 
   // ---------- ADDRESS ----------
   address: Yup.object({
@@ -64,6 +64,7 @@ export const UserFormSchema = Yup.object({
 export const BranchFormSchema = Yup.object({
   name: Validation("string", "Branch name"),
   address: Validation("string", "Address"),
+  phoneNo: Validation("string", "Phone No.", { required: false }),
   isActive: Yup.boolean(),
 });
 export const BrandFormSchema = Yup.object({

@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AddBranchPayload, AddBrandPayload, AddCategoryPayload, AddProductPayload, AddTaxPayload, AddUomPayload, AddUserPayload, CallRequestFormValues, CompanyApiResponse, EditBranchPayload, EditBrandPayload, EditCategoryPayload, EditCompanyPayload, EditProductPayload, EditTaxPayload, EditUomPayload, EditUserPayload, LoginPayload, LoginResponse, UploadResponse, UserApiResponse } from "../Types";
+import type { AddBranchPayload, AddBrandPayload, AddCategoryPayload, AddProductPayload, AddTaxPayload, AddUomPayload, AddUserPayload, CallRequestFormValues, EditBranchPayload, EditBrandPayload, EditCategoryPayload, EditCompanyPayload, EditProductPayload, EditTaxPayload, EditUomPayload, EditUserPayload, LoginPayload, LoginResponse, SingleCompanyApiResponse, UploadResponse, UserApiResponse } from "../Types";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
 
@@ -12,10 +12,10 @@ export const Mutations = {
   useDeleteUpload: () => useMutations<{ fileUrl: string }, void>([KEYS.UPLOAD.DELETE, KEYS.UPLOAD.ALL_IMAGE, KEYS.UPLOAD.ALL_PDF], (id) => Delete(`${URL_KEYS.UPLOAD.DELETE}`, id)),
 
   // ************ User ***********
-  useEditUser: () => useMutations<EditUserPayload, UserApiResponse>([KEYS.USER.EDIT], (input) => Put(URL_KEYS.USER.EDIT, input)),
+  useEditUser: () => useMutations<EditUserPayload, UserApiResponse>([KEYS.USER.EDIT, KEYS.USER.BASE], (input) => Put(URL_KEYS.USER.EDIT, input)),
 
   // ************ Company ***********
-  useEditCompany: () => useMutations<EditCompanyPayload, CompanyApiResponse>([KEYS.COMPANY.EDIT], (input) => Put(URL_KEYS.COMPANY.EDIT, input)),
+  useEditCompany: () => useMutations<EditCompanyPayload, SingleCompanyApiResponse>([KEYS.COMPANY.EDIT], (input) => Put(URL_KEYS.COMPANY.EDIT, input)),
 
   // ************ User ***********
   useAddUser: () => useMutations<AddUserPayload, void>([KEYS.USER.ADD, KEYS.USER.BASE], (input) => Post(URL_KEYS.USER.ADD, input)),

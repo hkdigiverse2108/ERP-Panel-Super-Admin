@@ -74,7 +74,7 @@ export const KEYS = {
     BASE: "call-request",
     ADD: "call-request-add",
   },
-  ROLES: {
-    BASE: "roles",
+  ROLE: {
+    BASE: "role",
   },
 };
