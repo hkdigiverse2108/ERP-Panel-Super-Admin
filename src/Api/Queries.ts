@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BrandApiResponse, CategoryApiResponse, CompanyApiResponse, UserApiResponse, Params, ProductApiResponse, ProductRequestApiResponse, UploadResponse, RolesApiResponse } from "../Types";
+import type { AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BrandApiResponse, CategoryApiResponse, CompanyApiResponse, UserApiResponse, Params, ProductApiResponse, ProductRequestApiResponse, UploadResponse, RolesApiResponse, SingleCompanyApiResponse } from "../Types";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 
@@ -10,10 +10,14 @@ export const Queries = {
 
   // ************ User ***********
   useGetUserdata: (id?: string) => useQueries<UserApiResponse>([KEYS.USER.BASE], () => Get(`${URL_KEYS.USER.BASE}/${id}`), { enabled: !!id }),
-  useGetRoles: (params?: Params) => useQueries<RolesApiResponse>([KEYS.USER.ROLE, params], () => Get(URL_KEYS.USER.ROLE, params)),
+
+  // ************ Roles ***********
+  useGetRoles: (params?: Params) => useQueries<RolesApiResponse>([KEYS.ROLE.BASE, params], () => Get(URL_KEYS.ROLE.ALL, params)),
+  
 
   // ************ Company ***********
-  useGetSingleCompany: (id?: string) => useQueries<CompanyApiResponse>([KEYS.COMPANY.BASE, id], () => Get(`${URL_KEYS.COMPANY.BASE}/${id}`), { enabled: !!id }),
+  useGetSingleCompany: (id?: string) => useQueries<SingleCompanyApiResponse>([KEYS.COMPANY.BASE, id], () => Get(`${URL_KEYS.COMPANY.BASE}/${id}`), { enabled: !!id }),
+  useGetCompany: (params?: Params) => useQueries<CompanyApiResponse>([KEYS.COMPANY.BASE, params], () => Get(URL_KEYS.COMPANY.ALL, params)),
 
   // ************ User ***********
   useGetUser: (params?: Params) => useQueries<UserApiResponse>([KEYS.USER.BASE, params], () => Get(URL_KEYS.USER.ALL, params)),

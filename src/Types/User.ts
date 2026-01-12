@@ -13,7 +13,7 @@ export interface Address {
 }
 
 export interface BankDetails {
-  bankName?: string;
+  name?: string;
   branchName?: string;
   accountNumber?: string;
   bankHolderName?: string;
@@ -40,6 +40,7 @@ export interface UserFormValues {
   isActive?: boolean;
   _submitAction?: string;
   companyId?: string;
+
 }
 
 export type AddUserPayload = UserFormValues;
