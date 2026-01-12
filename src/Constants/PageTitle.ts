@@ -1,10 +1,10 @@
 export const PAGE_TITLE = {
   DASHBOARD: "Dashboard",
-  EMPLOYEE: {
-    BASE: "Employee",
-    LIST: "Employee List",
-    ADD: "Add Employee",
-    EDIT: "Edit Employee",
+  USER: {
+    BASE: "User",
+    LIST: "User List",
+    ADD: "Add User",
+    EDIT: "Edit User",
   },
   BRANCH: {
     BASE: "Branch",
@@ -40,4 +40,5 @@ export const PAGE_TITLE = {
     ADD: "Add Customer",
     EDIT: "Edit Customer",
   },
+  
 } as const;

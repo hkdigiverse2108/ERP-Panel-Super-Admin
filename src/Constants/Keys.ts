@@ -10,21 +10,18 @@ export const KEYS = {
     DELETE: "upload-delete",
   },
 
-  USER: {
-    BASE: "user",
-    EDIT: "user-edit",
-  },
-
+ 
   COMPANY: {
     BASE: "company",
     EDIT: "company-edit",
   },
 
-  EMPLOYEE: {
-    BASE: "employee",
-    ADD: "employee-add",
-    EDIT: "employee-edit",
-    DELETE: "employee-delete",
+  USER: {
+    BASE: "user",
+    ADD: "user-add",
+    EDIT: "user-edit",
+    DELETE: "user-delete",
+    ROLE: "user-role",
   },
 
   BRANCH: {
@@ -69,5 +66,8 @@ export const KEYS = {
   CALL_REQUEST: {
     BASE: "call-request",
     ADD: "call-request-add",
+  },
+  ROLES: {
+    BASE: "roles",
   },
 };
