@@ -26,8 +26,6 @@ const UserForm = () => {
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
 
-console.log(data);
-
   const initialValues: UserFormValues = {
     fullName: data?.fullName || "",
     username: data?.username || "",

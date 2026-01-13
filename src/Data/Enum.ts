@@ -170,8 +170,8 @@ export const SEND_REMINDER = [
 ];
 
 export const PRODUCT_EXPIRY_TYPE = [
-  { label: "MFG", value: "mfg" },
-  { label: "EXP", value: "exp" },
+  { label: "MFG", value: "MFG" },
+  { label: "EXP", value: "expiry" },
 ];
 
 export const COMPANY = [

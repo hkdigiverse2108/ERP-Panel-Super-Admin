@@ -24,4 +24,8 @@ export interface BrandDataResponse extends PageStatus {
 
 export interface BrandApiResponse extends MessageStatus {
   data: BrandDataResponse;
+} 
+
+export interface BrandDropdownApiResponse extends MessageStatus {
+  data: BrandBase[];
 }  

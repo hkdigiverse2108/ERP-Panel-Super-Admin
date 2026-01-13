@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 import { Validation } from "./Validation";
 
-const requiredWhenTrue = (dependentField: string, message: string, baseSchema: Yup.AnySchema) => {
+const RequiredWhenTrue = (dependentField: string, message: string, baseSchema: Yup.AnySchema) => {
   return baseSchema.when(dependentField, {
     is: true,
     then: (schema) => schema.required(`${message} is required`),
@@ -91,10 +91,10 @@ export const ProductFormSchema = Yup.object({
   cessPercentage: Validation("number", "Cess Percentage", { required: false }),
   // uomId: Validation("string", "UOM"),
   manageMultipleBatch: Validation("boolean", "Multiple Batch", { required: false }),
-  hasExpiry: requiredWhenTrue("manageMultipleBatch", "Has Expiry", Yup.boolean()),
-  expiryDays: requiredWhenTrue("hasExpiry", "Expiry Days", Yup.number()),
-  calculateExpiryOn: requiredWhenTrue("hasExpiry", "Expiry Calculation", Yup.string()),
-  expiryReferenceDate: requiredWhenTrue("hasExpiry", "Expiry Reference Date", Yup.string()),
+  hasExpiry: RequiredWhenTrue("manageMultipleBatch", "Has Expiry", Yup.boolean()),
+  expiryDays: RequiredWhenTrue("hasExpiry", "Expiry Days", Yup.number()),
+  calculateExpiryOn: RequiredWhenTrue("hasExpiry", "Expiry Calculation", Yup.string()),
+  expiryReferenceDate: RequiredWhenTrue("hasExpiry", "Expiry Reference Date", Yup.string()),
 
   isExpiryProductSaleable: Yup.boolean(),
   ingredients: Validation("string", "Ingredients", { required: false }),

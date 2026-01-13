@@ -25,3 +25,7 @@ export interface CategoryDataResponse extends PageStatus {
 export interface CategoryApiResponse extends MessageStatus {
   data: CategoryDataResponse;
 }  
+
+export interface CategoryDropdownApiResponse extends MessageStatus {
+  data: CategoryBase[];
+}  

@@ -29,6 +29,7 @@ export const URL_KEYS = {
   },
   BRAND: {
     BASE: "/brand",
+    DROPDOWN: "/brand/dropdown",
     ALL: "/brand/all",
     ADD: "/brand/add",
     EDIT: "/brand/edit",
@@ -41,12 +42,14 @@ export const URL_KEYS = {
   },
   TAX: {
     BASE: "/tax",
+    DROPDOWN: "/tax/dropdown",
     ALL: "/tax/all",
     ADD: "/tax/add",
     EDIT: "/tax/edit",
   },
   CATEGORY: {
     BASE: "/category",
+    DROPDOWN: "/category/dropdown",
     ALL: "/category/all",
     ADD: "/category/add",
     EDIT: "/category/edit",

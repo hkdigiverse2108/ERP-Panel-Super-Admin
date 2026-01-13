@@ -9,7 +9,7 @@ import type { CategoryBase } from "./Category";
 import type { TaxBase } from "./Tax";
 import type { UomBase } from "./Uom";
 
-type GridType = number | object | "auto" | "grow";
+export type GridType = number | object | "auto" | "grow";
 
 export interface PhoneNumberType {
   countryCode?: string;
@@ -120,6 +120,7 @@ export interface UseDataGridOptions {
   initialSort?: GridSortModel;
   initialFilter?: GridFilterModel;
   active?: boolean;
+  debounceDelay?: number;
 }
 
 export interface CommonDataGridProps {
@@ -172,6 +173,13 @@ export interface ExportToPDFProps<T extends GridValidRowModel> {
   columns: readonly GridColDef[];
   rows: readonly T[];
   fileName?: string;
+}
+
+export interface CommonObjectNameColumnOptions {
+  headerName?: string;
+  width?: number;
+  flex?: number;
+  minWidth?: number;
 }
 
 // ************ Table End ***********
@@ -421,3 +429,23 @@ export interface CommonValidationQuillInputProps {
 }
 
 // ************ Quill Input End ***********
+
+// ************ Advanced Search Start ***********
+
+export interface AdvancedSearchFilterOption {
+  label: string;
+  options: SelectOptionType[];
+  value: string[];
+  onChange: (values: string[]) => void;
+  multiple?: boolean;
+  limitTags?: number;
+  grid?: GridType;
+  isLoading?: boolean;
+}
+
+export interface AdvancedSearchProps {
+  children?: ReactNode;
+  filter?: AdvancedSearchFilterOption[];
+}
+
+// ************ Advanced Search End ***********

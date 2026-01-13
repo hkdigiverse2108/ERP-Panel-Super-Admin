@@ -18,7 +18,7 @@ const BrandForm = () => {
   const { mutate: editBrand, isPending: isEditLoading } = Mutations.useEditBrand();
 
   const [activeImageKey, setActiveImageKey] = useState<"image" | null>(null);
-  const { data: brandData } = Queries.useGetBrand();
+  const { data: brandData, isLoading: brandDataLoading } = Queries.useGetBrandDropdown();
   const { isBrandModal } = useAppSelector((state) => state.modal);
 
   const dispatch = useDispatch();
@@ -86,7 +86,7 @@ const BrandForm = () => {
               <CommonValidationTextField name="name" label="Brand Name" required grid={{ xs: 12 }} />
               <CommonValidationTextField name="code" label="Code" required grid={{ xs: 12 }} />
               <CommonValidationTextField name="description" label="Description" grid={{ xs: 12 }} />
-              <CommonValidationSelect name="parentBrandId" label="Parent Brand" options={GenerateOptions(brandData?.data?.brand_data)} grid={{ xs: 12 }} />
+              <CommonValidationSelect name="parentBrandId" label="Parent Brand" isLoading={brandDataLoading} options={GenerateOptions(brandData?.data)} grid={{ xs: 12 }} />
               <CommonFormImageBox name="image" label="Image" type="image" grid={{ xs: 12 }} onUpload={handleUpload} onDelete={() => setFieldValue("image", null)} />
 
               {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}

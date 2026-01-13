@@ -6,7 +6,7 @@ import CommonModal from "./CommonModal";
 const CommonDeleteModal: FC<CommonDeleteModalProps> = ({ open, title, description, itemName, loading = false, onClose, onConfirm }) => {
   return (
     <CommonModal title={title || "Confirm Delete"} isOpen={open} onClose={onClose} className="max-w-125 m-2 sm:m-5">
-      <p className="my-3">
+      <p className="mt-3 mb-10 text-gray-800 dark:text-gray-400">
         {description || "Are you sure you want to delete"}
         {itemName && <span className="font-medium"> "{itemName}"</span>}?
       </p>

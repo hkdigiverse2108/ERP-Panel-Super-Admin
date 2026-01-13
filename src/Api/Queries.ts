@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BrandApiResponse, CategoryApiResponse, CompanyApiResponse, Params, ProductApiResponse, RolesApiResponse, SingleCompanyApiResponse, TaxApiResponse, UomApiResponse, UploadResponse, UserApiResponse } from "../Types";
+import type { AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, Params, ProductApiResponse, RolesApiResponse, SingleCompanyApiResponse, TaxApiResponse, TaxDropdownApiResponse, UomApiResponse, UploadResponse, UserApiResponse } from "../Types";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 
@@ -13,7 +13,6 @@ export const Queries = {
 
   // ************ Roles ***********
   useGetRoles: (params?: Params) => useQueries<RolesApiResponse>([KEYS.ROLE.BASE, params], () => Get(URL_KEYS.ROLE.ALL, params)),
-  
 
   // ************ Company ***********
   useGetSingleCompany: (id?: string) => useQueries<SingleCompanyApiResponse>([KEYS.COMPANY.BASE, id], () => Get(`${URL_KEYS.COMPANY.BASE}/${id}`), { enabled: !!id }),
@@ -29,6 +28,7 @@ export const Queries = {
   // ************ Brand ***********
 
   useGetBrand: (params?: Params) => useQueries<BrandApiResponse>([KEYS.BRAND.BASE, params], () => Get(URL_KEYS.BRAND.ALL, params)),
+  useGetBrandDropdown: (params?: Params, enabled?: boolean) => useQueries<BrandDropdownApiResponse>([KEYS.BRAND.BASE, params], () => Get(URL_KEYS.BRAND.DROPDOWN, params), { enabled: enabled }),
 
   // ************ Uom ***********
 
@@ -37,9 +37,11 @@ export const Queries = {
   // ************ Tax ***********
 
   useGetTax: (params?: Params) => useQueries<TaxApiResponse>([KEYS.TAX.BASE, params], () => Get(URL_KEYS.TAX.ALL, params)),
+  useGetTaxDropdown: (params?: Params) => useQueries<TaxDropdownApiResponse>([KEYS.TAX.BASE, params], () => Get(URL_KEYS.TAX.DROPDOWN, params)),
 
   // ************ Category ***********
   useGetCategory: (params?: Params) => useQueries<CategoryApiResponse>([KEYS.CATEGORY.BASE, params], () => Get(URL_KEYS.CATEGORY.ALL, params)),
+  useGetCategoryDropdown: (params?: Params, enabled?: boolean) => useQueries<CategoryDropdownApiResponse>([KEYS.CATEGORY.BASE, params], () => Get(URL_KEYS.CATEGORY.DROPDOWN, params), { enabled: enabled }),
 
   // ************ Announcement ***********
 

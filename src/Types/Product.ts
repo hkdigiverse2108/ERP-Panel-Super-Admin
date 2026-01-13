@@ -1,7 +1,11 @@
+import type { BrandBase } from "./Brand";
+import type { CategoryBase } from "./Category";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+
 export interface NutritionInfo {
   name?: string;
   value?: string;
+  _id?: string;
 }
 
 export interface ProductFormValues {
@@ -54,7 +58,12 @@ export type AddProductPayload = ProductFormValues;
 
 export type EditProductPayload = AddProductPayload & { productId: string };
 
-export type ProductBase = ProductFormValues & CommonDataType;
+export interface ProductBase extends Omit<ProductFormValues, "categoryId" | "subCategoryId" | "brandId" | "subBrandId">, CommonDataType {
+  categoryId?: CategoryBase;
+  subCategoryId?: CategoryBase;
+  brandId?: BrandBase;
+  subBrandId?: BrandBase;
+}
 
 export interface ProductDataResponse extends PageStatus {
   product_data: ProductBase[];

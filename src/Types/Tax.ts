@@ -19,3 +19,7 @@ export interface TaxDataResponse extends PageStatus {
 export interface TaxApiResponse extends MessageStatus {
   data: TaxDataResponse;
 }
+
+export interface TaxDropdownApiResponse extends MessageStatus {
+  data: TaxBase[];
+}

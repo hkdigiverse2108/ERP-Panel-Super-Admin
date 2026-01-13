@@ -2,13 +2,11 @@ import type { GridFilterModel, GridPaginationModel, GridSortModel } from "@mui/x
 import { useCallback, useMemo, useState } from "react";
 import type { UseDataGridOptions } from "../../Types";
 import { CleanParams } from "..";
+import { useDebounce } from "./useDebounce";
 
-export const useDataGrid = ({ page = 0, pageSize = 10, initialSort = [], initialFilter = { items: [] }, active }: UseDataGridOptions = {}) => {
+export const useDataGrid = ({ page = 0, pageSize = 10, initialSort = [], initialFilter = { items: [] }, active, debounceDelay = 500 }: UseDataGridOptions = {}) => {
   /* ---------------- Pagination ---------------- */
-  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
-    page,
-    pageSize,
-  });
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page, pageSize });
 
   /* ---------------- Sorting ---------------- */
   const [sortModel, setSortModel] = useState<GridSortModel>(initialSort);
@@ -19,6 +17,20 @@ export const useDataGrid = ({ page = 0, pageSize = 10, initialSort = [], initial
   /* ---------------- Filtering ---------------- */
   const [filterModel, setFilterModel] = useState<GridFilterModel>(initialFilter);
 
+  const debouncedSearchTerm = useDebounce(filterModel.quickFilterValues?.[0], debounceDelay);
+
+  /* ---------------- Advanced Filtering ---------------- */
+  const [advancedFilter, setAdvancedFilter] = useState<Record<string, string[]>>({});
+
+  const normalizeFilterValue = (value?: string[]) => {
+    if (!value || value.length === 0) return undefined;
+    return value.length === 1 ? value[0] : value;
+  };
+
+  const normalizedAdvancedFilter = Object.fromEntries(Object.entries(advancedFilter).map(([key, value]) => [key, normalizeFilterValue(value)]));
+
+  const updateAdvancedFilter = (key: string, value: string[]) => setAdvancedFilter((prev) => ({ ...prev, [key]: value }));
+
   /* ---------------- Delete ---------------- */
   const [rowToDelete, setRowToDelete] = useState<{ _id?: string; title?: string } | null>(null);
 
@@ -28,10 +40,11 @@ export const useDataGrid = ({ page = 0, pageSize = 10, initialSort = [], initial
       page: paginationModel.page + 1,
       limit: paginationModel.pageSize,
       ...(!active && { activeFilter: isActive }),
+      ...normalizedAdvancedFilter,
       // Quick search
-      search: filterModel.quickFilterValues?.[0],
+      search: debouncedSearchTerm,
     });
-  }, [paginationModel, filterModel, isActive,active]);
+  }, [paginationModel, debouncedSearchTerm, isActive, normalizedAdvancedFilter, active]);
 
   /* ---------------- Reset ---------------- */
   const resetModels = useCallback(() => {
@@ -55,6 +68,9 @@ export const useDataGrid = ({ page = 0, pageSize = 10, initialSort = [], initial
 
     isActive,
     setActive,
+
+    advancedFilter,
+    updateAdvancedFilter,
 
     params,
     resetModels,

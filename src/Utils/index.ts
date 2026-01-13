@@ -2,7 +2,7 @@ export * from "./FormHelpers";
 export * from "./DateFormatted";
 export * from "./DateConfig";
 import { STORAGE_KEYS } from "../Constants";
-import type { Params } from "../Types";
+import type { GridType, Params, SelectOptionType } from "../Types";
 
 
 export const Stringify = (value: object): string => {
@@ -38,3 +38,14 @@ export const GenerateOptions = (data?: { _id: string; name?: string; firstName?:
     };
   });
 };
+
+export const CreateFilter = (label: string, filterKey: string, advancedFilter: Record<string, string[]>, updateAdvancedFilter: (key: string, value: string[]) => void, options: SelectOptionType[], isLoading?: boolean, grid?: GridType, multiple?: boolean, limitTags?: number) => ({
+  label,
+  options,
+  value: advancedFilter[filterKey] || [],
+  multiple,
+  limitTags,
+  onChange: (val: string[]) => updateAdvancedFilter(filterKey, val),
+  grid,
+  isLoading,
+});

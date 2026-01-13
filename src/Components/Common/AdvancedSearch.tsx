@@ -1,12 +1,11 @@
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Accordion, AccordionDetails, AccordionSummary, Grid, Typography } from "@mui/material";
-// import { CommonSelect } from "../../Attribute";
-import { type FC, type ReactNode } from "react";
-// import { PRODUCT_TYPE_OPTIONS } from "../../Data";
+import { type FC } from "react";
+import { CommonSelect } from "../../Attribute";
+import type { AdvancedSearchProps } from "../../Types";
 
-const AdvancedSearch:FC<{children?: ReactNode}> = ({children}) => {
-  // const [value, setValue] = useState<string[]>([]);
-
+const AdvancedSearch: FC<AdvancedSearchProps> = ({ children, filter = [] }) => {
+  if (!filter.length && !children) return null;
   return (
     <>
       <Accordion className="advanced-search">
@@ -15,10 +14,10 @@ const AdvancedSearch:FC<{children?: ReactNode}> = ({children}) => {
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={1.5} className="flex items-center">
+            {filter.map((item, i) => (
+              <CommonSelect key={i} label={item.label} options={item.options} value={item.value} onChange={item.onChange} multiple={item.multiple} limitTags={item.limitTags ?? 1} grid={item.grid} isLoading={item.isLoading} />
+            ))}
             {children}
-            {/* <Grid size={{ xs: 12, xsm: 6, sm: 3, xxl: 2 }}>
-              <CommonSelect label="Select Location" options={PRODUCT_TYPE_OPTIONS} value={value} onChange={(v) => setValue(v)} limitTags={1} multiple/>
-            </Grid> */}
           </Grid>
         </AccordionDetails>
       </Accordion>

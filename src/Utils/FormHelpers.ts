@@ -24,9 +24,12 @@ export const GetChangedFields = <T extends Record<string, any>>(newVal: T, oldVa
   (Object.keys(newVal) as (keyof T)[]).forEach((key) => {
     const newValue = newVal[key];
     const oldValue = oldVal[key];
-
+    
     // ❌ Object / Array skip
-    if (typeof newValue === "object" && newValue !== null) return;
+    //  if (typeof newValue === "object" && newValue !== null) return;
+
+    // ❌ Object skip (arrays are handled)
+    if (typeof newValue === "object" && newValue !== null && !Array.isArray(newValue)) return;
 
     const isEmpty = (v: any) => v === "" || v === null || v === undefined;
 
