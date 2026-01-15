@@ -17,7 +17,7 @@ export const CommonObjectNameColumn = <T extends GridValidRowModel>(field: strin
 });
 
 // Common Phone Columns (dynamic - any phone field)
-export const CommonPhoneColumns = <T extends GridValidRowModel, K extends keyof T = "phoneNo" extends keyof T ? "phoneNo" : keyof T>(field?: K, options?: { headerName?: string; width?: number }): AppGridColDef<T> => {
+export const CommonPhoneColumns = <T extends GridValidRowModel, K extends keyof T = keyof T>(field?: K, options?: { headerName?: string; width?: number }): AppGridColDef<T> => {
   const colField = (field ?? ("phoneNo" as K)) as string;
 
   return {
@@ -38,3 +38,4 @@ export const CommonPhoneColumns = <T extends GridValidRowModel, K extends keyof 
     },
   };
 };
+
