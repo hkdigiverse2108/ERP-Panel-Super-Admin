@@ -14,6 +14,7 @@ const Product = () => {
   const navigate = useNavigate();
 
   const { data: productData, isLoading: productDataLoading, isFetching: productDataFetching } = Queries.useGetProduct(params);
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown();
   const brandId = advancedFilter?.brandFilter?.[0] || "";
   const { data: subBrandData, isLoading: subBrandDataLoading } = Queries.useGetBrandDropdown({ parentBrandFilter: brandId }, Boolean(brandId));
@@ -69,6 +70,7 @@ const Product = () => {
   };
 
   const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), // categoryFilter
     CreateFilter("Select Category", "categoryFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CategoryData?.data), CategoryDataLoading, { xs: 12, sm: 6, md: 3 }), // categoryFilter
     CreateFilter("Select Sub Category", "subCategoryFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(subCategoryData?.data), subCategoryDataLoading, { xs: 12, sm: 6, md: 3 }), // subCategoryFilter
     CreateFilter("Select Brand", "brandFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BrandsData?.data), BrandsDataLoading, { xs: 12, sm: 6, md: 3 }), // brandFilter

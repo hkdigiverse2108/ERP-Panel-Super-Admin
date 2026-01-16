@@ -11,6 +11,7 @@ export const URL_KEYS = {
 
   COMPANY: {
     BASE: "/company",
+    DROPDOWN: "/company/dropdown",
     ALL: "/company/all",
     ADD: "/company/add",
     EDIT: "/company/edit",
