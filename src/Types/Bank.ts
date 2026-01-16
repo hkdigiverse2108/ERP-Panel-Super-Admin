@@ -19,8 +19,8 @@ export type EditBankPayload = AddBankPayload & {
 export interface BankApiResponse {
     bank_data:  BankBase[];
 }
-export interface BrandBase extends Omit<BankFormValues, "_submitAction">, CommonDataType {
-  parentBrandId?: BrandBase 
+export interface BankBase extends Omit<BankFormValues, "_submitAction">, CommonDataType {
+  parentBrandId?: BankBase 
 }
 
 export interface BankDropdownApiResponse {
