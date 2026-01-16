@@ -184,3 +184,10 @@ export const ROLE_OPTIONS = [
   { label: "Manager", value: "manager" },
   { label: "Employee", value: "employee" },
 ];
+
+export const CONSUMPTION_TYPE= [
+  { label: "Expired", value: "expired" },
+  { label: "Sample", value: "sample" },
+  { label: "Production", value: "production" },
+  { label: "Scrap/Wastage", value: "scrap/wastage" },
+]

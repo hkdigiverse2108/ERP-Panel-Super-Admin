@@ -19,3 +19,7 @@ export interface UomDataResponse extends PageStatus {
 export interface UomApiResponse extends MessageStatus {
   data: UomDataResponse;
 }
+
+export interface UomDropdownApiResponse extends MessageStatus {
+  data: UomBase[];
+}

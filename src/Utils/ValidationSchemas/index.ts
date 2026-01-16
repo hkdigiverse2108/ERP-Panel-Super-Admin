@@ -158,3 +158,20 @@ export const TaxFormSchema = Yup.object({
   name: Validation("string", "Tax Name"),
   percentage: Validation("number", "Percentage"),
 });
+
+export const ProductItemFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
+  productId: Validation("string", "Product"),
+  uomId: Validation("string", "UOM"),
+  purchasePrice: Validation("number", "Purchase Price"),
+  landingCost: Validation("number", "Landing Cost"),
+  mrp: Validation("number", "MRP"),
+  sellingDiscount: Validation("number", "Selling Discount"),
+  sellingPrice: Validation("number", "Selling Price"),
+  sellingMargin: Validation("number", "Selling Margin"),
+  qty: Validation("number", "Quantity"),
+});
+
+export const ProductItemRemoveFormSchema = Yup.object({
+  remark: Validation("string", "Consumption Type"),
+});

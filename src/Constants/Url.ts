@@ -11,6 +11,7 @@ export const URL_KEYS = {
 
   COMPANY: {
     BASE: "/company",
+    DROPDOWN: "/company/dropdown",
     ALL: "/company/all",
     ADD: "/company/add",
     EDIT: "/company/edit",
@@ -37,6 +38,7 @@ export const URL_KEYS = {
   },
   UOM: {
     BASE: "/uom",
+    DROPDOWN: "/uom/dropdown",
     ALL: "/uom/all",
     ADD: "/uom/add",
     EDIT: "/uom/edit",
@@ -60,6 +62,7 @@ export const URL_KEYS = {
   },
   PRODUCT: {
     BASE: "/product",
+    DROPDOWN: "/product/dropdown",
     ADD: "/product/add",
     ALL: "/product/all",
     EDIT: "/product/edit",
@@ -74,10 +77,10 @@ export const URL_KEYS = {
     ADD: "/role/add",
     EDIT: "/role/edit",
   },
-  BANK: {
-    BASE: "/bank",
-    DROPDOWN: "/bank/dropdown",
-    ALL: "/bank/all",
-    ADD: "/bank/add",    
+  STOCK: {
+    BASE: "/stock",
+    ALL: "/stock/all",
+    ADD: "/stock/add",
+    BULK_ADJUSTMENT: "/stock/bulk-adjustment",
   },
 } as const;

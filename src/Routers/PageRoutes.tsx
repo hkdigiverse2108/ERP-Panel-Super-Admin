@@ -12,6 +12,7 @@ import Users from "../Pages/User";
 import UserForm from "../Pages/User/UserForm";
 import Uom from "../Pages/Inventory/Uom";
 import Tax from "../Pages/Inventory/Tax";
+import ItemForm from "../Pages/Inventory/Product/ItemForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -26,6 +27,7 @@ export const PageRoutes = [
 
   { path: ROUTES.PRODUCT.BASE, element: <Product /> },
   { path: ROUTES.PRODUCT.ADD_EDIT, element: <ProductForm /> },
+  { path: ROUTES.PRODUCT.ITEM_ADD_EDIT, element: <ItemForm /> },
 
   { path: ROUTES.BRAND.BASE, element: <Brand /> },
   

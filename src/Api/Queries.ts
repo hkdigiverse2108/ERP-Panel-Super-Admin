@@ -1,7 +1,6 @@
 import { use } from "react";
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, Params, ProductApiResponse, RolesApiResponse, SingleCompanyApiResponse, TaxApiResponse, TaxDropdownApiResponse, UomApiResponse, UploadResponse, UserApiResponse } from "../Types";
-import type { BankApiResponse, BankDropdownApiResponse } from "../Types/Bank";
+import type { AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, CompanyDropdownApiResponse, Params, ProductApiResponse, ProductDropDownApiResponse, RolesApiResponse, SingleCompanyApiResponse, TaxApiResponse, TaxDropdownApiResponse, UomApiResponse, UomDropdownApiResponse, UploadResponse, UserApiResponse } from "../Types";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 
@@ -19,6 +18,7 @@ export const Queries = {
   // ************ Company ***********
   useGetSingleCompany: (id?: string) => useQueries<SingleCompanyApiResponse>([KEYS.COMPANY.BASE, id], () => Get(`${URL_KEYS.COMPANY.BASE}/${id}`), { enabled: !!id }),
   useGetCompany: (params?: Params) => useQueries<CompanyApiResponse>([KEYS.COMPANY.BASE, params], () => Get(URL_KEYS.COMPANY.ALL, params)),
+  useGetCompanyDropdown: (params?: Params) => useQueries<CompanyDropdownApiResponse>([KEYS.COMPANY.BASE, params], () => Get(URL_KEYS.COMPANY.DROPDOWN, params)),
 
   // ************ User ***********
   useGetUser: (params?: Params) => useQueries<UserApiResponse>([KEYS.USER.BASE, params], () => Get(URL_KEYS.USER.ALL, params)),
@@ -36,6 +36,7 @@ export const Queries = {
   // ************ Uom ***********
 
   useGetUom: (params?: Params) => useQueries<UomApiResponse>([KEYS.UOM.BASE, params], () => Get(URL_KEYS.UOM.ALL, params)),
+  useGetUomDropdown: (params?: Params) => useQueries<UomDropdownApiResponse>([KEYS.UOM.BASE, params], () => Get(URL_KEYS.UOM.DROPDOWN, params)),
 
   // ************ Tax ***********
 
@@ -56,4 +57,5 @@ export const Queries = {
   //***************bank**************** */
   useGetBank: (params?: Params) => useQueries<BankApiResponse>([KEYS.BANK.BASE, params], () => Get(URL_KEYS.BANK.ALL, params)),
   useGetBankDropdown: (params?: Params) => useQueries<BankDropdownApiResponse>([KEYS.BANK.BASE, params], () => Get(URL_KEYS.BANK.DROPDOWN, params)),
+  useGetProductDropdown: (params?: Params) => useQueries<ProductDropDownApiResponse>([KEYS.PRODUCT.BASE, params], () => Get(URL_KEYS.PRODUCT.DROPDOWN, params)),
 };

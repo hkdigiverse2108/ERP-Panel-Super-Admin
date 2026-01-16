@@ -63,3 +63,7 @@ export interface CompanyApiResponse extends MessageStatus {
 export interface SingleCompanyApiResponse extends MessageStatus {
   data: CompanyBase;
 }
+
+export interface CompanyDropdownApiResponse extends MessageStatus {
+  data: CompanyBase[];
+}

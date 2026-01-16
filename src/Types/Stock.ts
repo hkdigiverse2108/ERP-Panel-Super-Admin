@@ -1,0 +1,38 @@
+import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+
+export interface StockFormValues {
+  productId?: string;
+  uomId?: string;
+  purchasePrice?: number | null;
+  landingCost?: number | null;
+  mrp?: number | null;
+  sellingDiscount?: number | null;
+  sellingPrice?: number | null;
+  sellingMargin?: number | null;
+  qty?: number | null;
+  isActive?: boolean;
+  _submitAction?: string;
+}
+
+export type AddStockPayload = StockFormValues;
+
+export type EditStockPayload = AddStockPayload & { stockId: string };
+
+export type AddStockBulkAdjustmentPayload = {
+  items: {
+    qty: number | null;
+    productId: string;
+  }[];
+  remark: string;
+  companyId: string;
+};
+
+export type StockBase = StockFormValues & CommonDataType;
+
+export interface StockDataResponse extends PageStatus {
+  stock_data: StockBase[];
+}
+
+export interface StockApiResponse extends MessageStatus {
+  data: StockDataResponse;
+}
