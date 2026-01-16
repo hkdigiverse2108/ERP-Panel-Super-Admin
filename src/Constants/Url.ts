@@ -83,4 +83,10 @@ export const URL_KEYS = {
     ADD: "/stock/add",
     BULK_ADJUSTMENT: "/stock/bulk-adjustment",
   },
+  BANK: {
+    BASE: "/bank",
+    DROPDOWN: "/bank/dropdown",
+    ALL: "/bank/all",
+    ADD: "/bank/add",
+  },
 } as const;
