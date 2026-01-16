@@ -23,6 +23,7 @@ export const URL_KEYS = {
   },
   BRANCH: {
     BASE: "/branch",
+    DROPDOWN: "/branch/dropdown",
     ALL: "/branch/all",
     ADD: "/branch/add",
     EDIT: "/branch/edit",
@@ -75,6 +76,7 @@ export const URL_KEYS = {
   },
   BANK: {
     BASE: "/bank",
+    DROPDOWN: "/bank/dropdown",
     ALL: "/bank/all",
     ADD: "/bank/add",    
   },

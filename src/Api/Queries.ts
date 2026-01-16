@@ -1,6 +1,7 @@
+import { use } from "react";
 import { KEYS, URL_KEYS } from "../Constants";
 import type { AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, Params, ProductApiResponse, RolesApiResponse, SingleCompanyApiResponse, TaxApiResponse, TaxDropdownApiResponse, UomApiResponse, UploadResponse, UserApiResponse } from "../Types";
-import type { BankApiResponse } from "../Types/Bank";
+import type { BankApiResponse, BankDropdownApiResponse } from "../Types/Bank";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 
@@ -25,6 +26,7 @@ export const Queries = {
   // ************ Branch ***********
 
   useGetBranch: (params?: Params) => useQueries<BranchApiResponse>([KEYS.BRANCH.BASE, params], () => Get(URL_KEYS.BRANCH.ALL, params)),
+  useGetBranchDropdown: (params?: Params) => useQueries<BranchApiResponse>([KEYS.BRANCH.BASE, params], () => Get(URL_KEYS.BRANCH.DROPDOWN, params)),
 
   // ************ Brand ***********
 
@@ -53,4 +55,5 @@ export const Queries = {
 
   //***************bank**************** */
   useGetBank: (params?: Params) => useQueries<BankApiResponse>([KEYS.BANK.BASE, params], () => Get(URL_KEYS.BANK.ALL, params)),
+  useGetBankDropdown: (params?: Params) => useQueries<BankDropdownApiResponse>([KEYS.BANK.BASE, params], () => Get(URL_KEYS.BANK.DROPDOWN, params)),
 };

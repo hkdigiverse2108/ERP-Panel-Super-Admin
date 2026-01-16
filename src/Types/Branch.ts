@@ -52,10 +52,9 @@ export type AddBranchPayload = BranchFormValues;
 export type EditBranchPayload = BranchFormValues & {
   branchId: string;
 };
-export interface BranchBase extends Omit<BranchFormValues, "companyId" | "userIds" | "password" | "_submitAction" | "bankId">, CommonDataType {
+export interface BranchBase extends Omit<BranchFormValues, "companyId" | "userIds" | "password" | "_submitAction">, CommonDataType {
   companyId: CompanyBase;
   userIds?: UserBase[];
-  bankId?: CommonDataType;
 }
 
 
