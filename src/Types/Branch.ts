@@ -56,6 +56,8 @@ export interface BranchBase extends Omit<BranchFormValues, "companyId" | "userId
   companyId: CompanyBase;
   userIds?: UserBase[];
 }
+
+
 export interface BranchDataResponse extends PageStatus {
   branch_data: BranchBase[];
 }

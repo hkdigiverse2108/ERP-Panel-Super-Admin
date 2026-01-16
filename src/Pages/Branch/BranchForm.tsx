@@ -9,11 +9,15 @@ import { BREADCRUMBS } from "../../Data";
 import type { BranchFormValues } from "../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { BranchFormSchema } from "../../Utils/ValidationSchemas";
+import type { CompanyBankSelectProps } from "../../Types/Bank";
 
 const BranchForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
+  const { data: bankData } = Queries.useGetBank({ activeFilter: true });
+  const { data: bankDropdownData } = Queries.useGetBankDropdown({ activeFilter: true });
+  const { data: branchDropdownData } = Queries.useGetBranchDropdown({ activeFilter: true });
   const { data: companydata } = Queries.useGetCompany({ activeFilter: true });
   const { mutate: addBranch, isPending: isAddLoading } = Mutations.useAddBranch();
   const { mutate: editBranch, isPending: isEditLoading } = Mutations.useEditBranch();
@@ -62,12 +66,26 @@ const BranchForm = () => {
 
     isActive: data?.isActive ?? true,
   };
-   console.log(initialValues);
+
+  // const CompanyBankSelect = ({ companyId, companies }: CompanyBankSelectProps) => {
+  //   const selectedCompany = companies?.find((company) => company._id === companyId);
+
+  //   const bankOption = selectedCompany?.bankId
+  //     ? [
+  //         {
+  //           label: selectedCompany.bankId.name,
+  //           value: selectedCompany.bankId._id,
+  //         },
+  //       ]
+  //     : [];
+
+  //   return <CommonValidationSelect name="bankId" label="Bank" options={bankOption} disabled grid={{ xs: 12, sm: 6, xl: 3 }} />;
+  // };
 
   const handleSubmit = async (values: BranchFormValues, { resetForm }: FormikHelpers<BranchFormValues>) => {
     const { _submitAction, ...rest } = values;
     const payload = { ...rest };
-console.log(values);
+    console.log(values);
 
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
@@ -76,7 +94,7 @@ console.log(values);
 
     if (isEditing) {
       const changedFields = GetChangedFields(payload, data);
-      await editBranch({ ...changedFields, branchId: data._id }, { onSuccess : handleSuccess });
+      await editBranch({ ...changedFields, branchId: data._id }, { onSuccess: handleSuccess });
     } else {
       await addBranch(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
     }
@@ -90,21 +108,21 @@ console.log(values);
         <Formik<BranchFormValues> enableReinitialize initialValues={initialValues} validationSchema={BranchFormSchema} onSubmit={handleSubmit}>
           {({ resetForm, setFieldValue, dirty }) => (
             <Form noValidate>
-              <Grid container spacing={2}>  
+              <Grid container spacing={2}>
                 <CommonCard title="Basic Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(companydata?.data?.company_data)} grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationTextField name="address" label="Address" required grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="name" label="Branch Name" required grid={{ xs: 12, md: 4 }} />
+
+                    <CommonValidationSelect name="name" label="Branch Name" options={GenerateOptions(branchDropdownData?.data?.branch_data)} required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="displayName" label="Display Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="contactName" label="Contact Person" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="panNo" label="PAN No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="gstIdentificationNumber" label="GST Identification Number" grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="gstRegistrationType" label="GST Registration Type"  grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="gstRegistrationType" label="GST Registration Type" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="timeZone" label="Time Zone" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="userName" label="Username" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="password" label="Password" type="password" required grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="yearInterval" label="Year Interval" required  grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="yearInterval" label="Year Interval" required grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>
                 <CommonCard title="Contact Details" grid={{ xs: 12 }}>
@@ -113,13 +131,13 @@ console.log(values);
                     <CommonValidationTextField name="telephoneNumber" label="Telephone No" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="webSite" label="Website" grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="fssaiNo" label="FSSAI No." grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="fssaiNo" label="FSSAI No." type="number" grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>
 
                 <CommonCard title="Bank Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonValidationTextField name="Name" label="Bank Name" required grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="bankId" label="Bank Name" options={GenerateOptions(bankDropdownData?.data?.bank_data)} required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="branchName" label="Branch Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="accountNumber" label="Account Number" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="ifscCode" label="IFSC Code" required grid={{ xs: 12, md: 4 }} />
