@@ -73,4 +73,9 @@ export const URL_KEYS = {
     ADD: "/role/add",
     EDIT: "/role/edit",
   },
+  BANK: {
+    BASE: "/bank",
+    ALL: "/bank/all",
+    ADD: "/bank/add",    
+  },
 } as const;

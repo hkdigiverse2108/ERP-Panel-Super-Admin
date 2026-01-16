@@ -52,10 +52,13 @@ export type AddBranchPayload = BranchFormValues;
 export type EditBranchPayload = BranchFormValues & {
   branchId: string;
 };
-export interface BranchBase extends Omit<BranchFormValues, "companyId" | "userIds" | "password" | "_submitAction">, CommonDataType {
+export interface BranchBase extends Omit<BranchFormValues, "companyId" | "userIds" | "password" | "_submitAction" | "bankId">, CommonDataType {
   companyId: CompanyBase;
   userIds?: UserBase[];
+  bankId?: CommonDataType;
 }
+
+
 export interface BranchDataResponse extends PageStatus {
   branch_data: BranchBase[];
 }

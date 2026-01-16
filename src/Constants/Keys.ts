@@ -77,4 +77,8 @@ export const KEYS = {
   ROLE: {
     BASE: "role",
   },
+  BANK: {
+    BASE: "bank",
+    ADD: "bank-add",    
+  },
 };

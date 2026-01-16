@@ -14,6 +14,7 @@ const BranchForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
+  const { data: bankData } = Queries.useGetBank({ activeFilter: true });
   const { data: companydata } = Queries.useGetCompany({ activeFilter: true });
   const { mutate: addBranch, isPending: isAddLoading } = Mutations.useAddBranch();
   const { mutate: editBranch, isPending: isEditLoading } = Mutations.useEditBranch();
@@ -94,7 +95,7 @@ console.log(values);
                 <CommonCard title="Basic Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(companydata?.data?.company_data)} grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationTextField name="address" label="Address" required grid={{ xs: 12, md: 4 }} />
+                    
                     <CommonValidationTextField name="name" label="Branch Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="displayName" label="Display Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="contactName" label="Contact Person" grid={{ xs: 12, md: 4 }} />
@@ -113,13 +114,13 @@ console.log(values);
                     <CommonValidationTextField name="telephoneNumber" label="Telephone No" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="webSite" label="Website" grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="fssaiNo" label="FSSAI No." grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="fssaiNo" label="FSSAI No." type="number" grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>
 
                 <CommonCard title="Bank Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonValidationTextField name="Name" label="Bank Name" required grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="Name" label="Bank Name" options={GenerateOptions(bankData?.data?.bank_data)} required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="branchName" label="Branch Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="accountNumber" label="Account Number" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="ifscCode" label="IFSC Code" required grid={{ xs: 12, md: 4 }} />
