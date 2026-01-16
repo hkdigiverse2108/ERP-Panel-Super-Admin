@@ -30,6 +30,9 @@ const Branch = () => {
   const columns: GridColDef<BranchBase>[] = [
     { field: "name", headerName: "Branch Name", flex: 1 },
     { field: "address", headerName: "Address", flex: 2 },
+    { field: "contactNumber", headerName: "Contact Number", flex: 1 },
+    { field: "email", headerName: "Email", flex: 1 },
+    
     CommonActionColumn({
       active: (row) => editBranch({ branchId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.BRANCH.ADD_EDIT,
