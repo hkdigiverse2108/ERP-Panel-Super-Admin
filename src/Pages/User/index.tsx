@@ -31,7 +31,7 @@ const User = () => {
   const columns: AppGridColDef<UserBase>[] = [
     { field: "username", headerName: "User Name", type: "string", width: 170 },
     { field: "fullName", headerName: "Full Name", width: 170 },
-    { field: "designation", headerName: "designation", width: 170 },
+    { field: "designation", headerName: "Designation", width: 170 },  
     { field: "email", headerName: "Email", width: 240 },
     CommonPhoneColumns<UserBase>("phoneNo", { headerName: "Phone No", width: 150 }),
     { field: "panNumber", headerName: "PAN Number", width: 150 },
@@ -69,7 +69,7 @@ const User = () => {
           <Grid size={{ xs: 12, xsm: 6, sm: 3, xxl: 2 }}>
             <CommonSelect label="Select Location" options={PRODUCT_TYPE_OPTIONS} value={value} onChange={(v) => setValue(v)} limitTags={1} multiple />
           </Grid>
-        </AdvancedSearch>
+        </AdvancedSearch >
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

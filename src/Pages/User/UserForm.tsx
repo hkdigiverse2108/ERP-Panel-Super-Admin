@@ -26,6 +26,7 @@ const UserForm = () => {
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
 
+
   const initialValues: UserFormValues = {
     fullName: data?.fullName || "",
     username: data?.username || "",
@@ -39,7 +40,7 @@ const UserForm = () => {
     role: data?.role?._id || "",
     branchId: data?.branchId?._id || "",
     companyId: data?.companyId?._id || "",
-    password: "",
+    password: data?.showPassword || "",
 
     address: {
       address: data?.address?.address || "",
@@ -101,7 +102,7 @@ const UserForm = () => {
                     <CommonValidationTextField name="username" label="User Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="password" label="Password" type="password" required grid={{ xs: 10, md: 4 }} />
+                    <CommonValidationTextField name="password" label="Password" type="password" showPasswordToggle required grid={{ xs: 10, md: 4 }} />
                     <CommonValidationTextField name="panNumber" label="PAN No." grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>

@@ -40,7 +40,7 @@ export const UserFormSchema = Yup.object({
   email: Validation("string", "Email", { required: false, extraRules: (s) => s.trim().email("Invalid email address") }),
   branchId: Validation("string", "Branch Name", { required: false }),
   panNumber: Validation("string", "PAN Number", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
-  password: Validation("string", "Password", { required: false, extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
+  password: Validation("string", "Password", {  extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
 
   // ---------- ADDRESS ----------
   address: Yup.object({
@@ -61,12 +61,27 @@ export const UserFormSchema = Yup.object({
   isActive: Yup.boolean(),
 });
 
+//----------- Branch ----------
 export const BranchFormSchema = Yup.object({
   name: Validation("string", "Branch name"),
   address: Validation("string", "Address"),
-  phoneNo: Validation("string", "Phone No.", { required: false }),
+  phoneNo: PhoneValidation(),
+  telephoneNumber: Validation("string", "Telephone No.", { required: false }),
+  email: Validation("string", "Email", { required: false, extraRules: (s) => s.trim().email("Invalid email address") }),
+  webSite: Validation("string", "Website", { required: false }),
+  fssaiNo: Validation("string", "FSSAI No.", { required: false }),
+  contactName: Validation("string", "Contact Person", { required: false }),
+  displayName: Validation("string", "Display Name"),
+  userName: Validation("string", "Username"),
+  password: Validation("string", "Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
+  yearInterval: Validation("string", "Year Interval"),
+  companyId: Validation("string", "Company"),
+  panNumber: Validation("string", "PAN No.", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
+  gstRegistrationType: Validation("string", "GST Registration Type", { required: false }),
   isActive: Yup.boolean(),
 });
+
+
 export const BrandFormSchema = Yup.object({
   name: Validation("string", "Brand name"),
   code: Validation("string", "code"),
