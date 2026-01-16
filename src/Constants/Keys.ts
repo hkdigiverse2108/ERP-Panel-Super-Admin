@@ -10,7 +10,6 @@ export const KEYS = {
     DELETE: "upload-delete",
   },
 
- 
   COMPANY: {
     BASE: "company",
     EDIT: "company-edit",
@@ -76,5 +75,10 @@ export const KEYS = {
   },
   ROLE: {
     BASE: "role",
+  },
+  STOCK: {
+    BASE: "stock",
+    ADD: "stock-add",
+    BULK_ADJUSTMENT: "stock-bulk-adjustment",
   },
 };

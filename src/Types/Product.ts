@@ -2,6 +2,8 @@ import type { BrandBase } from "./Brand";
 import type { CategoryBase } from "./Category";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 
+export type ProductWithRemoveQty = ProductBase & { id: string; removeQty: number | null };
+
 export interface NutritionInfo {
   name?: string;
   value?: string;
@@ -22,7 +24,6 @@ export interface ProductFormValues {
   salesTaxId?: string;
   isSalesTaxIncluding?: boolean;
   cessPercentage?: number | null;
-  // uomId?: string;
   manageMultipleBatch?: boolean;
   hasExpiry?: boolean;
   expiryDays?: number | null;
@@ -71,4 +72,8 @@ export interface ProductDataResponse extends PageStatus {
 
 export interface ProductApiResponse extends MessageStatus {
   data: ProductDataResponse;
+}
+
+export interface ProductDropDownApiResponse extends MessageStatus {
+  data: ProductBase[];
 }

@@ -4,11 +4,11 @@ import { type FC } from "react";
 import { CommonSelect } from "../../Attribute";
 import type { AdvancedSearchProps } from "../../Types";
 
-const AdvancedSearch: FC<AdvancedSearchProps> = ({ children, filter = [] }) => {
+const AdvancedSearch: FC<AdvancedSearchProps> = ({ children, filter = [] ,defaultExpanded}) => {
   if (!filter.length && !children) return null;
   return (
     <>
-      <Accordion className="advanced-search">
+      <Accordion defaultExpanded={defaultExpanded} className="advanced-search">
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header">
           <Typography component="span">Advanced Search</Typography>
         </AccordionSummary>
