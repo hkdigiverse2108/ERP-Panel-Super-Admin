@@ -15,3 +15,4 @@ export * from "./Roles";
 export * from "./Uom";
 export * from "./Tax";
 export * from "./Stock";
+export * from "./Location";

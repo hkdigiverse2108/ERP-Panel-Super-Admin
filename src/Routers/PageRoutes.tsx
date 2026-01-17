@@ -15,6 +15,8 @@ import Tax from "../Pages/Inventory/Tax";
 import ItemForm from "../Pages/Inventory/Product/ItemForm";
 import Company from "../Pages/Company";
 import CompanyForm from "../Pages/Company/CompanyForm";
+import Location from "../Pages/Location";
+import LocationForm from "../Pages/Location/LocationForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -29,6 +31,9 @@ export const PageRoutes = [
 
   { path: ROUTES.BRANCH.BASE, element: <Branch /> },
   { path: ROUTES.BRANCH.ADD_EDIT, element: <BranchForm /> },
+
+  { path: ROUTES.LOCATION.BASE, element: <Location /> },
+  { path: ROUTES.LOCATION.ADD_EDIT, element: <LocationForm /> },
 
   { path: ROUTES.PRODUCT.BASE, element: <Product /> },
   { path: ROUTES.PRODUCT.ADD_EDIT, element: <ProductForm /> },

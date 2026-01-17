@@ -86,4 +86,9 @@ export const KEYS = {
     BASE: "bank",
     ADD: "bank-add",    
   },
+  LOCATION: {
+    BASE: "location",
+    ADD: "location-add",   
+    EDIT: "location-edit", 
+  },
 };
