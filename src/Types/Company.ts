@@ -1,6 +1,7 @@
 import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
 
 export interface CompanyFormValues {
+  accountingType?: string;
   name?: string;
   displayName?: string;
   contactName?: string;
@@ -15,11 +16,11 @@ export interface CompanyFormValues {
   state?: string;
   country?: string;
   pinCode?: string;
-  timeZone?: string;
 
+  bankId?: string;
+  upiId?: string;
   bankName?: string;
   bankIFSC?: string;
-  upiId?: string;
   branchName?: string;
   accountHolderName?: string;
   bankAccountNumber?: string;
@@ -46,7 +47,12 @@ export interface CompanyFormValues {
   waterMark?: string;
   reportFormatLogo?: string;
   authorizedSignature?: string;
+
+  isActive?: boolean;
+  _submitAction?: string;
 }
+
+export type AddCompanyPayload = CompanyFormValues;
 
 export type EditCompanyPayload = CompanyFormValues & { companyId: string };
 

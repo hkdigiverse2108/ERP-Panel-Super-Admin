@@ -13,6 +13,8 @@ import UserForm from "../Pages/User/UserForm";
 import Uom from "../Pages/Inventory/Uom";
 import Tax from "../Pages/Inventory/Tax";
 import ItemForm from "../Pages/Inventory/Product/ItemForm";
+import Company from "../Pages/Company";
+import CompanyForm from "../Pages/Company/CompanyForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -21,6 +23,9 @@ export const PageRoutes = [
 
   { path: ROUTES.USER.BASE, element: <Users /> },
   { path: ROUTES.USER.ADD_EDIT, element: <UserForm /> },
+
+  { path: ROUTES.COMPANY.BASE, element: <Company /> },
+  { path: ROUTES.COMPANY.ADD_EDIT, element: <CompanyForm /> },
 
   { path: ROUTES.BRANCH.BASE, element: <Branch /> },
   { path: ROUTES.BRANCH.ADD_EDIT, element: <BranchForm /> },

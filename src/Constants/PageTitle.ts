@@ -6,6 +6,11 @@ export const PAGE_TITLE = {
     ADD: "Add User",
     EDIT: "Edit User",
   },
+  COMPANY: {
+    BASE: "Company",
+    ADD: "Add Company",
+    EDIT: "Edit Company",
+  },
   BRANCH: {
     BASE: "Branch",
     ADD: "Add Branch",

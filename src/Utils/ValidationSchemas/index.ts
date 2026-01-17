@@ -175,3 +175,48 @@ export const ProductItemFormSchema = Yup.object({
 export const ProductItemRemoveFormSchema = Yup.object({
   remark: Validation("string", "Consumption Type"),
 });
+
+export const CompanyFormSchemas = Yup.object({
+  accountingType: Validation("string", "Accounting Type"),
+  name: Validation("string", "Company Name"),
+  displayName: Validation("string", "display Name"),
+  contactName: Validation("string", "contact Name"),
+  email: Validation("string", "Email", { extraRules: (s) => s.trim().email("Invalid email address") }),
+  supportEmail: Validation("string", "support Email", { extraRules: (s) => s.trim().email("Invalid email address") }),
+  customerCareNumber: Validation("string", "customer Care Number"),
+  phoneNo: PhoneValidation(),
+  ownerNo: PhoneValidation(),
+
+  address: Validation("string", "address"),
+  city: Validation("string", "city"),
+  state: Validation("string", "State"),
+  country: Validation("string", "country"),
+  pinCode: Validation("string", "pinCode", { extraRules: (s) => s.trim().matches(/^[0-9]{6}$/, "Pin code must be 6 digits") }),
+
+  bankId: Validation("string", "select Bank", { required: false }),
+  upiId: Validation("string", "upiId", { required: false }),
+
+  userName: Validation("string", "userName", { required: false }),
+  GSTRegistrationType: Validation("string", "GSTRegistrationType", { required: false }),
+  GSTIdentificationNumber: Validation("string", "GSTIdentificationNumber", { required: false }),
+  PanNo: Validation("string", "PanNo", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid Pan Number") }),
+  taxDeductionAndCollectionAccountNumber: Validation("string", "taxDeductionAndCollectionAccountNumber", { required: false }),
+  webSite: Validation("string", "webSite", { required: false }),
+  financialYear: Validation("string", "financialYear", { required: false }),
+  corporateIdentificationNumber: Validation("string", "corporateIdentificationNumber", { required: false }),
+  letterOfUndertaking: Validation("string", "letterOfUndertaking", { required: false }),
+  importerExporterCode: Validation("string", "importerExporterCode", { required: false }),
+  outletSize: Validation("string", "outletSize", { required: false }),
+  fssaiNo: Validation("string", "fssaiNo", { required: false, extraRules: (s) => s.trim().matches(/^[0-9]{14}$/, "FSSAI number must be exactly 14 digits") }),
+  currency: Validation("string", "currency", { required: false }),
+  printDateFormat: Validation("string", "printDateFormat", { required: false }),
+  decimalPoint: Validation("string", "decimalPoint", { required: false }),
+
+  allowRoundOff: Validation("boolean", "allowRoundOff", { required: false }),
+  enableFeedbackModule: Validation("boolean", "enableFeedbackModule", { required: false }),
+
+  logo: Validation("string", "Logo", { required: false }),
+  waterMark: Validation("string", "Water Mark", { required: false }),
+  reportFormatLogo: Validation("string", "Report Format Logo", { required: false }),
+  authorizedSignature: Validation("string", "Authorized Signature", { required: false }),
+});

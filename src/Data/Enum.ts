@@ -191,3 +191,14 @@ export const CONSUMPTION_TYPE= [
   { label: "Production", value: "production" },
   { label: "Scrap/Wastage", value: "scrap/wastage" },
 ]
+
+export const DATE_FORMATS = [
+  { label: "DD/MM/YYYY", value: "DD/MM/YYYY" },
+  { label: "DD-MM-YYYY", value: "DD-MM-YYYY" },
+  { label: "DD.MM.YYYY", value: "DD.MM.YYYY" },
+  { label: "DD Month YYYY", value: "DD MMMM YYYY" },
+];
+
+export const ACCOUNTING_TYPE= [
+  { label: "Centralized", value: "centralized" },
+]

@@ -12,7 +12,9 @@ export const KEYS = {
 
   COMPANY: {
     BASE: "company",
+    ADD: "company-add",
     EDIT: "company-edit",
+    DELETE: "company-delete",
   },
 
   USER: {
@@ -20,7 +22,6 @@ export const KEYS = {
     ADD: "user-add",
     EDIT: "user-edit",
     DELETE: "user-delete",
-    ROLE: "user-role",
   },
 
   BRANCH: {
