@@ -18,25 +18,31 @@ export const RemoveEmptyFields = <T extends Record<string, any>>(obj: T): Partia
   return result;
 };
 
-export const GetChangedFields = <T extends Record<string, any>>(newVal: T, oldVal: Partial<T> = {}): Partial<T> => {
-  const changed: Partial<T> = {};
+export const GetChangedFields = (newVal: Record<string, any>, oldVal: Record<string, any> = {}): Record<string, any> => {
+  const changed: Record<string, any> = {};
 
-  (Object.keys(newVal) as (keyof T)[]).forEach((key) => {
+  const isEmpty = (v: any) => v === "" || v === null || v === undefined;
+
+  Object.keys(newVal).forEach((key) => {
     const newValue = newVal[key];
     const oldValue = oldVal[key];
-    
-    // ❌ Object / Array skip
-    //  if (typeof newValue === "object" && newValue !== null) return;
 
-    // ❌ Object skip (arrays are handled)
-    if (typeof newValue === "object" && newValue !== null && !Array.isArray(newValue)) return;
+    // ✅ Object (not array)
+    if (typeof newValue === "object" && newValue !== null && !Array.isArray(newValue)) {
+      const nestedChanged = GetChangedFields(newValue, oldValue ?? {});
 
-    const isEmpty = (v: any) => v === "" || v === null || v === undefined;
+      // 🔥 Any change → send full object
+      if (Object.keys(nestedChanged).length > 0) {
+        changed[key] = newValue;
+      }
 
-    // ❌ both old & new empty → ignore
+      return;
+    }
+
+    // ❌ both empty
     if (isEmpty(newValue) && isEmpty(oldValue)) return;
 
-    // ✅ changed OR cleared value
+    // ✅ primitive / array changed
     if (newValue !== oldValue) {
       changed[key] = newValue;
     }
@@ -44,7 +50,6 @@ export const GetChangedFields = <T extends Record<string, any>>(newVal: T, oldVa
 
   return changed;
 };
-
 // export const GetChangedFields = <T extends Record<string, any>>(newVal: T, oldVal?: Partial<T>): Partial<T> => {
 //   const changed: Partial<T> = {};
 

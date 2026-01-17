@@ -226,5 +226,3 @@ export const CityOptionsByState: Record<string, { label: string; value: string }
 
   Lakshadweep: [{ label: "Kavaratti", value: "Kavaratti" }],
 };
-
-export const TimeZoneOptions: Record<string, { label: string; value: string }[]> = { India: [{ label: "Chennai, Kolkata, Mumbai, New Delhi (UTC+05:30)", value: "Asia/Kolkata" }] };

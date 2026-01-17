@@ -8,6 +8,10 @@ export const ROUTES = {
     BASE: "/user",
     ADD_EDIT: "/user/add-edit",
   },
+  COMPANY: {
+    BASE: "/company",
+    ADD_EDIT: "/company/add-edit",
+  },
   PRODUCT: {
     BASE: "/product",
     ADD_EDIT: "/product/add-edit",
