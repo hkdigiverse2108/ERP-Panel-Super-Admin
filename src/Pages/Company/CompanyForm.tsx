@@ -170,7 +170,6 @@ const CompanyForm = () => {
                 <CommonCard title="Basic Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonValidationSelect name="accountingType" label="accountingType" options={ACCOUNTING_TYPE} required grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationSelect name="accountingType" label="accountingType" options={ACCOUNTING_TYPE} required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="name" label="Company Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="displayName" label="Display Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="contactName" label="Contact Name" required grid={{ xs: 12, md: 4 }} />

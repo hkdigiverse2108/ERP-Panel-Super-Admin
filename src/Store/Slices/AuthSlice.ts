@@ -31,6 +31,7 @@ const authSlice = createSlice({
       state.user = null;
       state.isAuthenticated = false;
       Storage.clear();
+      window.location.reload();
     },
   },
 });

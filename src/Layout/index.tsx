@@ -27,7 +27,7 @@ const Layout = () => {
     if (userData) {
       dispatch(setUser(userData?.data));
     }
-  }, [userData, userLoading]);
+  }, [dispatch, userData, userLoading]);
 
   useEffect(() => {
     const handleResize = () => {

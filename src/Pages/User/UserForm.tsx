@@ -9,13 +9,11 @@ import { BREADCRUMBS } from "../../Data";
 import type { UserFormValues } from "../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { UserFormSchema } from "../../Utils/ValidationSchemas";
-// import { useAppSelector } from "../../Store/hooks";
 
 const UserForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
-  // const{ company } = useAppSelector((state) => state.company);
 
   const { data: rolesData } = Queries.useGetRoles({ activeFilter: true });
   const { data: companyData } = Queries.useGetCompany({ activeFilter: true });
@@ -25,7 +23,6 @@ const UserForm = () => {
 
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
-
 
   const initialValues: UserFormValues = {
     fullName: data?.fullName || "",
@@ -44,7 +41,7 @@ const UserForm = () => {
 
     address: {
       address: data?.address?.address || "",
-      country: "India",
+      country: data?.address?.country || "",
       state: data?.address?.state || "",
       city: data?.address?.city || "",
       postalCode: data?.address?.postalCode || null,
@@ -64,7 +61,6 @@ const UserForm = () => {
     extraWages: data?.extraWages || null,
     target: data?.target || null,
     isActive: data?.isActive ?? true,
-   
   };
 
   const handleSubmit = async (values: UserFormValues, { resetForm }: FormikHelpers<UserFormValues>) => {
@@ -108,15 +104,15 @@ const UserForm = () => {
                 </CommonCard>
 
                 {/* ADDRESS DETAILS */}
-                 <CommonCard title="Communication Details" grid={{ xs: 12 }}>
-                                  <Grid container spacing={2} sx={{ p: 2 }}>
-                                    <CommonValidationTextField name="address" label="Address" grid={{ xs: 12, md: 4 }} multiline required />
-                                    <DependentSelect name="country" label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required />
-                                    <DependentSelect params={values.country} name="state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values.country} required />
-                                    <DependentSelect params={values.state} name="city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values.state} required />
-                                    <CommonValidationTextField name="pinCode" label="Pin Code" grid={{ xs: 12, md: 4 }} required />
-                                  </Grid>
-                                </CommonCard>
+                <CommonCard title="Communication Details" grid={{ xs: 12 }}>
+                  <Grid container spacing={2} sx={{ p: 2 }}>
+                    <CommonValidationTextField name="address.address" label="Address" grid={{ xs: 12, md: 4 }} multiline required />
+                    <DependentSelect name="address.country" label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required />
+                    <DependentSelect params={values.address?.country} name="address.state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values.address?.country} required />
+                    <DependentSelect params={values.address?.state} name="address.city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values.address?.state} required />
+                    <CommonValidationTextField name="address.postalCode" label="Pin Code" grid={{ xs: 12, md: 4 }} required />
+                  </Grid>
+                </CommonCard>
 
                 {/* BANK DETAILS */}
                 <CommonCard title="Bank Details" grid={{ xs: 12 }}>
@@ -131,7 +127,7 @@ const UserForm = () => {
                 </CommonCard>
 
                 {/* SALARY DETAILS */}
-                <CommonCard title="Salary Details" grid={{ xs: 12 }}> 
+                <CommonCard title="Salary Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonValidationTextField name="wages" label="Wages" type="number" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="commission" type="number" label="Commission" grid={{ xs: 12, md: 4 }} />
@@ -142,7 +138,7 @@ const UserForm = () => {
 
                 {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
 
-                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => {setFieldValue("_submitAction", "save"); } } onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")  } />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}
