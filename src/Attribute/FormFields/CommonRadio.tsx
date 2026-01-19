@@ -12,7 +12,7 @@ export const CommonValidationRadio: FC<CommonValidationRadioProps> = ({ name, la
 
       <RadioGroup row={row} value={field.value ?? ""} onChange={(e) => helpers.setValue(e.target.value)} onBlur={() => helpers.setTouched(true)}>
         {options.map((opt) => (
-          <FormControlLabel key={opt.value} value={opt.value} control={<Radio />} label={opt.label} />
+          <FormControlLabel key={opt.value} value={opt.value} control={<Radio />} label={opt.label} disabled={opt.disabled}/>
         ))}
       </RadioGroup>
 
@@ -31,7 +31,7 @@ export const CommonRadio: FC<CommonRadioProps> = ({ label, value, options, onCha
 
       <RadioGroup row={row} value={value} onChange={(e) => onChange(e.target.value)}>
         {options.map((opt) => (
-          <FormControlLabel key={opt.value} value={opt.value} control={<Radio />} label={opt.label} />
+          <FormControlLabel key={opt.value} value={opt.value} control={<Radio />} label={opt.label} disabled={opt.disabled}/>
         ))}
       </RadioGroup>
     </FormControl>

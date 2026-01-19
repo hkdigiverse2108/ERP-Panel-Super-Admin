@@ -1,11 +1,24 @@
 import * as Yup from "yup";
 import { Validation } from "./Validation";
+import type { DepValue, Primitive } from "../../Types";
 
 const RequiredWhenTrue = (dependentField: string, message: string, baseSchema: Yup.AnySchema) => {
   return baseSchema.when(dependentField, {
     is: true,
     then: (schema) => schema.required(`${message} is required`),
     otherwise: (schema) => schema.notRequired(),
+  });
+};
+
+export const RequiredWhen = (dependentField: string, requiredValues: Primitive[], label: string, type: "string" | "number" = "string") => {
+  return Yup.mixed().when(dependentField, (value: DepValue) => {
+    const match = Array.isArray(value) ? value.some((v) => requiredValues.includes(v)) : requiredValues.includes(value as Primitive);
+
+    if (match) {
+      return Validation(type, label);
+    }
+
+    return Validation(type, label, { required: false });
   });
 };
 
@@ -31,7 +44,7 @@ export const SigninSchema = Yup.object({
 
 export const UserFormSchema = Yup.object({
   // ---------- BASIC DETAILS ----------
-  companyId: Validation("string", "Company Name"),    
+  companyId: Validation("string", "Company Name"),
   fullName: Validation("string", "FullName"),
   username: Validation("string", "Username"),
   designation: Validation("string", "Designation", { required: false }),
@@ -40,7 +53,7 @@ export const UserFormSchema = Yup.object({
   email: Validation("string", "Email", { required: false, extraRules: (s) => s.trim().email("Invalid email address") }),
   branchId: Validation("string", "Branch Name", { required: false }),
   panNumber: Validation("string", "PAN Number", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
-  password: Validation("string", "Password", {  extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
+  password: Validation("string", "Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
 
   // ---------- ADDRESS ----------
   address: Yup.object({
@@ -81,7 +94,6 @@ export const BranchFormSchema = Yup.object({
   isActive: Yup.boolean(),
 });
 
-
 export const BrandFormSchema = Yup.object({
   name: Validation("string", "Brand name"),
   code: Validation("string", "code"),
@@ -119,7 +131,7 @@ export const ProductFormSchema = Yup.object({
     Yup.object({
       name: Validation("string", "Nutrition Name", { required: false }),
       value: Validation("string", "Nutrition Value", { required: false }),
-    })
+    }),
   ),
   netWeight: Validation("number", "Net Weight", { required: false }),
   masterQty: Validation("number", "Master Quantity", { required: false }),
@@ -219,4 +231,12 @@ export const CompanyFormSchemas = Yup.object({
   waterMark: Validation("string", "Water Mark", { required: false }),
   reportFormatLogo: Validation("string", "Report Format Logo", { required: false }),
   authorizedSignature: Validation("string", "Authorized Signature", { required: false }),
+});
+
+export const LocationFormSchema = Yup.object({
+  code: Validation("string", "code"),
+  type: Validation("string", "Type"),
+  name: Validation("string", "Location name"),
+  parentId: RequiredWhen("type", ["state", "city"], "Parent Location", "string"),
+  isActive: Validation("boolean", "is Active", { required: false }),
 });

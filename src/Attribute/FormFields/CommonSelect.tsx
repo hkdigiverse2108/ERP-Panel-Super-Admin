@@ -3,7 +3,7 @@ import { useField, useFormikContext } from "formik";
 import { type FC } from "react";
 import type { CommonSelectProps, CommonValidationSelectProps, SelectOptionType } from "../../Types";
 
-export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, label, required, options, multiple = false, limitTags, size = "small", grid, disabled, syncFieldName, isLoading, ...props }) => {
+export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, label, required, options, multiple = false, limitTags, size = "small", grid, disabled,readOnly, syncFieldName, isLoading, ...props }) => {
   const [field, meta, helpers] = useField<any>({ name });
   const { setFieldValue } = useFormikContext<any>();
   // Normalize value
@@ -20,6 +20,7 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
       value={valueObjects}
       size={size}
       disabled={disabled}
+      readOnly={readOnly}
       getOptionLabel={(opt) => opt.label}
       isOptionEqualToValue={(option, val) => option.value === val.value}
       onChange={(_, newValues) => {
@@ -49,7 +50,7 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
   return grid ? <Grid size={grid}>{Input}</Grid> : Input;
 };
 
-export const CommonSelect: FC<CommonSelectProps> = ({ label, options = [], value, onChange, multiple = false, limitTags, size, grid, disabled, isLoading, ...props }) => {
+export const CommonSelect: FC<CommonSelectProps> = ({ label, options = [], value, onChange, multiple = false, limitTags, size, grid, disabled,readOnly, isLoading, ...props }) => {
   const selectedValue = multiple ? (value || []).map((v) => options.find((o) => o.value === v)).filter((v): v is SelectOptionType => Boolean(v)) : options.find((o) => o.value === value?.[0]) ?? null;
 
   const Input = (
@@ -61,6 +62,7 @@ export const CommonSelect: FC<CommonSelectProps> = ({ label, options = [], value
       value={selectedValue}
       size={size}
       disabled={disabled}
+      readOnly={readOnly}
       getOptionLabel={(opt) => opt.label}
       isOptionEqualToValue={(option, val) => option.value === val.value}
       onChange={(_, newValue) => {

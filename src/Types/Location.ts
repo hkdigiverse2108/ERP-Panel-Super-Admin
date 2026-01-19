@@ -4,17 +4,17 @@ export interface LocationFormValues {
   code?: string;
   name?: string;
   type?: string;
-  parentLocationId?: string;
+  parentId?: string;
   isActive?: boolean;
 }
 
 export type AddLocationPayload = LocationFormValues;
 
-export type EditLocationPayload = AddLocationPayload & { LocationId?: string };
+export type EditLocationPayload = AddLocationPayload & { locationId?: string };
 
 
-export interface LocationBase extends Omit<LocationFormValues, "parentLocationId">, CommonDataType {
-  parentLocationId?: LocationBase 
+export interface LocationBase extends Omit<LocationFormValues, "parentId">, CommonDataType {
+  parentId?: LocationBase 
 }
 
 export interface LocationDataResponse extends PageStatus {
@@ -25,6 +25,6 @@ export interface LocationApiResponse extends MessageStatus {
   data: LocationDataResponse;
 } 
 
-export interface LocationDropdownApiResponse extends MessageStatus {
+export interface CountryApiResponse extends MessageStatus {
   data: LocationBase[];
 }  

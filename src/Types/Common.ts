@@ -8,6 +8,7 @@ import type { BrandBase } from "./Brand";
 import type { CategoryBase } from "./Category";
 import type { TaxBase } from "./Tax";
 import type { UomBase } from "./Uom";
+import type { LocationBase } from "./Location";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -54,6 +55,7 @@ export interface CommonSelectProps {
   grid?: GridType;
   required?: boolean;
   disabled?: boolean;
+  readOnly?: boolean;
   variant?: "standard" | "outlined" | "filled";
   placeholder?: string;
   syncFieldName?: string;
@@ -209,7 +211,6 @@ export interface CommonValidationTextFieldProps {
   isCurrency?: boolean;
   color?: TextFieldProps["color"];
   focused?: boolean;
-  readOnly?: boolean;
   rows?: number;
   onCurrencyLog?: (value: string) => void;
 }
@@ -250,6 +251,9 @@ export interface BreadcrumbHeaderProps {
 // ************ Breadcrumb Start ***********
 
 // ************ Validation Yup schema Start ***********
+
+export type Primitive = string | number;
+export type DepValue = Primitive | Primitive[] | undefined;
 
 export type FieldSchemaArgs<K extends keyof FieldTypeMap> = [type: K, options?: FieldOptions<FieldTypeMap[K]>] | [type: K, label: string, options?: FieldOptions<FieldTypeMap[K]>];
 
@@ -384,6 +388,7 @@ export interface ModalStateSlice {
   isUomModal: { open: boolean; data: UomBase | null };
   isTaxModal: { open: boolean; data: TaxBase | null };
   isCategoryModal: { open: boolean; data: CategoryBase | null };
+  isLocationModal: { open: boolean; data: LocationBase | null };
 }
 
 // ************ Modal End ***********
@@ -393,6 +398,7 @@ export interface ModalStateSlice {
 export type RadioOptionType = {
   label: string;
   value: string;
+  disabled?: boolean;
 };
 export type ImageSyncProps = {
   activeKey: "image" | null | string;
@@ -450,3 +456,29 @@ export interface AdvancedSearchProps {
 }
 
 // ************ Advanced Search End ***********
+
+// ************ Dependent Select End ***********
+
+export type ApiOption = {
+  _id: string;
+  name?: string;
+  firstName?: string;
+  lastName?: string;
+  title?: string;
+};
+
+export type DependentSelectProps<T extends ApiOption, P = string | undefined> = {
+  params?: P;
+  name: string;
+  label: string;
+  grid: GridType;
+  required?: boolean;
+  disabled?: boolean;
+  enabled?: boolean;
+  query: (params?: P, enabled?: boolean) => {
+    data?: { data: T[] };
+    isLoading: boolean;
+  };
+};
+
+// ************ Dependent Select End ***********

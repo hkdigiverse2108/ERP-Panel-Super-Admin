@@ -90,5 +90,6 @@ export const KEYS = {
     BASE: "location",
     ADD: "location-add",   
     EDIT: "location-edit", 
+    DELETE: "location-delete",
   },
 };

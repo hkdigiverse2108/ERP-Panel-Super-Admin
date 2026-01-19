@@ -4,7 +4,6 @@ export * from "./DateConfig";
 import { STORAGE_KEYS } from "../Constants";
 import type { GridType, Params, SelectOptionType } from "../Types";
 
-
 export const Stringify = (value: object): string => {
   try {
     return JSON.stringify(value);
@@ -27,7 +26,7 @@ export const CleanParams = (params?: Params): Params | undefined => {
 };
 
 export const GenerateOptions = (data?: { _id: string; name?: string; firstName?: string; lastName?: string; title?: string }[]) => {
-  if (!data || !  Array.isArray(data)) return [];
+  if (!data || !Array.isArray(data)) return [];
 
   return data.map((item) => {
     const label = item.name?.trim() || [item.firstName, item.lastName].filter(Boolean).join(" ") || item.title?.trim() || "Unnamed";
@@ -49,3 +48,5 @@ export const CreateFilter = (label: string, filterKey: string, advancedFilter: R
   grid,
   isLoading,
 });
+
+export const WithAllOption = <T extends { label: string; value: string }>(data: T[], allLabel = "All", allValue = ""): T[] => [{ label: allLabel, value: allValue } as T, ...data];

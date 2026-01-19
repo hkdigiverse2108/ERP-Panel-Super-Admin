@@ -9,6 +9,7 @@ const initialState: ModalStateSlice = {
   isUomModal: { open: false, data: null },
   isTaxModal: { open: false, data: null },
   isCategoryModal: { open: false, data: null },
+  isLocationModal: { open: false, data: null },
 };
 
 const ModalSlice = createSlice({
@@ -37,9 +38,12 @@ const ModalSlice = createSlice({
     setModalVideoPlay(state, action) {
       state.isModalVideoPlay = action.payload;
     },
+    setLocationModal(state, action) {
+      state.isLocationModal = action.payload;
+    },
   },
 });
 
-export const { setUploadModal, setSelectedFiles, setModalVideoPlay, setBrandModal, setCategoryModal, setUomModal, setTaxModal } = ModalSlice.actions;
+export const { setUploadModal, setSelectedFiles, setModalVideoPlay, setBrandModal, setCategoryModal, setUomModal, setTaxModal, setLocationModal } = ModalSlice.actions;
 
 export default ModalSlice.reducer;
