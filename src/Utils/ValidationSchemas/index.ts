@@ -91,6 +91,7 @@ export const BranchFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
   panNumber: Validation("string", "PAN No.", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
   gstRegistrationType: Validation("string", "GST Registration Type", { required: false }),
+  upiId: Validation("string", "upiId", { required: false, extraRules: (s) => s.trim().matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Invalid UPI Id") }),
   isActive: Yup.boolean(),
 });
 

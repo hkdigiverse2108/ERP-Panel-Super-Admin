@@ -3,9 +3,9 @@ import { Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
 import { CommonPhoneNumber, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../Attribute";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../Components/Common";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
-import { BREADCRUMBS, CityOptionsByState, COMPANY, CountryOptions, ROLE_OPTIONS, StateOptions ,} from "../../Data";
+import { BREADCRUMBS } from "../../Data";
 import type { UserFormValues } from "../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { UserFormSchema } from "../../Utils/ValidationSchemas";
@@ -108,15 +108,15 @@ const UserForm = () => {
                 </CommonCard>
 
                 {/* ADDRESS DETAILS */}
-                <CommonCard title="Address Details" grid={{ xs: 12 }}>
-                  <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonValidationTextField name="address.address" label="Address" required grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationSelect name="address.state" label="State" disabled={!values.address?.country} options={StateOptions} grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationSelect name="address.city" label="City" disabled={!values.address?.state} options={CityOptionsByState[values?.address?.state || ""] || []} grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationSelect name="address.country" label="Country" disabled options={CountryOptions} required grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="address.postalCode" label="ZIP Code" required type="number" grid={{ xs: 12, md: 4 }} />
-                  </Grid>
-                </CommonCard>
+                 <CommonCard title="Communication Details" grid={{ xs: 12 }}>
+                                  <Grid container spacing={2} sx={{ p: 2 }}>
+                                    <CommonValidationTextField name="address" label="Address" grid={{ xs: 12, md: 4 }} multiline required />
+                                    <DependentSelect name="country" label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required />
+                                    <DependentSelect params={values.country} name="state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values.country} required />
+                                    <DependentSelect params={values.state} name="city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values.state} required />
+                                    <CommonValidationTextField name="pinCode" label="Pin Code" grid={{ xs: 12, md: 4 }} required />
+                                  </Grid>
+                                </CommonCard>
 
                 {/* BANK DETAILS */}
                 <CommonCard title="Bank Details" grid={{ xs: 12 }}>

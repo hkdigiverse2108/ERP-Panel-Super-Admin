@@ -42,3 +42,6 @@ export interface BankApiResponse extends MessageStatus {
 export interface BankDropdownApiResponse {
   data: BankBase[];
 }
+// export interface BankDropdownResponse extends MessageStatus {
+//   data: BankDropdownApiResponse;
+// }

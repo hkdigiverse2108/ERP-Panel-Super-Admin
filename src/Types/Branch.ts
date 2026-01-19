@@ -70,3 +70,6 @@ export interface BranchDataResponse extends PageStatus {
 export interface BranchApiResponse extends MessageStatus {
   data: BranchDataResponse;
 }
+export interface BranchDropdownApiResponse extends MessageStatus {
+  data: BranchBase[];
+}

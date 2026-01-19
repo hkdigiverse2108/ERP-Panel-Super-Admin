@@ -3,22 +3,23 @@ import { Form, Formik, useFormikContext, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
 import { CommonValidationTextField, CommonValidationSelect, CommonPhoneNumber } from "../../Attribute";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../Components/Common";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
 import { BREADCRUMBS, COMPANY } from "../../Data";
 import type { BranchFormValues } from "../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { BranchFormSchema } from "../../Utils/ValidationSchemas";
 import type { BankBase } from "../../Types/Bank";
-import {  useEffect } from "react";
+import { useEffect } from "react";
 // import { setSelectedFiles } from "../../Store/Slices/ModalSlice";
 
 const BranchForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
-  const { data: bankData, isLoading: bankDataLoading } = Queries.useGetBankDropdown({ companyFilter:  data?._id },Boolean(data?._id));
-  // const { data: bankData } = Queries.useGetBankDropdown({ activeFilter: true });
+  // const { data: bankData, isLoading: bankDataLoading } = Queries.useGetBankDropdown({ companyFilter: data?._id }, Boolean(data?._id));
+  const { data: bankData } = Queries.useGetBankDropdown();
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { data: branchDropdownData } = Queries.useGetBranchDropdown({ activeFilter: true });
   const { mutate: addBranch, isPending: isAddLoading } = Mutations.useAddBranch();
   const { mutate: editBranch, isPending: isEditLoading } = Mutations.useEditBranch();
@@ -62,14 +63,19 @@ const BranchForm = () => {
     timeZone: data?.timeZone || "",
 
     bankId: data?.bankId?._id || "",
-    upiId: data?.upiId || "",
+    upiId: "",
+    bankName: "",
+    bankIFSC: "",
+    branchName: "",
+    accountHolderName: "",
+    bankAccountNumber: "",
 
     outletSize: data?.outletSize || "",
     userIds: data?.userIds || [],
 
     isActive: data?.isActive ?? true,
   };
-const FormikBankSync = ({ bankData }: { bankData?: BankBase[] }) => {
+  const FormikBankSync = ({ bankData }: { bankData?: BankBase[] }) => {
     const { values, setFieldValue } = useFormikContext<BranchFormValues>();
 
     useEffect(() => {
@@ -82,18 +88,17 @@ const FormikBankSync = ({ bankData }: { bankData?: BankBase[] }) => {
       setFieldValue("branchName", selectedBank.branchName || "");
       setFieldValue("accountHolderName", selectedBank.accountHolderName || "");
       setFieldValue("bankAccountNumber", selectedBank.bankAccountNumber || "");
+      setFieldValue("upiId", selectedBank.upiId || "");
     }, [values.bankId, bankData, setFieldValue]);
 
     return null;
   };
- 
 
   const handleSubmit = async (values: BranchFormValues, { resetForm }: FormikHelpers<BranchFormValues>) => {
     const { _submitAction, ...rest } = values;
     BANK_UI_FIELDS.forEach((field) => delete (rest as BranchFormValues)[field]);
 
     const payload = { ...rest };
-   
 
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
@@ -114,13 +119,13 @@ const FormikBankSync = ({ bankData }: { bankData?: BankBase[] }) => {
 
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<BranchFormValues> enableReinitialize initialValues={initialValues} validationSchema={BranchFormSchema} onSubmit={handleSubmit}>
-          {({ resetForm, setFieldValue, dirty }) => (
+          {({ resetForm, setFieldValue, dirty, values }) => (
             <Form noValidate>
               <FormikBankSync bankData={bankData?.data} />
               <Grid container spacing={2}>
                 <CommonCard title="Basic Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonValidationSelect name="companyId" label="Company" options={COMPANY} grid={{ xs: 12, md: 4 }} required />
+                    <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 4 }} required />
 
                     {/* <CommonValidationSelect name="name" label="Branch Name" options={GenerateOptions(branchDropdownData?.data?.branch_data)} required grid={{ xs: 12, md: 4 }} /> */}
                     <CommonValidationTextField name="displayName" label="Display Name" required grid={{ xs: 12, md: 4 }} />
@@ -146,22 +151,22 @@ const FormikBankSync = ({ bankData }: { bankData?: BankBase[] }) => {
 
                 <CommonCard title="Bank Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonValidationSelect name="bankId" label="Bank Name" options={GenerateOptions(bankData?.data)}  isLoading={bankDataLoading} grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="branchName" label="Branch Name" disabled grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="accountHolderName" label="Account Holder Name" disabled grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="bankAccountNumber" label="Account Number" disabled grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="ifscCode" label="IFSC Code" disabled grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="upiId" label="UPI ID"  grid={{ xs: 12, md: 4 }} />
+                    <DependentSelect name="bankId" label="Bank Name" grid={{ xs: 12, md: 4 }} query={Queries.useGetBankDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} required />
+                    <CommonValidationTextField name="branchName" label="Branch Name" grid={{ xs: 12, md: 4 }} disabled />
+                    <CommonValidationTextField name="bankIFSC" label="Bank IFSC" grid={{ xs: 12, md: 4 }} disabled />
+                    <CommonValidationTextField name="accountHolderName" label="Account Holder Name" grid={{ xs: 12, md: 4 }} disabled />
+                    <CommonValidationTextField name="bankAccountNumber" label="Bank Account Number" grid={{ xs: 12, md: 4 }} disabled />
+                    <CommonValidationTextField name="upiId" label="UPI ID" grid={{ xs: 12, md: 4 }} disabled/>
                   </Grid>
                 </CommonCard>
 
-                <CommonCard title="Address Details" grid={{ xs: 12 }}>
+                <CommonCard title="Communication Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonValidationTextField name="address" label="Address" required grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="country" label="Country" required grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="state" label="State" required grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="city" label="City" required grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="pinCode" label="Pin Code" required grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="address" label="Address" grid={{ xs: 12, md: 4 }} multiline required />
+                    <DependentSelect name="country" label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required />
+                    <DependentSelect params={values.country} name="state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values.country} required />
+                    <DependentSelect params={values.state} name="city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values.state} required />
+                    <CommonValidationTextField name="pinCode" label="Pin Code" grid={{ xs: 12, md: 4 }} required />
                   </Grid>
                 </CommonCard>
 
