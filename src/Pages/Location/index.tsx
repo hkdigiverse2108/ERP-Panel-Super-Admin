@@ -2,48 +2,49 @@ import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { Mutations, Queries } from "../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
-import { BREADCRUMBS } from "../../Data";
-import { setBrandModal } from "../../Store/Slices/ModalSlice";
-import type { AppGridColDef, BrandBase } from "../../Types";
+import { BREADCRUMBS, LOCATION_TYPE } from "../../Data";
+import { setLocationModal } from "../../Store/Slices/ModalSlice";
+import type { AppGridColDef, LocationBase } from "../../Types";
 import { useDataGrid } from "../../Utils/Hooks";
-import BrandForm from "./LocationForm";
+import LocationForm from "./LocationForm";
+import { CreateFilter, WithAllOption } from "../../Utils";
 
 const Location = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
   const dispatch = useDispatch();
 
-  const { data: BrandsData, isLoading: brandsDataLoading, isFetching: brandsDataFetching } = Queries.useGetBrand(params);
-  const { mutate: deleteBrandsMutate } = Mutations.useDeleteBrand();
-  const { mutate: editBrand, isPending: isEditLoading } = Mutations.useEditBrand();
+  const { data: locationData, isLoading: locationDataLoading, isFetching: locationDataFetching } = Queries.useGetLocation(params);
+  const { mutate: deleteLocationMutate } = Mutations.useDeleteLocation();
+  const { mutate: editLocation, isPending: isEditLoading } = Mutations.useEditLocation();
 
-  const allBrands = useMemo(() => BrandsData?.data?.brand_data.map((brand) => ({ ...brand, id: brand?._id })) || [], [BrandsData]);
-  const totalRows = BrandsData?.data?.totalData || 0;
+  const allLocation = useMemo(() => locationData?.data?.location_data.map((location) => ({ ...location, id: location?._id })) || [], [locationData]);
+  const totalRows = locationData?.data?.totalData || 0;
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
-    deleteBrandsMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
+    deleteLocationMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
   };
 
-  const handleAdd = () => dispatch(setBrandModal({ open: true, data: null }));
+  const handleAdd = () => dispatch(setLocationModal({ open: true, data: null }));
 
-  const handleEdit = (row: BrandBase) => dispatch(setBrandModal({ open: true, data: row }));
+  const handleEdit = (row: LocationBase) => dispatch(setLocationModal({ open: true, data: row }));
 
-  const columns: AppGridColDef<BrandBase>[] = [
-    { field: "name", headerName: "Name", width: 200 },
-    { field: "code", headerName: "Code", width: 200 },
-    { field: "description", headerName: "Description", width: 300 },
+  const columns: AppGridColDef<LocationBase>[] = [
+    { field: "name", headerName: "Name", width: 300 },
+    { field: "code", headerName: "Code", width: 300 },
+    { field: "type", headerName: "Type", width: 300 },
     {
-      field: "parentBrandId",
-      headerName: "Parent Brand",
+      field: "parentId",
+      headerName: "Parent",
       flex: 1,
-      minWidth: 200,
+      minWidth: 300,
       renderCell: ({ value }) => (typeof value === "object" ? value?.name || "-" : value),
       exportFormatter: (value) => (typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-"),
     },
     CommonActionColumn({
-      active: (row) => editBrand({ brandId: row?._id, isActive: !row.isActive }),
+      active: (row) => editLocation({ locationId: row?._id, isActive: !row.isActive }),
       onEdit: (row) => handleEdit(row),
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
     }),
@@ -51,9 +52,9 @@ const Location = () => {
 
   const CommonDataGridOption = {
     columns,
-    rows: allBrands,
+    rows: allLocation,
     rowCount: totalRows,
-    loading: brandsDataLoading || brandsDataFetching || isEditLoading,
+    loading: locationDataLoading || locationDataFetching || isEditLoading,
     isActive,
     setActive,
     handleAdd,
@@ -65,16 +66,19 @@ const Location = () => {
     onFilterModelChange: setFilterModel,
     isExport: false,
   };
-
+  const filter = [
+    CreateFilter("Select Location Type", "typeFilter", advancedFilter, updateAdvancedFilter, WithAllOption(LOCATION_TYPE), false, { xs: 12, sm: 4 }), // Location Type
+  ];
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.BRAND.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.BRAND.BASE} />
-      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
+      <CommonBreadcrumbs title={PAGE_TITLE.LOCATION.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.LOCATION.BASE} />
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <AdvancedSearch filter={filter}/>
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
         <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
-        <BrandForm />
+        <LocationForm />
       </Box>
     </>
   );

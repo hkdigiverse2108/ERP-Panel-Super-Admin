@@ -92,6 +92,9 @@ export const URL_KEYS = {
   LOCATION: {
     BASE: "/location",
     ALL: "/location/all",
+    COUNTRY: "/location/country",
+    STATE: "/location/state",
+    CITY: "/location/city",
     ADD: "/location/add",
     EDIT: "/location/edit",
   }

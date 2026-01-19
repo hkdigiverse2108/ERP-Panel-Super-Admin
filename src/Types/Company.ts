@@ -1,4 +1,5 @@
 import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
+import type { LocationBase } from "./Location";
 
 export interface CompanyFormValues {
   accountingType?: string;
@@ -56,7 +57,9 @@ export type AddCompanyPayload = CompanyFormValues;
 
 export type EditCompanyPayload = CompanyFormValues & { companyId: string };
 
-export type CompanyBase = CompanyFormValues & CommonDataType;
+export interface CompanyBase extends Omit<CompanyFormValues, "country">, CommonDataType {
+  country: LocationBase;
+}
 
 export interface CompanyDataResponse extends PageStatus {
   company_data: CompanyBase[];

@@ -7,6 +7,7 @@ export interface BankFormValues {
   branchName?: string;
   accountHolderName?: string;
   bankAccountNumber?: string;
+  upiId?: string;
   swiftCode?: string;
   openingBalance?: {
     creditBalance?: number;

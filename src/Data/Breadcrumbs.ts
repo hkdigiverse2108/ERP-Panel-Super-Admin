@@ -38,4 +38,7 @@ export const BREADCRUMBS = {
   CATEGORY: {
     BASE: [{ label: PAGE_TITLE.INVENTORY.CATEGORY.BASE }],
   },
+  LOCATION: {
+    BASE: [{ label: PAGE_TITLE.LOCATION.BASE }],
+  },
 };
