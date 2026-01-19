@@ -33,4 +33,8 @@ export const ROUTES = {
     BASE: "/branch",
     ADD_EDIT: "/branch/add-edit",
   },
+  LOCATION: {
+    BASE: "/location",
+    ADD_EDIT: "/location/add-edit",
+  }
 } as const;

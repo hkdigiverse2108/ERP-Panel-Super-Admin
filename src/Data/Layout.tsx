@@ -10,6 +10,7 @@ export const NavItems: NavItem[] = [
   { icon: <PeopleIcon />, name: PAGE_TITLE.USER.BASE, path: ROUTES.USER.BASE },
   { icon: <ApartmentIcon />, name: PAGE_TITLE.COMPANY.BASE, path: ROUTES.COMPANY.BASE },
   { icon: <GridViewRoundedIcon />, name: PAGE_TITLE.BRANCH.BASE, path: ROUTES.BRANCH.BASE },
+  { icon: <GridViewRoundedIcon />, name: PAGE_TITLE.LOCATION.BASE, path: ROUTES.LOCATION.BASE },
   {
     name: PAGE_TITLE.INVENTORY.BASE,
     icon: <SettingsIcon />,

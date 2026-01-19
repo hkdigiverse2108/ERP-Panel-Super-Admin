@@ -202,3 +202,9 @@ export const DATE_FORMATS = [
 export const ACCOUNTING_TYPE= [
   { label: "Centralized", value: "centralized" },
 ]
+
+export const LOCATION_TYPE= [
+  { label: "Country", value: "country" },
+  { label: "State", value: "state" },
+  { label: "City", value: "city" },
+]

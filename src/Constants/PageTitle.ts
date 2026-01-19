@@ -55,4 +55,9 @@ export const PAGE_TITLE = {
     ADD: "Add Customer",
     EDIT: "Edit Customer",
   },
+  LOCATION: {
+    BASE: "Location",
+    ADD: "Add Location",
+    EDIT: "Edit Location",
+  }
 } as const;
