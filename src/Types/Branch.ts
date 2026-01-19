@@ -39,6 +39,11 @@ export interface BranchFormValues {
 
   bankId?: string;
   upiId?: string;
+  bankName?: string;
+  bankIFSC?: string;
+  branchName?: string;
+  accountHolderName?: string;
+  bankAccountNumber?: string;
 
   outletSize?: string;
   userIds?: string[];
