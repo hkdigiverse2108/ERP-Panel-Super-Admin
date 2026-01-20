@@ -65,7 +65,7 @@ const LocationForm = () => {
               <CommonValidationRadio name="type" options={LOCATION_TYPE.map((opt) => ({ ...opt, disabled: isEditing && opt.value !== isEdit?.type }))} grid={{ xs: 12 }} />
               <LocationSelect id={values.type} />
               <CommonValidationTextField name="name" label={`${values.type} Name`} required grid={{ xs: 12 }} />
-              <CommonValidationTextField name="code" label="Code" required grid={{ xs: 12 }} />
+              <CommonValidationTextField name="code" label="Code" grid={{ xs: 12 }} />
 
               {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
               <Grid sx={{ display: "flex", gap: 2, ml: "auto" }}>

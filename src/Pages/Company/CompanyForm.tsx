@@ -58,11 +58,13 @@ const CompanyForm = () => {
     },
     customerCareNumber: data?.customerCareNumber || "",
 
-    address: data?.address || "",
-    city: data?.city || "",
-    state: data?.state || "",
-    country: data?.country || "",
-    pinCode: data?.pinCode || null,
+    address: {
+      address: data?.address?.address || "",
+      country: data?.address?.country?._id || "",
+      state: data?.address?.state?._id || "",
+      city: data?.address?.city?._id || "",
+      pinCode: data?.address?.pinCode || null,
+    },
 
     bankId: data?.bankId?._id || "",
     upiId: "",
@@ -184,11 +186,11 @@ const CompanyForm = () => {
                 {/* COMMUNICATION */}
                 <CommonCard title="Communication Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonValidationTextField name="address" label="Address" grid={{ xs: 12, md: 4 }} multiline required />
-                    <DependentSelect name="country" label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required />
-                    <DependentSelect params={values.country} name="state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values.country} required />
-                    <DependentSelect params={values.state} name="city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values.state} required />
-                    <CommonValidationTextField name="pinCode" label="Pin Code" grid={{ xs: 12, md: 4 }} required />
+                    <CommonValidationTextField name="address.address" label="Address" grid={{ xs: 12, md: 4 }} multiline required />
+                    <DependentSelect name="address.country" label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required />
+                    <DependentSelect params={values?.address?.country} name="address.state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values?.address?.country} required />
+                    <DependentSelect params={values?.address?.state} name="address.city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values?.address?.state} required />
+                    <CommonValidationTextField name="address.pinCode" label="Pin Code" type="number" grid={{ xs: 12, md: 4 }} required />
                   </Grid>
                 </CommonCard>
 

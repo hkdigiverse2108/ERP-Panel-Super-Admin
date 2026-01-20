@@ -306,6 +306,20 @@ export interface CommonDataType {
   updatedAt: string;
 }
 
+export interface AddressBase {
+  address?: string;
+  country?: string;
+  state?: string;
+  city?: string;
+  pinCode?: string;
+}
+
+export interface AddressApi extends Omit<AddressBase, "country" | "state" | "city"> {
+  country?: LocationBase;
+  state?: LocationBase;
+  city?: LocationBase;
+}
+
 // ************ Common Api Data Type End ***********
 
 // ************ Common Switch Start ***********

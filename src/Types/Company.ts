@@ -1,5 +1,4 @@
-import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
-import type { LocationBase } from "./Location";
+import type { AddressApi, AddressBase, CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
 
 export interface CompanyFormValues {
   accountingType?: string;
@@ -12,11 +11,7 @@ export interface CompanyFormValues {
   ownerNo?: PhoneNumberType;
   customerCareNumber?: string;
 
-  address?: string;
-  city?: string;
-  state?: string;
-  country?: string;
-  pinCode?: string;
+  address?: AddressBase;
 
   bankId?: string;
   upiId?: string;
@@ -57,8 +52,8 @@ export type AddCompanyPayload = CompanyFormValues;
 
 export type EditCompanyPayload = CompanyFormValues & { companyId: string };
 
-export interface CompanyBase extends Omit<CompanyFormValues, "country">, CommonDataType {
-  country: LocationBase;
+export interface CompanyBase extends Omit<CompanyFormValues, "address">, CommonDataType {
+  address: AddressApi;
 }
 
 export interface CompanyDataResponse extends PageStatus {

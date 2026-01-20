@@ -235,7 +235,7 @@ export const CompanyFormSchemas = Yup.object({
 });
 
 export const LocationFormSchema = Yup.object({
-  code: Validation("string", "code"),
+  code: Validation("string", "code",{ required: false }),
   type: Validation("string", "Type"),
   name: Validation("string", "Location name"),
   parentId: RequiredWhen("type", ["state", "city"], "Parent Location", "string"),
