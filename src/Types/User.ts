@@ -22,6 +22,8 @@ export interface BankDetails {
 }
 
 export interface UserFormValues {
+  state: string | undefined;
+  country: string | undefined;
   password?: string;
   fullName?: string;
   username?: string;
