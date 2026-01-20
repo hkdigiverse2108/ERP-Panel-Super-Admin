@@ -36,5 +36,9 @@ export const ROUTES = {
   LOCATION: {
     BASE: "/location",
     ADD_EDIT: "/location/add-edit",
+  },
+  ACCOUNT_GROUP:{
+    BASE: "/account-group",
+    TREE: "/account-group/tree",
   }
 } as const;

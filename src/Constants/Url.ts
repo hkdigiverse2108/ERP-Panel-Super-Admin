@@ -97,5 +97,19 @@ export const URL_KEYS = {
     CITY: "/location/city",
     ADD: "/location/add",
     EDIT: "/location/edit",
-  }
+  },
+  ACCOUNT_GROUP: {
+    BASE: "/account-group",
+    DROPDOWN: "/account-group/dropdown",
+    ALL: "/account-group/all",
+    ADD: "/account-group/add",
+    EDIT: "/account-group/edit",
+  },
+  ACCOUNT: {
+    BASE: "/account",
+    DROPDOWN: "/account/dropdown",
+    ALL: "/account/all",
+    ADD: "/account/add",
+    EDIT: "/account/edit",
+  },
 } as const;

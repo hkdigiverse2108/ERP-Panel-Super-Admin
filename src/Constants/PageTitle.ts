@@ -59,5 +59,14 @@ export const PAGE_TITLE = {
     BASE: "Location",
     ADD: "Add Location",
     EDIT: "Edit Location",
+  },
+  ACCOUNTING:{
+    BASE: "Accounting",
+  },
+  ACCOUNT_GROUP:{
+    BASE:"Account Group",
+    ADD:"Add Account Group",
+    EDIT:"Edit Account Group",
+    TREE:"Account Group Tree"
   }
 } as const;
