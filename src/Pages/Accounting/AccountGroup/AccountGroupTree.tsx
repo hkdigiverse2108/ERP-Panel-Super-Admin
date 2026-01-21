@@ -1,141 +1,99 @@
-// import { Box } from "@mui/material";
-// import { CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
-// import { PAGE_TITLE } from "../../../Constants";
-// import { BREADCRUMBS } from "../../../Data";
-// import "zingchart/es6";
-// import ZingChart from "zingchart-react";
-// import "zingchart/modules-es6/zingchart-tree.min.js";
-
-// const AccountGroupTree = () => {
-//   const treeConfig = {
-//     type: "tree",
-//     options: {
-//       aspect: "tree-right",
-//       layout: "tree-right",
-//       node: {
-//         type: "circle",
-//         label: {
-//           visible: true,
-//           fontSize: 12,
-//         },
-//         hoverState: {
-//           visible: false,
-//         },
-//       },
-//       connectors: [
-//         {
-//           type: "step",
-//           lineStyle: "solid",
-//           lineColor: "#666",
-//           lineWidth: 2,
-//         },
-//       ],
-//     },
-//     series: [
-//       { type: "node", id: "primary", parent: "", name: "Primary" },
-//       { type: "node", id: "current-assets", parent: "primary", name: "Current Assets" },
-//       { type: "node", id: "bank-account", parent: "current-assets", name: "Bank Account" },
-//       { type: "node", id: "cash-in-hand", parent: "current-assets", name: "Cash in Hand" },
-//       { type: "node", id: "stock-in-hand", parent: "current-assets", name: "Stock in Hand" },
-//       { type: "node", id: "sundry-debtors", parent: "current-assets", name: "Sundry Debtors" },
-//       { type: "node", id: "current-liabilities", parent: "primary", name: "Current Liabilities" },
-//       { type: "node", id: "duties-taxes", parent: "current-liabilities", name: "Duties & Taxes" },
-//       { type: "node", id: "tds", parent: "duties-taxes", name: "TDS" },
-//       { type: "node", id: "tcs", parent: "duties-taxes", name: "TCS" },
-//       { type: "node", id: "salary-payable", parent: "current-liabilities", name: "Salary Payable" },
-//     ],
-//   };
-
-//   return (
-//     <>
-//       <CommonBreadcrumbs title={PAGE_TITLE.ACCOUNT_GROUP.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.ACCOUNT_GROUP.BASE} />
-//       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
-//         <CommonCard hideDivider>
-//           <ZingChart data={treeConfig} height="600px" />
-//         </CommonCard>
-//       </Box>
-//     </>
-//   );
-// };
-
-// export default AccountGroupTree;
-
 import { Box } from "@mui/material";
+import type { Edge, Node } from "reactflow";
+import ReactFlow, { Background, Controls, MiniMap, Position } from "reactflow";
+import "reactflow/dist/style.css";
+
+import { Queries } from "../../../Api";
 import { CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
+import type { AccountGroupTreeDataResponse } from "../../../Types";
 
-import ReactFlow, { Background, Controls, MiniMap, Position } from "reactflow";
-import type { Node, Edge } from "reactflow";
-import "reactflow/dist/style.css";
+/* -------------------- Layout constants -------------------- */
+const NODE_HEIGHT = 40;
+const NODE_GAP_Y = 40;
+const LEVEL_GAP_X = 280;
 
-const nodes: Node[] = [
-  // Root
-  {
-    id: "primary",
-    data: { label: "Primary" },
-    position: { x: 0, y: 200 },
-    sourcePosition: Position.Right,
-    targetPosition: Position.Left,
-  },
+/* -------------------- Types -------------------- */
+type FlowResult = {
+  nodes: Node[];
+  edges: Edge[];
+};
 
-  // Level 1
-  {
-    id: "current-assets",
-    data: { label: "Current Assets" },
-    position: { x: 250, y: 100 },
-    sourcePosition: Position.Right,
-    targetPosition: Position.Left,
-  },
-  {
-    id: "current-liabilities",
-    data: { label: "Current Liabilities" },
-    position: { x: 250, y: 300 },
-    sourcePosition: Position.Right,
-    targetPosition: Position.Left,
-  },
+/* -------------------- Calculate subtree height -------------------- */
+const getSubtreeHeight = (node: AccountGroupTreeDataResponse): number => {
+  if (!node.children || node.children.length === 0) {
+    return NODE_HEIGHT;
+  }
 
-  // Level 2 - Assets
-  { id: "bank", data: { label: "Bank Account" }, position: { x: 550, y: 0 }, targetPosition: Position.Left },
-  { id: "cash", data: { label: "Cash in Hand" }, position: { x: 550, y: 80 }, targetPosition: Position.Left },
-  { id: "stock", data: { label: "Stock in Hand" }, position: { x: 550, y: 160 }, targetPosition: Position.Left },
-  { id: "debtors", data: { label: "Sundry Debtors" }, position: { x: 550, y: 240 }, targetPosition: Position.Left },
+  return node.children.reduce((sum, child) => sum + getSubtreeHeight(child), 0) + (node.children.length - 1) * NODE_GAP_Y;
+};
 
-  // Level 2 - Liabilities
-  { id: "duties", data: { label: "Duties & Taxes" }, position: { x: 550, y: 320 }, sourcePosition: Position.Right, targetPosition: Position.Left },
-  { id: "salary", data: { label: "Salary Payable" }, position: { x: 550, y: 400 }, targetPosition: Position.Left },
+/* -------------------- Build CENTERED tree -------------------- */
+const buildCenteredTree = (data: AccountGroupTreeDataResponse[], level = 0, parentId?: string, startY = 0): FlowResult => {
+  const nodes: Node[] = [];
+  const edges: Edge[] = [];
 
-  // Level 3
-  { id: "tds", data: { label: "TDS" }, position: { x: 800, y: 300 }, targetPosition: Position.Left },
-  { id: "tcs", data: { label: "TCS" }, position: { x: 800, y: 360 }, targetPosition: Position.Left },
-];
+  let currentY = startY;
 
-const edges: Edge[] = [
-  { id: "e1", source: "primary", target: "current-assets", type: "smoothstep" , animated: true},
-  { id: "e2", source: "primary", target: "current-liabilities", type: "smoothstep", animated: true },
+  data.forEach((item) => {
+    const subtreeHeight = getSubtreeHeight(item);
 
-  { id: "e3", source: "current-assets", target: "bank", type: "smoothstep", animated: true },
-  { id: "e4", source: "current-assets", target: "cash", type: "smoothstep", animated: true },
-  { id: "e5", source: "current-assets", target: "stock", type: "smoothstep", animated: true },
-  { id: "e6", source: "current-assets", target: "debtors", type: "smoothstep", animated: true },
+    // Parent is vertically centered in its subtree
+    const nodeY = currentY + subtreeHeight / 2 - NODE_HEIGHT / 2;
 
-  { id: "e7", source: "current-liabilities", target: "duties", type: "smoothstep", animated: true },
-  { id: "e8", source: "current-liabilities", target: "salary", type: "smoothstep", animated: true },
+    nodes.push({
+      id: item._id,
+      data: { label: item.name },
+      position: {
+        x: level * LEVEL_GAP_X,
+        y: nodeY,
+      },
+      sourcePosition: Position.Right,
+      targetPosition: Position.Left,
+    });
 
-  { id: "e9", source: "duties", target: "tds", type: "smoothstep", animated: true },
-  { id: "e10", source: "duties", target: "tcs", type: "smoothstep", animated: true },
-];
+    if (parentId) {
+      edges.push({
+        id: `${parentId}-${item._id}`,
+        source: parentId,
+        target: item._id,
+        type: "smoothstep",
+        animated: true,
+      });
+    }
 
+    if (item.children?.length) {
+      const childFlow = buildCenteredTree(item.children, level + 1, item._id, currentY);
+
+      nodes.push(...childFlow.nodes);
+      edges.push(...childFlow.edges);
+    }
+
+    currentY += subtreeHeight + NODE_GAP_Y;
+  });
+
+  return { nodes, edges };
+};
+
+/* -------------------- Page Component -------------------- */
 const AccountGroupTree = () => {
-  
+  const { data, isLoading } = Queries.useGetAccountGroupTree();
+
+  if (isLoading) return null;
+
+  const treeData: AccountGroupTreeDataResponse[] = data?.data ?? [];
+
+  const { nodes, edges } = buildCenteredTree(treeData);
+
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.ACCOUNT_GROUP.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.ACCOUNT_GROUP.BASE} />
+      <CommonBreadcrumbs title={PAGE_TITLE.ACCOUNT_GROUP.TREE} maxItems={3} breadcrumbs={BREADCRUMBS.ACCOUNT_GROUP.TREE} />
 
       <Box sx={{ p: 3 }}>
         <CommonCard hideDivider>
           <Box sx={{ height: 600 }}>
-            <ReactFlow nodes={nodes} edges={edges} fitView>
+            <ReactFlow nodes={nodes} edges={edges} fitView fitViewOptions={{ padding: 0.2 }}>
               <Background />
               <Controls />
               <MiniMap />
@@ -148,5 +106,3 @@ const AccountGroupTree = () => {
 };
 
 export default AccountGroupTree;
-
-

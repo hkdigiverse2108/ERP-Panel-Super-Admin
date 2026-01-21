@@ -26,3 +26,14 @@ export interface AccountGroupApiResponse extends MessageStatus {
 export interface AccountGroupDropdownApiResponse extends MessageStatus {
   data: AccountGroupBase[];
 }
+
+export interface AccountGroupTreeDataResponse extends MessageStatus {
+  _id: string;
+  name: string;
+  parentGroupId: string | null;
+  children: AccountGroupTreeDataResponse[];
+}
+
+export interface AccountGroupTreeApiResponse extends MessageStatus {
+  data: AccountGroupTreeDataResponse[];
+}
