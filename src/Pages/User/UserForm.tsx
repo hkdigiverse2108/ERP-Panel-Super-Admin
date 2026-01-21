@@ -39,7 +39,7 @@ const UserForm = () => {
     branchId: data?.branchId?._id || "",
     companyId: data?.companyId?._id || "",
     password: data?.showPassword || "",
-    userType: data?.userType || "Admin",
+    userType: data?.userType || "admin",
    address: {
       address: data?.address?.address || "",
       country: data?.address?.country?._id || "",

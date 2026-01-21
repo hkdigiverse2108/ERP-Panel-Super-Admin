@@ -1,3 +1,5 @@
+import type { BranchFormValues } from "../Types";
+
 export const PRODUCT_TYPE = ["finished", "raw_material", "semi_finished", "service", "non_inventory"] as const;
 
 export const RECIPE_TYPE = ["assemble", "unassemble"] as const;
@@ -211,3 +213,5 @@ export const LOCATION_TYPE= [
   { label: "State", value: "state" },
   { label: "City", value: "city" },
 ]
+
+export  const BANK_UI_FIELDS: (keyof BranchFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber"];

@@ -6,7 +6,7 @@ import { Mutations, Queries } from "../../Api";
 import { CommonPhoneNumber, CommonValidationSelect, CommonValidationTextField } from "../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
-import { BREADCRUMBS } from "../../Data";
+import { BANK_UI_FIELDS, BREADCRUMBS } from "../../Data";
 import type { BranchFormValues } from "../../Types";
 import type { BankBase } from "../../Types/Bank";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
@@ -25,7 +25,7 @@ const BranchForm = () => {
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
 
-  const BANK_UI_FIELDS: (keyof BranchFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber"];
+  // const BANK_UI_FIELDS: (keyof BranchFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber"];
 
   const initialValues: BranchFormValues = {
     companyId: data?.companyId?._id || "",
@@ -70,8 +70,6 @@ const BranchForm = () => {
 
     isActive: data?.isActive ?? true,
   };
-
-  console.log(initialValues);
 
   const FormikBankSync = ({ bankData }: { bankData?: BankBase[] }) => {
     const { values, setFieldValue } = useFormikContext<BranchFormValues>();
