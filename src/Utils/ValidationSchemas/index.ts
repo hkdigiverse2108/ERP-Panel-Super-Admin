@@ -61,7 +61,7 @@ export const UserFormSchema = Yup.object({
     country: Validation("string", "Country"),
     state: Validation("string", "State"),
     city: Validation("string", "City"),
-    postalCode: Validation("string", "ZIP Code", { extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid ZIP Code") }),
+    pinCode: Validation("number", "Pin Code", ),
   }).nullable(),
 
   // ---------- SALARY ----------
@@ -76,7 +76,7 @@ export const UserFormSchema = Yup.object({
 
 //----------- Branch ----------
 export const BranchFormSchema = Yup.object({
-  name: Validation("string", "Branch name"),
+  
   address: Validation("string", "Address"),
   phoneNo: PhoneValidation(),
   telephoneNumber: Validation("string", "Telephone No.", { required: false }),
@@ -91,7 +91,6 @@ export const BranchFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
   panNumber: Validation("string", "PAN No.", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
   gstRegistrationType: Validation("string", "GST Registration Type", { required: false }),
-  upiId: Validation("string", "upiId", { required: false, extraRules: (s) => s.trim().matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Invalid UPI Id") }),
   isActive: Yup.boolean(),
 });
 

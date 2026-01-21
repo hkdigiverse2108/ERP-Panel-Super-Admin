@@ -73,6 +73,7 @@ export const URL_KEYS = {
   },
   ROLE: {
     BASE: "/role",
+    DROPDOWN: "/role/dropdown",
     ALL: "/role/all",
     ADD: "/role/add",
     EDIT: "/role/edit",
