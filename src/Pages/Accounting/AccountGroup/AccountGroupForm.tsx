@@ -11,12 +11,11 @@ import type { AccountGroupFormValues } from "../../../Types";
 import { AccountGroupFormSchema, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 
 const AccountGroupForm = () => {
-  const { data: AccountGroupData, isLoading: AccountGroupDataLoading } = Queries.useGetAccountGroupDropdown();
+  const { isAccountGroupModal } = useAppSelector((state) => state.modal);
+  const { data: AccountGroupData, isLoading: AccountGroupDataLoading } = Queries.useGetAccountGroupDropdown({}, Boolean(isAccountGroupModal.open));
 
   const { mutate: addAccountGroup, isPending: isAddLoading } = Mutations.useAddAccountGroup();
   const { mutate: editAccountGroup, isPending: isEditLoading } = Mutations.useEditAccountGroup();
-
-  const { isAccountGroupModal } = useAppSelector((state) => state.modal);
 
   const dispatch = useDispatch();
 
@@ -32,6 +31,24 @@ const AccountGroupForm = () => {
   };
 
   const closeModal = () => dispatch(setAccountGroupModal({ open: false, data: null }));
+
+  const GroupDetails = (value: { value?: string }) => {
+    const group = AccountGroupData?.data?.find((item) => item._id === value.value);
+
+    return (
+      <Grid size={{ xs: 12 }} sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+        <p className="text-gray-800 dark:text-gray-400">
+          Group Under : <span className="font-normal capitalize text-gray-700 dark:text-gray-200">{group?.parentGroupId?.name}</span>
+        </p>
+        <p className="text-gray-800 dark:text-gray-400">
+          Group Nature : <span className="font-normal capitalize text-gray-700 dark:text-gray-200">{group?.parentGroupId?.nature}</span>
+        </p>
+        <p className="text-gray-800 dark:text-gray-400">
+          Group Level : <span className="font-normal capitalize text-gray-700 dark:text-gray-200">{group?.parentGroupId?.groupLevel}</span>
+        </p>
+      </Grid>
+    );
+  };
 
   const handleSubmit = (values: AccountGroupFormValues, { resetForm }: FormikHelpers<AccountGroupFormValues>) => {
     const onSuccessHandler = () => {
@@ -50,11 +67,13 @@ const AccountGroupForm = () => {
   return (
     <CommonModal title={PAGE_TITLE.ACCOUNT_GROUP[pageMode]} isOpen={openModal} onClose={closeModal} className="max-w-125">
       <Formik<AccountGroupFormValues> enableReinitialize initialValues={initialValues} validationSchema={AccountGroupFormSchema} onSubmit={handleSubmit}>
-        {({ dirty }) => (
+        {({ dirty, values }) => (
           <Form noValidate>
             <Grid container spacing={2} sx={{ p: 1 }}>
               <CommonValidationTextField name="name" label="Group Name" required grid={{ xs: 12 }} />
-              <CommonValidationSelect name="parentGroupId" label="Parent Group" isLoading={AccountGroupDataLoading} options={GenerateOptions(AccountGroupData?.data)} grid={{ xs: 12 }} required />
+              <CommonValidationSelect name="parentGroupId" label="Parent Group" isLoading={AccountGroupDataLoading} options={GenerateOptions(AccountGroupData?.data)} grid={{ xs: 12 }} />
+              <GroupDetails value={values.parentGroupId} />
+
               {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
               <Grid sx={{ display: "flex", gap: 2, ml: "auto" }}>
                 <CommonButton variant="outlined" onClick={closeModal} title="Cancel" />

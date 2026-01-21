@@ -9,13 +9,15 @@ import { setLocationModal } from "../../Store/Slices/ModalSlice";
 import type { AppGridColDef, LocationBase } from "../../Types";
 import { useDataGrid } from "../../Utils/Hooks";
 import LocationForm from "./LocationForm";
-import { CreateFilter, WithAllOption } from "../../Utils";
+import { CreateFilter, GenerateOptions, WithAllOption } from "../../Utils";
 
 const Location = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
   const dispatch = useDispatch();
 
   const { data: locationData, isLoading: locationDataLoading, isFetching: locationDataFetching } = Queries.useGetLocation(params);
+  const { data: parentData, isLoading: parentDataLoading} = Queries.useGetLocation({ typeFilter: advancedFilter?.typeFilter?.[0] });
+
   const { mutate: deleteLocationMutate } = Mutations.useDeleteLocation();
   const { mutate: editLocation, isPending: isEditLoading } = Mutations.useEditLocation();
 
@@ -66,14 +68,26 @@ const Location = () => {
     onFilterModelChange: setFilterModel,
     isExport: false,
   };
-  const filter = [
-    CreateFilter("Select Location Type", "typeFilter", advancedFilter, updateAdvancedFilter, WithAllOption(LOCATION_TYPE), false, { xs: 12, sm: 4 }), // Location Type
-  ];
+
+  const filter = useMemo(() => {
+    const filters = [CreateFilter("Select Location Type", "typeFilter", advancedFilter, updateAdvancedFilter, WithAllOption(LOCATION_TYPE), false, { xs: 12, sm: 4 })];
+
+    if (advancedFilter?.typeFilter?.[0] === "country") {
+      filters.push(CreateFilter("Select Country", "parentFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(parentData?.data?.location_data), parentDataLoading, { xs: 12, sm: 4 }));
+    }
+
+    if (advancedFilter?.typeFilter?.[0] === "state") {
+      filters.push(CreateFilter("Select State", "parentFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(parentData?.data?.location_data), parentDataLoading, { xs: 12, sm: 4 }));
+    }
+
+    return filters;
+  }, [advancedFilter, updateAdvancedFilter, parentData?.data?.location_data, parentDataLoading]);
+
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.LOCATION.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.LOCATION.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <AdvancedSearch filter={filter}/>
+        <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

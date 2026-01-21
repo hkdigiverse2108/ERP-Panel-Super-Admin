@@ -153,6 +153,7 @@ export interface CommonDataGridProps {
   defaultHidden?: string[];
   BoxClass?: string;
   isExport?: boolean;
+  fileName?: string;
 }
 
 export interface CustomToolbarProps {
@@ -164,18 +165,23 @@ export interface CustomToolbarProps {
   isActive?: boolean;
   setActive?: (active: boolean) => void;
   isExport?: boolean;
+  fileName?: string;
+  filterModel: GridFilterModel;
+  onFilterModelChange: (model: GridFilterModel) => void;
 }
 
 export interface ExportToExcelProps<T extends GridValidRowModel> {
   columns: readonly GridColDef[];
   rows: readonly T[];
   fileName?: string;
+  title?: string;
 }
 
 export interface ExportToPDFProps<T extends GridValidRowModel> {
   columns: readonly GridColDef[];
   rows: readonly T[];
   fileName?: string;
+  title?: string;
 }
 
 export interface CommonObjectNameColumnOptions {
@@ -491,7 +497,10 @@ export type DependentSelectProps<T extends ApiOption, P = string | undefined> = 
   required?: boolean;
   disabled?: boolean;
   enabled?: boolean;
-  query: (params?: P, enabled?: boolean) => {
+  query: (
+    params?: P,
+    enabled?: boolean,
+  ) => {
     data?: { data: T[] };
     isLoading: boolean;
   };

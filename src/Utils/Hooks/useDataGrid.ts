@@ -4,7 +4,7 @@ import type { UseDataGridOptions } from "../../Types";
 import { CleanParams } from "..";
 import { useDebounce } from "./useDebounce";
 
-export const useDataGrid = ({ page = 0, pageSize = 10, initialSort = [], initialFilter = { items: [] }, active, debounceDelay = 500 }: UseDataGridOptions = {}) => {
+export const useDataGrid = ({ page = 0, pageSize = 10, initialSort = [], initialFilter = { items: [] }, active, debounceDelay = 0 }: UseDataGridOptions = {}) => {
   /* ---------------- Pagination ---------------- */
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page, pageSize });
 

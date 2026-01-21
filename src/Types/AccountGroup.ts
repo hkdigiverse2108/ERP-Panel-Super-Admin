@@ -4,6 +4,7 @@ export interface AccountGroupFormValues {
   name?: string;
   parentGroupId?: string;
   nature?: string;
+  groupLevel?: number;
   isActive?: boolean;
 }
 

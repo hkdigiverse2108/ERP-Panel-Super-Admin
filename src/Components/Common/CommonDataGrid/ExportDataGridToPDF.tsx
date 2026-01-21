@@ -17,7 +17,7 @@ const normalizeExportValue = (value: unknown): string | number => {
 /* -------------------------------------------------------
    Export Function
 ------------------------------------------------------- */
-export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows, fileName = "data.pdf" }: ExportToPDFProps<T>): void => {
+export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows, fileName = "data.pdf", title = "" }: ExportToPDFProps<T>): void => {
   const doc = new jsPDF("l", "pt", "a4");
 
   /* -----------------------------------------------
@@ -39,12 +39,12 @@ export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows
 
       const rawValue = (row as Record<string, unknown>)[col.field];
 
-   if ("exportFormatter" in col && typeof col.exportFormatter === "function") {
-      return col.exportFormatter(rawValue, row);
-    }
+      if ("exportFormatter" in col && typeof col.exportFormatter === "function") {
+        return col.exportFormatter(rawValue, row);
+      }
 
       return normalizeExportValue(rawValue);
-    })
+    }),
   );
 
   /* -----------------------------------------------
@@ -53,10 +53,28 @@ export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows
   autoTable(doc, {
     head: [tableHeaders],
     body: tableRows,
-    startY: 40,
-    styles: { fontSize: 9 },
+    startY: 60,
+    styles: { fontSize: 10 },
     headStyles: { fillColor: [22, 160, 133] },
+    columnStyles: exportableColumns.reduce((acc, _, index) => {
+      acc[index] = { cellWidth: "auto" };
+      return acc;
+    }, {} as any),
+
+    didDrawPage: () => {
+      const pageWidth = doc.internal.pageSize.getWidth();
+
+      doc.setFontSize(14);
+      doc.text(fileName, pageWidth / 2, 30, { align: "center" });
+
+      if (title) {
+        doc.setFontSize(10);
+        doc.text(`Exported by: ${title}`, pageWidth / 2, 48, {
+          align: "center",
+        });
+      }
+    },
   });
 
-  doc.save(fileName);
+  doc.save(fileName + ".pdf");
 };

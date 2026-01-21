@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { CommonButton } from "../../../Attribute";
 import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import { setAccountGroupModal } from "../../../Store/Slices/ModalSlice";
@@ -33,16 +34,10 @@ const AccountGroup = () => {
   const handleEdit = (row: AccountGroupBase) => dispatch(setAccountGroupModal({ open: true, data: row }));
 
   const columns: AppGridColDef<AccountGroupBase>[] = [
-    { field: "name", headerName: "Group Name", width: 300 },
-    { field: "nature", headerName: "Group nature", width: 300 },
-    {
-      field: "parentGroupId",
-      headerName: "Parent Group",
-      flex: 1,
-      minWidth: 300,
-      renderCell: ({ value }) => (typeof value === "object" ? value?.name || "-" : value),
-      exportFormatter: (value) => (typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-"),
-    },
+    { field: "name", headerName: "Group Name", width: 350 },
+    { field: "nature", headerName: "Group nature", width: 350 },
+    CommonObjectPropertyColumn<AccountGroupBase>("parentGroupName", "parentGroupId", "name", { headerName: "Parent Group", width: 300 }),
+    CommonObjectPropertyColumn<AccountGroupBase>("parentGroupNature", "parentGroupId", "nature", { headerName: "Parent Nature",flex: 1, minWidth: 300 }),
     CommonActionColumn({
       active: (row) => editAccountGroup({ accountGroupId: row?._id, isActive: !row.isActive }),
       onEdit: (row) => handleEdit(row),
@@ -50,11 +45,13 @@ const AccountGroup = () => {
     }),
   ];
 
+
   const CommonDataGridOption = {
     columns,
     rows: allAccountGroup,
     rowCount: totalRows,
     loading: accountGroupDataLoading || accountGroupDataFetching || isEditLoading,
+    fileName: "Account Group",
     isActive,
     setActive,
     handleAdd,
@@ -64,12 +61,11 @@ const AccountGroup = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    isExport: false,
   };
 
   const topContent = (
     <Grid size={"auto"}>
-      <CommonButton variant="outlined" title="View Tree" size="medium" onClick={() => navigate(ROUTES.ACCOUNT_GROUP.TREE)} />
+      <CommonButton variant="contained" title="View Tree" size="small" onClick={() => navigate(ROUTES.ACCOUNT_GROUP.TREE)} />
     </Grid>
   );
 
@@ -77,7 +73,7 @@ const AccountGroup = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.ACCOUNT_GROUP.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.ACCOUNT_GROUP.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
-        <CommonCard topContent={topContent}>
+        <CommonCard topContent={topContent} gridClass="justify-end!">
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
         <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />

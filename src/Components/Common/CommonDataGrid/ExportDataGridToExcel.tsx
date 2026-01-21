@@ -1,48 +1,87 @@
 import type { GridValidRowModel } from "@mui/x-data-grid";
 import { saveAs } from "file-saver";
-import * as XLSX from "xlsx";
-import type { ExportToExcelProps } from "../../../Types";
+import * as XLSX from "xlsx-js-style";
+import type { AppGridColDef } from "../../../Types";
 
-export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, rows, fileName = "data.xlsx" }: ExportToExcelProps<T>): void => {
+export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, rows, fileName = "data", title = "Report" }: { columns: AppGridColDef<T>[]; rows: readonly T[]; fileName?: string; title?: string }) => {
   const exportableColumns = columns.filter((col) => !col.disableExport && col.field !== "actions");
 
-  const excelData: Record<string, unknown>[] = rows.map((row, index) => {
-    const record: Record<string, unknown> = {};
+  /* ---------------------------------- */
+  /* Headers & Rows                     */
+  /* ---------------------------------- */
+  const headers = exportableColumns.map((col) => col.headerName ?? col.field);
 
-    exportableColumns.forEach((col) => {
-      const header = col.headerName ?? col.field;
+  const dataRows = rows.map((row, index) =>
+    exportableColumns.map((col) => {
+      if (col.field === "srNo") return index + 1;
 
-      if (col.field === "srNo") {
-        record[header] = index + 1;
-        return;
+      const raw = (row as Record<string, unknown>)[col.field];
+      if (typeof col.exportFormatter === "function") {
+        return col.exportFormatter(raw, row);
       }
+      return raw ?? "-";
+    }),
+  );
 
-      const rawValue = (row as Record<string, unknown>)[col.field];
+  const sheetData = [[title], headers, ...dataRows];
+  const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
 
-      if ("exportFormatter" in col && typeof col.exportFormatter === "function") {
-        record[header] = col.exportFormatter(rawValue, row);
-      } else {
-        record[header] = rawValue ?? "";
-      }
-    });
+  /* ---------------------------------- */
+  /* Merge title                        */
+  /* ---------------------------------- */
+  worksheet["!merges"] = [
+    {
+      s: { r: 0, c: 0 },
+      e: { r: 0, c: headers.length - 1 },
+    },
+  ];
 
-    return record;
+  /* ---------------------------------- */
+  /* Column width                       */
+  /* ---------------------------------- */
+  worksheet["!cols"] = headers.map((h, i) => ({
+    wch: Math.min(Math.max(h.length, ...dataRows.map((r) => String(r[i] ?? "").length)) + 4, 30),
+  }));
+
+  /* ---------------------------------- */
+  /* Title style                        */
+  /* ---------------------------------- */
+  worksheet["A1"].s = {
+    font: { bold: true, sz: 14 },
+    alignment: { horizontal: "center", vertical: "center" },
+  };
+
+  worksheet["!rows"] = [{ hpt: 30 }];
+
+  /* ---------------------------------- */
+  /* Header style                       */
+  /* ---------------------------------- */
+  headers.forEach((_, i) => {
+    const ref = XLSX.utils.encode_cell({ r: 1, c: i });
+    worksheet[ref].s = {
+      font: { bold: true },
+      alignment: { horizontal: "center" },
+      border: {
+        bottom: { style: "thin" },
+      },
+    };
   });
 
-  const worksheet = XLSX.utils.json_to_sheet(excelData);
+  /* ---------------------------------- */
+  /* Workbook                           */
+  /* ---------------------------------- */
   const workbook = XLSX.utils.book_new();
-
   XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
 
-  const excelBuffer = XLSX.write(workbook, {
-    bookType: "xlsx",
+  const buffer = XLSX.write(workbook, {
     type: "array",
+    bookType: "xlsx",
   });
 
   saveAs(
-    new Blob([excelBuffer], {
+    new Blob([buffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     }),
-    fileName
+    `${fileName}.xlsx`,
   );
 };

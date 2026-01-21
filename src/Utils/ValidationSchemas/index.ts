@@ -244,6 +244,6 @@ export const LocationFormSchema = Yup.object({
 
 export const AccountGroupFormSchema = Yup.object({
   name: Validation("string", "Group name"),
-  parentGroupId: Validation("string", "Parent Group"),
+  parentGroupId: Validation("string", "Parent Group", { required: false }),
   isActive: Validation("boolean", "is Active", { required: false }),
 });

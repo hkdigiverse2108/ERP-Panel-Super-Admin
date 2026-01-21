@@ -65,7 +65,7 @@ import { CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 
-import ReactFlow, { Background, Controls, Position } from "reactflow";
+import ReactFlow, { Background, Controls, MiniMap, Position } from "reactflow";
 import type { Node, Edge } from "reactflow";
 import "reactflow/dist/style.css";
 
@@ -76,6 +76,7 @@ const nodes: Node[] = [
     data: { label: "Primary" },
     position: { x: 0, y: 200 },
     sourcePosition: Position.Right,
+    targetPosition: Position.Left,
   },
 
   // Level 1
@@ -110,22 +111,23 @@ const nodes: Node[] = [
 ];
 
 const edges: Edge[] = [
-  { id: "e1", source: "primary", target: "current-assets", type: "smoothstep" },
-  { id: "e2", source: "primary", target: "current-liabilities", type: "smoothstep" },
+  { id: "e1", source: "primary", target: "current-assets", type: "smoothstep" , animated: true},
+  { id: "e2", source: "primary", target: "current-liabilities", type: "smoothstep", animated: true },
 
-  { id: "e3", source: "current-assets", target: "bank", type: "smoothstep" },
-  { id: "e4", source: "current-assets", target: "cash", type: "smoothstep" },
-  { id: "e5", source: "current-assets", target: "stock", type: "smoothstep" },
-  { id: "e6", source: "current-assets", target: "debtors", type: "smoothstep" },
+  { id: "e3", source: "current-assets", target: "bank", type: "smoothstep", animated: true },
+  { id: "e4", source: "current-assets", target: "cash", type: "smoothstep", animated: true },
+  { id: "e5", source: "current-assets", target: "stock", type: "smoothstep", animated: true },
+  { id: "e6", source: "current-assets", target: "debtors", type: "smoothstep", animated: true },
 
-  { id: "e7", source: "current-liabilities", target: "duties", type: "smoothstep" },
-  { id: "e8", source: "current-liabilities", target: "salary", type: "smoothstep" },
+  { id: "e7", source: "current-liabilities", target: "duties", type: "smoothstep", animated: true },
+  { id: "e8", source: "current-liabilities", target: "salary", type: "smoothstep", animated: true },
 
-  { id: "e9", source: "duties", target: "tds", type: "smoothstep" },
-  { id: "e10", source: "duties", target: "tcs", type: "smoothstep" },
+  { id: "e9", source: "duties", target: "tds", type: "smoothstep", animated: true },
+  { id: "e10", source: "duties", target: "tcs", type: "smoothstep", animated: true },
 ];
 
 const AccountGroupTree = () => {
+  
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.ACCOUNT_GROUP.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.ACCOUNT_GROUP.BASE} />
@@ -136,6 +138,7 @@ const AccountGroupTree = () => {
             <ReactFlow nodes={nodes} edges={edges} fitView>
               <Background />
               <Controls />
+              <MiniMap />
             </ReactFlow>
           </Box>
         </CommonCard>

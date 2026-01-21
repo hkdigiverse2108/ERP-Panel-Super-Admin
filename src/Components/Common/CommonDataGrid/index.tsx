@@ -1,12 +1,11 @@
+import type { GridColDef, GridValueGetter } from "@mui/x-data-grid";
 import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import { useMemo, type FC } from "react";
-import CustomToolbar from "./CustomToolbar";
 import type { CommonDataGridProps } from "../../../Types";
-import type { GridColDef, GridValueGetter } from "@mui/x-data-grid";
-import { Box } from "@mui/material";
+import CustomToolbar from "./CustomToolbar";
 import NoRowsOverlay from "./NoRowsOverlay";
 
-const CommonDataGrid: FC<CommonDataGridProps> = ({isExport, columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, defaultHidden = [], BoxClass, handleAdd, isActive, setActive }) => {
+const CommonDataGrid: FC<CommonDataGridProps> = ({isExport,fileName, columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, defaultHidden = [], BoxClass, handleAdd, isActive, setActive }) => {
   const apiRef = useGridApiRef();
 
   const visibilityModel = useMemo(() => {
@@ -49,9 +48,9 @@ const CommonDataGrid: FC<CommonDataGridProps> = ({isExport, columns, rows, rowCo
         rowCount={rowCount}
         loading={loading}
         slots={{
-          toolbar: () => <CustomToolbar isExport={isExport} apiRef={apiRef} columns={fixedColumns} rows={rows} rowCount={rowCount} handleAdd={handleAdd} isActive={isActive} setActive={setActive} />,
+          toolbar: () => <CustomToolbar filterModel={filterModel} onFilterModelChange={onFilterModelChange} isExport={isExport} fileName={fileName} apiRef={apiRef} columns={fixedColumns} rows={rows} rowCount={rowCount} handleAdd={handleAdd} isActive={isActive} setActive={setActive} />,
           noRowsOverlay: () => <NoRowsOverlay />,
-          noResultsOverlay: () => <Box sx={{ p: 2, textAlign: "center" }}>No matching results</Box>,
+          // noResultsOverlay: () => <Box sx={{ p: 2, textAlign: "center" }}>No matching results</Box>,
         }}
         showToolbar
         initialState={{
@@ -60,7 +59,7 @@ const CommonDataGrid: FC<CommonDataGridProps> = ({isExport, columns, rows, rowCo
         paginationMode="server"
         paginationModel={paginationModel}
         onPaginationModelChange={onPaginationModelChange}
-        pageSizeOptions={[5, 10, 50, 100, { value: rowCount, label: "All" }]}
+        pageSizeOptions={[5, 10, 50, 100]}
         sortingMode="client"
         sortModel={sortModel}
         onSortModelChange={onSortModelChange}
