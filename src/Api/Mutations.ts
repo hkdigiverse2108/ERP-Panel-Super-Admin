@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AddBranchPayload, AddBrandPayload, AddCategoryPayload, AddCompanyPayload, AddLocationPayload, AddProductPayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddTaxPayload, AddUomPayload, AddUserPayload, CallRequestFormValues, EditBranchPayload, EditBrandPayload, EditCategoryPayload, EditCompanyPayload, EditLocationPayload, EditProductPayload, EditTaxPayload, EditUomPayload, EditUserPayload, LoginPayload, LoginResponse, UploadResponse, UserApiResponse } from "../Types";
+import type { AddAccountGroupPayload, AddBranchPayload, AddBrandPayload, AddCategoryPayload, AddCompanyPayload, AddLocationPayload, AddProductPayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddTaxPayload, AddUomPayload, AddUserPayload, CallRequestFormValues, EditAccountGroupPayload, EditBranchPayload, EditBrandPayload, EditCategoryPayload, EditCompanyPayload, EditLocationPayload, EditProductPayload, EditTaxPayload, EditUomPayload, EditUserPayload, LoginPayload, LoginResponse, UploadResponse, UserApiResponse } from "../Types";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
 
@@ -63,4 +63,9 @@ export const Mutations = {
   useEditLocation: () => useMutations<EditLocationPayload, void>([KEYS.LOCATION.EDIT, KEYS.LOCATION.BASE], (input) => Put(URL_KEYS.LOCATION.EDIT, input)),
   useDeleteLocation: () => useMutations<string, void>([KEYS.LOCATION.DELETE, KEYS.LOCATION.BASE], (id) => Delete(`${URL_KEYS.LOCATION.BASE}/${id}`)),
 
+  
+  //*************** Account Group **************** */
+  useAddAccountGroup: () => useMutations<AddAccountGroupPayload, void>([KEYS.ACCOUNT_GROUP.ADD, KEYS.ACCOUNT_GROUP.BASE], (input) => Post(URL_KEYS.ACCOUNT_GROUP.ADD, input)),
+  useEditAccountGroup: () => useMutations<EditAccountGroupPayload, void>([KEYS.ACCOUNT_GROUP.EDIT, KEYS.ACCOUNT_GROUP.BASE], (input) => Put(URL_KEYS.ACCOUNT_GROUP.EDIT, input)),
+  useDeleteAccountGroup: () => useMutations<string, void>([KEYS.ACCOUNT_GROUP.DELETE, KEYS.ACCOUNT_GROUP.BASE], (id) => Delete(`${URL_KEYS.ACCOUNT_GROUP.BASE}/${id}`)),
 };

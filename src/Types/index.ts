@@ -16,3 +16,4 @@ export * from "./Uom";
 export * from "./Tax";
 export * from "./Stock";
 export * from "./Location";
+export * from "./AccountGroup";

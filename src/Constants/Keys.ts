@@ -92,4 +92,10 @@ export const KEYS = {
     EDIT: "location-edit", 
     DELETE: "location-delete",
   },
+  ACCOUNT_GROUP:{
+    BASE: "account-group",
+    ADD: "account-group-add",
+    EDIT: "account-group-edit",
+    DELETE: "account-group-delete",
+  }
 };

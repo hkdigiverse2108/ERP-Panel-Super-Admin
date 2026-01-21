@@ -240,3 +240,9 @@ export const LocationFormSchema = Yup.object({
   parentId: RequiredWhen("type", ["state", "city"], "Parent Location", "string"),
   isActive: Validation("boolean", "is Active", { required: false }),
 });
+
+export const AccountGroupFormSchema = Yup.object({
+  name: Validation("string", "Group name"),
+  parentGroupId: Validation("string", "Parent Group"),
+  isActive: Validation("boolean", "is Active", { required: false }),
+});
