@@ -31,7 +31,7 @@ const BranchForm = () => {
     companyId: data?.companyId?._id || "",
 
     name: data?.name || "",
-    displayName: data?.displayName || "",
+    displayName: data?.displayName || "", 
     contactName: data?.contactName || "",
 
     phoneNo: {
@@ -43,7 +43,6 @@ const BranchForm = () => {
     email: data?.email || "",
 
     userName: data?.userName || "",
-    password: data?.showPassword || "",
     yearInterval: data?.yearInterval || "",
 
     gstRegistrationType: data?.gstRegistrationType || "",
@@ -53,7 +52,7 @@ const BranchForm = () => {
     webSite: data?.webSite || "",
     fssaiNo: data?.fssaiNo || "",
 
-   address: {
+    address: {
       address: data?.address?.address || "",
       country: data?.address?.country?._id || "",
       state: data?.address?.state?._id || "",
@@ -71,6 +70,9 @@ const BranchForm = () => {
 
     isActive: data?.isActive ?? true,
   };
+
+  console.log(initialValues);
+
   const FormikBankSync = ({ bankData }: { bankData?: BankBase[] }) => {
     const { values, setFieldValue } = useFormikContext<BranchFormValues>();
 
@@ -128,17 +130,16 @@ const BranchForm = () => {
                     <CommonValidationTextField name="gstIdentificationNumber" label="GST Identification Number" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="gstRegistrationType" label="GST Registration Type" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="userName" label="Username" required grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="password" label="Password" showPasswordToggle type="password" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="yearInterval" label="Year Interval" required grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>
                 <CommonCard title="Contact Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonPhoneNumber label="Phone Number" countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" required grid={{ xs: 12, md: 4 }} />
+                    <CommonPhoneNumber label="phoneNo" countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="telephoneNumber" label="Telephone No" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="webSite" label="Website" grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="fssaiNo" label="FSSAI No."  grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="fssaiNo" label="FSSAI No." grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>
 
@@ -155,7 +156,7 @@ const BranchForm = () => {
 
                 <CommonCard title="Communication Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonValidationTextField name="address.address" label="Address" grid={{ xs: 12, md: 4 }} multiline required />
+                    <CommonValidationTextField name="address.address" label="Address" grid={{ xs: 12, md: 4 }} multiline required />
                     <DependentSelect name="address.country" label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required />
                     <DependentSelect params={values.address?.country} name="address.state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values.address?.country} required />
                     <DependentSelect params={values.address?.state} name="address.city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values.address?.state} required />
@@ -163,19 +164,7 @@ const BranchForm = () => {
                   </Grid>
                 </CommonCard>
 
-                <CommonBottomActionBar
-                  save={isEditing}
-                  clear={!isEditing}
-                  disabled={!dirty}
-                  isLoading={isEditLoading || isAddLoading}
-                  onClear={() => resetForm({ values: initialValues })}
-                  onSave={() => {
-                    setFieldValue("_submitAction", "save");
-                  }}
-                  onSaveAndNew={() => {
-                    setFieldValue("_submitAction", "saveAndNew");
-                  }}
-                />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}

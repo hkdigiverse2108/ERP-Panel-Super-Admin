@@ -61,7 +61,7 @@ export const UserFormSchema = Yup.object({
     country: Validation("string", "Country"),
     state: Validation("string", "State"),
     city: Validation("string", "City"),
-    pinCode: Validation("number", "Pin Code", ),
+    pinCode: Validation("number", "Pin Code"),
   }).nullable(),
 
   // ---------- SALARY ----------
@@ -76,8 +76,7 @@ export const UserFormSchema = Yup.object({
 
 //----------- Branch ----------
 export const BranchFormSchema = Yup.object({
-  
-  address: Validation("string", "Address"),
+  name: Validation("string", "Branch Name"),
   phoneNo: PhoneValidation(),
   telephoneNumber: Validation("string", "Telephone No.", { required: false }),
   email: Validation("string", "Email", { required: false, extraRules: (s) => s.trim().email("Invalid email address") }),
@@ -86,12 +85,19 @@ export const BranchFormSchema = Yup.object({
   contactName: Validation("string", "Contact Person", { required: false }),
   displayName: Validation("string", "Display Name"),
   userName: Validation("string", "Username"),
-  password: Validation("string", "Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
   yearInterval: Validation("string", "Year Interval"),
   companyId: Validation("string", "Company"),
   panNumber: Validation("string", "PAN No.", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
   gstRegistrationType: Validation("string", "GST Registration Type", { required: false }),
   isActive: Yup.boolean(),
+  address: Yup.object({
+    address: Validation("string", "Address"),
+    country: Validation("string", "Country"),
+    state: Validation("string", "State"),
+    city: Validation("string", "City"),
+    pinCode: Validation("number", "Pin Code"),
+  }).nullable(),
+    bankId: Validation("string", "select Bank"),
 });
 
 export const BrandFormSchema = Yup.object({
@@ -234,7 +240,7 @@ export const CompanyFormSchemas = Yup.object({
 });
 
 export const LocationFormSchema = Yup.object({
-  code: Validation("string", "code",{ required: false }),
+  code: Validation("string", "code", { required: false }),
   type: Validation("string", "Type"),
   name: Validation("string", "Location name"),
   parentId: RequiredWhen("type", ["state", "city"], "Parent Location", "string"),

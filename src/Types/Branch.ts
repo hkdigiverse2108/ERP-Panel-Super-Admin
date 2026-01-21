@@ -13,7 +13,6 @@ export interface BranchFormValues {
   telephoneNumber?: string;
   email?: string;
   userName?: string;
-  password?: string;
   yearInterval?: string;
 
   gstRegistrationType?: string;
