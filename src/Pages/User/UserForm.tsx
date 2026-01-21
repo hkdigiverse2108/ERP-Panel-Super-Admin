@@ -5,7 +5,7 @@ import { Mutations, Queries } from "../../Api";
 import { CommonPhoneNumber, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
-import { BREADCRUMBS, } from "../../Data";
+import { BREADCRUMBS, USER_TYPE, } from "../../Data";
 import type { UserFormValues } from "../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { UserFormSchema } from "../../Utils/ValidationSchemas";
@@ -15,11 +15,12 @@ const UserForm = () => {
   const navigate = useNavigate();
   const { data } = location.state || {};
 
-  const { data: rolesData } = Queries.useGetRoles({ activeFilter: true });
-  const { data: companyData } = Queries.useGetCompany({ activeFilter: true });
-  const { data: branchData } = Queries.useGetBranch({ activeFilter: true });
+  const { data: rolesData , isLoading: rolesDataLoading} = Queries.useGetRolesDropdown();
+  const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
+  const { data: branchData , isLoading: branchDataLoading} = Queries.useGetBranchDropdown();
   const { mutate: addUser, isPending: isAddLoading } = Mutations.useAddUser();
   const { mutate: editUser, isPending: isEditLoading } = Mutations.useEditUser();
+ 
 
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
@@ -38,13 +39,13 @@ const UserForm = () => {
     branchId: data?.branchId?._id || "",
     companyId: data?.companyId?._id || "",
     password: data?.showPassword || "",
-
-    address: {
+    userType: data?.userType || "Admin",
+   address: {
       address: data?.address?.address || "",
-      country: data?.address?.country || "",
-      state: data?.address?.state || "",
-      city: data?.address?.city || "",
-      postalCode: data?.address?.postalCode || null,
+      country: data?.address?.country?._id || "",
+      state: data?.address?.state?._id || "",
+      city: data?.address?.city?._id || "",
+      pinCode: data?.address?.pinCode || null,
     },
 
     bankDetails: {
@@ -62,7 +63,8 @@ const UserForm = () => {
     target: data?.target || null,
     isActive: data?.isActive ?? true,
   };
-
+ 
+  
   const handleSubmit = async (values: UserFormValues, { resetForm }: FormikHelpers<UserFormValues>) => {
     const { _submitAction, ...rest } = values;
     const payload = { ...rest };
@@ -90,16 +92,17 @@ const UserForm = () => {
                 {/* BASIC DETAILS */}
                 <CommonCard title="Basic Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(companyData?.data?.company_data)} grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationSelect name="branchId" label="branch" options={GenerateOptions(branchData?.data?.branch_data)} grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(companyData?.data)} isLoading={companyDataLoading} grid={{ xs: 12, md: 4 }} required />
+                    <CommonValidationSelect name="branchId" label="branch" options={GenerateOptions(branchData?.data)} isLoading={branchDataLoading} grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="designation" label="User designation" grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationSelect name="role" label="role" options={GenerateOptions(rolesData?.data?.role_data)} grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="role" label="role" options={GenerateOptions(rolesData?.data)} isLoading={rolesDataLoading} grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="fullName" label="Full Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="username" label="User Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="password" label="Password" type="password" showPasswordToggle required grid={{ xs: 10, md: 4 }} />
                     <CommonValidationTextField name="panNumber" label="PAN No." grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="userType" label="User Type" required options={USER_TYPE}  grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>
 
@@ -110,7 +113,7 @@ const UserForm = () => {
                     <DependentSelect name="address.country" label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required />
                     <DependentSelect params={values.address?.country} name="address.state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values.address?.country} required />
                     <DependentSelect params={values.address?.state} name="address.city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values.address?.state} required />
-                    <CommonValidationTextField name="address.postalCode" label="Pin Code" grid={{ xs: 12, md: 4 }} required />
+                    <CommonValidationTextField name="address.pinCode" label="Pin Code" grid={{ xs: 12, md: 4 }} required />
                   </Grid>
                 </CommonCard>
 

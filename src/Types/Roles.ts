@@ -20,3 +20,7 @@ export interface RolesApiResponse extends MessageStatus {
   data: RolesDataResponse;
 }
 
+export interface RolesDropdownApiResponse extends MessageStatus {
+  data: RolesBase[];
+}
+

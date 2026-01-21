@@ -1,16 +1,7 @@
 import type { BranchBase } from "./Branch";
 import type { RolesBase } from "./Roles";
-import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
+import type { AddressApi, AddressBase, CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
 import type { CompanyBase } from "./Company";
-
-
-export interface Address {
-  address?: string;
-  country?: string;
-  state?: string;
-  city?: string;
-  postalCode?: string;
-}
 
 export interface BankDetails {
   name?: string;
@@ -22,8 +13,7 @@ export interface BankDetails {
 }
 
 export interface UserFormValues {
-  state: string | undefined;
-  country: string | undefined;
+  userType?: string;
   password?: string;
   fullName?: string;
   username?: string;
@@ -33,7 +23,7 @@ export interface UserFormValues {
   branchId?: string;
   panNumber?: string;
   role?: string;
-  address?: Address;
+  address?: AddressBase;
   bankDetails?: BankDetails;
   wages?: number;
   commission?: number;
@@ -42,17 +32,17 @@ export interface UserFormValues {
   isActive?: boolean;
   _submitAction?: string;
   companyId?: string;
-
 }
 
 export type AddUserPayload = UserFormValues;
 
 export type EditUserPayload = AddUserPayload & { userId: string };
 
-export interface UserBase extends Omit<UserFormValues, "branchId" | "role" | "companyId">, CommonDataType {
+export interface UserBase extends Omit<UserFormValues, "branchId" | "role" | "companyId" | "address">, CommonDataType {
   branchId: BranchBase;
    role: RolesBase;
   companyId: CompanyBase;
+  address?: AddressApi;
 }
 
 export interface UserDataResponse extends PageStatus {

@@ -1,15 +1,7 @@
-import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
+import type { AddressApi, AddressBase, CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
 import type { CompanyBase } from "./Company";
 import type { UserBase } from "./User";
 
-export interface BranchAddress {
-  address?: string;
-  city?: string;
-  state?: string;
-  country?: string;
-  pinCode?: string;
-  timeZone?: string;
-}
 export interface BranchFormValues {
 
   companyId?: string;
@@ -21,7 +13,6 @@ export interface BranchFormValues {
   telephoneNumber?: string;
   email?: string;
   userName?: string;
-  password?: string;
   yearInterval?: string;
 
   gstRegistrationType?: string;
@@ -34,8 +25,7 @@ export interface BranchFormValues {
   state?: string;
   city?: string;
   pinCode?: string;
-  timeZone?: string;
-  address?: BranchAddress;
+  address?: AddressBase;
 
   bankId?: string;
   upiId?: string;
@@ -57,9 +47,10 @@ export type AddBranchPayload = BranchFormValues;
 export type EditBranchPayload = BranchFormValues & {
   branchId: string;
 };
-export interface BranchBase extends Omit<BranchFormValues, "companyId" | "userIds" | "password" | "_submitAction">, CommonDataType {
+export interface BranchBase extends Omit<BranchFormValues, "companyId" | "userIds" | "password" | "address">, CommonDataType {
   companyId: CompanyBase;
   userIds?: UserBase[];
+  address?: AddressApi;
 }
 
 
