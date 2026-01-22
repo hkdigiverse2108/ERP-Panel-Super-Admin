@@ -49,5 +49,6 @@ export const ROUTES = {
   },
   MODULE: {
     BASE: "/module",
+    ADD_EDIT: "/module/add-edit",
   },
 } as const;

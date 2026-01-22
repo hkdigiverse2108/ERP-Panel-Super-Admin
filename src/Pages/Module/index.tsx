@@ -1,18 +1,17 @@
 import { Box } from "@mui/material";
 import { useMemo } from "react";
-import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
 import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../Components/Common";
-import { PAGE_TITLE } from "../../Constants";
+import { PAGE_TITLE, ROUTES } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
-import { setModuleModal } from "../../Store/Slices/ModalSlice";
 import type { AppGridColDef, RoleBase } from "../../Types";
 import { useDataGrid } from "../../Utils/Hooks";
 import ModuleForm from "./ModuleForm";
 
 const Module = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
-  const dispatch = useDispatch();
+    const navigate = useNavigate();
 
   const { data: ModuleData, isLoading: ModuleDataLoading, isFetching: ModuleDataFetching } = Queries.useGetRole(params);
 
@@ -27,15 +26,13 @@ const Module = () => {
     deleteModuleMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
   };
 
-  const handleAdd = () => dispatch(setModuleModal({ open: true, data: null }));
-
-  const handleEdit = (row: RoleBase) => dispatch(setModuleModal({ open: true, data: row }));
+  const handleAdd = () => navigate(ROUTES.MODULE.ADD_EDIT);
 
   const columns: AppGridColDef<RoleBase>[] = [
     { field: "name", headerName: "Name",flex:1, minWidth: 300 },
     CommonActionColumn({
       active: (row) => editModule({ RoleId: row?._id, isActive: !row.isActive }),
-      onEdit: (row) => handleEdit(row),
+      editRoute: ROUTES.MODULE.ADD_EDIT,
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
     }),
   ];

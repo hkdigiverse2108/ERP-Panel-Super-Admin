@@ -53,5 +53,7 @@ export const BREADCRUMBS = {
   },
   MODULE: {
     BASE: [{ label: PAGE_TITLE.MODULE.BASE }],
+    ADD: [{ label: PAGE_TITLE.MODULE.BASE, href: ROUTES.MODULE.BASE }, { label: PAGE_TITLE.MODULE.ADD }],
+    EDIT: [{ label: PAGE_TITLE.MODULE.BASE, href: ROUTES.MODULE.BASE }, { label: PAGE_TITLE.MODULE.EDIT }],
   },
 };

@@ -413,7 +413,6 @@ export interface ModalStateSlice {
   isLocationModal: { open: boolean; data: LocationBase | null };
   isAccountGroupModal: { open: boolean; data: AccountGroupBase | null };
   isRoleModal: { open: boolean; data: RoleBase | null };
-  isModuleModal: { open: boolean; data: any | null };
 }
 
 // ************ Modal End ***********

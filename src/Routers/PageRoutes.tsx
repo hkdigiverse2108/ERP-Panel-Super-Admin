@@ -22,6 +22,7 @@ import Users from "../Pages/User";
 import UserForm from "../Pages/User/UserForm";
 import Role from "../Pages/Role";
 import Module from "../Pages/Module";
+import ModuleForm from "../Pages/Module/ModuleForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -60,6 +61,7 @@ export const PageRoutes = [
   { path: ROUTES.ROLE.BASE, element: <Role /> },
 
   { path: ROUTES.MODULE.BASE, element: <Module /> },
+  { path: ROUTES.MODULE.ADD_EDIT, element: <ModuleForm /> },
 ];
 
 export const AuthRoutes = [
