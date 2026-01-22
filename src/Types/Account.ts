@@ -1,40 +1,39 @@
-import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
-import type { AccountGroupBase } from "./AccountGroup";
 
-export interface AccountBase extends CommonDataType {
-  name: string;
-  groupId?: AccountGroupBase | string;
+import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+
+export interface AccountFormValues {
+  name?: string;
+  accountGroupId?: string;
+  type?: string;
+  nature?: string;
   openingBalance?: number;
   currentBalance?: number;
-  type?: string;
+  groupLevel?: number;
   isActive?: boolean;
 }
-export interface AddAccountPayload {
-  name: string;
-  groupId: string;
-  openingBalance?: number;
-  currentBalance?: number;
-  type?: string;
-  isActive?: boolean;
+
+export type AddAccountPayload = AccountFormValues;
+
+export type EditAccountPayload = AccountFormValues & {
+  accountId?: string;
+};
+
+export interface AccountBase extends Omit<AccountFormValues, "accountGroupId">, CommonDataType {
+  accountGroupId?: AccountGroupBase | string;
 }
 
 export interface AccountDataResponse extends PageStatus {
   account_data: AccountBase[];
 }
+
 export interface AccountApiResponse extends MessageStatus {
   data: AccountDataResponse;
 }
+
 export interface AccountDropdownApiResponse extends MessageStatus {
   data: AccountBase[];
 }
-export interface DeleteAccountPayload {
-  id: string;
-}
 
-export interface GetAccountPayload {
-  id: string;
-}
-
-export interface EditAccountPayload {
-  account: AccountBase;
+export interface AccountGroupBase extends CommonDataType {
+  name?: string;
 }

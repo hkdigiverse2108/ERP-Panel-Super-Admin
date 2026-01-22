@@ -252,3 +252,12 @@ export const AccountGroupFormSchema = Yup.object({
   parentGroupId: Validation("string", "Parent Group", { required: false }),
   isActive: Validation("boolean", "is Active", { required: false }),
 });
+
+export const AccountFormSchema = Yup.object({
+  name: Validation("string", "Account name"),
+  groupId: Validation("string", "Account Group"),
+  type: Validation("string", "Type", { required: false }),
+  openingBalance: Validation("number", "Opening Balance", { required: false }),
+  currentBalance: Validation("number", "Current Balance", { required: false }),
+  isActive: Validation("boolean", "is Active", { required: false }),
+});

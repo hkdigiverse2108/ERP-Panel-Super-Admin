@@ -1,6 +1,6 @@
 import { KEYS, URL_KEYS } from "../Constants";
 import type { AccountGroupApiResponse, AccountGroupDropdownApiResponse, AccountGroupTreeApiResponse, AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, CompanyDropdownApiResponse, CountryApiResponse, LocationApiResponse, Params, ProductApiResponse, ProductDropDownApiResponse, RolesApiResponse, RolesDropdownApiResponse, SingleCompanyApiResponse, TaxApiResponse, TaxDropdownApiResponse, UomApiResponse, UomDropdownApiResponse, UploadResponse, UserApiResponse } from "../Types";
-import type { AccountApiResponse, AccountDropdownApiResponse } from "../Types/Account";
+import type { AccountApiResponse, AccountDropdownApiResponse } from "../Types";
 import type { BankApiResponse, BankDropdownApiResponse } from "../Types/Bank";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
