@@ -2,6 +2,7 @@ import { Navigate } from "react-router-dom";
 import { ROUTES } from "../Constants";
 import AccountGroup from "../Pages/Accounting/AccountGroup";
 import AccountGroupTree from "../Pages/Accounting/AccountGroup/AccountGroupTree";
+import Account from "../Pages/Accounting/Account";
 import SignInForm from "../Pages/Auth/SignInForm";
 import Branch from "../Pages/Branch";
 import BranchForm from "../Pages/Branch/BranchForm";
@@ -51,6 +52,7 @@ export const PageRoutes = [
 
   { path: ROUTES.ACCOUNT_GROUP.BASE, element: <AccountGroup /> },
   { path: ROUTES.ACCOUNT_GROUP.TREE, element: <AccountGroupTree /> },
+  { path: ROUTES.ACCOUNT.BASE, element: <Account /> },
 ];
 
 export const AuthRoutes = [

@@ -11,6 +11,7 @@ const initialState: ModalStateSlice = {
   isCategoryModal: { open: false, data: null },
   isLocationModal: { open: false, data: null },
   isAccountGroupModal: { open: false, data: null },
+  isAccountModal: { open: false, data: null },
 };
 
 const ModalSlice = createSlice({
@@ -45,9 +46,23 @@ const ModalSlice = createSlice({
     setAccountGroupModal(state, action) {
       state.isAccountGroupModal = action.payload;
     },
+    setAccountModal(state, action) {
+      state.isAccountModal = action.payload;
+    },
   },
 });
 
-export const { setUploadModal, setSelectedFiles, setModalVideoPlay, setBrandModal, setCategoryModal, setUomModal, setTaxModal, setLocationModal ,setAccountGroupModal} = ModalSlice.actions;
+export const {
+  setUploadModal,
+  setSelectedFiles,
+  setModalVideoPlay,
+  setBrandModal,
+  setCategoryModal,
+  setUomModal,
+  setTaxModal,
+  setLocationModal,
+  setAccountGroupModal,
+  setAccountModal,
+} = ModalSlice.actions;
 
 export default ModalSlice.reducer;

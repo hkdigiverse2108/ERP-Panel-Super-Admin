@@ -29,6 +29,7 @@ export const NavItems: NavItem[] = [
     icon: <ReceiptLongIcon />,
     subItems: [
       { name: PAGE_TITLE.ACCOUNT_GROUP.BASE, path: ROUTES.ACCOUNT_GROUP.BASE},
+      { name: PAGE_TITLE.ACCOUNT.BASE, path: ROUTES.ACCOUNT.BASE},
     ],
   },
 ];
