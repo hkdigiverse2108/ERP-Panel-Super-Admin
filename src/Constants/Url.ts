@@ -102,6 +102,7 @@ export const URL_KEYS = {
   ACCOUNT_GROUP: {
     BASE: "/account-group",
     DROPDOWN: "/account-group/dropdown",
+    TREE: "/account-group/tree",
     ALL: "/account-group/all",
     ADD: "/account-group/add",
     EDIT: "/account-group/edit",
