@@ -253,11 +253,7 @@ export const AccountGroupFormSchema = Yup.object({
   isActive: Validation("boolean", "is Active", { required: false }),
 });
 
-export const AccountFormSchema = Yup.object({
-  name: Validation("string", "Account name"),
-  groupId: Validation("string", "Account Group"),
-  type: Validation("string", "Type", { required: false }),
-  openingBalance: Validation("number", "Opening Balance", { required: false }),
-  currentBalance: Validation("number", "Current Balance", { required: false }),
+export const RoleFormSchema = Yup.object({
+  name: Validation("string", "Role name"),
   isActive: Validation("boolean", "is Active", { required: false }),
 });

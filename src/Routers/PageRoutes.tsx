@@ -20,6 +20,8 @@ import Location from "../Pages/Location";
 import LocationForm from "../Pages/Location/LocationForm";
 import Users from "../Pages/User";
 import UserForm from "../Pages/User/UserForm";
+import Role from "../Pages/Role";
+import Module from "../Pages/Module";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -52,7 +54,12 @@ export const PageRoutes = [
 
   { path: ROUTES.ACCOUNT_GROUP.BASE, element: <AccountGroup /> },
   { path: ROUTES.ACCOUNT_GROUP.TREE, element: <AccountGroupTree /> },
+
   { path: ROUTES.ACCOUNT.BASE, element: <Account /> },
+
+  { path: ROUTES.ROLE.BASE, element: <Role /> },
+
+  { path: ROUTES.MODULE.BASE, element: <Module /> },
 ];
 
 export const AuthRoutes = [

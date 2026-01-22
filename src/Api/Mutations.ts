@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AddAccountGroupPayload, AddBranchPayload, AddBrandPayload, AddCategoryPayload, AddCompanyPayload, AddLocationPayload, AddProductPayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddTaxPayload, AddUomPayload, AddUserPayload, CallRequestFormValues, EditAccountGroupPayload, EditBranchPayload, EditBrandPayload, EditCategoryPayload, EditCompanyPayload, EditLocationPayload, EditProductPayload, EditTaxPayload, EditUomPayload, EditUserPayload, LoginPayload, LoginResponse, UploadResponse, UserApiResponse } from "../Types";
+import type { AddAccountGroupPayload, AddBranchPayload, AddBrandPayload, AddCategoryPayload, AddCompanyPayload, AddLocationPayload, AddProductPayload, AddRolePayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddTaxPayload, AddUomPayload, AddUserPayload, CallRequestFormValues, EditAccountGroupPayload, EditBranchPayload, EditBrandPayload, EditCategoryPayload, EditCompanyPayload, EditLocationPayload, EditProductPayload, EditRolePayload, EditTaxPayload, EditUomPayload, EditUserPayload, LoginPayload, LoginResponse, UploadResponse, UserApiResponse } from "../Types";
 import type { AddAccountPayload, EditAccountPayload } from "../Types/Account";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
@@ -74,4 +74,9 @@ export const Mutations = {
   useAddAccount: () => useMutations<AddAccountPayload, void>([KEYS.ACCOUNT.ADD, KEYS.ACCOUNT.BASE], (input) => Post(URL_KEYS.ACCOUNT.ADD, input)),
   useEditAccount: () => useMutations<EditAccountPayload, void>([KEYS.ACCOUNT.EDIT, KEYS.ACCOUNT.BASE], (input) => Put(URL_KEYS.ACCOUNT.EDIT, input)),
   useDeleteAccount: () => useMutations<string, void>([KEYS.ACCOUNT.DELETE, KEYS.ACCOUNT.BASE], (id) => Delete(`${URL_KEYS.ACCOUNT.BASE}/${id}`)),
+
+  //*************** Role **************** */
+  useAddRole: () => useMutations<AddRolePayload, void>([KEYS.ROLE.ADD, KEYS.ROLE.BASE], (input) => Post(URL_KEYS.ROLE.ADD, input)),
+  useEditRole: () => useMutations<EditRolePayload, void>([KEYS.ROLE.EDIT, KEYS.ROLE.BASE], (input) => Put(URL_KEYS.ROLE.EDIT, input)),
+  useDeleteRole: () => useMutations<string, void>([KEYS.ROLE.DELETE, KEYS.ROLE.BASE], (id) => Delete(`${URL_KEYS.ROLE.BASE}/${id}`)),
 };

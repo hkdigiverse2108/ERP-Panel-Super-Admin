@@ -73,5 +73,15 @@ export const PAGE_TITLE = {
     BASE:"Account",
     ADD:"Add Account",
     EDIT:"Edit Account",
+  },
+  ROLE:{
+    BASE:"Role",
+    ADD:"Add Role",
+    EDIT:"Edit Role",
+  },
+  MODULE:{
+    BASE:"Module",
+    ADD:"Add Module",
+    EDIT:"Edit Module",
   }
 } as const;

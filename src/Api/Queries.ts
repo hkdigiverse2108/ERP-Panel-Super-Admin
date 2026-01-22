@@ -1,6 +1,6 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AccountGroupApiResponse, AccountGroupDropdownApiResponse, AccountGroupTreeApiResponse, AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, CompanyDropdownApiResponse, CountryApiResponse, LocationApiResponse, Params, ProductApiResponse, ProductDropDownApiResponse, RolesApiResponse, RolesDropdownApiResponse, SingleCompanyApiResponse, TaxApiResponse, TaxDropdownApiResponse, UomApiResponse, UomDropdownApiResponse, UploadResponse, UserApiResponse } from "../Types";
-import type { AccountApiResponse, AccountDropdownApiResponse } from "../Types";
+import type { AccountGroupApiResponse, AccountGroupDropdownApiResponse, AccountGroupTreeApiResponse, AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, CompanyDropdownApiResponse, CountryApiResponse, LocationApiResponse, Params, ProductApiResponse, ProductDropDownApiResponse, RoleApiResponse, RoleDropdownApiResponse, SingleCompanyApiResponse, TaxApiResponse, TaxDropdownApiResponse, UomApiResponse, UomDropdownApiResponse, UploadResponse, UserApiResponse } from "../Types";
+import type { AccountApiResponse, AccountDropdownApiResponse } from "../Types/Account";
 import type { BankApiResponse, BankDropdownApiResponse } from "../Types/Bank";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
@@ -14,9 +14,9 @@ export const Queries = {
   useGetUser: (params?: Params) => useQueries<UserApiResponse>([KEYS.USER.BASE, params], () => Get(URL_KEYS.USER.ALL, params)),
   useGetUserdata: (id?: string) => useQueries<UserApiResponse>([KEYS.USER.BASE], () => Get(`${URL_KEYS.USER.BASE}/${id}`), { enabled: !!id }),
 
-  // ************ Roles ***********
-  useGetRoles: (params?: Params) => useQueries<RolesApiResponse>([KEYS.ROLE.BASE, params], () => Get(URL_KEYS.ROLE.ALL, params)),
-  useGetRolesDropdown: (params?: Params) => useQueries<RolesDropdownApiResponse>([KEYS.ROLE.BASE, params], () => Get(URL_KEYS.ROLE.DROPDOWN, params)),
+  // ************ Role ***********
+  useGetRole: (params?: Params) => useQueries<RoleApiResponse>([KEYS.ROLE.BASE, params], () => Get(URL_KEYS.ROLE.ALL, params)),
+  useGetRoleDropdown: (params?: Params, enabled?: boolean) => useQueries<RoleDropdownApiResponse>([KEYS.ROLE.BASE, params], () => Get(URL_KEYS.ROLE.DROPDOWN, params), { enabled: enabled }),
 
   // ************ Company ***********
   useGetSingleCompany: (id?: string) => useQueries<SingleCompanyApiResponse>([KEYS.COMPANY.BASE, id], () => Get(`${URL_KEYS.COMPANY.BASE}/${id}`), { enabled: !!id }),
@@ -25,7 +25,7 @@ export const Queries = {
 
   // ************ Branch ***********
   useGetBranch: (params?: Params) => useQueries<BranchApiResponse>([KEYS.BRANCH.BASE, params], () => Get(URL_KEYS.BRANCH.ALL, params)),
-  useGetBranchDropdown: (params?: Params) => useQueries<BranchDropdownApiResponse>([KEYS.BRANCH.BASE, params], () => Get(URL_KEYS.BRANCH.DROPDOWN, params)),
+  useGetBranchDropdown: (params?: Params, enabled?: boolean) => useQueries<BranchDropdownApiResponse>([KEYS.BRANCH.BASE, params], () => Get(URL_KEYS.BRANCH.DROPDOWN, params), { enabled: enabled }),
 
   // ************ Brand ***********
   useGetBrand: (params?: Params) => useQueries<BrandApiResponse>([KEYS.BRAND.BASE, params], () => Get(URL_KEYS.BRAND.ALL, params)),
