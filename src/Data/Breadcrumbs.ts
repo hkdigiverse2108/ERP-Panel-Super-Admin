@@ -45,4 +45,7 @@ export const BREADCRUMBS = {
     BASE: [{ label: PAGE_TITLE.ACCOUNT_GROUP.BASE }],
     TREE: [{ label: PAGE_TITLE.ACCOUNT_GROUP.BASE, href: ROUTES.ACCOUNT_GROUP.BASE }, { label: PAGE_TITLE.ACCOUNT_GROUP.TREE }],
   },
+  ACCOUNT: {
+    BASE: [{ label: PAGE_TITLE.ACCOUNT.BASE }],
+  },
 };

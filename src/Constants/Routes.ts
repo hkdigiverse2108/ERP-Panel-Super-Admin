@@ -40,5 +40,8 @@ export const ROUTES = {
   ACCOUNT_GROUP:{
     BASE: "/account-group",
     TREE: "/account-group/tree",
-  }
+  },
+  ACCOUNT: {
+    BASE: "/account",
+  },
 } as const;

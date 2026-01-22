@@ -68,5 +68,10 @@ export const PAGE_TITLE = {
     ADD:"Add Account Group",
     EDIT:"Edit Account Group",
     TREE:"Account Group Tree"
+  },
+  ACCOUNT:{
+    BASE:"Account",
+    ADD:"Add Account",
+    EDIT:"Edit Account",
   }
 } as const;
