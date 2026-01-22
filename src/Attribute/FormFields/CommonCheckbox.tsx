@@ -1,16 +1,21 @@
-import { FormControlLabel, FormLabel, Grid, Switch } from "@mui/material";
+import { Checkbox, FormControlLabel, FormLabel, Grid } from "@mui/material";
 import { useField, useFormikContext, type FieldHookConfig } from "formik";
 import type { FC } from "react";
-import type { CommonSwitchProps, CommonValidationSwitchProps } from "../../Types";
+import type { CommonCheckboxProps, CommonValidationCheckboxProps } from "../../Types";
 
 const classStart = "justify-end flex-row-reverse m-0!";
 const classBetween = "justify-between flex-row-reverse m-0!";
 
-export const CommonValidationSwitch: FC<CommonValidationSwitchProps> = ({ switchPlacement, name, label, required, disabled, isFormLabel = false, grid, syncFieldName }) => {
-  const fieldConfig: FieldHookConfig<boolean> = { name, type: "checkbox" };
+export const CommonValidationCheckbox: FC<CommonValidationCheckboxProps> = ({ checkboxPlacement, name, label, required, disabled, isFormLabel = false, grid, syncFieldName }) => {
+  const fieldConfig: FieldHookConfig<boolean> = {
+    name,
+    type: "checkbox",
+  };
+
   const [field, meta, helpers] = useField(fieldConfig);
-  const placementClass = switchPlacement === "start" ? classStart : switchPlacement === "between" ? classBetween : "";
   const { setFieldValue } = useFormikContext<any>();
+
+  const placementClass = checkboxPlacement === "start" ? classStart : checkboxPlacement === "between" ? classBetween : "";
 
   const Input = (
     <div className="flex flex-col gap-1">
@@ -25,9 +30,9 @@ export const CommonValidationSwitch: FC<CommonValidationSwitchProps> = ({ switch
         required={isFormLabel ? false : required}
         label={isFormLabel ? "" : label}
         control={
-          <Switch
+          <Checkbox
             id={name}
-            checked={field.value}
+            checked={!!field.value}
             onChange={(e) => {
               const value = e.target.checked;
               helpers.setValue(value);
@@ -45,8 +50,8 @@ export const CommonValidationSwitch: FC<CommonValidationSwitchProps> = ({ switch
   return grid ? <Grid size={grid}>{Input}</Grid> : Input;
 };
 
-export const CommonSwitch: FC<CommonSwitchProps> = ({ switchPlacement, name, label, required, disabled, isFormLabel = false, grid, value, onChange }) => {
-  const placementClass = switchPlacement === "start" ? classStart : switchPlacement === "between" ? classBetween : "";
+export const CommonCheckbox: FC<CommonCheckboxProps> = ({ checkboxPlacement, name, label, required, disabled, isFormLabel = false, grid, value, onChange }) => {
+  const placementClass = checkboxPlacement === "start" ? classStart : checkboxPlacement === "between" ? classBetween : "";
 
   const Input = (
     <div className="flex flex-col gap-1">
@@ -56,7 +61,7 @@ export const CommonSwitch: FC<CommonSwitchProps> = ({ switchPlacement, name, lab
         </FormLabel>
       )}
 
-      <FormControlLabel className={`capitalize ${placementClass}`} required={isFormLabel ? false : required} label={isFormLabel ? "" : label} control={<Switch id={name} name={name} checked={!!value} onChange={(e) => onChange?.(e.target.checked)} disabled={disabled} />} />
+      <FormControlLabel className={`capitalize ${placementClass}`} required={isFormLabel ? false : required} label={isFormLabel ? "" : label} control={<Checkbox id={name} name={name} checked={!!value} onChange={(e) => onChange?.(e.target.checked)} disabled={disabled} />} />
     </div>
   );
 

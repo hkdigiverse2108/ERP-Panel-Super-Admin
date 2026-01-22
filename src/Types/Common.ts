@@ -192,6 +192,13 @@ export interface CommonObjectNameColumnOptions {
   minWidth?: number;
 }
 
+export interface CommonActionColumnProps<T> {
+  editRoute?: string;
+  onEdit?: (row: T) => void;
+  onDelete?: (row: T) => void;
+  active?: (row: T) => void;
+}
+
 // ************ Table End ***********
 
 // ************ Input Start ***********
@@ -509,3 +516,20 @@ export type DependentSelectProps<T extends ApiOption, P = string | undefined> = 
 };
 
 // ************ Dependent Select End ***********
+export type ControlPlacement = "start" | "between";
+
+export interface CommonValidationCheckboxProps {
+  name: string;
+  label?: string;
+  required?: boolean;
+  disabled?: boolean;
+  isFormLabel?: boolean;
+  grid?: GridType;
+  checkboxPlacement?: ControlPlacement;
+  syncFieldName?: string;
+}
+
+export interface CommonCheckboxProps extends CommonValidationCheckboxProps {
+  value?: boolean;
+  onChange?: (value: boolean) => void;
+}

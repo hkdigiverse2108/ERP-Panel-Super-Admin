@@ -8,7 +8,7 @@ import { PAGE_TITLE } from "../../../Constants";
 import { useAppSelector } from "../../../Store/hooks";
 import { setAccountModal } from "../../../Store/Slices/ModalSlice";
 import type { AddAccountPayload } from "../../../Types";
-import { AccountFormSchema, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
+import {GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { ACCOUNT_TYPE} from "../../../Data";
 
 interface AccountFormValues {
@@ -62,7 +62,7 @@ const AccountForm = () => {
 
   return (
     <CommonModal title={PAGE_TITLE.ACCOUNT[pageMode]} isOpen={openModal} onClose={closeModal} className="max-w-125">
-      <Formik<AccountFormValues> enableReinitialize initialValues={initialValues} validationSchema={AccountFormSchema} onSubmit={handleSubmit}>
+      <Formik<AccountFormValues> enableReinitialize initialValues={initialValues}  onSubmit={handleSubmit}>
         {({ dirty }) => (
           <Form noValidate>
             <Grid container spacing={2} sx={{ p: 1 }}>

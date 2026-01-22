@@ -257,3 +257,11 @@ export const RoleFormSchema = Yup.object({
   name: Validation("string", "Role name"),
   isActive: Validation("boolean", "is Active", { required: false }),
 });
+
+export const ModuleFormSchema = Yup.object({
+  tabName: Validation("string", "Tab name"),
+  displayName: Validation("string", "Display name"),
+  tabUrl: Validation("string", "Tab url"),
+  number: Validation("number", "Number"),
+  isActive: Validation("boolean", "is Active", { required: false }),
+});

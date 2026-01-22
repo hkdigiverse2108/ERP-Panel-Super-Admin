@@ -19,4 +19,5 @@ export * from "./Location";
 export * from "./AccountGroup";
 export * from "./Account";
 export * from "./Bank";
+export * from "./Module";
 
