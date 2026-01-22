@@ -252,3 +252,8 @@ export const AccountGroupFormSchema = Yup.object({
   parentGroupId: Validation("string", "Parent Group", { required: false }),
   isActive: Validation("boolean", "is Active", { required: false }),
 });
+
+export const RoleFormSchema = Yup.object({
+  name: Validation("string", "Role name"),
+  isActive: Validation("boolean", "is Active", { required: false }),
+});

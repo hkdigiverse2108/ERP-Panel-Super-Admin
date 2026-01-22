@@ -1,5 +1,5 @@
 import type { BranchBase } from "./Branch";
-import type { RolesBase } from "./Roles";
+import type { RoleBase } from "./Role";
 import type { AddressApi, AddressBase, CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
 import type { CompanyBase } from "./Company";
 
@@ -40,7 +40,7 @@ export type EditUserPayload = AddUserPayload & { userId: string };
 
 export interface UserBase extends Omit<UserFormValues, "branchId" | "role" | "companyId" | "address">, CommonDataType {
   branchId: BranchBase;
-   role: RolesBase;
+   role: RoleBase;
   companyId: CompanyBase;
   address?: AddressApi;
 }

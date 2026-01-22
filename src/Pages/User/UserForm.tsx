@@ -15,9 +15,7 @@ const UserForm = () => {
   const navigate = useNavigate();
   const { data } = location.state || {};
 
-  const { data: rolesData , isLoading: rolesDataLoading} = Queries.useGetRolesDropdown();
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
-  const { data: branchData , isLoading: branchDataLoading} = Queries.useGetBranchDropdown();
   const { mutate: addUser, isPending: isAddLoading } = Mutations.useAddUser();
   const { mutate: editUser, isPending: isEditLoading } = Mutations.useEditUser();
  
@@ -93,9 +91,9 @@ const UserForm = () => {
                 <CommonCard title="Basic Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(companyData?.data)} isLoading={companyDataLoading} grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationSelect name="branchId" label="branch" options={GenerateOptions(branchData?.data)} isLoading={branchDataLoading} grid={{ xs: 12, md: 4 }} />
+                    <DependentSelect name="branchId" label="Branch Name" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="designation" label="User designation" grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationSelect name="role" label="role" options={GenerateOptions(rolesData?.data)} isLoading={rolesDataLoading} grid={{ xs: 12, md: 4 }} />
+                    <DependentSelect name="role" label="role Name" query={Queries.useGetRoleDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="fullName" label="Full Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="username" label="User Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />

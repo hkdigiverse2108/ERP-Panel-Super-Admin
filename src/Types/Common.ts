@@ -4,12 +4,13 @@ import type { Dayjs } from "dayjs";
 import type { MuiTelInputProps } from "mui-tel-input";
 import type { FocusEvent, ReactNode } from "react";
 import * as Yup from "yup";
+import type { AccountGroupBase } from "./AccountGroup";
 import type { BrandBase } from "./Brand";
 import type { CategoryBase } from "./Category";
+import type { LocationBase } from "./Location";
+import type { RoleBase } from "./Role";
 import type { TaxBase } from "./Tax";
 import type { UomBase } from "./Uom";
-import type { LocationBase } from "./Location";
-import type { AccountGroupBase } from "./AccountGroup";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -411,6 +412,8 @@ export interface ModalStateSlice {
   isCategoryModal: { open: boolean; data: CategoryBase | null };
   isLocationModal: { open: boolean; data: LocationBase | null };
   isAccountGroupModal: { open: boolean; data: AccountGroupBase | null };
+  isRoleModal: { open: boolean; data: RoleBase | null };
+  isModuleModal: { open: boolean; data: any | null };
 }
 
 // ************ Modal End ***********

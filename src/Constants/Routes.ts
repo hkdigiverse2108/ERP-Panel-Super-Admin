@@ -44,4 +44,10 @@ export const ROUTES = {
   ACCOUNT: {
     BASE: "/account",
   },
+  ROLE: {
+    BASE: "/role",
+  },
+  MODULE: {
+    BASE: "/module",
+  },
 } as const;

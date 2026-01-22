@@ -1,21 +1,18 @@
-import ApartmentIcon from '@mui/icons-material/Apartment';
-import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
-import MyLocationIcon from '@mui/icons-material/MyLocation';
-import PeopleIcon from "@mui/icons-material/People";
-import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
-import SettingsIcon from "@mui/icons-material/Settings";
 import { PAGE_TITLE, ROUTES } from "../Constants";
 import type { NavItem } from "../Types";
+import { AdminPanelSettings, Apartment, GridViewRounded, MyLocation, People, ReceiptLong, Settings, AccountTree, ViewModule } from "@mui/icons-material";
 
 export const NavItems: NavItem[] = [
-  { icon: <GridViewRoundedIcon />, name: PAGE_TITLE.DASHBOARD, path: ROUTES.DASHBOARD },
-  { icon: <PeopleIcon />, name: PAGE_TITLE.USER.BASE, path: ROUTES.USER.BASE },
-  { icon: <ApartmentIcon />, name: PAGE_TITLE.COMPANY.BASE, path: ROUTES.COMPANY.BASE },
-  { icon: <GridViewRoundedIcon />, name: PAGE_TITLE.BRANCH.BASE, path: ROUTES.BRANCH.BASE },
-  { icon: <MyLocationIcon />, name: PAGE_TITLE.LOCATION.BASE, path: ROUTES.LOCATION.BASE },
+  { icon: <GridViewRounded />, name: PAGE_TITLE.DASHBOARD, path: ROUTES.DASHBOARD },
+  { icon: <People />, name: PAGE_TITLE.USER.BASE, path: ROUTES.USER.BASE },
+  { icon: <Apartment />, name: PAGE_TITLE.COMPANY.BASE, path: ROUTES.COMPANY.BASE },
+  { icon: <AccountTree />, name: PAGE_TITLE.BRANCH.BASE, path: ROUTES.BRANCH.BASE },
+  { icon: <MyLocation />, name: PAGE_TITLE.LOCATION.BASE, path: ROUTES.LOCATION.BASE },
+  { icon: <AdminPanelSettings />, name: PAGE_TITLE.ROLE.BASE, path: ROUTES.ROLE.BASE },
+  { icon: <ViewModule />, name: PAGE_TITLE.MODULE.BASE, path: ROUTES.MODULE.BASE },
   {
     name: PAGE_TITLE.INVENTORY.BASE,
-    icon: <SettingsIcon />,
+    icon: <Settings />,
     subItems: [
       { name: PAGE_TITLE.INVENTORY.PRODUCT.BASE, path: ROUTES.PRODUCT.BASE, pro: false },
       { name: PAGE_TITLE.INVENTORY.BRAND.BASE, path: ROUTES.BRAND.BASE, pro: false },
@@ -26,10 +23,10 @@ export const NavItems: NavItem[] = [
   },
   {
     name: PAGE_TITLE.ACCOUNTING.BASE,
-    icon: <ReceiptLongIcon />,
+    icon: <ReceiptLong />,
     subItems: [
-      { name: PAGE_TITLE.ACCOUNT_GROUP.BASE, path: ROUTES.ACCOUNT_GROUP.BASE},
-      { name: PAGE_TITLE.ACCOUNT.BASE, path: ROUTES.ACCOUNT.BASE},
+      { name: PAGE_TITLE.ACCOUNT_GROUP.BASE, path: ROUTES.ACCOUNT_GROUP.BASE },
+      { name: PAGE_TITLE.ACCOUNT.BASE, path: ROUTES.ACCOUNT.BASE },
     ],
   },
 ];

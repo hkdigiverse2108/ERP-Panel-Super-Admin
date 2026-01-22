@@ -76,6 +76,9 @@ export const KEYS = {
   },
   ROLE: {
     BASE: "role",
+    ADD: "role-add",
+    EDIT: "role-edit",
+    DELETE: "role-delete",
   },
   STOCK: {
     BASE: "stock",
@@ -104,4 +107,10 @@ export const KEYS = {
     EDIT: "account-edit",
     DELETE: "account-delete",
   },
+  MODULE:{
+    BASE: "module",
+    ADD: "module-add",
+    EDIT: "module-edit",
+    DELETE: "module-delete",
+  }
 };

@@ -114,4 +114,11 @@ export const URL_KEYS = {
     ADD: "/account/add",
     EDIT: "/account/edit",
   },
+  MODULE: {
+    BASE: "/module",
+    DROPDOWN: "/module/dropdown",
+    ALL: "/module/all",
+    ADD: "/module/add",
+    EDIT: "/module/edit",
+  },
 } as const;

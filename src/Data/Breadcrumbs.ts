@@ -48,4 +48,10 @@ export const BREADCRUMBS = {
   ACCOUNT: {
     BASE: [{ label: PAGE_TITLE.ACCOUNT.BASE }],
   },
+  ROLE: {
+    BASE: [{ label: PAGE_TITLE.ROLE.BASE }],
+  },
+  MODULE: {
+    BASE: [{ label: PAGE_TITLE.MODULE.BASE }],
+  },
 };

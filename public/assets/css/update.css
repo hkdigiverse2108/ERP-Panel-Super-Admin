@@ -110,6 +110,7 @@ input[type="number"] {
   @apply fill-gray-800 dark:fill-gray-400!;
 }
 
+.Mui-error .MuiOutlinedInput-notchedOutline,
 .is-invalid .ql-toolbar.ql-snow,
 .is-invalid .ql-container.ql-snow {
   @apply border-red-500!;
