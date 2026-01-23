@@ -1,16 +1,15 @@
 
+import type { AccountGroupBase } from "./AccountGroup";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 
 export interface AccountFormValues {
   name?: string;
-  accountGroupId?: string;
   type?: string;
-  nature?: string;
+  groupId?: string;
   openingBalance?: number;
   currentBalance?: number;
-  groupLevel?: number;
   isActive?: boolean;
-}
+};
 
 export type AddAccountPayload = AccountFormValues;
 
@@ -18,8 +17,8 @@ export type EditAccountPayload = AccountFormValues & {
   accountId?: string;
 };
 
-export interface AccountBase extends Omit<AccountFormValues, "accountGroupId">, CommonDataType {
-  accountGroupId?: AccountGroupBase | string;
+export interface AccountBase extends Omit<AccountFormValues, "groupId">, CommonDataType {
+  groupId?: AccountGroupBase;
 }
 
 export interface AccountDataResponse extends PageStatus {
@@ -34,6 +33,3 @@ export interface AccountDropdownApiResponse extends MessageStatus {
   data: AccountBase[];
 }
 
-export interface AccountGroupBase extends CommonDataType {
-  name?: string;
-}

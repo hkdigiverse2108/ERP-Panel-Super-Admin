@@ -5,20 +5,13 @@ import { Mutations, Queries } from "../../../Api";
 import { CommonButton, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonModal } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
+import { ACCOUNT_TYPE } from "../../../Data";
 import { useAppSelector } from "../../../Store/hooks";
 import { setAccountModal } from "../../../Store/Slices/ModalSlice";
-import type { AddAccountPayload } from "../../../Types";
-import {GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
-import { ACCOUNT_TYPE} from "../../../Data";
+import type { AccountFormValues, AddAccountPayload } from "../../../Types";
+import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 
-interface AccountFormValues {
-  name?: string;
-  groupId?: string;
-  type?: string;
-  openingBalance?: number;
-  currentBalance?: number;
-  isActive?: boolean;
-}
+
 
 const AccountForm = () => {
   const { isAccountModal } = useAppSelector((state) => state.modal);
@@ -36,7 +29,7 @@ const AccountForm = () => {
 
   const initialValues: AccountFormValues = {
     name: isEdit?.name || "",
-    groupId: isEdit?.groupId?._id || isEdit?.groupId || "",
+    groupId: isEdit?.groupId?._id,
     type: isEdit?.type || "",
     openingBalance: isEdit?.openingBalance || 0,
     currentBalance: isEdit?.currentBalance || 0,
