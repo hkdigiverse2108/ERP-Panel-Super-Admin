@@ -28,7 +28,7 @@ const Account = () => {
 
   const totalRows = accountData?.data?.totalData || 0;
 
-  function handleDeleteBtn() {
+  const handleDeleteBtn = () => {
     if (!rowToDelete) return;
     deleteAccountMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
   }

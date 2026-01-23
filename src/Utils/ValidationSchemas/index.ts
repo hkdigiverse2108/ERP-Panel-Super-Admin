@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import { Validation } from "./Validation";
 import type { DepValue, Primitive } from "../../Types";
+import { Group } from "@mui/icons-material";
 
 const RequiredWhenTrue = (dependentField: string, message: string, baseSchema: Yup.AnySchema) => {
   return baseSchema.when(dependentField, {
@@ -255,5 +256,13 @@ export const AccountGroupFormSchema = Yup.object({
 
 export const RoleFormSchema = Yup.object({
   name: Validation("string", "Role name"),
+  isActive: Validation("boolean", "is Active", { required: false }),
+});
+
+export const AccountFormSchema = Yup.object({
+  name: Validation("string", "Account name"),
+  GroupId: Validation("string", "Group", { required: false }),
+  type: Validation("string", "Type", { required: false }),
+  nature: Validation("string", "Nature", { required: false }),
   isActive: Validation("boolean", "is Active", { required: false }),
 });
