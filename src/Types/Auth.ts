@@ -4,6 +4,7 @@ import type { CommonDataType, MessageStatus } from "./Common";
 export interface LoginPayload {
   email: string;
   password: string;
+  loginSource?: string;
 }
 
 export interface User extends LoginPayload, CommonDataType {

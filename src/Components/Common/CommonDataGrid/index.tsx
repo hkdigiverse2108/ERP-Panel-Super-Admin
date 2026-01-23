@@ -5,7 +5,7 @@ import type { CommonDataGridProps } from "../../../Types";
 import CustomToolbar from "./CustomToolbar";
 import NoRowsOverlay from "./NoRowsOverlay";
 
-const CommonDataGrid: FC<CommonDataGridProps> = ({isExport,fileName, columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, defaultHidden = [], BoxClass, handleAdd, isActive, setActive }) => {
+const CommonDataGrid: FC<CommonDataGridProps> = ({ isExport, pagination, fileName, columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, defaultHidden = [], BoxClass, handleAdd, isActive, setActive }) => {
   const apiRef = useGridApiRef();
 
   const visibilityModel = useMemo(() => {
@@ -33,7 +33,7 @@ const CommonDataGrid: FC<CommonDataGridProps> = ({isExport,fileName, columns, ro
         width: 90,
         sortable: false,
         filterable: false,
-        valueGetter: (_value, row) => paginationModel.page * paginationModel.pageSize + rows.findIndex((r) => r.id === row.id) + 1,
+        valueGetter: (_value, row) => (paginationModel ? paginationModel?.page * paginationModel?.pageSize + rows.findIndex((r) => r.id === row.id) + 1 : rows.findIndex((r) => r.id === row.id) + 1),
       },
       ...columnsWithFallback,
     ];
@@ -56,6 +56,8 @@ const CommonDataGrid: FC<CommonDataGridProps> = ({isExport,fileName, columns, ro
         initialState={{
           columns: { columnVisibilityModel: visibilityModel },
         }}
+        hideFooter={pagination === false}
+        hideFooterPagination={pagination === false}
         paginationMode="server"
         paginationModel={paginationModel}
         onPaginationModelChange={onPaginationModelChange}

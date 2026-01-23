@@ -109,8 +109,13 @@ export const KEYS = {
   },
   MODULE:{
     BASE: "module",
+    USER_PERMISSION: "module-user-permission",
     ADD: "module-add",
     EDIT: "module-edit",
     DELETE: "module-delete",
+  },
+  PERMISSION:{
+    BASE: "permission",
+    EDIT: "permission-edit",
   }
 };

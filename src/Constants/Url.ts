@@ -120,5 +120,13 @@ export const URL_KEYS = {
     ALL: "/module/all",
     ADD: "/module/add",
     EDIT: "/module/edit",
+    USER_PERMISSION: "/module/user/permissions",
+    BULK_EDIT: "/module/bulk/edit",
+  },
+  PERMISSION: {
+    BASE: "/permission",
+    DETAILS: "/permission/details",
+    ALL: "/permission/all",
+    EDIT: "/permission/edit",
   },
 } as const;

@@ -126,6 +126,7 @@ export interface UseDataGridOptions {
   initialFilter?: GridFilterModel;
   active?: boolean;
   debounceDelay?: number;
+  pagination?: boolean;
 }
 
 export interface CommonDataGridProps {
@@ -140,8 +141,8 @@ export interface CommonDataGridProps {
   setActive?: (active: boolean) => void;
 
   // Pagination
-  paginationModel: GridPaginationModel;
-  onPaginationModelChange: (model: GridPaginationModel) => void;
+  paginationModel?: GridPaginationModel;
+  onPaginationModelChange?: (model: GridPaginationModel) => void;
 
   // Sorting
   sortModel: GridSortModel;
@@ -156,6 +157,7 @@ export interface CommonDataGridProps {
   BoxClass?: string;
   isExport?: boolean;
   fileName?: string;
+  pagination?: boolean;
 }
 
 export interface CustomToolbarProps {
@@ -421,7 +423,6 @@ export interface ModalStateSlice {
   isLocationModal: { open: boolean; data: LocationBase | null };
   isAccountGroupModal: { open: boolean; data: AccountGroupBase | null };
   isRoleModal: { open: boolean; data: RoleBase | null };
-  isModuleModal: { open: boolean; data: any | null };
   isAccountModal: { open: boolean; data: AccountBase | null };
 }
 
@@ -519,6 +520,7 @@ export type DependentSelectProps<T extends ApiOption, P = string | undefined> = 
 };
 
 // ************ Dependent Select End ***********
+// ************ Dependent Select End ***********
 export type ControlPlacement = "start" | "between";
 
 export interface CommonValidationCheckboxProps {
@@ -536,3 +538,13 @@ export interface CommonCheckboxProps extends CommonValidationCheckboxProps {
   value?: boolean;
   onChange?: (value: boolean) => void;
 }
+
+// ************ Tab Select End ***********
+
+export interface TabPanelProps {
+  children?: ReactNode;
+  index: number;
+  value: number;
+}
+
+// ************ Tab Select End ***********

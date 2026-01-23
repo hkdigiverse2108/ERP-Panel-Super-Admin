@@ -4,7 +4,7 @@ import type { UseDataGridOptions } from "../../Types";
 import { CleanParams } from "..";
 import { useDebounce } from "./useDebounce";
 
-export const useDataGrid = ({ page = 0, pageSize = 10, initialSort = [], initialFilter = { items: [] }, active, debounceDelay = 0 }: UseDataGridOptions = {}) => {
+export const useDataGrid = ({ page = 0, pageSize = 10, initialSort = [], initialFilter = { items: [] }, active = true, debounceDelay = 0, pagination = true }: UseDataGridOptions = {}) => {
   /* ---------------- Pagination ---------------- */
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page, pageSize });
 
@@ -37,14 +37,16 @@ export const useDataGrid = ({ page = 0, pageSize = 10, initialSort = [], initial
   /* ---------------- API Params ---------------- */
   const params = useMemo(() => {
     return CleanParams({
-      page: paginationModel.page + 1,
-      limit: paginationModel.pageSize,
-      ...(!active && { activeFilter: isActive }),
+      ...(pagination && {
+        page: paginationModel.page + 1,
+        limit: paginationModel.pageSize,
+      }),
+      ...(active && { activeFilter: isActive }),
       ...normalizedAdvancedFilter,
       // Quick search
       search: debouncedSearchTerm,
     });
-  }, [paginationModel, debouncedSearchTerm, isActive, normalizedAdvancedFilter, active]);
+  }, [paginationModel, debouncedSearchTerm, isActive, normalizedAdvancedFilter, active, pagination]);
 
   /* ---------------- Reset ---------------- */
   const resetModels = useCallback(() => {

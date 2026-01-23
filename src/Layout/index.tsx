@@ -17,6 +17,7 @@ const Layout = () => {
 
   const { user } = useAppSelector((state) => state.auth);
   const { data: userData, isLoading: userLoading } = Queries.useGetUserdata(user?._id);
+  const { data: permissionData, isLoading: permissionLoading } = Queries.useGetPermissionDetails({userId:user?._id},Boolean(user?._id));
 
   useEffect(() => {
     if (location.pathname.startsWith("/pos")) dispatch(setSidebarOpen(false));
