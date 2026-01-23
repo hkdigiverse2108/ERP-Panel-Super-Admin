@@ -39,7 +39,7 @@ const RoleForm = () => {
 
     if (isEditing) {
       const changedFields = GetChangedFields(values, isEdit as Partial<RoleFormValues>);
-      editRole({ ...changedFields, RoleId: isEdit?._id }, { onSuccess: onSuccessHandler });
+      editRole({ ...changedFields, roleId: isEdit?._id }, { onSuccess: onSuccessHandler });
     } else {
       addRole(RemoveEmptyFields(values), { onSuccess: onSuccessHandler });
     }

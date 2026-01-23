@@ -11,12 +11,9 @@ import { setAccountModal } from "../../../Store/Slices/ModalSlice";
 import type { AccountFormValues, AddAccountPayload } from "../../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 
-
-
 const AccountForm = () => {
   const { isAccountModal } = useAppSelector((state) => state.modal);
   const { data: accountGroupData, isLoading: accountDataLoading } = Queries.useGetAccountGroupDropdown({}, Boolean(isAccountModal.open));
-  // const { data: accountTypeData, isLoading: accountTypeLoading } = Queries.useGetAccountTypeDropdown({}, Boolean(isAccountModal.open));
   const { mutate: addAccount, isPending: isAddLoading } = Mutations.useAddAccount();
   const { mutate: editAccount, isPending: isEditLoading } = Mutations.useEditAccount();
 

@@ -38,7 +38,7 @@ const Module = () => {
     { field: "hasView", headerName: "View", width: 120 },
     { field: "hasDefault", headerName: "Default", flex: 1, minWidth: 120 },
     CommonActionColumn({
-      active: (row) => editModule({ RoleId: row?._id, isActive: !row.isActive }),
+      active: (row) => editModule({ roleId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.MODULE.ADD_EDIT,
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.tabName }),
     }),
