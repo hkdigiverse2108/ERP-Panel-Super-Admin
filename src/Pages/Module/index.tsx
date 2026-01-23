@@ -7,6 +7,7 @@ import { PAGE_TITLE, ROUTES } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
 import type { AppGridColDef, ModuleBase } from "../../Types";
 import { useDataGrid } from "../../Utils/Hooks";
+import { CommonObjectPropertyColumn } from "../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Module = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -31,12 +32,13 @@ const Module = () => {
     { field: "tabName", headerName: "Tab Name", width: 200 },
     { field: "displayName", headerName: "Display Name", width: 200 },
     { field: "tabUrl", headerName: "Tab URL", width: 200 },
-    { field: "number", headerName: "Number", width: 100 },
-    { field: "hasAdd", headerName: "Add", width: 100, headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ Add" : "❌ Add") },
-    { field: "hasEdit", headerName: "Edit", width: 120, headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ Edit" : "❌ Edit") },
-    { field: "hasDelete", headerName: "Delete", width: 130, headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ Delete" : "❌ Delete") },
-    { field: "hasView", headerName: "View", width: 120, headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ View" : "❌ View") },
-    { field: "default", headerName: "Default",  flex: 1, minWidth: 120 , headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ Default" : "❌ Default") },
+    CommonObjectPropertyColumn<ModuleBase>("Parent", "parentId", "tabName", { headerName: "Parent Name", width: 150 }),
+    { field: "number", headerName: "Number", width: 80 },
+    { field: "hasAdd", headerName: "Add", width: 85, headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ Add" : "❌ Add") },
+    { field: "hasEdit", headerName: "Edit", width: 85, headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ Edit" : "❌ Edit") },
+    { field: "hasDelete", headerName: "Delete", width: 90, headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ Delete" : "❌ Delete") },
+    { field: "hasView", headerName: "View", width: 85, headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ View" : "❌ View") },
+    { field: "default", headerName: "Default", flex: 1, minWidth: 90, headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ Default" : "❌ Default") },
     CommonActionColumn({
       active: (row) => editModule({ moduleId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.MODULE.ADD_EDIT,
