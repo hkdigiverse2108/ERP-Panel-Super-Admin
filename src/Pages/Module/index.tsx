@@ -7,17 +7,18 @@ import { PAGE_TITLE, ROUTES } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
 import type { AppGridColDef, ModuleBase } from "../../Types";
 import { useDataGrid } from "../../Utils/Hooks";
+import { CommonObjectPropertyColumn } from "../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Module = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
 
-  const { data: ModuleData, isLoading: ModuleDataLoading, isFetching: ModuleDataFetching } = Queries.useGetRole(params);
+  const { data: ModuleData, isLoading: ModuleDataLoading, isFetching: ModuleDataFetching } = Queries.useGetModule(params);
 
-  const { mutate: deleteModuleMutate } = Mutations.useDeleteRole();
-  const { mutate: editModule, isPending: isEditLoading } = Mutations.useEditRole();
+  const { mutate: deleteModuleMutate } = Mutations.useDeleteModule();
+  const { mutate: editModule, isPending: isEditLoading } = Mutations.useEditModule();
 
-  const allModule = useMemo(() => ModuleData?.data?.role_data.map((module) => ({ ...module, id: module?._id })) || [], [ModuleData]);
+  const allModule = useMemo(() => ModuleData?.data?.module_data.map((module) => ({ ...module, id: module?._id })) || [], [ModuleData]);
   const totalRows = ModuleData?.data?.totalData || 0;
 
   const handleDeleteBtn = () => {
@@ -31,14 +32,15 @@ const Module = () => {
     { field: "tabName", headerName: "Tab Name", width: 200 },
     { field: "displayName", headerName: "Display Name", width: 200 },
     { field: "tabUrl", headerName: "Tab URL", width: 200 },
-    { field: "number", headerName: "Number", width: 120 },
-    { field: "hasAdd", headerName: "Add", width: 120 },
-    { field: "hasEdit", headerName: "Edit", width: 120 },
-    { field: "hasDelete", headerName: "Delete", width: 120 },
-    { field: "hasView", headerName: "View", width: 120 },
-    { field: "hasDefault", headerName: "Default", flex: 1, minWidth: 120 },
+    CommonObjectPropertyColumn<ModuleBase>("Parent", "parentId", "tabName", { headerName: "Parent Name", width: 150 }),
+    { field: "number", headerName: "Number", width: 80 },
+    { field: "hasAdd", headerName: "Add", width: 85, headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ Add" : "❌ Add") },
+    { field: "hasEdit", headerName: "Edit", width: 85, headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ Edit" : "❌ Edit") },
+    { field: "hasDelete", headerName: "Delete", width: 90, headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ Delete" : "❌ Delete") },
+    { field: "hasView", headerName: "View", width: 85, headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ View" : "❌ View") },
+    { field: "default", headerName: "Default", flex: 1, minWidth: 90, headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ Default" : "❌ Default") },
     CommonActionColumn({
-      active: (row) => editModule({ RoleId: row?._id, isActive: !row.isActive }),
+      active: (row) => editModule({ moduleId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.MODULE.ADD_EDIT,
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.tabName }),
     }),

@@ -18,7 +18,7 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ ac
   field: "actions",
   headerName: "Actions",
   headerAlign: "center",
-  width: 200,
+  width: 180,
   minWidth: 100,
   sortable: false,
   filterable: false,

@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AddAccountGroupPayload, AddBranchPayload, AddBrandPayload, AddCategoryPayload, AddCompanyPayload, AddLocationPayload, AddProductPayload, AddRolePayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddTaxPayload, AddUomPayload, AddUserPayload, CallRequestFormValues, EditAccountGroupPayload, EditBranchPayload, EditBrandPayload, EditCategoryPayload, EditCompanyPayload, EditLocationPayload, EditProductPayload, EditRolePayload, EditTaxPayload, EditUomPayload, EditUserPayload, LoginPayload, LoginResponse, UploadResponse, UserApiResponse } from "../Types";
+import type { AddAccountGroupPayload, AddBranchPayload, AddBrandPayload, AddCategoryPayload, AddCompanyPayload, AddLocationPayload, AddModulePayload, AddModulePermissionPayload, AddProductPayload, AddRolePayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddTaxPayload, AddUomPayload, AddUserPayload, CallRequestFormValues, EditAccountGroupPayload, EditBranchPayload, EditBrandPayload, EditCategoryPayload, EditCompanyPayload, EditLocationPayload, EditModulePayload, EditProductPayload, EditRolePayload, EditTaxPayload, EditUomPayload, EditUserPayload, LoginPayload, LoginResponse, UploadResponse, UserApiResponse } from "../Types";
 import type { AddAccountPayload, EditAccountPayload } from "../Types/Account";
 import type { AddPurchaseOrderPayload, EditPurchaseOrderPayload } from "../Types/PurchaseOrder";
 import { Delete, Post, Put } from "./Methods";
@@ -86,4 +86,9 @@ export const Mutations = {
   useEditPurchaseOrder: () => useMutations<EditPurchaseOrderPayload, void>([KEYS.PURCHASE_ORDER.EDIT, KEYS.PURCHASE_ORDER.BASE], (input) => Put(URL_KEYS.PURCHASE_ORDER.EDIT, input)),
   useDeletePurchaseOrder: () => useMutations<string, void>([KEYS.PURCHASE_ORDER.DELETE, KEYS.PURCHASE_ORDER.BASE], (id) => Delete(`${URL_KEYS.PURCHASE_ORDER.BASE}/${id}`)),
 
+  //*************** Module **************** */
+  useAddModule: () => useMutations<AddModulePayload, void>([KEYS.MODULE.ADD, KEYS.MODULE.BASE], (input) => Post(URL_KEYS.MODULE.ADD, input)),
+  useEditModule: () => useMutations<EditModulePayload, void>([KEYS.MODULE.EDIT, KEYS.MODULE.BASE], (input) => Put(URL_KEYS.MODULE.EDIT, input)),
+  useDeleteModule: () => useMutations<string, void>([KEYS.MODULE.DELETE, KEYS.MODULE.BASE], (id) => Delete(`${URL_KEYS.MODULE.BASE}/${id}`)),
+  useAddUserModulePermission: () => useMutations<AddModulePermissionPayload, void>([KEYS.MODULE.USER_PERMISSION, KEYS.MODULE.BASE], (input) => Put(URL_KEYS.MODULE.BULK_EDIT, input)),
 };

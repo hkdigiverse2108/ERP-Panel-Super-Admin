@@ -53,17 +53,19 @@ export const CommonValidationCheckbox: FC<CommonValidationCheckboxProps> = ({ ch
 export const CommonCheckbox: FC<CommonCheckboxProps> = ({ checkboxPlacement, name, label, required, disabled, isFormLabel = false, grid, value, onChange }) => {
   const placementClass = checkboxPlacement === "start" ? classStart : checkboxPlacement === "between" ? classBetween : "";
 
-  const Input = (
-    <div className="flex flex-col gap-1">
-      {isFormLabel && label && (
+  const Input = <FormControlLabel className={`capitalize m-0! ${placementClass}`} required={isFormLabel ? false : required} label={isFormLabel ? "" : label} control={<Checkbox id={name} name={name} checked={!!value} onChange={(e) => onChange?.(e.target.checked)} disabled={disabled} />} />;
+
+  const Label =
+    isFormLabel && label ? (
+      <div className="flex flex-col gap-1">
         <FormLabel htmlFor={name} required={required}>
           {label}
         </FormLabel>
-      )}
 
-      <FormControlLabel className={`capitalize ${placementClass}`} required={isFormLabel ? false : required} label={isFormLabel ? "" : label} control={<Checkbox id={name} name={name} checked={!!value} onChange={(e) => onChange?.(e.target.checked)} disabled={disabled} />} />
-    </div>
-  );
-
-  return grid ? <Grid size={grid}>{Input}</Grid> : Input;
+        {Input}
+      </div>
+    ) : (
+      Input
+    );
+  return grid ? <Grid size={grid}>{Label}</Grid> : Label;
 };

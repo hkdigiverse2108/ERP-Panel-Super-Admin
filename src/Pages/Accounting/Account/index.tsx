@@ -18,29 +18,23 @@ const Account = () => {
   const { mutate: deleteAccountMutate } = Mutations.useDeleteAccount();
   const { mutate: editAccountMutate, isPending: isEditLoading } = Mutations.useEditAccount();
 
-  const allAccount = useMemo(() =>
-      accountData?.data?.account_data?.map((account) => ({
-        ...account,
-        id: account?._id,
-      })) ?? [],
-    [accountData],
-  );
+  const allAccount = useMemo(() => accountData?.data?.account_data?.map((account) => ({ ...account, id: account?._id })) ?? [], [accountData]);
 
   const totalRows = accountData?.data?.totalData || 0;
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
     deleteAccountMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
-  }
+  };
 
   const handleAdd = () => dispatch(setAccountModal({ open: true, data: null }));
   const handleEdit = (row: AccountBase) => dispatch(setAccountModal({ open: true, data: row }));
 
   const columns: AppGridColDef<AccountBase>[] = [
-    { field: "name", headerName: "Account Name", width: 350 ,flex: 1},
+    { field: "name", headerName: "Account Name", width: 350, flex: 1 },
     CommonObjectPropertyColumn<AccountBase>("GroupName", "groupId", "name", { headerName: "Group Name", width: 300 }),
-    { field: "type", headerName: "Account Type", width: 200 ,flex: 1},
-    { field: "updatedAt", headerName: "UpdatedAt", width: 200 ,flex: 1},
+    { field: "type", headerName: "Account Type", width: 200, flex: 1 },
+    { field: "updatedAt", headerName: "UpdatedAt", width: 200, flex: 1 },
 
     CommonActionColumn({
       active: (row) => editAccountMutate({ accountId: row?._id, isActive: !row.isActive }),
@@ -70,7 +64,7 @@ const Account = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.ACCOUNT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.ACCOUNT.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
-        <CommonCard gridClass="justify-end!">
+        <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
         <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />

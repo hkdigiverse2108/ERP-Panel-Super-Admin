@@ -34,7 +34,7 @@ const Role = () => {
   const columns: AppGridColDef<RoleBase>[] = [
     { field: "name", headerName: "Name",flex:1, minWidth: 300 },
     CommonActionColumn({
-      active: (row) => editRole({ RoleId: row?._id, isActive: !row.isActive }),
+      active: (row) => editRole({ roleId: row?._id, isActive: !row.isActive }),
       onEdit: (row) => handleEdit(row),
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
     }),

@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AccountGroupApiResponse, AccountGroupDropdownApiResponse, AccountGroupTreeApiResponse, AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, CompanyDropdownApiResponse, CountryApiResponse, LocationApiResponse, Params, ProductApiResponse, ProductDropDownApiResponse, RoleApiResponse, RoleDropdownApiResponse, SingleCompanyApiResponse, TaxApiResponse, TaxDropdownApiResponse, UomApiResponse, UomDropdownApiResponse, UploadResponse, UserApiResponse } from "../Types";
+import type { AccountGroupApiResponse, AccountGroupDropdownApiResponse, AccountGroupTreeApiResponse, AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, CompanyDropdownApiResponse, CountryApiResponse, LocationApiResponse, ModuleApiResponse, Params, ProductApiResponse, ProductDropDownApiResponse, RoleApiResponse, RoleDropdownApiResponse, SingleCompanyApiResponse, TaxApiResponse, TaxDropdownApiResponse, UomApiResponse, UomDropdownApiResponse, UploadResponse, UserApiResponse, UserModulePermissionApiResponse } from "../Types";
 import type { AccountApiResponse, AccountDropdownApiResponse } from "../Types/Account";
 import type { BankApiResponse, BankDropdownApiResponse } from "../Types/Bank";
 import type { PurchaseOrderApiResponse, PurchaseOrderDropdownApiResponse } from "../Types/PurchaseOrder";
@@ -74,4 +74,10 @@ export const Queries = {
   useGetPurchaseOrder: (params?: Params) => useQueries<PurchaseOrderApiResponse>([KEYS.PURCHASE_ORDER.BASE, params], () => Get(URL_KEYS.PURCHASE_ORDER.ALL, params)),
   useGetPurchaseOrderDropdown: (params?: Params) => useQueries<PurchaseOrderDropdownApiResponse>([KEYS.PURCHASE_ORDER.BASE, params], () => Get(URL_KEYS.PURCHASE_ORDER.DROPDOWN, params)),
   
+  //*************** Module **************** */
+  useGetModule: (params?: Params) => useQueries<ModuleApiResponse>([KEYS.MODULE.BASE, params], () => Get(URL_KEYS.MODULE.ALL, params)),
+  useGetModuleUserPermission: (params?: Params, enabled?: boolean) => useQueries<UserModulePermissionApiResponse>([KEYS.MODULE.BASE, params], () => Get(URL_KEYS.MODULE.USER_PERMISSION, params), { enabled: enabled }),
+
+  //*************** Permission **************** */
+  useGetPermissionDetails: (params?: Params, enabled?: boolean) => useQueries<UserApiResponse>([KEYS.MODULE.BASE,KEYS.USER.BASE,KEYS.PERMISSION.BASE, params], () => Get(URL_KEYS.PERMISSION.DETAILS, params), { enabled: enabled }),
 };

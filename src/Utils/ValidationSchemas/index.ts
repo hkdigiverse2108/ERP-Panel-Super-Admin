@@ -1,7 +1,6 @@
 import * as Yup from "yup";
-import { Validation } from "./Validation";
 import type { DepValue, Primitive } from "../../Types";
-import { Group } from "@mui/icons-material";
+import { Validation } from "./Validation";
 
 const RequiredWhenTrue = (dependentField: string, message: string, baseSchema: Yup.AnySchema) => {
   return baseSchema.when(dependentField, {
@@ -98,7 +97,7 @@ export const BranchFormSchema = Yup.object({
     city: Validation("string", "City"),
     pinCode: Validation("number", "Pin Code"),
   }).nullable(),
-    bankId: Validation("string", "select Bank"),
+  bankId: Validation("string", "select Bank"),
 });
 
 export const BrandFormSchema = Yup.object({
@@ -262,8 +261,15 @@ export const RoleFormSchema = Yup.object({
 export const ModuleFormSchema = Yup.object({
   tabName: Validation("string", "Tab name"),
   displayName: Validation("string", "Display name"),
-  tabUrl: Validation("string", "Tab url"),
+  tabUrl: Validation("string", "Tab url", { required: false }),
   number: Validation("number", "Number"),
+  parentId: Validation("string", "Parent Module", { required: false }),
+  hasDefault: Validation("boolean", "hasDefault", { required: false }),
+  hasAdd: Validation("boolean", "hasAdd", { required: false }),
+  hasEdit: Validation("boolean", "hasEdit", { required: false }),
+  hasView: Validation("boolean", "hasView", { required: false }),
+  hasDelete: Validation("boolean", "hasDelete", { required: false }),
+  isActive: Validation("boolean", "is Active", { required: false }),
 });
 
 export const AccountFormSchema = Yup.object({

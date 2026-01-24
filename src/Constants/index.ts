@@ -7,4 +7,4 @@ export * from "./Keys";
 
 export const Href: string = "#Javascript";
 export const ImagePath: string = "/assets/images/";
-
+export const LoginSource: string = "super-admin-panel";
