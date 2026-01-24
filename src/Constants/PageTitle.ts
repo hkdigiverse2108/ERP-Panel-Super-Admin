@@ -83,5 +83,15 @@ export const PAGE_TITLE = {
     BASE:"Module",
     ADD:"Add Module",
     EDIT:"Edit Module",
-  }
+  },
+  
+  PURCHASE: {
+    BASE: "Purchase",
+    ADD: "Add Purchase",
+     PURCHASE_ORDER: {
+     BASE: "Purchase Order",
+     ADD: "Add Purchase Order",
+     EDIT: "Edit Purchase Order",
+   },
+  },
 } as const;

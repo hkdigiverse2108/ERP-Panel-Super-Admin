@@ -121,4 +121,12 @@ export const URL_KEYS = {
     ADD: "/module/add",
     EDIT: "/module/edit",
   },
+   PURCHASE_ORDER: {
+    BASE: "purchase-order",
+    ADD: "purchase-order-add",
+    EDIT: "purchase-order-edit",
+    DELETE: "purchase-order-delete",
+    ALL: "purchase-order-all",
+    DROPDOWN: "purchase-order-dropdown",
+  },
 } as const;

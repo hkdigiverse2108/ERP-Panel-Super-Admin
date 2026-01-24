@@ -51,4 +51,8 @@ export const ROUTES = {
     BASE: "/module",
     ADD_EDIT: "/module/add-edit",
   },
+  PURCHASE_ORDER: {
+    BASE: "/purchase-order",
+    ADD_EDIT: "/purchase-order/add-edit",
+  },
 } as const;

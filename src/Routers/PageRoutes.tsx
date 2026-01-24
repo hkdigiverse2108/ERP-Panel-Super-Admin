@@ -23,6 +23,7 @@ import UserForm from "../Pages/User/UserForm";
 import Role from "../Pages/Role";
 import Module from "../Pages/Module";
 import ModuleForm from "../Pages/Module/ModuleForm";
+import PurchaseOrder from "../Pages/Purchase/PurchaseOrder";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -62,6 +63,8 @@ export const PageRoutes = [
 
   { path: ROUTES.MODULE.BASE, element: <Module /> },
   { path: ROUTES.MODULE.ADD_EDIT, element: <ModuleForm /> },
+
+  { path: ROUTES.PURCHASE_ORDER.BASE, element: <PurchaseOrder /> },
 ];
 
 export const AuthRoutes = [

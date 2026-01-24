@@ -112,5 +112,11 @@ export const KEYS = {
     ADD: "module-add",
     EDIT: "module-edit",
     DELETE: "module-delete",
-  }
+  },
+  PURCHASE_ORDER: {
+    BASE: "purchase-order",
+    ADD: "purchase-order-add",
+    EDIT: "purchase-order-edit",
+    DELETE: "purchase-order-delete",
+  },
 };

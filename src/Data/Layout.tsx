@@ -29,4 +29,12 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.ACCOUNT.BASE, path: ROUTES.ACCOUNT.BASE },
     ],
   },
+  {
+    name: PAGE_TITLE.PURCHASE.BASE,
+    icon: <Settings />,
+    subItems: [
+      { name: PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE, path: ROUTES.PURCHASE_ORDER.BASE },
+    ],
+
+  },
 ];

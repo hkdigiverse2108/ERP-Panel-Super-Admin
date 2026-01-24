@@ -6,9 +6,9 @@ export interface RoleFormValues {
   _submitAction?: string;
 }
 
-export type AddRolesPayload = RoleFormValues;
+export type AddRolePayload = RoleFormValues;
 
-export type EditRolesPayload = AddRolesPayload & { roleId: string };
+export type EditRolePayload = AddRolePayload & { roleId: string };
 
 export type RoleBase = RoleFormValues & CommonDataType;
 
