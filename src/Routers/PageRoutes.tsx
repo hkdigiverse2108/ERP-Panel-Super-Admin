@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { ROUTES } from "../Constants";
+import { PAGE_TITLE, ROUTES } from "../Constants";
 import AccountGroup from "../Pages/Accounting/AccountGroup";
 import AccountGroupTree from "../Pages/Accounting/AccountGroup/AccountGroupTree";
 import Account from "../Pages/Accounting/Account";
@@ -23,45 +23,47 @@ import UserForm from "../Pages/User/UserForm";
 import Role from "../Pages/Role";
 import Module from "../Pages/Module";
 import ModuleForm from "../Pages/Module/ModuleForm";
+import Permission from "../Pages/User/Permission";
 
 export const PageRoutes = [
-  { path: ROUTES.HOME, element: <Dashboard /> },
+  { path: ROUTES.HOME, name: PAGE_TITLE.USER.BASE, element: <Dashboard /> },
 
-  { path: ROUTES.DASHBOARD, element: <Dashboard /> },
+  { path: ROUTES.DASHBOARD, name: PAGE_TITLE.DASHBOARD, element: <Dashboard /> },
 
-  { path: ROUTES.USER.BASE, element: <Users /> },
-  { path: ROUTES.USER.ADD_EDIT, element: <UserForm /> },
+  { path: ROUTES.USER.BASE, name: PAGE_TITLE.USER.BASE, element: <Users /> },
+  { path: ROUTES.USER.PERMISSION_ADD_EDIT, name: PAGE_TITLE.USER.BASE, element: <Permission /> },
+  { path: ROUTES.USER.ADD_EDIT, name: PAGE_TITLE.USER.BASE, element: <UserForm /> },
 
-  { path: ROUTES.COMPANY.BASE, element: <Company /> },
-  { path: ROUTES.COMPANY.ADD_EDIT, element: <CompanyForm /> },
+  { path: ROUTES.COMPANY.BASE, name: PAGE_TITLE.COMPANY.BASE, element: <Company /> },
+  { path: ROUTES.COMPANY.ADD_EDIT, name: PAGE_TITLE.COMPANY.BASE, element: <CompanyForm /> },
 
-  { path: ROUTES.BRANCH.BASE, element: <Branch /> },
-  { path: ROUTES.BRANCH.ADD_EDIT, element: <BranchForm /> },
+  { path: ROUTES.BRANCH.BASE, name: PAGE_TITLE.BRANCH.BASE, element: <Branch /> },
+  { path: ROUTES.BRANCH.ADD_EDIT, name: PAGE_TITLE.BRANCH.BASE, element: <BranchForm /> },
 
-  { path: ROUTES.LOCATION.BASE, element: <Location /> },
-  { path: ROUTES.LOCATION.ADD_EDIT, element: <LocationForm /> },
-  
-  { path: ROUTES.PRODUCT.BASE, element: <Product /> },
-  { path: ROUTES.PRODUCT.ADD_EDIT, element: <ProductForm /> },
-  { path: ROUTES.PRODUCT.ITEM_ADD_EDIT, element: <ItemForm /> },
-  
-  { path: ROUTES.BRAND.BASE, element: <Brand /> },
-  
-  { path: ROUTES.UOM.BASE, element: <Uom /> },
+  { path: ROUTES.LOCATION.BASE, name: PAGE_TITLE.LOCATION.BASE, element: <Location /> },
+  { path: ROUTES.LOCATION.ADD_EDIT, name: PAGE_TITLE.LOCATION.BASE, element: <LocationForm /> },
 
-  { path: ROUTES.TAX.BASE, element: <Tax /> },
-  
-  { path: ROUTES.CATEGORY.BASE, element: <Category /> },
+  { path: ROUTES.PRODUCT.BASE, name: PAGE_TITLE.INVENTORY.PRODUCT.BASE, element: <Product /> },
+  { path: ROUTES.PRODUCT.ADD_EDIT, name: PAGE_TITLE.INVENTORY.PRODUCT.BASE, element: <ProductForm /> },
+  { path: ROUTES.PRODUCT.ITEM_ADD_EDIT, name: PAGE_TITLE.INVENTORY.PRODUCT.ITEM.BASE, element: <ItemForm /> },
 
-  { path: ROUTES.ACCOUNT_GROUP.BASE, element: <AccountGroup /> },
-  { path: ROUTES.ACCOUNT_GROUP.TREE, element: <AccountGroupTree /> },
+  { path: ROUTES.BRAND.BASE, name: PAGE_TITLE.INVENTORY.BRAND.BASE, element: <Brand /> },
 
-  { path: ROUTES.ACCOUNT.BASE, element: <Account /> },
+  { path: ROUTES.UOM.BASE, name: PAGE_TITLE.INVENTORY.UOM.BASE, element: <Uom /> },
 
-  { path: ROUTES.ROLE.BASE, element: <Role /> },
+  { path: ROUTES.TAX.BASE, name: PAGE_TITLE.INVENTORY.TAX.BASE, element: <Tax /> },
 
-  { path: ROUTES.MODULE.BASE, element: <Module /> },
-  { path: ROUTES.MODULE.ADD_EDIT, element: <ModuleForm /> },
+  { path: ROUTES.CATEGORY.BASE, name: PAGE_TITLE.INVENTORY.CATEGORY.BASE, element: <Category /> },
+
+  { path: ROUTES.ACCOUNT_GROUP.BASE, name: PAGE_TITLE.ACCOUNT_GROUP.BASE, element: <AccountGroup /> },
+  { path: ROUTES.ACCOUNT_GROUP.TREE, name: PAGE_TITLE.ACCOUNT_GROUP.BASE, element: <AccountGroupTree /> },
+
+  { path: ROUTES.ACCOUNT.BASE, name: PAGE_TITLE.ACCOUNT.BASE, element: <Account /> },
+
+  { path: ROUTES.ROLE.BASE, name: PAGE_TITLE.ROLE.BASE, element: <Role /> },
+
+  { path: ROUTES.MODULE.BASE, name: PAGE_TITLE.MODULE.BASE, element: <Module /> },
+  { path: ROUTES.MODULE.ADD_EDIT, name: PAGE_TITLE.MODULE.BASE, element: <ModuleForm /> },
 ];
 
 export const AuthRoutes = [

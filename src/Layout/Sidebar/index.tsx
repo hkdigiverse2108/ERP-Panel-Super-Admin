@@ -1,16 +1,51 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import { NavItems } from "../../Data";
 import { useAppDispatch, useAppSelector } from "../../Store/hooks";
 import { setIsHovered, setToggleMobileSidebar, setToggleSidebar } from "../../Store/Slices/LayoutSlice";
-import type { NavItem } from "../../Types";
+import type { ChildDetailsApiResponse, NavItem } from "../../Types";
 import { ImagePath } from "../../Constants";
 import { useWindowWidth } from "../../Utils/Hooks";
 
+const filterNavItems = (navItems: NavItem[], permissions: ChildDetailsApiResponse[]): NavItem[] => {
+  const permissionMap = new Map<string, ChildDetailsApiResponse>();
+
+  permissions.forEach((p) => permissionMap.set(p?.tabName?.toLowerCase() || "", p as ChildDetailsApiResponse));
+
+  return navItems
+    .map((item) => {
+      const parentPerm = permissionMap.get(item.name.toLowerCase());
+
+      // ❌ Parent no view permission → parent + children both hide
+      if (!parentPerm?.view) return null;
+
+      // ✅ Parent allowed
+      if (item.children?.length) {
+        const allowedChildren = item.children
+          .map((child) => {
+            const childPerm = parentPerm.children?.find((c) => c?.tabName?.toLowerCase() === child.name.toLowerCase());
+
+            if (!childPerm?.view) return null;
+
+            // 🔥 Override child label
+            return { ...child, name: childPerm.displayName };
+          })
+          .filter(Boolean);
+
+        if (allowedChildren.length === 0) return null;
+
+        return { ...item, name: parentPerm.displayName, children: allowedChildren as NavItem[] };
+      }
+
+      return { ...item, name: parentPerm.displayName };
+    })
+    .filter(Boolean) as NavItem[];
+};
+
 const Sidebar = () => {
-  const { isExpanded, isMobileOpen, isHovered } = useAppSelector((state) => state.layout);
+  const { isExpanded, isMobileOpen, isHovered, permission } = useAppSelector((state) => state.layout);
   const dispatch = useAppDispatch();
   const width = useWindowWidth();
 
@@ -19,16 +54,17 @@ const Sidebar = () => {
   const [openSubmenu, setOpenSubmenu] = useState<{ type: "main" | "others"; index: number } | null>(null);
   const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>({});
   const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const allowedNavItems = useMemo(() => filterNavItems(NavItems, permission), [permission]);
 
   const isActive = useCallback((path: string) => location.pathname === path, [location.pathname]);
 
   useEffect(() => {
-    NavItems.forEach((menu, index) => {
-      if (menu.subItems?.some((sub) => sub.path === location.pathname)) {
+    allowedNavItems.forEach((menu, index) => {
+      if (menu.children?.some((sub) => sub.path === location.pathname)) {
         setOpenSubmenu({ type: "main", index });
       }
     });
-  }, [location.pathname]);
+  }, [location.pathname, allowedNavItems]);
 
   const handleToggle = () => {
     if (window.innerWidth >= 1024) {
@@ -63,7 +99,7 @@ const Sidebar = () => {
     <ul className="flex flex-col gap-2">
       {items.map((nav, index) => (
         <li key={nav.name}>
-          {nav.subItems ? (
+          {nav.children ? (
             <button onClick={() => handleSubmenuToggle(index, menuType)} className={`menu-item w-full group ${openSubmenu?.type === menuType && openSubmenu?.index === index ? "menu-item-active" : "menu-item-inactive"} cursor-pointer ${!isExpanded && !isHovered ? "lg:justify-center" : "lg:justify-start"}`}>
               <span className={`menu-item-icon-size  ${openSubmenu?.type === menuType && openSubmenu?.index === index ? "menu-item-icon-active" : "menu-item-icon-inactive"}`}>{nav.icon}</span>
               {(isExpanded || isHovered || isMobileOpen) && <span className="menu-item-text">{nav.name}</span>}
@@ -71,13 +107,13 @@ const Sidebar = () => {
             </button>
           ) : (
             nav.path && (
-              <Link to={nav.path} className={`menu-item group ${isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"}`}>
+              <Link to={nav.path} className={`menu-item group ${isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"}`} onClick={() => handleSubmenuToggle(index, menuType)}>
                 <span className={`menu-item-icon-size ${isActive(nav.path) ? "menu-item-icon-active" : "menu-item-icon-inactive"}`}>{nav.icon}</span>
                 {(isExpanded || isHovered || isMobileOpen) && <span className="menu-item-text">{nav.name}</span>}
               </Link>
             )
           )}
-          {nav.subItems && (isExpanded || isHovered || isMobileOpen) && (
+          {nav.children && (isExpanded || isHovered || isMobileOpen) && (
             <div
               ref={(el) => {
                 subMenuRefs.current[`${menuType}-${index}`] = el;
@@ -88,13 +124,13 @@ const Sidebar = () => {
               }}
             >
               <ul className="mt-2 space-y-1 ml-9">
-                {nav.subItems.map((subItem) => (
-                  <li key={subItem.name}>
-                    <Link to={subItem.path} className={`menu-dropdown-item ${isActive(subItem.path) ? "menu-dropdown-item-active" : "menu-dropdown-item-inactive"}`}>
-                      {subItem.name}
+                {nav.children.map((children) => (
+                  <li key={children.name}>
+                    <Link to={children.path} className={`menu-dropdown-item ${isActive(children.path) ? "menu-dropdown-item-active" : "menu-dropdown-item-inactive"}`}>
+                      {children.name}
                       <span className="flex items-center gap-1 ml-auto">
-                        {subItem.new && <span className={`ml-auto ${isActive(subItem.path) ? "menu-dropdown-badge-active" : "menu-dropdown-badge-inactive"} menu-dropdown-badge`}>new</span>}
-                        {subItem.pro && <span className={`ml-auto ${isActive(subItem.path) ? "menu-dropdown-badge-active" : "menu-dropdown-badge-inactive"} menu-dropdown-badge`}>pro</span>}
+                        {children.new && <span className={`ml-auto ${isActive(children.path) ? "menu-dropdown-badge-active" : "menu-dropdown-badge-inactive"} menu-dropdown-badge`}>new</span>}
+                        {children.pro && <span className={`ml-auto ${isActive(children.path) ? "menu-dropdown-badge-active" : "menu-dropdown-badge-inactive"} menu-dropdown-badge`}>pro</span>}
                       </span>
                     </Link>
                   </li>
@@ -140,7 +176,7 @@ const Sidebar = () => {
           <div className="flex flex-col gap-4">
             <div>
               <h2 className={`mb-4 text-xs uppercase flex text-gray-400 ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"}`}>{isExpanded || isHovered || isMobileOpen ? "Menu" : <MoreHorizRoundedIcon className="size-6" />}</h2>
-              {renderMenuItems(NavItems, "main")}
+              {renderMenuItems(allowedNavItems, "main")}
             </div>
           </div>
         </nav>

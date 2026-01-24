@@ -5,13 +5,13 @@ import ThemeToggler from "../../Layout/ThemeToggler";
 const NotFound = () => {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen p-6 overflow-hidden z-1">
-      <div className="absolute right-0 top-0 -z-1 w-full max-w-[250px] xl:max-w-[450px]">
+      <div className="absolute right-0 top-0 -z-1 w-full max-w-62.5 xl:max-w-112.5">
         <img src={`${ImagePath}logo/grid-01.svg`} alt="grid" />
       </div>
-      <div className="absolute bottom-0 left-0 -z-1 w-full max-w-[250px] rotate-180 xl:max-w-[450px]">
+      <div className="absolute bottom-0 left-0 -z-1 w-full max-w-62.5 rotate-180 xl:max-w-112.5">
         <img src={`${ImagePath}logo/grid-01.svg`} alt="grid" />
       </div>
-      <div className="mx-auto w-full max-w-[242px] text-center sm:max-w-[472px]">
+      <div className="mx-auto w-full max-w-60.5 text-center sm:max-w-118">
         <h1 className="mb-8 font-bold text-gray-800 text-title-md dark:text-white/90 xl:text-title-2xl">ERROR</h1>
 
         <img src={`${ImagePath}error/404.svg`} alt="404" className="dark:hidden" />

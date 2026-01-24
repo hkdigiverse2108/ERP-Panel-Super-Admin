@@ -16,7 +16,7 @@ export const Mutations = {
   useAddCompany: () => useMutations<AddCompanyPayload, void>([KEYS.COMPANY.ADD, KEYS.COMPANY.BASE], (input) => Put(URL_KEYS.COMPANY.ADD, input)),
   useEditCompany: () => useMutations<EditCompanyPayload, void>([KEYS.COMPANY.EDIT, KEYS.COMPANY.BASE], (input) => Put(URL_KEYS.COMPANY.EDIT, input)),
   useDeleteCompany: () => useMutations<string, void>([KEYS.COMPANY.DELETE, KEYS.COMPANY.BASE], (id) => Delete(`${URL_KEYS.COMPANY.BASE}/${id}`)),
-  
+
   // ************ User ***********
   useAddUser: () => useMutations<AddUserPayload, void>([KEYS.USER.ADD, KEYS.USER.BASE], (input) => Post(URL_KEYS.USER.ADD, input)),
   useEditUser: () => useMutations<EditUserPayload, UserApiResponse>([KEYS.USER.EDIT, KEYS.USER.BASE], (input) => Put(URL_KEYS.USER.EDIT, input)),
@@ -54,7 +54,7 @@ export const Mutations = {
 
   // ************ Call Request ***********
   useAddCallRequest: () => useMutations<CallRequestFormValues, void>([KEYS.CALL_REQUEST.ADD], (input) => Post(URL_KEYS.CALL_REQUEST.ADD, input)),
-  
+
   // ************ Stock ***********
   useAddStock: () => useMutations<AddStockPayload, void>([KEYS.STOCK.ADD, KEYS.STOCK.BASE], (input) => Post(URL_KEYS.STOCK.ADD, input)),
   useAddStockBulkAdjustment: () => useMutations<AddStockBulkAdjustmentPayload, void>([KEYS.STOCK.BULK_ADJUSTMENT, KEYS.STOCK.BASE], (input) => Put(URL_KEYS.STOCK.BULK_ADJUSTMENT, input)),
@@ -64,7 +64,6 @@ export const Mutations = {
   useEditLocation: () => useMutations<EditLocationPayload, void>([KEYS.LOCATION.EDIT, KEYS.LOCATION.BASE], (input) => Put(URL_KEYS.LOCATION.EDIT, input)),
   useDeleteLocation: () => useMutations<string, void>([KEYS.LOCATION.DELETE, KEYS.LOCATION.BASE], (id) => Delete(`${URL_KEYS.LOCATION.BASE}/${id}`)),
 
-  
   //*************** Account Group **************** */
   useAddAccountGroup: () => useMutations<AddAccountGroupPayload, void>([KEYS.ACCOUNT_GROUP.ADD, KEYS.ACCOUNT_GROUP.BASE], (input) => Post(URL_KEYS.ACCOUNT_GROUP.ADD, input)),
   useEditAccountGroup: () => useMutations<EditAccountGroupPayload, void>([KEYS.ACCOUNT_GROUP.EDIT, KEYS.ACCOUNT_GROUP.BASE], (input) => Put(URL_KEYS.ACCOUNT_GROUP.EDIT, input)),
@@ -81,8 +80,8 @@ export const Mutations = {
   useDeleteRole: () => useMutations<string, void>([KEYS.ROLE.DELETE, KEYS.ROLE.BASE], (id) => Delete(`${URL_KEYS.ROLE.BASE}/${id}`)),
 
   //*************** Module **************** */
-  useAddModule: () => useMutations<AddModulePayload, void>([KEYS.MODULE.ADD, KEYS.MODULE.BASE], (input) => Post(URL_KEYS.MODULE.ADD, input)),
-  useEditModule: () => useMutations<EditModulePayload, void>([KEYS.MODULE.EDIT, KEYS.MODULE.BASE], (input) => Put(URL_KEYS.MODULE.EDIT, input)),
-  useDeleteModule: () => useMutations<string, void>([KEYS.MODULE.DELETE, KEYS.MODULE.BASE], (id) => Delete(`${URL_KEYS.MODULE.BASE}/${id}`)),
-  useAddUserModulePermission: () => useMutations<AddModulePermissionPayload, void>([KEYS.MODULE.USER_PERMISSION, KEYS.MODULE.BASE], (input) => Put(URL_KEYS.MODULE.BULK_EDIT, input)),
+  useAddModule: () => useMutations<AddModulePayload, void>([KEYS.MODULE.ADD, KEYS.MODULE.BASE, KEYS.PERMISSION.DETAILS], (input) => Post(URL_KEYS.MODULE.ADD, input)),
+  useEditModule: () => useMutations<EditModulePayload, void>([KEYS.MODULE.EDIT, KEYS.MODULE.BASE, KEYS.PERMISSION.DETAILS], (input) => Put(URL_KEYS.MODULE.EDIT, input)),
+  useDeleteModule: () => useMutations<string, void>([KEYS.MODULE.DELETE, KEYS.MODULE.BASE, KEYS.PERMISSION.DETAILS], (id) => Delete(`${URL_KEYS.MODULE.BASE}/${id}`)),
+  useAddUserModulePermission: () => useMutations<AddModulePermissionPayload, void>([KEYS.MODULE.USER_PERMISSION, KEYS.MODULE.BASE, KEYS.PERMISSION.DETAILS], (input) => Put(URL_KEYS.MODULE.BULK_EDIT, input)),
 };

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Outlet, useLocation } from "react-router-dom";
 import { useAppSelector } from "../Store/hooks";
-import { setIsMobile, setSidebarOpen } from "../Store/Slices/LayoutSlice";
+import { setIsMobile, setPermission, setSidebarOpen } from "../Store/Slices/LayoutSlice";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { CommonUpload } from "../Components/Common";
@@ -17,8 +17,7 @@ const Layout = () => {
 
   const { user } = useAppSelector((state) => state.auth);
   const { data: userData, isLoading: userLoading } = Queries.useGetUserdata(user?._id);
-//   const { data: permissionData } = Queries.useGetPermissionDetails({userId:user?._id},Boolean(user?._id));
-// console.log(permissionData,"permissionData");
+  const { data: permissionData, isLoading: permissionLoading } = Queries.useGetPermissionChildDetails({ userId: user?._id }, Boolean(user?._id));
 
   useEffect(() => {
     if (location.pathname.startsWith("/pos")) dispatch(setSidebarOpen(false));
@@ -30,6 +29,12 @@ const Layout = () => {
       dispatch(setUser(userData?.data));
     }
   }, [dispatch, userData, userLoading]);
+
+  useEffect(() => {
+    if (permissionData) {
+      dispatch(setPermission(permissionData?.data));
+    }
+  }, [dispatch, permissionData, permissionLoading]);
 
   useEffect(() => {
     const handleResize = () => {

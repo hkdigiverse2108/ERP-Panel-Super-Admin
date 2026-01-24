@@ -1,12 +1,14 @@
 export const ROUTES = {
   HOME: "/",
   DASHBOARD: "/dashboard",
+  NOT_FOUND: "/not-found",
   AUTH: {
     SIGNIN: "/auth/signin",
   },
   USER: {
     BASE: "/user",
     ADD_EDIT: "/user/add-edit",
+    PERMISSION_ADD_EDIT: "/user/permission/add-edit",
   },
   COMPANY: {
     BASE: "/company",
