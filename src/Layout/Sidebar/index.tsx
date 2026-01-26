@@ -12,7 +12,7 @@ import { useWindowWidth } from "../../Utils/Hooks";
 const filterNavItems = (navItems: NavItem[], permissions: ChildDetailsApiResponse[]): NavItem[] => {
   const permissionMap = new Map<string, ChildDetailsApiResponse>();
 
-  permissions.forEach((p) => permissionMap.set(p?.tabName?.toLowerCase() || "", p as ChildDetailsApiResponse));
+  permissions?.forEach((p) => permissionMap.set(p?.tabName?.toLowerCase() || "", p as ChildDetailsApiResponse));
 
   return navItems
     .map((item) => {
@@ -59,7 +59,7 @@ const Sidebar = () => {
   const isActive = useCallback((path: string) => location.pathname === path, [location.pathname]);
 
   useEffect(() => {
-    allowedNavItems.forEach((menu, index) => {
+    allowedNavItems?.forEach((menu, index) => {
       if (menu.children?.some((sub) => sub.path === location.pathname)) {
         setOpenSubmenu({ type: "main", index });
       }

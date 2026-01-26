@@ -84,9 +84,15 @@ export interface PermissionChildApiResponse extends MessageStatus {
   data: UserModulePermissionDataResponse[];
 }
 
+export interface EditPermissionPayload {
+  userId: string;
+  modules: {_id?: string } & ModulePermission[];
+}
+
 export interface PermissionDetailsApiPayload extends CommonDataType, ModulePermission, ModuleFormValues {
   modules: string;
   parentTab: ModuleFormValues & CommonDataType;
+  id?: string;
 }
 
 export interface PermissionDetailsApiResponse extends MessageStatus {

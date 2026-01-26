@@ -2,6 +2,7 @@ export const ROUTES = {
   HOME: "/",
   DASHBOARD: "/dashboard",
   NOT_FOUND: "/not-found",
+  ACCESS_DENIED: "/access-denied",
   AUTH: {
     SIGNIN: "/auth/signin",
   },
@@ -39,7 +40,7 @@ export const ROUTES = {
     BASE: "/location",
     ADD_EDIT: "/location/add-edit",
   },
-  ACCOUNT_GROUP:{
+  ACCOUNT_GROUP: {
     BASE: "/account-group",
     TREE: "/account-group/tree",
   },
@@ -52,5 +53,5 @@ export const ROUTES = {
   MODULE: {
     BASE: "/module",
     ADD_EDIT: "/module/add-edit",
-  },
+  }
 } as const;

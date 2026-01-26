@@ -76,7 +76,7 @@ const ModuleForm = () => {
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.MODULE[pageMode]} maxItems={4} breadcrumbs={BREADCRUMBS.MODULE[pageMode]} />
-      <Box sx={{ p: { xs: 2, md: 4 }, mb: 8 }}>
+      <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Grid container spacing={2}>
           <CommonCard hideDivider>
             <Box sx={{ width: "100%" }}>

@@ -119,5 +119,139 @@
 @utility head-icon {
   @apply flex items-center justify-center h-11 w-11 max-xsm:h-9 max-xsm:w-9 text-gray-500 transition-colors bg-white border border-gray-200 rounded-full hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white;
 }
+/* ************ Sidebar Loader (Theme Based) *********** */
 
-/* ************ Sidebar End *********** */
+.boxes {
+  --size: 32px;
+  --duration: 800ms;
+
+  /* theme colors */
+  --box-main: var(--color-brand-500);
+  --box-dark: var(--color-brand-700);
+  --box-mid: var(--color-brand-600);
+  --box-light: var(--color-gray-200);
+
+  height: calc(var(--size) * 2);
+  width: calc(var(--size) * 3);
+  position: relative;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50%;
+  margin-top: calc(var(--size) * 1.5 * -1);
+  transform: rotateX(60deg) rotateZ(45deg);
+}
+
+.boxes .box {
+  width: var(--size);
+  height: var(--size);
+  position: absolute;
+  transform-style: preserve-3d;
+}
+
+/* positions + animations */
+.boxes .box:nth-child(1) {
+  transform: translate(100%, 0);
+  animation: box1 var(--duration) linear infinite;
+}
+
+.boxes .box:nth-child(2) {
+  transform: translate(0, 100%);
+  animation: box2 var(--duration) linear infinite;
+}
+
+.boxes .box:nth-child(3) {
+  transform: translate(100%, 100%);
+  animation: box3 var(--duration) linear infinite;
+}
+
+.boxes .box:nth-child(4) {
+  transform: translate(200%, 0);
+  animation: box4 var(--duration) linear infinite;
+}
+
+/* cube faces */
+.boxes .box > div {
+  --translateZ: calc(var(--size) / 2);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: var(--box-main);
+  transform: rotateY(var(--rotateY, 0deg)) rotateX(var(--rotateX, 0deg)) translateZ(var(--translateZ));
+}
+
+/* front */
+.boxes .box > div:nth-child(1) {
+  top: 0;
+  left: 0;
+}
+
+/* right */
+.boxes .box > div:nth-child(2) {
+  background: var(--box-dark);
+  right: 0;
+  --rotateY: 90deg;
+}
+
+/* top */
+.boxes .box > div:nth-child(3) {
+  background: var(--box-mid);
+  --rotateX: -90deg;
+}
+
+/* back / shadow */
+.boxes .box > div:nth-child(4) {
+  background: var(--box-light);
+  top: 0;
+  left: 0;
+  --translateZ: calc(var(--size) * -3);
+}
+
+/* animations */
+@keyframes box1 {
+  0%,
+  50% {
+    transform: translate(100%, 0);
+  }
+  100% {
+    transform: translate(200%, 0);
+  }
+}
+
+@keyframes box2 {
+  0% {
+    transform: translate(0, 100%);
+  }
+  50% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(100%, 0);
+  }
+}
+
+@keyframes box3 {
+  0%,
+  50% {
+    transform: translate(100%, 100%);
+  }
+  100% {
+    transform: translate(0, 100%);
+  }
+}
+
+@keyframes box4 {
+  0% {
+    transform: translate(200%, 0);
+  }
+  50% {
+    transform: translate(200%, 100%);
+  }
+  100% {
+    transform: translate(100%, 100%);
+  }
+}
+.dark .boxes {
+  --box-main: var(--color-brand-400);
+  --box-dark: var(--color-brand-800);
+  --box-mid: var(--color-brand-600);
+  --box-light: var(--color-gray-700);
+}

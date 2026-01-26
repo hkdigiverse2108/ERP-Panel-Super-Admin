@@ -15,7 +15,7 @@ export const usePagePermission = (pageName: string) => {
     isAllowed: false,
   };
 
-  permission.forEach((parent) => {
+  permission?.forEach((parent) => {
     const parentKey = normalize(parent?.tabName || "");
 
     // 🔹 Parent level
@@ -31,7 +31,7 @@ export const usePagePermission = (pageName: string) => {
 
     // 🔹 Child level (ONLY if parent view)
     if (parent.view && parent.children?.length) {
-      parent.children.forEach((child) => {
+      parent.children?.forEach((child) => {
         const childKey = normalize(child?.tabName || "");
 
         if (childKey === pageKey) {

@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AddAccountGroupPayload, AddBranchPayload, AddBrandPayload, AddCategoryPayload, AddCompanyPayload, AddLocationPayload, AddModulePayload, AddModulePermissionPayload, AddProductPayload, AddRolePayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddTaxPayload, AddUomPayload, AddUserPayload, CallRequestFormValues, EditAccountGroupPayload, EditBranchPayload, EditBrandPayload, EditCategoryPayload, EditCompanyPayload, EditLocationPayload, EditModulePayload, EditProductPayload, EditRolePayload, EditTaxPayload, EditUomPayload, EditUserPayload, LoginPayload, LoginResponse, UploadResponse, UserApiResponse } from "../Types";
+import type { AddAccountGroupPayload, AddBranchPayload, AddBrandPayload, AddCategoryPayload, AddCompanyPayload, AddLocationPayload, AddModulePayload, AddModulePermissionPayload, AddProductPayload, AddRolePayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddTaxPayload, AddUomPayload, AddUserPayload, CallRequestFormValues, EditAccountGroupPayload, EditBranchPayload, EditBrandPayload, EditCategoryPayload, EditCompanyPayload, EditLocationPayload, EditModulePayload, EditPermissionPayload, EditProductPayload, EditRolePayload, EditTaxPayload, EditUomPayload, EditUserPayload, LoginPayload, LoginResponse, UploadResponse, UserApiResponse } from "../Types";
 import type { AddAccountPayload, EditAccountPayload } from "../Types/Account";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
@@ -84,4 +84,7 @@ export const Mutations = {
   useEditModule: () => useMutations<EditModulePayload, void>([KEYS.MODULE.EDIT, KEYS.MODULE.BASE, KEYS.PERMISSION.DETAILS], (input) => Put(URL_KEYS.MODULE.EDIT, input)),
   useDeleteModule: () => useMutations<string, void>([KEYS.MODULE.DELETE, KEYS.MODULE.BASE, KEYS.PERMISSION.DETAILS], (id) => Delete(`${URL_KEYS.MODULE.BASE}/${id}`)),
   useAddUserModulePermission: () => useMutations<AddModulePermissionPayload, void>([KEYS.MODULE.USER_PERMISSION, KEYS.MODULE.BASE, KEYS.PERMISSION.DETAILS], (input) => Put(URL_KEYS.MODULE.BULK_EDIT, input)),
+
+  //*************** Permission **************** */
+  useEditUserPermission: () => useMutations<EditPermissionPayload, void>([KEYS.MODULE.USER_PERMISSION, KEYS.MODULE.BASE, KEYS.PERMISSION.DETAILS], (input) => Put(URL_KEYS.PERMISSION.EDIT, input)),
 };

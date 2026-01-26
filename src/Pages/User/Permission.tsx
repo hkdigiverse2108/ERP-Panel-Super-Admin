@@ -1,169 +1,158 @@
 import { Box } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
-import { Queries } from "../../Api";
-import { CommonCard, CommonDataGrid } from "../../Components/Common";
-import { useAppSelector } from "../../Store/hooks";
-import type { AppGridColDef, PermissionDetailsApiPayload, PermissionKey } from "../../Types";
+import { useLocation } from "react-router-dom";
+import { Mutations, Queries } from "../../Api";
+import { CommonButton, CommonCheckbox } from "../../Attribute";
+import { CommonBreadcrumbs, CommonCard, CommonDataGrid } from "../../Components/Common";
+import type { AppGridColDef, PermissionColumnKey, PermissionDetailsApiPayload, PermissionKey } from "../../Types";
 import { useDataGrid } from "../../Utils/Hooks";
+import { PAGE_TITLE } from "../../Constants";
+import { BREADCRUMBS } from "../../Data";
+
+const PERMISSION_KEYS: PermissionKey[] = ["add", "edit", "delete", "view"];
 
 const Permission = () => {
   const { sortModel, setSortModel, filterModel, setFilterModel, params } = useDataGrid({ active: false, pagination: false });
-  const [permissionRows, setPermissionRows] = useState<PermissionDetailsApiPayload[]>([]);
-  const { user } = useAppSelector((state) => state.auth);
-  const { data: permissionData, isLoading, isFetching } = Queries.useGetPermissionDetails({ ...params, userId: user?._id }, Boolean(user?._id));
 
+  const location = useLocation();
+  const { data: userData } = location.state || {};
+
+  const [permissionRows, setPermissionRows] = useState<PermissionDetailsApiPayload[]>([]);
+  const { data, isLoading, isFetching } = Queries.useGetPermissionDetails({ ...params, userId: userData?._id }, Boolean(userData?._id));
+
+  const { mutate: editPermission, isPending: isEditPermissionLoading } = Mutations.useEditUserPermission();
   /* -------------------- */
   /* Prepare rows */
   /* -------------------- */
-  const allModule = useMemo(() => permissionData?.data?.map((m) => ({ ...m, id: m._id })) || [], [permissionData]);
+  const allPermission = useMemo(() => data?.data?.map((m) => ({ ...m, id: m._id })) || [], [data]);
 
   useEffect(() => {
-    setPermissionRows(allModule);
-  }, [allModule]);
+    setPermissionRows(allPermission);
+  }, [allPermission]);
 
   /* -------------------- */
-  /* Permission access map */
+  /* Helpers */
   /* -------------------- */
-    // const permissionAccessMap: Record<PermissionColumnKey, boolean> = {
-    //   add: data?.hasAdd ?? false,
-    //   edit: data?.hasEdit ?? false,
-    //   delete: data?.hasDelete ?? false,
-    //   view: data?.hasView ?? false,
-    //   all: Boolean(data?.hasAdd || data?.hasEdit || data?.hasDelete || data?.hasView),
-    // };
+  const hasAccess = (row: PermissionDetailsApiPayload, key: PermissionKey) => row[`has${key.charAt(0).toUpperCase() + key.slice(1)}` as keyof PermissionDetailsApiPayload];
+
+  const isRowAllChecked = (row: PermissionDetailsApiPayload) => PERMISSION_KEYS.every((k) => !hasAccess(row, k) || row[k]);
 
   /* -------------------- */
-  /* Row change handler */
+  /* Row checkbox change */
   /* -------------------- */
-    // const handlePermissionChange = (rowId: string, key: PermissionColumnKey, value: boolean) => {
-    //   setPermissionRows((prev) =>
-    //     prev.map((row) => {
-    //       if (row.id !== rowId) return row;
+  const handlePermissionChange = (rowId: string, key: PermissionColumnKey, value: boolean) => {
+    if (key === "all") return;
+    setPermissionRows((prev) =>
+      prev.map((row) => {
+        if (row.id !== rowId) return row;
+        if (!hasAccess(row, key)) return row;
+        return { ...row, [key]: value };
+      }),
+    );
+  };
 
-    //       // ALL (row)
-    //       if (key === "all") {
-    //         return {
-    //           ...row,
-    //           permissions: {
-    //             add: permissionAccessMap.add ? value : row.add,
-    //             edit: permissionAccessMap.edit ? value : row.edit,
-    //             delete: permissionAccessMap.delete ? value : row.delete,
-    //             view: permissionAccessMap.view ? value : row.view,
-    //           },
-    //         };
-    //       }
-
-    //       if (!permissionAccessMap[key]) return row;
-
-    //       return {
-    //         ...row,
-    //         permissions: {
-    //           ...row,
-    //           [key]: value,
-    //         },
-    //       };
-    //     }),
-    //   );
-    // };
+  const handleRowAllChange = (rowId: string, value: boolean) => {
+    setPermissionRows((prev) =>
+      prev.map((row) => {
+        if (row.id !== rowId) return row;
+        return {
+          ...row,
+          add: row.hasAdd ? value : row.add,
+          edit: row.hasEdit ? value : row.edit,
+          delete: row.hasDelete ? value : row.delete,
+          view: row.hasView ? value : row.view,
+        };
+      }),
+    );
+  };
 
   /* -------------------- */
   /* Header helpers */
   /* -------------------- */
-    // const isHeaderChecked = (key: PermissionKey) => {
-    //   if (!permissionAccessMap[key]) return false;
-    //   return permissionRows.length > 0 && permissionRows.every((r) => r[key]);
-    // };
+  const isHeaderChecked = (key: PermissionKey) => {
+    const eligibleRows = permissionRows.filter((r) => hasAccess(r, key));
+    if (!eligibleRows.length) return false;
+    return eligibleRows.every((r) => r[key]);
+  };
 
-    // const handleHeaderChange = (key: PermissionKey, value: boolean) => {
-    //   if (!permissionAccessMap[key]) return;
-
-    //   setPermissionRows((prev) =>
-    //     prev.map((row) => ({
-    //       ...row,
-    //       permissions: {
-    //         ...row.permissions,
-    //         [key]: value,
-    //       },
-    //     })),
-    //   );
-    // };
+  const handleHeaderChange = (key: PermissionKey, value: boolean) => {
+    setPermissionRows((prev) => prev.map((row) => (hasAccess(row, key) ? { ...row, [key]: value } : row)));
+  };
 
   /* -------------------- */
-  /* ALL header logic */
+  /* ALL header */
   /* -------------------- */
-    // const isAllHeaderChecked = useMemo(() => {
-    //   const keys: PermissionKey[] = ["add", "edit", "delete", "view"];
-    //   const activeKeys = keys.filter((k) => permissionAccessMap[k]);
-    //   if (!activeKeys.length) return false;
+  const isAllHeaderChecked = useMemo(() => {
+    if (!permissionRows.length) return false;
+    return permissionRows.every((row) => isRowAllChecked(row));
+  }, [permissionRows]);
 
-    //   return permissionRows.every((row) => activeKeys.every((k) => row.permissions[k]));
-    // }, [permissionRows, permissionAccessMap]);
-
-    // const handleAllHeaderChange = (value: boolean) => {
-    //   setModuleRows((prev) =>
-    //     prev.map((row) => ({
-    //       ...row,
-    //       permissions: {
-    //         add: permissionAccessMap.add ? value : row.permissions.add,
-    //         edit: permissionAccessMap.edit ? value : row.permissions.edit,
-    //         delete: permissionAccessMap.delete ? value : row.permissions.delete,
-    //         view: permissionAccessMap.view ? value : row.permissions.view,
-    //       },
-    //     })),
-    //   );
-    // };
+  const handleAllHeaderChange = (value: boolean) => {
+    setPermissionRows((prev) =>
+      prev.map((row) => ({
+        ...row,
+        add: row.hasAdd ? value : row.add,
+        edit: row.hasEdit ? value : row.edit,
+        delete: row.hasDelete ? value : row.delete,
+        view: row.hasView ? value : row.view,
+      })),
+    );
+  };
 
   /* -------------------- */
-  /* Permission column factory */
+  /* Permission column */
   /* -------------------- */
-    const permissionColumnWithHeader = (key: PermissionKey, label: string): AppGridColDef<PermissionDetailsApiPayload> => ({
-      field: `has${label}`,
-      headerName: label,
-      width: 170,
-      align: "center",
-      headerAlign: "center",
-      sortable: false,
-      filterable: false,
-
-    //   renderHeader: () => (permissionAccessMap[key] ? <CommonCheckbox name="" label={label} value={isHeaderChecked(key)} onChange={(e) => handleHeaderChange(key, e)} /> : <span>{label}</span>),
-
-    //   renderCell: (params) => (permissionAccessMap[key] ? <CommonCheckbox name="" value={params.row.permissions[key]} onChange={(e) => handlePermissionChange(params.row.id!, key, e)} /> : <span>-</span>),
-    });
+  const permissionColumn = (key: PermissionKey, label: string): AppGridColDef<PermissionDetailsApiPayload> => ({
+    field: key,
+    headerName: label,
+    width: 150,
+    align: "center",
+    headerAlign: "center",
+    sortable: false,
+    filterable: false,
+    renderHeader: () => <CommonCheckbox name="" label={label} value={isHeaderChecked(key)} onChange={(e) => handleHeaderChange(key, e)} />,
+    renderCell: (params) => (hasAccess(params.row, key) ? <CommonCheckbox name="" value={params.row[key]} onChange={(e) => handlePermissionChange(params.row.id!, key, e)} /> : <span>-</span>),
+  });
 
   /* -------------------- */
   /* ALL column */
   /* -------------------- */
-  //   const allColumn: AppGridColDef<UserModulePermissionDataResponse> = {
-  //     field: "hasAll",
-  //     headerName: "All",
-  //     width: 170,
-  //     align: "center",
-  //     headerAlign: "center",
-  //     sortable: false,
-  //     filterable: false,
+  const allColumn: AppGridColDef<PermissionDetailsApiPayload> = {
+    field: "all",
+    headerName: "All",
+    width: 150,
+    align: "center",
+    headerAlign: "center",
+    sortable: false,
+    filterable: false,
+    renderHeader: () => <CommonCheckbox name="" label="All" value={isAllHeaderChecked} onChange={(e) => handleAllHeaderChange(e)} />,
+    renderCell: (params) => <CommonCheckbox name="" value={isRowAllChecked(params.row)} onChange={(e) => handleRowAllChange(params.row.id!, e)} />,
+  };
 
-  //     renderHeader: () => (permissionAccessMap.all ? <CommonCheckbox name="" label="All" value={isAllHeaderChecked} onChange={(e) => handleAllHeaderChange(e)} /> : <span>All</span>),
+  const handleSaveAll = async () => {
+    const payload = {
+      userId: userData?._id,
+      modules: permissionRows.map((row) => ({
+        _id: row._id,
+        view: !!row.view,
+        add: !!row.add,
+        edit: !!row.edit,
+        delete: !!row.delete,
+      })),
+    };
+    await editPermission(payload);
+  };
 
-  //     renderCell: (params) => {
-  //       const allowedKeys: PermissionKey[] = ["add", "edit", "delete", "view"];
+  const topContent = <CommonButton variant="contained" title="Save All" size="small" loading={isEditPermissionLoading} onClick={handleSaveAll} />;
 
-  //       const isAllChecked = allowedKeys.filter((k) => permissionAccessMap[k]).every((k) => params.row.permissions[k]);
-
-  //       return permissionAccessMap.all ? <CommonCheckbox name={""} value={isAllChecked} onChange={(e) => handlePermissionChange(params.row.id!, "all", e)} /> : <span>-</span>;
-  //     },
-  //   };
-
-  /* -------------------- */
-  /* Columns */
-  /* -------------------- */
   const columns: AppGridColDef<PermissionDetailsApiPayload>[] = [
     { field: "tabName", headerName: "Tab Name", width: 300 }, //
     { field: "displayName", headerName: "Display Name", width: 300 },
-    permissionColumnWithHeader("add", "Add"),
-    permissionColumnWithHeader("edit", "Edit"),
-    permissionColumnWithHeader("delete", "Delete"),
-    permissionColumnWithHeader("view", "View"),
-    // allColumn,
+    permissionColumn("add", "Add"),
+    permissionColumn("edit", "Edit"),
+    permissionColumn("delete", "Delete"),
+    permissionColumn("view", "View"),
+    allColumn,
   ];
 
   const CommonDataGridOption = {
@@ -180,11 +169,14 @@ const Permission = () => {
   };
 
   return (
-    <Box sx={{ p: 2 }}>
-      <CommonCard>
-        <CommonDataGrid {...CommonDataGridOption} />
-      </CommonCard>
-    </Box>
+    <>
+      <CommonBreadcrumbs title={PAGE_TITLE.USER.PERMISSION} maxItems={3} breadcrumbs={BREADCRUMBS.USER.PERMISSION} />
+      <Box sx={{ p: 2 }}>
+        <CommonCard title={`${userData?.fullName} (${userData?.username})`} topContent={topContent}>
+          <CommonDataGrid {...CommonDataGridOption} />
+        </CommonCard>
+      </Box>
+    </>
   );
 };
 

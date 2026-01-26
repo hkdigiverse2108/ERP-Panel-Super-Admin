@@ -24,11 +24,13 @@ import Role from "../Pages/Role";
 import Module from "../Pages/Module";
 import ModuleForm from "../Pages/Module/ModuleForm";
 import Permission from "../Pages/User/Permission";
+import NotFound from "../Pages/NotFound";
+import AccessDenied from "../Pages/AccessDenied";
 
 export const PageRoutes = [
-  { path: ROUTES.HOME, name: PAGE_TITLE.USER.BASE, element: <Dashboard /> },
+  { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
 
-  { path: ROUTES.DASHBOARD, name: PAGE_TITLE.DASHBOARD, element: <Dashboard /> },
+  { path: ROUTES.DASHBOARD , name: PAGE_TITLE.DASHBOARD, element: <Dashboard /> },
 
   { path: ROUTES.USER.BASE, name: PAGE_TITLE.USER.BASE, element: <Users /> },
   { path: ROUTES.USER.PERMISSION_ADD_EDIT, name: PAGE_TITLE.USER.BASE, element: <Permission /> },
@@ -64,6 +66,8 @@ export const PageRoutes = [
 
   { path: ROUTES.MODULE.BASE, name: PAGE_TITLE.MODULE.BASE, element: <Module /> },
   { path: ROUTES.MODULE.ADD_EDIT, name: PAGE_TITLE.MODULE.BASE, element: <ModuleForm /> },
+  { path: ROUTES.NOT_FOUND, element: <NotFound /> },
+  { path: ROUTES.ACCESS_DENIED, element: <AccessDenied /> }
 ];
 
 export const AuthRoutes = [

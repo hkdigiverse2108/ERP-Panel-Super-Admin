@@ -9,7 +9,15 @@ const normalizeTabName = (name: string) => name.toLowerCase().replace(/\s+/g, ""
 const PrivateRoutes = () => {
   const location = useLocation();
   const { permission } = useAppSelector((state) => state.layout);
+  const { isAuthenticated } = useAppSelector((store) => store.auth);
 
+  if (!isAuthenticated) {
+    return <Navigate to={ROUTES.AUTH.SIGNIN} replace />;
+  }
+
+  if (permission === null) {
+    return <Outlet />; // or Loader
+  }
   // current route config
   const currentRoute = PageRoutes.find((r) => r.path === location.pathname);
 
@@ -22,7 +30,7 @@ const PrivateRoutes = () => {
   const isAddEdit = isAddEditRoute(location.pathname);
 
   // 🔥 Permission check with parent support
-  const hasPermission = permission.some((parent) => {
+  const hasPermission = permission?.some((parent) => {
     const parentTab = normalizeTabName(parent?.tabName || "");
 
     // 🔹 Parent level route
@@ -32,7 +40,7 @@ const PrivateRoutes = () => {
 
     // 🔹 Child level route (ONLY if parent hasView)
     if (parent.view && parent.children?.length) {
-      return parent.children.some((child) => {
+      return parent?.children?.some((child) => {
         const childTab = normalizeTabName(child?.tabName || "");
 
         if (childTab !== routeTab) return false;
@@ -45,7 +53,7 @@ const PrivateRoutes = () => {
   });
 
   if (!hasPermission) {
-    return <Navigate to={ROUTES.NOT_FOUND} replace />;
+    return <Navigate to={ROUTES.ACCESS_DENIED} replace />;
   }
 
   return <Outlet />;

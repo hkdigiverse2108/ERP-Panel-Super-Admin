@@ -135,7 +135,7 @@ const ModuleAccess: FC<ModuleAccessProps> = ({ data, moduleRows, setModuleRows }
   const allColumn: AppGridColDef<UserModulePermissionDataResponse> = {
     field: "hasAll",
     headerName: "All",
-    width: 170,
+    width: 150,
     align: "center",
     headerAlign: "center",
     sortable: false,

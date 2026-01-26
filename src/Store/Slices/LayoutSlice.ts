@@ -15,7 +15,7 @@ type LayoutState = {
 
 const StoredPermission = JSON.parse(Storage.getItem(STORAGE_KEYS.PERMISSION) || "null");
 
-const initialState:LayoutState = {
+const initialState: LayoutState = {
   isExpanded: true,
   isMobileOpen: false,
   isMobile: false,
@@ -65,6 +65,6 @@ const layoutSlice = createSlice({
   },
 });
 
-export const {setPermission, setIsMobile, setToggleSidebar, setToggleMobileSidebar, setIsHovered, setApplicationMenuOpen, setToggleTheme, setSidebarOpen } = layoutSlice.actions;
+export const { setPermission, setIsMobile, setToggleSidebar, setToggleMobileSidebar, setIsHovered, setApplicationMenuOpen, setToggleTheme, setSidebarOpen } = layoutSlice.actions;
 
 export default layoutSlice.reducer;
