@@ -6,12 +6,13 @@ import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, Comm
 import { PAGE_TITLE, ROUTES } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
 import type { AppGridColDef, ModuleBase } from "../../Types";
-import { useDataGrid } from "../../Utils/Hooks";
+import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
 import { CommonObjectPropertyColumn } from "../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Module = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
+  const permission = usePagePermission(PAGE_TITLE.MODULE.BASE);
 
   const { data: ModuleData, isLoading: ModuleDataLoading, isFetching: ModuleDataFetching } = Queries.useGetModule(params);
 
@@ -39,11 +40,17 @@ const Module = () => {
     { field: "hasDelete", headerName: "Delete", width: 90, headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ Delete" : "❌ Delete") },
     { field: "hasView", headerName: "View", width: 85, headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ View" : "❌ View") },
     { field: "default", headerName: "Default", flex: 1, minWidth: 90, headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ Default" : "❌ Default") },
-    CommonActionColumn({
-      active: (row) => editModule({ moduleId: row?._id, isActive: !row.isActive }),
-      editRoute: ROUTES.MODULE.ADD_EDIT,
-      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.tabName }),
-    }),
+    ...(permission?.edit || permission?.delete
+      ? [
+          CommonActionColumn<ModuleBase>({
+            ...(permission?.edit && {
+              active: (row) => editModule({ moduleId: row?._id, isActive: !row.isActive }),
+              editRoute: ROUTES.MODULE.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.tabName }) }),
+          }),
+        ]
+      : []),
   ];
 
   const CommonDataGridOption = {
@@ -53,7 +60,7 @@ const Module = () => {
     loading: ModuleDataLoading || ModuleDataFetching || isEditLoading,
     isActive,
     setActive,
-    handleAdd,
+    ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,

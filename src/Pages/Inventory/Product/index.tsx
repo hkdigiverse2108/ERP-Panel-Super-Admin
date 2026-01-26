@@ -6,7 +6,7 @@ import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, Comm
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, CONSUMPTION_TYPE, PRODUCT_TYPE_OPTIONS } from "../../../Data";
 import type { AppGridColDef, ProductBase, ProductWithRemoveQty } from "../../../Types";
-import { useDataGrid } from "../../../Utils/Hooks";
+import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { CommonButton, CommonTextField, CommonValidationSelect } from "../../../Attribute";
 import { Form, Formik } from "formik";
@@ -19,6 +19,8 @@ const Product = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isRemoveItem, setRemoveItem] = useState(false);
   const [gridRows, setGridRows] = useState<ProductWithRemoveQty[]>([]);
+  const permission = usePagePermission(PAGE_TITLE.INVENTORY.PRODUCT.BASE);
+  const permissionItem = usePagePermission(PAGE_TITLE.INVENTORY.STOCK);
 
   const { data: productData, isLoading: productDataLoading, isFetching: productDataFetching } = Queries.useGetProduct(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
@@ -91,11 +93,17 @@ const Product = () => {
           },
         ]
       : []),
-    CommonActionColumn({
-      active: (row) => editProduct({ productId: row?._id, isActive: !row.isActive }),
-      editRoute: ROUTES.PRODUCT.ADD_EDIT,
-      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
-    }),
+    ...(permission?.edit || permission?.delete
+      ? [
+          CommonActionColumn<ProductBase>({
+            ...(permission?.edit && {
+              active: (row) => editProduct({ productId: row?._id, isActive: !row.isActive }),
+              editRoute: ROUTES.PRODUCT.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+          }),
+        ]
+      : []),
   ];
 
   const CommonDataGridOption = {
@@ -105,7 +113,7 @@ const Product = () => {
     loading: productDataLoading || productDataFetching || isEditLoading,
     isActive,
     setActive,
-    handleAdd,
+    ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,
@@ -128,12 +136,16 @@ const Product = () => {
   const topContent = (
     <Grid size={"auto"}>
       <Grid container spacing={1}>
-        <Grid size={"auto"}>
-          <CommonButton variant="contained" title="Add Item" size="medium" onClick={handleAddItem} disabled={!advancedFilter?.companyFilter?.length} />
-        </Grid>
-        <Grid size={"auto"}>
-          <CommonButton variant="contained" title="Remove Item" size="medium" disabled={!advancedFilter?.companyFilter?.length} onClick={() => setRemoveItem(!isRemoveItem)} />
-        </Grid>
+        {permissionItem?.add && (
+          <Grid size={"auto"}>
+            <CommonButton variant="contained" title="Add Item" size="medium" onClick={handleAddItem} disabled={!advancedFilter?.companyFilter?.length} />
+          </Grid>
+        )}
+        {permissionItem?.delete && (
+          <Grid size={"auto"}>
+            <CommonButton variant="contained" title="Remove Item" size="medium" disabled={!advancedFilter?.companyFilter?.length} onClick={() => setRemoveItem(!isRemoveItem)} />
+          </Grid>
+        )}
       </Grid>
     </Grid>
   );

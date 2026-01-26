@@ -6,11 +6,12 @@ import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, Comm
 import { PAGE_TITLE, ROUTES } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
 import type { AppGridColDef, CompanyBase } from "../../Types";
-import { useDataGrid } from "../../Utils/Hooks";
+import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
 
 const Company = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
+  const permission = usePagePermission(PAGE_TITLE.COMPANY.BASE);
 
   const { data: companyData, isLoading: companyDataLoading, isFetching: companyDataFetching } = Queries.useGetCompany(params);
   const { mutate: deleteCompanyMutate } = Mutations.useDeleteCompany();
@@ -32,13 +33,19 @@ const Company = () => {
     { field: "displayName", headerName: "displayName", width: 240 },
     { field: "contactName", headerName: "contactName", width: 150 },
     CommonPhoneColumns<CompanyBase>("phoneNo", { headerName: "Phone No", width: 150 }),
-    { field: "webSite", headerName: "webSite", width: 170 },
+    { field: "webSite", headerName: "webSite", width: 200 },
     { field: "email", headerName: "Email", flex: 1, minWidth: 150 },
-    CommonActionColumn({
-      active: (row) => editCompany({ companyId: row?._id, isActive: !row.isActive }),
-      editRoute: ROUTES.COMPANY.ADD_EDIT,
-      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
-    }),
+    ...(permission?.edit || permission?.delete
+      ? [
+          CommonActionColumn<CompanyBase>({
+            ...(permission?.edit && {
+              active: (row) => editCompany({ companyId: row?._id, isActive: !row.isActive }),
+              editRoute: ROUTES.COMPANY.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+          }),
+        ]
+      : []),
   ];
 
   const CommonDataGridOption = {
@@ -48,7 +55,7 @@ const Company = () => {
     loading: companyDataLoading || companyDataFetching || isEditLoading,
     isActive,
     setActive,
-    handleAdd,
+    ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,

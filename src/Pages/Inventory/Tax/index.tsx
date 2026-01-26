@@ -7,12 +7,13 @@ import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import { setTaxModal } from "../../../Store/Slices/ModalSlice";
 import type { AppGridColDef, TaxBase } from "../../../Types";
-import { useDataGrid } from "../../../Utils/Hooks";
+import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import TaxForm from "./TaxForm";
 
 const Tax = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const dispatch = useDispatch();
+  const permission = usePagePermission(PAGE_TITLE.INVENTORY.TAX.BASE);
 
   const { data: TaxData, isLoading: TaxDataLoading, isFetching: TaxDataFetching } = Queries.useGetTax(params);
   const { mutate: deleteTaxMutate } = Mutations.useDeleteTax();
@@ -33,11 +34,17 @@ const Tax = () => {
   const columns: AppGridColDef<TaxBase>[] = [
     { field: "name", headerName: "Name", flex: 1, minWidth: 200 },
     { field: "percentage", headerName: "Percentage", flex: 1, minWidth: 200 },
-    CommonActionColumn({
-      active: (row) => editTax({ taxId: row?._id, isActive: !row.isActive }),
-      onEdit: (row) => handleEdit(row),
-      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
-    }),
+    ...(permission?.edit || permission?.delete
+      ? [
+          CommonActionColumn<TaxBase>({
+            ...(permission?.edit && {
+              active: (row) => editTax({ taxId: row?._id, isActive: !row.isActive }),
+              onEdit: (row) => handleEdit(row),
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+          }),
+        ]
+      : []),
   ];
 
   const CommonDataGridOption = {
@@ -47,7 +54,7 @@ const Tax = () => {
     loading: TaxDataLoading || TaxDataFetching || isEditLoading,
     isActive,
     setActive,
-    handleAdd,
+    ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,

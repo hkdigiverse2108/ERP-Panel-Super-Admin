@@ -63,12 +63,10 @@ export interface UserModulePermissionDataResponse {
 
 export interface ModuleAccessProps {
   data?: ModuleBase;
-  moduleRows: UserModulePermissionDataResponse[];
-  setModuleRows: Dispatch<SetStateAction<UserModulePermissionDataResponse[]>>;
 }
 
 export interface AddModulePermissionPayload {
-  moduleId: string;
+  moduleId?: string;
   users: UserModulePermissionDataResponse[];
 }
 

@@ -6,12 +6,13 @@ import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, Comm
 import { PAGE_TITLE, ROUTES } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
 import type { BranchBase } from "../../Types";
-import { useDataGrid } from "../../Utils/Hooks";
+import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
 import { useNavigate } from "react-router-dom";
 
 const Branch = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
+  const permission = usePagePermission(PAGE_TITLE.BRANCH.BASE);
 
   const { data: branchData, isLoading: branchDataLoading, isFetching: branchDataFetching } = Queries.useGetBranch(params);
   const { mutate: deleteBranchMutate } = Mutations.useDeleteBranch();
@@ -29,16 +30,21 @@ const Branch = () => {
 
   const columns: GridColDef<BranchBase>[] = [
     { field: "name", headerName: "Branch Name", flex: 1 },
-   { field: "displayName", headerName: "Display Name", flex: 1 },
-   { field: "userName", headerName: "User Name", flex: 1 },
+    { field: "displayName", headerName: "Display Name", flex: 1 },
+    { field: "userName", headerName: "User Name", flex: 1 },
     { field: "contactName", headerName: "Contact Name", flex: 1 },
     { field: "email", headerName: "Email", flex: 1 },
-    
-    CommonActionColumn({
-      active: (row) => editBranch({ branchId: row?._id, isActive: !row.isActive }),
-      editRoute: ROUTES.BRANCH.ADD_EDIT,
-      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
-    }),
+    ...(permission?.edit || permission?.delete
+      ? [
+          CommonActionColumn<BranchBase>({
+            ...(permission?.edit && {
+              active: (row) => editBranch({ branchId: row?._id, isActive: !row.isActive }),
+              editRoute: ROUTES.BRANCH.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+          }),
+        ]
+      : []),
   ];
 
   const CommonDataGridOption = {
@@ -48,7 +54,7 @@ const Branch = () => {
     loading: branchDataLoading || branchDataFetching || isEditLoading,
     isActive,
     setActive,
-    handleAdd,
+    ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,

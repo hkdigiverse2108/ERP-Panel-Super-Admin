@@ -1,27 +1,27 @@
 import { Box, Grid, Tab, Tabs } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
-import { CommonButton, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../Attribute";
+import { CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonTabPanel } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
-import type { ModuleFormValues, UserModulePermissionDataResponse } from "../../Types";
+import type { ModuleFormValues } from "../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { ModuleFormSchema } from "../../Utils/ValidationSchemas";
 import ModuleAccess from "./ModuleAccess";
+import { usePagePermission } from "../../Utils/Hooks";
 
 const ModuleForm = () => {
   const [value, setValue] = useState(0);
-  const [moduleRows, setModuleRows] = useState<UserModulePermissionDataResponse[]>([]);
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
+  const permission = usePagePermission(PAGE_TITLE.MODULE.BASE);
 
   const { data: ModuleData, isLoading: ModuleDataLoading } = Queries.useGetModule({ activeFilter: true });
 
-  const { mutate: addModulePermission, isPending: isAddModulePermissionLoading } = Mutations.useAddUserModulePermission();
   const { mutate: addModule, isPending: isAddLoading } = Mutations.useAddModule();
   const { mutate: editModule, isPending: isEditLoading } = Mutations.useEditModule();
 
@@ -57,22 +57,11 @@ const ModuleForm = () => {
       await addModule(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
     }
   };
-
-  const handleSaveAll = async () => {
-    const payload = {
-      moduleId: data?._id,
-      users: moduleRows.map((row) => ({
-        _id: row.id || row._id,
-        fullName: row.fullName,
-        email: row.email,
-        role: row.role,
-        permissions: row.permissions,
-      })),
-    };
-
-    await addModulePermission(payload);
-  };
-
+  
+  useEffect(() => {
+    const hasAccess = isEditing ? permission.edit : permission.add;
+    if (!hasAccess) navigate(-1);
+  }, [isEditing, permission, navigate]);
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.MODULE[pageMode]} maxItems={4} breadcrumbs={BREADCRUMBS.MODULE[pageMode]} />
@@ -81,12 +70,11 @@ const ModuleForm = () => {
           <CommonCard hideDivider>
             <Box sx={{ width: "100%" }}>
               {isEditing && (
-                <Box sx={{ borderBottom: 1, borderColor: "divider", display: "flex", alignItems: "center", justifyContent: "space-between", pr: 2 }}>
+                <Box sx={{ borderBottom: 1, borderColor: "divider", }}>
                   <Tabs value={value} onChange={(_, newValue: number) => setValue(newValue)} aria-label="module tabs">
                     <Tab label={PAGE_TITLE.MODULE.EDIT} />
                     <Tab label="Module Access" />
                   </Tabs>
-                  {value === 1 && <CommonButton variant="contained" title="Save All" size="small" loading={isAddModulePermissionLoading} onClick={handleSaveAll} />}
                 </Box>
               )}
 
@@ -114,7 +102,7 @@ const ModuleForm = () => {
                 </Formik>
               </CommonTabPanel>
               <CommonTabPanel value={value} index={1}>
-                <ModuleAccess data={data} moduleRows={moduleRows} setModuleRows={setModuleRows} />
+                <ModuleAccess data={data} />
               </CommonTabPanel>
             </Box>
           </CommonCard>

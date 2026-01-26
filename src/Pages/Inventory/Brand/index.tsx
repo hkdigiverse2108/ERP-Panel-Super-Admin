@@ -7,12 +7,13 @@ import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import { setBrandModal } from "../../../Store/Slices/ModalSlice";
 import type { AppGridColDef, BrandBase } from "../../../Types";
-import { useDataGrid } from "../../../Utils/Hooks";
+import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import BrandForm from "./BrandForm";
 
 const Brand = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const dispatch = useDispatch();
+  const permission = usePagePermission(PAGE_TITLE.INVENTORY.BRAND.BASE);
 
   const { data: BrandsData, isLoading: brandsDataLoading, isFetching: brandsDataFetching } = Queries.useGetBrand(params);
   const { mutate: deleteBrandsMutate } = Mutations.useDeleteBrand();
@@ -48,11 +49,17 @@ const Brand = () => {
       renderCell: ({ value }) => (typeof value === "object" ? value?.name || "-" : value),
       exportFormatter: (value) => (typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-"),
     },
-    CommonActionColumn({
-      active: (row) => editBrand({ brandId: row?._id, isActive: !row.isActive }),
-      onEdit: (row) => handleEdit(row),
-      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
-    }),
+    ...(permission?.edit || permission?.delete
+      ? [
+          CommonActionColumn<BrandBase>({
+            ...(permission?.edit && {
+              active: (row) => editBrand({ brandId: row?._id, isActive: !row.isActive }),
+              onEdit: (row) => handleEdit(row),
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+          }),
+        ]
+      : []),
   ];
 
   const CommonDataGridOption = {
@@ -62,7 +69,7 @@ const Brand = () => {
     loading: brandsDataLoading || brandsDataFetching || isEditLoading,
     isActive,
     setActive,
-    handleAdd,
+    ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,

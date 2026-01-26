@@ -18,7 +18,7 @@ const Permission = () => {
   const { data: userData } = location.state || {};
 
   const [permissionRows, setPermissionRows] = useState<PermissionDetailsApiPayload[]>([]);
-  const { data, isLoading, isFetching } = Queries.useGetPermissionDetails({ ...params, userId: userData?._id }, Boolean(userData?._id));
+  const { data, isLoading, isFetching } = Queries.useGetPermissionDetails({ userId: userData?._id, ...params }, Boolean(userData?._id));
 
   const { mutate: editPermission, isPending: isEditPermissionLoading } = Mutations.useEditUserPermission();
   /* -------------------- */

@@ -11,11 +11,14 @@ import type { BranchFormValues } from "../../Types";
 import type { BankBase } from "../../Types/Bank";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { BranchFormSchema } from "../../Utils/ValidationSchemas";
+import { usePagePermission } from "../../Utils/Hooks";
 
 const BranchForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
+  const permission = usePagePermission(PAGE_TITLE.BRANCH.BASE);
+
   const { data: bankData } = Queries.useGetBankDropdown();
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
 
@@ -31,7 +34,7 @@ const BranchForm = () => {
     companyId: data?.companyId?._id || "",
 
     name: data?.name || "",
-    displayName: data?.displayName || "", 
+    displayName: data?.displayName || "",
     contactName: data?.contactName || "",
 
     phoneNo: {
@@ -107,6 +110,11 @@ const BranchForm = () => {
       await addBranch(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
     }
   };
+
+  useEffect(() => {
+    const hasAccess = isEditing ? permission.edit : permission.add;
+    if (!hasAccess) navigate(-1);
+  }, [isEditing, permission, navigate]);
 
   return (
     <>

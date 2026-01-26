@@ -1,16 +1,18 @@
 import { Box } from "@mui/material";
-import { useEffect, useMemo, type FC } from "react";
-import { Queries } from "../../Api";
-import { CommonCheckbox } from "../../Attribute";
+import { useEffect, useMemo, useState, type FC } from "react";
+import { Mutations, Queries } from "../../Api";
+import { CommonButton, CommonCheckbox } from "../../Attribute";
 import { CommonCard, CommonDataGrid } from "../../Components/Common";
 import type { AppGridColDef, ModuleAccessProps, PermissionColumnKey, PermissionKey, UserModulePermissionDataResponse } from "../../Types";
 import { useDataGrid } from "../../Utils/Hooks";
 
-const ModuleAccess: FC<ModuleAccessProps> = ({ data, moduleRows, setModuleRows }) => {
+const ModuleAccess: FC<ModuleAccessProps> = ({ data }) => {
   const { sortModel, setSortModel, filterModel, setFilterModel, params } = useDataGrid({ active: false, pagination: false });
+  const [moduleRows, setModuleRows] = useState<UserModulePermissionDataResponse[]>([]);
 
-  const { data: ModuleData, isLoading, isFetching } = Queries.useGetModuleUserPermission({ ...params, moduleId: data?._id }, Boolean(data?._id));
-
+  const { data: ModuleData, isLoading, isFetching } = Queries.useGetModuleUserPermission({ moduleId: data?._id ,...params}, Boolean(data?._id));
+  
+  const { mutate: addModulePermission, isPending: isAddModulePermissionLoading } = Mutations.useAddUserModulePermission();
   /* -------------------- */
   /* Prepare rows */
   /* -------------------- */
@@ -18,7 +20,7 @@ const ModuleAccess: FC<ModuleAccessProps> = ({ data, moduleRows, setModuleRows }
 
   useEffect(() => {
     setModuleRows(allModule);
-  }, [allModule, setModuleRows]);
+  }, [allModule]);
 
   /* -------------------- */
   /* Permission access map */
@@ -155,6 +157,23 @@ const ModuleAccess: FC<ModuleAccessProps> = ({ data, moduleRows, setModuleRows }
   /* -------------------- */
   /* Columns */
   /* -------------------- */
+
+  const handleSaveAll = async () => {
+    const payload = {
+      moduleId: data?._id,
+      users: moduleRows.map((row) => ({
+        _id: row.id || row._id,
+        fullName: row.fullName,
+        email: row.email,
+        role: row.role,
+        permissions: row.permissions,
+      })),
+    };
+
+    await addModulePermission(payload);
+  };
+
+  const topContent = <CommonButton variant="contained" title="Save All" size="small" loading={isAddModulePermissionLoading} onClick={handleSaveAll} />;
   const columns: AppGridColDef<UserModulePermissionDataResponse>[] = [
     { field: "fullName", headerName: "User Full Name", width: 300 }, //
     { field: "email", headerName: "User Email", width: 300 },
@@ -164,7 +183,7 @@ const ModuleAccess: FC<ModuleAccessProps> = ({ data, moduleRows, setModuleRows }
     permissionColumnWithHeader("view", "View"),
     allColumn,
   ];
-  
+
   const CommonDataGridOption = {
     columns,
     rows: moduleRows,
@@ -180,7 +199,7 @@ const ModuleAccess: FC<ModuleAccessProps> = ({ data, moduleRows, setModuleRows }
 
   return (
     <Box sx={{ p: 2 }}>
-      <CommonCard>
+      <CommonCard title={`${data?.displayName} (${data?.tabName})`} topContent={topContent}>
         <CommonDataGrid {...CommonDataGridOption} />
       </CommonCard>
     </Box>
