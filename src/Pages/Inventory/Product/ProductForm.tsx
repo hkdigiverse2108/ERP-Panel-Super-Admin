@@ -14,12 +14,14 @@ import { setSelectedFiles, setUploadModal } from "../../../Store/Slices/ModalSli
 import type { ImageSyncProps, NutritionInfo, ProductFormValues } from "../../../Types";
 import { DateConfig, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { ProductFormSchema } from "../../../Utils/ValidationSchemas";
+import { usePagePermission } from "../../../Utils/Hooks";
 
 const ProductForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [activeImageKey, setActiveImageKey] = useState<"images" | null>(null);
+  const permission = usePagePermission(PAGE_TITLE.INVENTORY.PRODUCT.BASE);
 
   const { data } = location.state || {};
   const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown();
@@ -77,7 +79,7 @@ const ProductForm = () => {
       images: data?.images || [],
       isActive: data?.isActive || true,
     }),
-    [data]
+    [data],
   );
 
   const FormikImageSync = <T extends FormikValues>({ activeKey, clearActiveKey }: ImageSyncProps) => {
@@ -124,6 +126,11 @@ const ProductForm = () => {
       await addProduct(RemoveEmptyFields(rest), { onSuccess: handleSuccess });
     }
   };
+
+  useEffect(() => {
+    const hasAccess = isEditing ? permission.edit : permission.add;
+    if (!hasAccess) navigate(-1);
+  }, [isEditing, permission, navigate]);
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT[pageMode]} maxItems={1} breadcrumbs={BREADCRUMBS.PRODUCT[pageMode]} />
