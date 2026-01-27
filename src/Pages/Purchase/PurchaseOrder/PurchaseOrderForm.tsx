@@ -6,7 +6,7 @@ import { Mutations, Queries } from "../../../Api";
 import { CommonValidationTextField, CommonValidationSelect } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { TAX_TYPE, ORDER_STATUS } from "../../../Data";
+import { TAX_TYPE, ORDER_STATUS, BREADCRUMBS } from "../../../Data";
 import { GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import type { FormikHelpers } from "formik";
 import type { PurchaseOrderFormValues } from "../../../Types";
@@ -91,7 +91,7 @@ const PurchaseOrderForm = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE.PURCHASE_ORDER[pageMode]} breadcrumbs={BREADCRUMBS.PURCHASE_ORDER[pageMode]} />
+      <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE_ORDER[pageMode]} breadcrumbs={BREADCRUMBS.PURCHASE_ORDER[pageMode]} />
 
       <Box sx={{ p: 3, mb: 8 }}>
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>

@@ -32,10 +32,6 @@ export const NavItems: NavItem[] = [
   {
     name: PAGE_TITLE.PURCHASE.BASE,
     icon: <Settings />,
-    children: [
-      { name: PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE, path: ROUTES.PURCHASE.PURCHASE_ORDER.BASE },
-   
-    ],
-
+    children: [{ name: PAGE_TITLE.PURCHASE_ORDER.BASE, path: ROUTES.PURCHASE_ORDER.BASE }],
   },
 ];

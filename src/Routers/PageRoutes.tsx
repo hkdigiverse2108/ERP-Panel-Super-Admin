@@ -70,8 +70,8 @@ export const PageRoutes = [
   { path: ROUTES.NOT_FOUND, element: <NotFound /> },
   { path: ROUTES.ACCESS_DENIED, element: <AccessDenied /> },
 
-  { path: ROUTES.PURCHASE.PURCHASE_ORDER.BASE, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseOrder /> },
-  { Path: ROUTES.PURCHASE.PURCHASE_ORDER.ADD_EDIT, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseOrder /> },
+  { path: ROUTES.PURCHASE_ORDER.BASE, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseOrder /> },
+  { Path: ROUTES.PURCHASE_ORDER.ADD_EDIT, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseOrder /> },
 ];
 
 export const AuthRoutes = [

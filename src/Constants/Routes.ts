@@ -57,9 +57,9 @@ export const ROUTES = {
   PURCHASE: {
     BASE: "/purchase",
     ADD_EDIT: "/purchase/add-edit",
-    PURCHASE_ORDER: {
-      BASE: "/purchase-order",
-      ADD_EDIT: "/purchase-order/add-edit",
-    },
-  }
+  },
+  PURCHASE_ORDER: {
+    BASE: "/purchase-order",
+    ADD_EDIT: "/purchase-order/add-edit",
+  },
 } as const;

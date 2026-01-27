@@ -61,38 +61,38 @@ export const PAGE_TITLE = {
     ADD: "Add Location",
     EDIT: "Edit Location",
   },
-  ACCOUNTING:{
+  ACCOUNTING: {
     BASE: "Accounting",
   },
-  ACCOUNT_GROUP:{
-    BASE:"Account Group",
-    ADD:"Add Account Group",
-    EDIT:"Edit Account Group",
-    TREE:"Account Group Tree"
+  ACCOUNT_GROUP: {
+    BASE: "Account Group",
+    ADD: "Add Account Group",
+    EDIT: "Edit Account Group",
+    TREE: "Account Group Tree",
   },
-  ACCOUNT:{
-    BASE:"Account",
-    ADD:"Add Account",
-    EDIT:"Edit Account",
+  ACCOUNT: {
+    BASE: "Account",
+    ADD: "Add Account",
+    EDIT: "Edit Account",
   },
-  ROLE:{
-    BASE:"Role",
-    ADD:"Add Role",
-    EDIT:"Edit Role",
+  ROLE: {
+    BASE: "Role",
+    ADD: "Add Role",
+    EDIT: "Edit Role",
   },
-  MODULE:{
-    BASE:"Module",
-    ADD:"Add Module",
-    EDIT:"Edit Module",
+  MODULE: {
+    BASE: "Module",
+    ADD: "Add Module",
+    EDIT: "Edit Module",
   },
-  
+
   PURCHASE: {
     BASE: "Purchase",
     ADD: "Add Purchase",
-     PURCHASE_ORDER: {
-     BASE: "Purchase Order",
-     ADD: "Add Purchase Order",
-     EDIT: "Edit Purchase Order",
-   },
+  },
+  PURCHASE_ORDER: {
+    BASE: "Purchase Order",
+    ADD: "Add Purchase Order",
+    EDIT: "Edit Purchase Order",
   },
 } as const;

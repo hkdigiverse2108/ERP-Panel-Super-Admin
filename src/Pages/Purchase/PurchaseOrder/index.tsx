@@ -61,7 +61,7 @@ const PurchaseOrder = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.PURCHASE_ORDER.BASE} />
+      <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE_ORDER.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.PURCHASE_ORDER.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
