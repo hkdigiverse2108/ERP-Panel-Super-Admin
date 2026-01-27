@@ -10,13 +10,15 @@ import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import { setAccountGroupModal } from "../../../Store/Slices/ModalSlice";
 import type { AccountGroupBase, AppGridColDef } from "../../../Types";
-import { useDataGrid } from "../../../Utils/Hooks";
+import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import AccountGroupForm from "./AccountGroupForm";
 
 const AccountGroup = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const permission = usePagePermission(PAGE_TITLE.ACCOUNT_GROUP.BASE);
+
   const { data: accountGroupData, isLoading: accountGroupDataLoading, isFetching: accountGroupDataFetching } = Queries.useGetAccountGroup(params);
   const { mutate: deleteAccountGroupMutate } = Mutations.useDeleteAccountGroup();
   const { mutate: editAccountGroup, isPending: isEditLoading } = Mutations.useEditAccountGroup();
@@ -37,14 +39,20 @@ const AccountGroup = () => {
     { field: "name", headerName: "Group Name", width: 350 },
     { field: "nature", headerName: "Group nature", width: 350 },
     CommonObjectPropertyColumn<AccountGroupBase>("parentGroupName", "parentGroupId", "name", { headerName: "Parent Group", width: 300 }),
-    CommonObjectPropertyColumn<AccountGroupBase>("parentGroupNature", "parentGroupId", "nature", { headerName: "Parent Nature",flex: 1, minWidth: 300 }),
-    CommonActionColumn({
-      active: (row) => editAccountGroup({ accountGroupId: row?._id, isActive: !row.isActive }),
-      onEdit: (row) => handleEdit(row),
-      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
-    }),
-  ];
+    CommonObjectPropertyColumn<AccountGroupBase>("parentGroupNature", "parentGroupId", "nature", { headerName: "Parent Nature", flex: 1, minWidth: 300 }),
 
+    ...(permission?.edit || permission?.delete
+      ? [
+          CommonActionColumn<AccountGroupBase>({
+            ...(permission?.edit && {
+              active: (row) => editAccountGroup({ accountGroupId: row?._id, isActive: !row.isActive }),
+              onEdit: (row) => handleEdit(row),
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+          }),
+        ]
+      : []),
+  ];
 
   const CommonDataGridOption = {
     columns,
@@ -54,7 +62,7 @@ const AccountGroup = () => {
     fileName: "Account Group",
     isActive,
     setActive,
-    handleAdd,
+    ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,

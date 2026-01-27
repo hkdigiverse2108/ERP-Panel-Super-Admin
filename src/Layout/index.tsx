@@ -2,13 +2,14 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Outlet, useLocation } from "react-router-dom";
 import { useAppSelector } from "../Store/hooks";
-import { setIsMobile, setSidebarOpen } from "../Store/Slices/LayoutSlice";
+import { setIsMobile, setPermission, setSidebarOpen } from "../Store/Slices/LayoutSlice";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { CommonUpload } from "../Components/Common";
 import { Queries } from "../Api";
 import { setUser } from "../Store/Slices/AuthSlice";
 import CommonVideoModal from "../Components/Common/Modal/CommonVideoModal";
+import Loader from "./Loader";
 
 const Layout = () => {
   const { isExpanded, isMobileOpen, isApplicationMenuOpen } = useAppSelector((state) => state.layout);
@@ -17,8 +18,8 @@ const Layout = () => {
 
   const { user } = useAppSelector((state) => state.auth);
   const { data: userData, isLoading: userLoading } = Queries.useGetUserdata(user?._id);
-//   const { data: permissionData } = Queries.useGetPermissionDetails({userId:user?._id},Boolean(user?._id));
-// console.log(permissionData,"permissionData");
+  const { data: permissionData, isLoading: permissionLoading } = Queries.useGetPermissionChildDetails({ userId: user?._id }, Boolean(user?._id));
+  const isAppLoading = userLoading || permissionLoading;
 
   useEffect(() => {
     if (location.pathname.startsWith("/pos")) dispatch(setSidebarOpen(false));
@@ -29,7 +30,13 @@ const Layout = () => {
     if (userData) {
       dispatch(setUser(userData?.data));
     }
-  }, [dispatch, userData, userLoading]);
+  }, [dispatch, userData]);
+
+  useEffect(() => {
+    if (permissionData) {
+      dispatch(setPermission(permissionData?.data));
+    }
+  }, [dispatch, permissionData]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -44,6 +51,7 @@ const Layout = () => {
 
   return (
     <>
+      <Loader loading={isAppLoading} />
       <div className="min-h-screen xl:flex overflow-hidden">
         <div>
           <Sidebar />

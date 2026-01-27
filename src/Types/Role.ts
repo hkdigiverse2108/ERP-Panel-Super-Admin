@@ -8,7 +8,7 @@ export interface RoleFormValues {
 
 export type AddRolePayload = RoleFormValues;
 
-export type EditRolePayload = AddRolePayload & { roleId: string };
+export type EditRolePayload = AddRolePayload & { roleId?: string };
 
 export type RoleBase = RoleFormValues & CommonDataType;
 

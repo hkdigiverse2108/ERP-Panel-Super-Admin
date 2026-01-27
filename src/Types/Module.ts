@@ -36,7 +36,6 @@ export interface ModuleApiResponse extends MessageStatus {
   data: ModuleDataResponse;
 }
 
-
 /* =========================
    PERMISSIONS
 ========================= */
@@ -44,7 +43,6 @@ export interface ModuleApiResponse extends MessageStatus {
 export type PermissionKey = "add" | "edit" | "delete" | "view";
 
 export type PermissionColumnKey = PermissionKey | "all";
-
 
 export interface ModulePermission {
   add: boolean;
@@ -65,15 +63,36 @@ export interface UserModulePermissionDataResponse {
 
 export interface ModuleAccessProps {
   data?: ModuleBase;
-  moduleRows: UserModulePermissionDataResponse[];
-  setModuleRows: Dispatch<SetStateAction<UserModulePermissionDataResponse[]>>;
 }
 
 export interface AddModulePermissionPayload {
-  moduleId: string;
+  moduleId?: string;
   users: UserModulePermissionDataResponse[];
 }
 
 export interface UserModulePermissionApiResponse extends MessageStatus {
   data: UserModulePermissionDataResponse[];
+}
+
+export interface ChildDetailsApiResponse extends CommonDataType, ModulePermission, ModuleFormValues {
+  children: ChildDetailsApiResponse[];
+}
+
+export interface PermissionChildApiResponse extends MessageStatus {
+  data: UserModulePermissionDataResponse[];
+}
+
+export interface EditPermissionPayload {
+  userId: string;
+  modules: {_id?: string } & ModulePermission[];
+}
+
+export interface PermissionDetailsApiPayload extends CommonDataType, ModulePermission, ModuleFormValues {
+  modules: string;
+  parentTab: ModuleFormValues & CommonDataType;
+  id?: string;
+}
+
+export interface PermissionDetailsApiResponse extends MessageStatus {
+  data: PermissionDetailsApiPayload[];
 }

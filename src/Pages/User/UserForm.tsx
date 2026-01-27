@@ -9,11 +9,14 @@ import { BREADCRUMBS, USER_TYPE, } from "../../Data";
 import type { UserFormValues } from "../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { UserFormSchema } from "../../Utils/ValidationSchemas";
+import { useEffect } from "react";
+import { usePagePermission } from "../../Utils/Hooks";
 
 const UserForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
+  const permission = usePagePermission(PAGE_TITLE.USER.BASE);
 
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: addUser, isPending: isAddLoading } = Mutations.useAddUser();
@@ -78,6 +81,11 @@ const UserForm = () => {
       await addUser(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
     }
   };
+
+    useEffect(() => {
+      const hasAccess = isEditing ? permission.edit : permission.add;
+      if (!hasAccess) navigate(-1);
+    }, [isEditing, permission, navigate]);
 
   return (
     <>

@@ -6,6 +6,7 @@ import { Grid, IconButton } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import type { CommonActionColumnProps } from "../../Types";
+import KeyIcon from '@mui/icons-material/Key';
 
 const iconButtonStyle = {
   border: "1px solid #e0e0e0",
@@ -14,11 +15,11 @@ const iconButtonStyle = {
   height: 34,
 };
 
-const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ active, editRoute, onDelete, onEdit }: CommonActionColumnProps<T>): GridColDef<T> => ({
+const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ active, editRoute, onDelete, onEdit, permissionRoute }: CommonActionColumnProps<T>): GridColDef<T> => ({
   field: "actions",
   headerName: "Actions",
   headerAlign: "center",
-  width: 180,
+  width: permissionRoute ? 240 : 180,
   minWidth: 100,
   sortable: false,
   filterable: false,
@@ -39,6 +40,15 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ ac
             <Link to={editRoute} state={{ data: params.row }}>
               <IconButton sx={iconButtonStyle} size="small">
                 <DriveFileRenameOutlineIcon fontSize="small" />
+              </IconButton>
+            </Link>
+          </Grid>
+        )}
+        {permissionRoute && (
+          <Grid size="auto">
+            <Link to={permissionRoute} state={{ data: params.row }}>
+              <IconButton sx={iconButtonStyle} size="small">
+                <KeyIcon fontSize="small" />
               </IconButton>
             </Link>
           </Grid>

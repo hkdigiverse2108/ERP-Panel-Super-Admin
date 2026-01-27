@@ -30,6 +30,10 @@
   @apply min-h-auto!;
 }
 
+.MuiDataGrid-cell {
+  outline: none !important;
+}
+
 .dark .MuiDataGrid-withBorderColor,
 .dark .MuiDataGrid-cell {
   @apply dark:border-gray-700!;

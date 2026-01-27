@@ -6,13 +6,14 @@ import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, Comm
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import { setCategoryModal } from "../../../Store/Slices/ModalSlice";
-import { useDataGrid } from "../../../Utils/Hooks";
+import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import CategoryForm from "./CategoryForm";
 import type { AppGridColDef, CategoryBase } from "../../../Types";
 
 const Category = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const dispatch = useDispatch();
+  const permission = usePagePermission(PAGE_TITLE.INVENTORY.CATEGORY.BASE);
 
   const { data: CategoryData, isLoading: CategoryDataLoading, isFetching: CategoryDataFetching } = Queries.useGetCategory(params);
   const { mutate: deleteCategoryMutate } = Mutations.useDeleteCategory();
@@ -48,11 +49,17 @@ const Category = () => {
       renderCell: ({ value }) => (typeof value === "object" ? value?.name || "-" : value),
       exportFormatter: (value) => (typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-"),
     },
-    CommonActionColumn({
-      active: (row) => editCategory({ categoryId: row?._id, isActive: !row.isActive }),
-      onEdit: (row) => handleEdit(row),
-      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
-    }),
+    ...(permission?.edit || permission?.delete
+      ? [
+          CommonActionColumn<CategoryBase>({
+            ...(permission?.edit && {
+              active: (row) => editCategory({ categoryId: row?._id, isActive: !row.isActive }),
+              onEdit: (row) => handleEdit(row),
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+          }),
+        ]
+      : []),
   ];
 
   const CommonDataGridOption = {
@@ -62,7 +69,7 @@ const Category = () => {
     loading: CategoryDataLoading || CategoryDataFetching || isEditLoading,
     isActive,
     setActive,
-    handleAdd,
+    ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,

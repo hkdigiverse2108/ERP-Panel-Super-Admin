@@ -1,4 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { Storage, Stringify } from "../../Utils";
+import { STORAGE_KEYS } from "../../Constants";
+import type { ChildDetailsApiResponse } from "../../Types";
 
 type LayoutState = {
   isExpanded: boolean;
@@ -7,7 +10,10 @@ type LayoutState = {
   isHovered: boolean;
   isApplicationMenuOpen: boolean;
   isToggleTheme: string;
+  permission: ChildDetailsApiResponse[];
 };
+
+const StoredPermission = JSON.parse(Storage.getItem(STORAGE_KEYS.PERMISSION) || "null");
 
 const initialState: LayoutState = {
   isExpanded: true,
@@ -16,12 +22,17 @@ const initialState: LayoutState = {
   isHovered: false,
   isApplicationMenuOpen: false,
   isToggleTheme: "light",
+  permission: StoredPermission,
 };
 
 const layoutSlice = createSlice({
   name: "layout",
   initialState,
   reducers: {
+    setPermission: (state, action) => {
+      state.permission = action.payload;
+      Storage.setItem(STORAGE_KEYS.PERMISSION, Stringify(action.payload));
+    },
     setIsMobile: (state, action) => {
       state.isMobile = action.payload;
       if (!action.payload) {
@@ -54,6 +65,6 @@ const layoutSlice = createSlice({
   },
 });
 
-export const { setIsMobile, setToggleSidebar, setToggleMobileSidebar, setIsHovered, setApplicationMenuOpen, setToggleTheme, setSidebarOpen } = layoutSlice.actions;
+export const { setPermission, setIsMobile, setToggleSidebar, setToggleMobileSidebar, setIsHovered, setApplicationMenuOpen, setToggleTheme, setSidebarOpen } = layoutSlice.actions;
 
 export default layoutSlice.reducer;

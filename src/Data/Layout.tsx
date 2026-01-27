@@ -13,7 +13,7 @@ export const NavItems: NavItem[] = [
   {
     name: PAGE_TITLE.INVENTORY.BASE,
     icon: <Settings />,
-    subItems: [
+    children: [
       { name: PAGE_TITLE.INVENTORY.PRODUCT.BASE, path: ROUTES.PRODUCT.BASE, pro: false },
       { name: PAGE_TITLE.INVENTORY.BRAND.BASE, path: ROUTES.BRAND.BASE, pro: false },
       { name: PAGE_TITLE.INVENTORY.CATEGORY.BASE, path: ROUTES.CATEGORY.BASE, pro: false },
@@ -24,7 +24,7 @@ export const NavItems: NavItem[] = [
   {
     name: PAGE_TITLE.ACCOUNTING.BASE,
     icon: <ReceiptLong />,
-    subItems: [
+    children: [
       { name: PAGE_TITLE.ACCOUNT_GROUP.BASE, path: ROUTES.ACCOUNT_GROUP.BASE },
       { name: PAGE_TITLE.ACCOUNT.BASE, path: ROUTES.ACCOUNT.BASE },
     ],

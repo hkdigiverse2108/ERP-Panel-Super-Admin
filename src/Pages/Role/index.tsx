@@ -7,12 +7,13 @@ import { PAGE_TITLE } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
 import { setRoleModal } from "../../Store/Slices/ModalSlice";
 import type { AppGridColDef, RoleBase } from "../../Types";
-import { useDataGrid } from "../../Utils/Hooks";
+import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
 import RoleForm from "./RoleForm";
 
 const Role = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const dispatch = useDispatch();
+  const permission = usePagePermission(PAGE_TITLE.ROLE.BASE);
 
   const { data: RoleData, isLoading: RoleDataLoading, isFetching: RoleDataFetching } = Queries.useGetRole(params);
 
@@ -32,12 +33,18 @@ const Role = () => {
   const handleEdit = (row: RoleBase) => dispatch(setRoleModal({ open: true, data: row }));
 
   const columns: AppGridColDef<RoleBase>[] = [
-    { field: "name", headerName: "Name",flex:1, minWidth: 300 },
-    CommonActionColumn({
-      active: (row) => editRole({ roleId: row?._id, isActive: !row.isActive }),
-      onEdit: (row) => handleEdit(row),
-      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
-    }),
+    { field: "name", headerName: "Name", flex: 1, minWidth: 300 },
+    ...(permission?.edit || permission?.delete
+      ? [
+          CommonActionColumn<RoleBase>({
+            ...(permission?.edit && {
+              active: (row) => editRole({ roleId: row?._id, isActive: !row.isActive }),
+              onEdit: (row) => handleEdit(row),
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+          }),
+        ]
+      : []),
   ];
 
   const CommonDataGridOption = {
@@ -47,7 +54,7 @@ const Role = () => {
     loading: RoleDataLoading || RoleDataFetching || isEditLoading,
     isActive,
     setActive,
-    handleAdd,
+    ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,
@@ -56,7 +63,6 @@ const Role = () => {
     onFilterModelChange: setFilterModel,
     isExport: false,
   };
-
 
   return (
     <>

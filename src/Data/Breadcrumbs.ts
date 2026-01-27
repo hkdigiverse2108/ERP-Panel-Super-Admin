@@ -6,6 +6,7 @@ export const BREADCRUMBS = {
     BASE: [{ label: PAGE_TITLE.USER.BASE }],
     ADD: [{ label: PAGE_TITLE.USER.BASE, href: ROUTES.USER.BASE }, { label: PAGE_TITLE.USER.ADD }],
     EDIT: [{ label: PAGE_TITLE.USER.BASE, href: ROUTES.USER.BASE }, { label: PAGE_TITLE.USER.EDIT }],
+    PERMISSION: [{ label: PAGE_TITLE.USER.BASE, href: ROUTES.USER.BASE }, { label: PAGE_TITLE.USER.PERMISSION }],
   },
   COMPANY: {
     BASE: [{ label: PAGE_TITLE.COMPANY.BASE }],

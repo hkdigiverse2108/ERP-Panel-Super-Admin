@@ -14,6 +14,7 @@ import type { CompanyFormValues, Params } from "../../Types";
 import type { BankBase } from "../../Types/Bank";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { CompanyFormSchemas } from "../../Utils/ValidationSchemas";
+import { usePagePermission } from "../../Utils/Hooks";
 
 type CompanyImageKey = "logo" | "waterMark" | "reportFormatLogo" | "authorizedSignature";
 
@@ -30,6 +31,7 @@ const CompanyForm = () => {
   const dispatch = useAppDispatch();
   const { data } = location.state || {};
   const [activeKey, setActiveKey] = useState<CompanyImageKey | null>(null);
+  const permission = usePagePermission(PAGE_TITLE.COMPANY.BASE);
 
   const { data: bankData, isLoading: bankDataLoading } = Queries.useGetBankDropdown({ companyFilter: data?._id }, Boolean(data?._id));
 
@@ -157,6 +159,11 @@ const CompanyForm = () => {
       await addCompany(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
     }
   };
+  
+  useEffect(() => {
+    const hasAccess = isEditing ? permission.edit : permission.add;
+    if (!hasAccess) navigate(-1);
+  }, [isEditing, permission, navigate]);
 
   return (
     <>
@@ -239,7 +246,7 @@ const CompanyForm = () => {
                 </CommonCard>
 
                 {/* ACTIONS */}
-                <CommonBottomActionBar save disabled={!dirty} isLoading={isEditLoading || isAddLoading} />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} />
               </Grid>
             </Form>
           )}

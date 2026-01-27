@@ -5,6 +5,7 @@ export const PAGE_TITLE = {
     LIST: "User List",
     ADD: "Add User",
     EDIT: "Edit User",
+    PERMISSION: "User Permission",
   },
   COMPANY: {
     BASE: "Company",

@@ -1,12 +1,15 @@
 export const ROUTES = {
   HOME: "/",
   DASHBOARD: "/dashboard",
+  NOT_FOUND: "/not-found",
+  ACCESS_DENIED: "/access-denied",
   AUTH: {
     SIGNIN: "/auth/signin",
   },
   USER: {
     BASE: "/user",
     ADD_EDIT: "/user/add-edit",
+    PERMISSION_ADD_EDIT: "/user/permission/add-edit",
   },
   COMPANY: {
     BASE: "/company",
@@ -37,7 +40,7 @@ export const ROUTES = {
     BASE: "/location",
     ADD_EDIT: "/location/add-edit",
   },
-  ACCOUNT_GROUP:{
+  ACCOUNT_GROUP: {
     BASE: "/account-group",
     TREE: "/account-group/tree",
   },
@@ -50,9 +53,5 @@ export const ROUTES = {
   MODULE: {
     BASE: "/module",
     ADD_EDIT: "/module/add-edit",
-  },
-  PURCHASE_ORDER: {
-    BASE: "/purchase-order",
-    ADD_EDIT: "/purchase-order/add-edit",
-  },
+  }
 } as const;

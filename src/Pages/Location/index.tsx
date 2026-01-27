@@ -7,16 +7,17 @@ import { PAGE_TITLE } from "../../Constants";
 import { BREADCRUMBS, LOCATION_TYPE } from "../../Data";
 import { setLocationModal } from "../../Store/Slices/ModalSlice";
 import type { AppGridColDef, LocationBase } from "../../Types";
-import { useDataGrid } from "../../Utils/Hooks";
+import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
 import LocationForm from "./LocationForm";
 import { CreateFilter, GenerateOptions, WithAllOption } from "../../Utils";
 
 const Location = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
   const dispatch = useDispatch();
+  const permission = usePagePermission(PAGE_TITLE.LOCATION.BASE);
 
   const { data: locationData, isLoading: locationDataLoading, isFetching: locationDataFetching } = Queries.useGetLocation(params);
-  const { data: parentData, isLoading: parentDataLoading} = Queries.useGetLocation({ typeFilter: advancedFilter?.typeFilter?.[0] });
+  const { data: parentData, isLoading: parentDataLoading } = Queries.useGetLocation({ typeFilter: advancedFilter?.typeFilter?.[0] });
 
   const { mutate: deleteLocationMutate } = Mutations.useDeleteLocation();
   const { mutate: editLocation, isPending: isEditLoading } = Mutations.useEditLocation();
@@ -45,11 +46,17 @@ const Location = () => {
       renderCell: ({ value }) => (typeof value === "object" ? value?.name || "-" : value),
       exportFormatter: (value) => (typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-"),
     },
-    CommonActionColumn({
-      active: (row) => editLocation({ locationId: row?._id, isActive: !row.isActive }),
-      onEdit: (row) => handleEdit(row),
-      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
-    }),
+    ...(permission?.edit || permission?.delete
+      ? [
+          CommonActionColumn<LocationBase>({
+            ...(permission?.edit && {
+              active: (row) => editLocation({ locationId: row?._id, isActive: !row.isActive }),
+              onEdit: (row) => handleEdit(row),
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+          }),
+        ]
+      : []),
   ];
 
   const CommonDataGridOption = {
@@ -59,7 +66,7 @@ const Location = () => {
     loading: locationDataLoading || locationDataFetching || isEditLoading,
     isActive,
     setActive,
-    handleAdd,
+    ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,

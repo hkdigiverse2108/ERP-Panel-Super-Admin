@@ -126,6 +126,7 @@ export const URL_KEYS = {
   PERMISSION: {
     BASE: "/permission",
     DETAILS: "/permission/details",
+    CHILD: "/permission/child/details",
     ALL: "/permission/all",
     EDIT: "/permission/edit",
   },

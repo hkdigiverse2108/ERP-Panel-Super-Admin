@@ -123,5 +123,6 @@ export const KEYS = {
   PERMISSION:{
     BASE: "permission",
     EDIT: "permission-edit",
+    DETAILS: "permission-details",
   }
 };
