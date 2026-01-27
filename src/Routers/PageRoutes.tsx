@@ -26,6 +26,7 @@ import ModuleForm from "../Pages/Module/ModuleForm";
 import Permission from "../Pages/User/Permission";
 import NotFound from "../Pages/NotFound";
 import AccessDenied from "../Pages/AccessDenied";
+import PurchaseOrder from "../Pages/Purchase/PurchaseOrder";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -67,7 +68,10 @@ export const PageRoutes = [
   { path: ROUTES.MODULE.BASE, name: PAGE_TITLE.MODULE.BASE, element: <Module /> },
   { path: ROUTES.MODULE.ADD_EDIT, name: PAGE_TITLE.MODULE.BASE, element: <ModuleForm /> },
   { path: ROUTES.NOT_FOUND, element: <NotFound /> },
-  { path: ROUTES.ACCESS_DENIED, element: <AccessDenied /> }
+  { path: ROUTES.ACCESS_DENIED, element: <AccessDenied /> },
+
+  { path: ROUTES.PURCHASE.PURCHASE_ORDER.BASE, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseOrder /> },
+  { Path: ROUTES.PURCHASE.PURCHASE_ORDER.ADD_EDIT, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseOrder /> },
 ];
 
 export const AuthRoutes = [
