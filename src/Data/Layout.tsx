@@ -1,6 +1,7 @@
 import { PAGE_TITLE, ROUTES } from "../Constants";
 import type { NavItem } from "../Types";
-import { AdminPanelSettings, Apartment, GridViewRounded, MyLocation, People, ReceiptLong, Settings, AccountTree, ViewModule } from "@mui/icons-material";
+import { AdminPanelSettings, Apartment, GridViewRounded, MyLocation, People, ReceiptLong, Settings, AccountTree, ViewModule, Work } from "@mui/icons-material";
+
 
 export const NavItems: NavItem[] = [
   { icon: <GridViewRounded />, name: PAGE_TITLE.DASHBOARD, path: ROUTES.DASHBOARD },
@@ -31,7 +32,8 @@ export const NavItems: NavItem[] = [
   },
   {
     name: PAGE_TITLE.PURCHASE.BASE,
-    icon: <Settings />,
+    icon: <Work />,
     children: [{ name: PAGE_TITLE.PURCHASE_ORDER.BASE, path: ROUTES.PURCHASE_ORDER.BASE }],
   },
 ];
+  

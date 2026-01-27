@@ -48,6 +48,8 @@ export type EditPurchaseOrderPayload = PurchaseOrderFormValues & {
 
 export interface PurchaseOrderBase extends PurchaseOrderFormValues, CommonDataType {
   _id: string;
+  
+  
 }
 
 export interface PurchaseOrderDataResponse extends PageStatus {

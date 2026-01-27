@@ -218,5 +218,16 @@ export const ACCOUNT_TYPE= [
   { label: "Cash", value: "cash" },
   { label: "Other", value: "other" },
 ]
+export const ORDER_STATUS = [
+ { label: "IN_PROGRESS", value: "IN_PROGRESS"},
+ { label: "COMPLETED", value: "COMPLETED"},
+ { label: "CANCELLED", value: "CANCELLED"},
+ ]
+export const TAX_TYPE = [
+  { label: "GST", value: "GST" },
+  { label: "CGST", value: "CGST" },
+  { label: "SGST", value: "SGST" },
+  { label: "IGST", value: "IGST" },
+]
 
 export  const BANK_UI_FIELDS: (keyof BranchFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber"];

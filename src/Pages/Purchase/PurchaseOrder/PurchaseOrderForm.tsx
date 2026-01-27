@@ -6,7 +6,7 @@ import { Mutations, Queries } from "../../../Api";
 import { CommonValidationTextField, CommonValidationSelect } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { TAX_TYPE, ORDER_STATUS, BREADCRUMBS } from "../../../Data";
+ import { TAX_TYPE, ORDER_STATUS, BREADCRUMBS } from "../../../Data";
 import { GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import type { FormikHelpers } from "formik";
 import type { PurchaseOrderFormValues } from "../../../Types";
@@ -14,11 +14,13 @@ import type { PurchaseOrderFormValues } from "../../../Types";
 const PurchaseOrderCalcSync = () => {
   const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
 
-  const itemsTotal = values.items.reduce((sum, item, index) => {
+  const itemsTotal =
+  values.items?.reduce((sum, item, index) => {
     const total = (item.qty || 0) * (item.unitCost || 0);
-    setFieldValue(`items.${index}.total`, total || 0);
+    setFieldValue(`items.${index}.total`, total);
     return sum + total;
-  }, 0);
+  }, 0) ?? 0;
+
 
   const discount = values.flatDiscount || 0;
   const taxableAmount = Math.max(itemsTotal - discount, 0);
@@ -44,9 +46,10 @@ const PurchaseOrderForm = () => {
   const { mutate: addPurchaseOrder, isPending: addLoading } = Mutations.useAddPurchaseOrder();
   const { mutate: editPurchaseOrder, isPending: editLoading } = Mutations.useEditPurchaseOrder();
 
-  // const { data: supplierData } = Queries.useGetSupplierDropdown();
-  // const { data: productData } = Queries.useGetProductDropdown();
-
+   const { data: supplierData } = Queries. useGetPurchaseOrderDropdown();
+   const { data: productData } = Queries.useGetProductDropdown();
+   
+  const pageMode = isEditing ? "EDIT" : "ADD";
   const initialValues: PurchaseOrderFormValues = {
     supplierId: data?.supplierId?._id || "",
     orderDate: data?.orderDate || "",
@@ -74,7 +77,7 @@ const PurchaseOrderForm = () => {
     roundOff: data?.roundOff || 0,
     netAmount: data?.netAmount || 0,
 
-    notes: data?.notes || "",
+    notes: data?.notes || "", 
     status: data?.status || ORDER_STATUS.IN_PROGRESS,
   };
 
@@ -114,11 +117,11 @@ const PurchaseOrderForm = () => {
                 </CommonCard>
 
                 {/* ITEMS */}
-                <CommonCard title="Items" grid={{ xs: 12 }}>
+                <CommonCard title="Items" grid={{ xs: 12 }}>  
                   <FieldArray name="items">
                     {({ push, remove }) => (
                       <>
-                        {values.items.map((_, index) => (
+                       {values.items?.map((_, index) => (
                           <Grid container spacing={2} sx={{ p: 2 }} key={index}>
                             <CommonValidationSelect name={`items.${index}.productId`} label="Product" options={productData?.data || []} required grid={{ xs: 12, md: 3 }} />
 
@@ -166,14 +169,12 @@ const PurchaseOrderForm = () => {
                   </Grid>
                 </CommonCard>
 
-                {/* NOTES */}
                 <CommonCard title="Notes" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonValidationTextField name="notes" label="Notes" multiline rows={3} grid={{ xs: 12 }} />
                   </Grid>
                 </CommonCard>
 
-                {/* ACTIONS */}
                 <CommonBottomActionBar save disabled={!dirty} isLoading={addLoading || editLoading} />
               </Grid>
             </Form>

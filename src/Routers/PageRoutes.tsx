@@ -27,6 +27,7 @@ import Permission from "../Pages/User/Permission";
 import NotFound from "../Pages/NotFound";
 import AccessDenied from "../Pages/AccessDenied";
 import PurchaseOrder from "../Pages/Purchase/PurchaseOrder";
+import PurchaseOrderForm from "../Pages/Purchase/PurchaseOrder/PurchaseOrderForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -71,7 +72,8 @@ export const PageRoutes = [
   { path: ROUTES.ACCESS_DENIED, element: <AccessDenied /> },
 
   { path: ROUTES.PURCHASE_ORDER.BASE, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseOrder /> },
-  { Path: ROUTES.PURCHASE_ORDER.ADD_EDIT, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseOrder /> },
+  { Path: ROUTES.PURCHASE_ORDER.ADD_EDIT, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseOrderForm /> },
+  
 ];
 
 export const AuthRoutes = [
