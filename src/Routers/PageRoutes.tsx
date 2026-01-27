@@ -24,6 +24,7 @@ import Role from "../Pages/Role";
 import Module from "../Pages/Module";
 import ModuleForm from "../Pages/Module/ModuleForm";
 import PurchaseOrder from "../Pages/Purchase/PurchaseOrder";
+import PurchaseOrderForm from "../Pages/Purchase/PurchaseOrder/PurchaseOrderForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -65,6 +66,7 @@ export const PageRoutes = [
   { path: ROUTES.MODULE.ADD_EDIT, element: <ModuleForm /> },
 
   { path: ROUTES.PURCHASE_ORDER.BASE, element: <PurchaseOrder /> },
+  // { path: ROUTES.PURCHASE_ORDER.ADD_EDIT, element: <PurchaseOrderForm /> },
 ];
 
 export const AuthRoutes = [
