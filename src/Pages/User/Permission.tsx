@@ -105,7 +105,7 @@ const Permission = () => {
   const permissionColumn = (key: PermissionKey, label: string): AppGridColDef<PermissionDetailsApiPayload> => ({
     field: key,
     headerName: label,
-    width: 150,
+    width: 170,
     align: "center",
     headerAlign: "center",
     sortable: false,
@@ -120,7 +120,7 @@ const Permission = () => {
   const allColumn: AppGridColDef<PermissionDetailsApiPayload> = {
     field: "all",
     headerName: "All",
-    width: 150,
+    width: 170,
     align: "center",
     headerAlign: "center",
     sortable: false,
@@ -171,8 +171,8 @@ const Permission = () => {
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.USER.PERMISSION} maxItems={3} breadcrumbs={BREADCRUMBS.USER.PERMISSION} />
-      <Box sx={{ p: 2 }}>
-        <CommonCard title={`${userData?.fullName} (${userData?.username})`} topContent={topContent}>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <CommonCard title={`${userData?.fullName ? userData?.fullName + `(${userData?.username})` : " "}`} topContent={topContent}>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
       </Box>

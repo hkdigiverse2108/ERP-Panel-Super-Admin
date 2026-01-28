@@ -2,19 +2,21 @@ import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
 import type { AppGridColDef, ModuleBase } from "../../Types";
 import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
 import { CommonObjectPropertyColumn } from "../../Components/Common/CommonDataGrid/CommonColumns";
+import { CreateFilter, GenerateOptions } from "../../Utils";
 
 const Module = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive,advancedFilter, updateAdvancedFilter, params } = useDataGrid();
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.MODULE.BASE);
 
   const { data: ModuleData, isLoading: ModuleDataLoading, isFetching: ModuleDataFetching } = Queries.useGetModule(params);
+  const { data: ModuleListData, isLoading: ModuleLoading} = Queries.useGetModule();
 
   const { mutate: deleteModuleMutate } = Mutations.useDeleteModule();
   const { mutate: editModule, isPending: isEditLoading } = Mutations.useEditModule();
@@ -70,10 +72,15 @@ const Module = () => {
     isExport: false,
   };
 
+    const filter = [
+      CreateFilter("Select Module", "parentFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(ModuleListData?.data?.module_data), ModuleLoading, { xs: 12, sm: 7, md: 5 }), // categoryFilter
+    ];
+
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.MODULE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.MODULE.BASE} />
-      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" , gap:2}}>
+         <AdvancedSearch filter={filter} defaultExpanded/>
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

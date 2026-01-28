@@ -9,10 +9,13 @@ import { BREADCRUMBS } from "../../../Data";
 import type { StockFormValues } from "../../../Types";
 import { GenerateOptions, RemoveEmptyFields } from "../../../Utils";
 import { ProductItemFormSchema } from "../../../Utils/ValidationSchemas";
+import { usePagePermission } from "../../../Utils/Hooks";
+import { useEffect } from "react";
 
 const ItemForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK);
 
   const { data } = location.state || {};
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
@@ -47,6 +50,10 @@ const ItemForm = () => {
     await addStock(RemoveEmptyFields(rest), { onSuccess: handleSuccess });
   };
 
+  useEffect(() => {
+    const hasAccess = isEditing ? permission.edit : permission.add;
+    if (!hasAccess) navigate(-1);
+  }, [isEditing, permission, navigate]);
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT.ITEM[pageMode]} breadcrumbs={BREADCRUMBS.PRODUCT.ITEM[pageMode]} />
