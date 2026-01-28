@@ -3,7 +3,7 @@ import { useField, useFormikContext } from "formik";
 import { type FC } from "react";
 import type { CommonSelectProps, CommonValidationSelectProps, SelectOptionType } from "../../Types";
 
-export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, label, required, options, multiple = false, limitTags, size = "small", grid, disabled,readOnly, syncFieldName, isLoading, ...props }) => {
+export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, label, required, options, multiple = false, limitTags, size = "small", grid, disabled,readOnly, syncFieldName, isLoading,placeholder, ...props }) => {
   const [field, meta, helpers] = useField<any>({ name });
   const { setFieldValue } = useFormikContext<any>();
   // Normalize value
@@ -43,14 +43,14 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
         </li>
       )}
       loading={isLoading}
-      renderInput={(params) => <TextField {...params} className="capitalize" disabled={disabled} required={required} label={label} size={size} error={meta.touched && Boolean(meta.error)} helperText={meta.touched && meta.error ? meta.error : ""} />}
+      renderInput={(params) => <TextField {...params} className="capitalize" placeholder={placeholder} disabled={disabled} required={required} label={label} size={size} error={meta.touched && Boolean(meta.error)} helperText={meta.touched && meta.error ? meta.error : ""} />}
     />
   );
 
   return grid ? <Grid size={grid}>{Input}</Grid> : Input;
 };
 
-export const CommonSelect: FC<CommonSelectProps> = ({ label, options = [], value, onChange, multiple = false, limitTags, size, grid, disabled,readOnly, isLoading, ...props }) => {
+export const CommonSelect: FC<CommonSelectProps> = ({ label, options = [], value, onChange, multiple = false, limitTags, size, grid, disabled,readOnly, isLoading,placeholder, ...props }) => {
   const selectedValue = multiple ? (value || []).map((v) => options.find((o) => o.value === v)).filter((v): v is SelectOptionType => Boolean(v)) : options.find((o) => o.value === value?.[0]) ?? null;
 
   const Input = (
@@ -81,7 +81,7 @@ export const CommonSelect: FC<CommonSelectProps> = ({ label, options = [], value
         </li>
       )}
       loading={isLoading}
-      renderInput={(params) => <TextField {...params} label={label} size="small" className="capitalize" disabled={disabled} />}
+      renderInput={(params) => <TextField {...params} placeholder={placeholder} label={label} size="small" className="capitalize" disabled={disabled} />}
     />
   );
 

@@ -8,13 +8,6 @@ import { Link } from "react-router-dom";
 import type { CommonActionColumnProps } from "../../Types";
 import KeyIcon from '@mui/icons-material/Key';
 
-const iconButtonStyle = {
-  border: "1px solid #e0e0e0",
-  borderRadius: "6px",
-  width: 46,
-  height: 34,
-};
-
 const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ active, editRoute, onDelete, onEdit, permissionRoute }: CommonActionColumnProps<T>): GridColDef<T> => ({
   field: "actions",
   headerName: "Actions",
@@ -30,7 +23,7 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ ac
       <Grid container spacing={1} className="flex items-center justify-center">
         {active && (
           <Grid size="auto">
-            <IconButton sx={iconButtonStyle} size="small" color={isActive ? "success" : "error"} onClick={() => active(params.row)}>
+            <IconButton className="iconButtonStyle" size="small" color={isActive ? "success" : "error"} onClick={() => active(params.row)}>
               {isActive ? <VisibilityIcon fontSize="small" /> : <VisibilityOffIcon fontSize="small" />}
             </IconButton>
           </Grid>
@@ -38,7 +31,7 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ ac
         {editRoute && (
           <Grid size="auto">
             <Link to={editRoute} state={{ data: params.row }}>
-              <IconButton sx={iconButtonStyle} size="small">
+              <IconButton className="iconButtonStyle" size="small">
                 <DriveFileRenameOutlineIcon fontSize="small" />
               </IconButton>
             </Link>
@@ -47,7 +40,7 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ ac
         {permissionRoute && (
           <Grid size="auto">
             <Link to={permissionRoute} state={{ data: params.row }}>
-              <IconButton sx={iconButtonStyle} size="small">
+              <IconButton className="iconButtonStyle" size="small">
                 <KeyIcon fontSize="small" />
               </IconButton>
             </Link>
@@ -55,14 +48,14 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ ac
         )}
         {onEdit && (
           <Grid size="auto">
-            <IconButton sx={iconButtonStyle} size="small" onClick={() => onEdit(params.row)}>
+            <IconButton className="iconButtonStyle" size="small" onClick={() => onEdit(params.row)}>
               <DriveFileRenameOutlineIcon fontSize="small" />
             </IconButton>
           </Grid>
         )}
         {onDelete && (
           <Grid size="auto">
-            <IconButton sx={iconButtonStyle} color="error" size="small" onClick={() => onDelete(params.row)}>
+            <IconButton className="iconButtonStyle" color="error" size="small" onClick={() => onDelete(params.row)}>
               <DeleteForeverIcon fontSize="small" />
             </IconButton>
           </Grid>
