@@ -11,31 +11,6 @@ import { GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import type { FormikHelpers } from "formik";
 import type { PurchaseOrderFormValues } from "../../../Types";
 
-const PurchaseOrderCalcSync = () => {
-  const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
-
-  const itemsTotal =
-  values.items?.reduce((sum, item, index) => {
-    const total = (item.qty || 0) * (item.unitCost || 0);
-    setFieldValue(`items.${index}.total`, total);
-    return sum + total;
-  }, 0) ?? 0;
-
-
-  const discount = values.flatDiscount || 0;
-  const taxableAmount = Math.max(itemsTotal - discount, 0);
-  const taxAmount = values.tax || 0;
-  const roundOff = values.roundOff || 0;
-
-  const netAmount = taxableAmount + taxAmount + roundOff;
-
-  setFieldValue("grossAmount", itemsTotal);
-  setFieldValue("taxableAmount", taxableAmount);
-  setFieldValue("netAmount", netAmount);
-
-  return null;
-};
-
 const PurchaseOrderForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,7 +18,7 @@ const PurchaseOrderForm = () => {
 
   const isEditing = Boolean(data?._id);
 
-  const { mutate: addPurchaseOrder, isPending: addLoading } = Mutations.useAddPurchaseOrder();
+  const { mutate: addPurchaseOrder, isPending: addLoading } = Mutations.useAddPurchaseOrder();    
   const { mutate: editPurchaseOrder, isPending: editLoading } = Mutations.useEditPurchaseOrder();
 
    const { data: supplierData } = Queries. useGetPurchaseOrderDropdown();
@@ -80,6 +55,31 @@ const PurchaseOrderForm = () => {
     notes: data?.notes || "", 
     status: data?.status || ORDER_STATUS.IN_PROGRESS,
   };
+
+  const PurchaseOrderCalcSync = () => {
+  const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
+
+  const itemsTotal =
+  values.items?.reduce((sum, item, index) => {
+    const total = (item.qty || 0) * (item.unitCost || 0);
+    setFieldValue(`items.${index}.total`, total);
+    return sum + total;
+  }, 0) ?? 0;
+
+
+  const discount = values.flatDiscount || 0;
+  const taxableAmount = Math.max(itemsTotal - discount, 0);
+  const taxAmount = values.tax || 0;
+  const roundOff = values.roundOff || 0;
+
+  const netAmount = taxableAmount + taxAmount + roundOff;
+
+  setFieldValue("grossAmount", itemsTotal);
+  setFieldValue("taxableAmount", taxableAmount);
+  setFieldValue("netAmount", netAmount);
+
+  return null;
+};
 
   const handleSubmit = async (values: PurchaseOrderFormValues, { resetForm }: FormikHelpers<PurchaseOrderFormValues>) => {
     if (isEditing) {
