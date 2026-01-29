@@ -31,37 +31,50 @@ export const KEYS = {
     DELETE: "branch-delete",
   },
 
-  BRAND: {
-    BASE: "brand",
-    ADD: "brand-add",
-    EDIT: "brand-edit",
-    DELETE: "brand-delete",
-  },
-
-  UOM: {
-    BASE: "uom",
-    ADD: "uom-add",
-    EDIT: "uom-edit",
-    DELETE: "uom-delete",
-  },
-
-  TAX: {
-    BASE: "tax",
-    ADD: "tax-add",
-    EDIT: "tax-edit",
-    DELETE: "tax-delete",
-  },
-
-  CATEGORY: {
-    BASE: "category",
-    ADD: "category-add",
-    EDIT: "category-edit",
-    DELETE: "category-delete",
+  ROLE: {
+    BASE: "role",
+    ADD: "role-add",
+    EDIT: "role-edit",
+    DELETE: "role-delete",
   },
 
   ANNOUNCEMENT: {
     BASE: "announcement",
   },
+
+  CALL_REQUEST: {
+    BASE: "call-request",
+    ADD: "call-request-add",
+  },
+
+  LOCATION: {
+    BASE: "location",
+    ADD: "location-add",
+    EDIT: "location-edit",
+    DELETE: "location-delete",
+  },
+
+  MODULE: {
+    BASE: "module",
+    USER_PERMISSION: "module-user-permission",
+    ADD: "module-add",
+    EDIT: "module-edit",
+    DELETE: "module-delete",
+  },
+
+  PERMISSION: {
+    BASE: "permission",
+    EDIT: "permission-edit",
+    DETAILS: "permission-details",
+  },
+
+  // ----------------------------- bank -----------------------------
+  BANK: {
+    BASE: "bank",
+    ADD: "bank-add",
+  },
+
+  // ----------------------------- inventory -----------------------------
 
   PRODUCT: {
     BASE: "product",
@@ -69,33 +82,44 @@ export const KEYS = {
     EDIT: "product-edit",
     DELETE: "product-delete",
   },
-
-  CALL_REQUEST: {
-    BASE: "call-request",
-    ADD: "call-request-add",
+  BRAND: {
+    BASE: "brand",
+    ADD: "brand-add",
+    EDIT: "brand-edit",
+    DELETE: "brand-delete",
   },
-  ROLE: {
-    BASE: "role",
-    ADD: "role-add",
-    EDIT: "role-edit",
-    DELETE: "role-delete",
+  UOM: {
+    BASE: "uom",
+    ADD: "uom-add",
+    EDIT: "uom-edit",
+    DELETE: "uom-delete",
+  },
+  TAX: {
+    BASE: "tax",
+    ADD: "tax-add",
+    EDIT: "tax-edit",
+    DELETE: "tax-delete",
+  },
+  CATEGORY: {
+    BASE: "category",
+    ADD: "category-add",
+    EDIT: "category-edit",
+    DELETE: "category-delete",
   },
   STOCK: {
     BASE: "stock",
     ADD: "stock-add",
     BULK_ADJUSTMENT: "stock-bulk-adjustment",
   },
-  BANK: {
-    BASE: "bank",
-    ADD: "bank-add",    
+  MATERIAL_CONSUMPTION: {
+    BASE: "material-consumption",
+    ADD: "material-consumption-add",
+    EDIT: "material-consumption-edit",
+    DELETE: "material-consumption-delete",
   },
-  LOCATION: {
-    BASE: "location",
-    ADD: "location-add",   
-    EDIT: "location-edit", 
-    DELETE: "location-delete",
-  },
-  ACCOUNT_GROUP:{
+
+  // ----------------------------- accounts -----------------------------
+  ACCOUNT_GROUP: {
     BASE: "account-group",
     ADD: "account-group-add",
     EDIT: "account-group-edit",
@@ -107,22 +131,24 @@ export const KEYS = {
     EDIT: "account-edit",
     DELETE: "account-delete",
   },
-  MODULE:{
-    BASE: "module",
-    USER_PERMISSION: "module-user-permission",
-    ADD: "module-add",
-    EDIT: "module-edit",
-    DELETE: "module-delete",
+  DEBIT_NOTE: {
+    BASE: "debit-note",
+    ADD: "debit-note-add",
+    EDIT: "debit-note-edit",
+    DELETE: "debit-note-delete",
   },
+  CREDIT_NOTE: {
+    BASE: "credit-note",
+    ADD: "credit-note-add",
+    EDIT: "credit-note-edit",
+    DELETE: "credit-note-delete",
+  },
+
+  // ----------------------------- purchase -----------------------------
   PURCHASE_ORDER: {
     BASE: "purchase-order",
     ADD: "purchase-order-add",
     EDIT: "purchase-order-edit",
     DELETE: "purchase-order-delete",
   },
-  PERMISSION:{
-    BASE: "permission",
-    EDIT: "permission-edit",
-    DETAILS: "permission-details",
-  }
 };

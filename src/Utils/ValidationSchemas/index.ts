@@ -191,7 +191,7 @@ export const ProductItemFormSchema = Yup.object({
 });
 
 export const ProductItemRemoveFormSchema = Yup.object({
-  remark: Validation("string", "Consumption Type"),
+  type: Validation("string", "Consumption Type"),
 });
 
 export const CompanyFormSchemas = Yup.object({
@@ -278,4 +278,33 @@ export const AccountFormSchema = Yup.object({
   type: Validation("string", "Type", { required: false }),
   nature: Validation("string", "Nature", { required: false }),
   isActive: Validation("boolean", "is Active", { required: false }),
+});
+
+export const DebitNoteFormSchema = Yup.object({
+  voucherNumber: Validation("string", "Voucher Number", { required: false }),
+  companyId: Validation("string", "Company"),
+  date: Validation("string", "Date"),
+  fromAccountId: Validation("string", "From Account"),
+  toAccountId: Validation("string", "To Account"),
+  amount: Validation("string", "Amount", { required: true, extraRules: (s) => s?.matches(/^\d+(\.\d{1,2})?$/, "The amount no can only consist of number").max(10, "The amount no must be 10 digit long") }),
+  description: Validation("string", "Description", { required: false, extraRules: (s) => s?.trim().max(200, "Maximum 200 characters allowed") }),
+});
+
+export const CreditNoteFormSchema = Yup.object({
+  voucherNumber: Validation("string", "Voucher Number", { required: false }),
+  companyId: Validation("string", "Company"),
+  date: Validation("string", "Date"),
+  fromAccountId: Validation("string", "From Account"),
+  toAccountId: Validation("string", "To Account"),
+  amount: Validation("string", "Amount", { required: true, extraRules: (s) => s?.matches(/^\d+(\.\d{1,2})?$/, "The amount no can only consist of number").max(10, "The amount no must be 10 digit long") }),
+  description: Validation("string", "Description", { required: false, extraRules: (s) => s?.trim().max(200, "Maximum 200 characters allowed") }),
+});
+
+export const MaterialConsumptionFormSchema = Yup.object({
+  consumptionNo: Validation("string", "Consumption No"),
+  companyId: Validation("string", "Company"),
+  branchId: Validation("string", "Branch", { required: false }),
+  date: Validation("string", "Date"),
+  type: Validation("string", "Type", { required: false }),
+  remark: Validation("string", "Remark", { required: false, extraRules: (s) => s?.trim().max(200, "Maximum 200 characters allowed") }),
 });

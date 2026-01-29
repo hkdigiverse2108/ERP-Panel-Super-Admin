@@ -19,7 +19,6 @@ export const PAGE_TITLE = {
   },
   INVENTORY: {
     BASE: "inventory",
-    STOCK: "stock",
     PRODUCT: {
       BASE: "product",
       ADD: "Add Product",
@@ -29,6 +28,11 @@ export const PAGE_TITLE = {
         ADD: "Add Product Item",
         EDIT: "Edit Product Item",
       },
+    },
+    STOCK: {
+      BASE: "stock",
+      ADD: "Add Stock",
+      EDIT: "Edit Stock",
     },
     BRAND: {
       BASE: "brand",
@@ -49,6 +53,11 @@ export const PAGE_TITLE = {
       BASE: "category",
       ADD: "Add category",
       EDIT: "Edit category",
+    },
+    MATERIAL_CONSUMPTION: {
+      BASE: "Material Consumption",
+      ADD: "Add Material Consumption",
+      EDIT: "Edit Material Consumption",
     },
   },
   CUSTOMER: {
@@ -75,6 +84,16 @@ export const PAGE_TITLE = {
     ADD: "Add Account",
     EDIT: "Edit Account",
   },
+  DEBIT_NOTE: {
+    BASE: "Debit Note",
+    ADD: "Add Debit Note",
+    EDIT: "Edit Debit Note",
+  },
+  CREDIT_NOTE: {
+    BASE: "Credit Note",
+    ADD: "Add Credit Note",
+    EDIT: "Edit Credit Note",
+  },
   ROLE: {
     BASE: "Role",
     ADD: "Add Role",
@@ -85,7 +104,6 @@ export const PAGE_TITLE = {
     ADD: "Add Module",
     EDIT: "Edit Module",
   },
-
   PURCHASE: {
     BASE: "Purchase",
     ADD: "Add Purchase",

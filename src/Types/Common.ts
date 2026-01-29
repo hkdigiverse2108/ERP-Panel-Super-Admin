@@ -1,5 +1,5 @@
 import type { Breakpoint, ButtonProps, DrawerProps, PaperProps as MuiPaperProps, TextFieldProps } from "@mui/material";
-import type { GridColDef, GridFilterModel, GridPaginationModel, GridRowsProp, GridSortModel, GridValidRowModel } from "@mui/x-data-grid";
+import type { GridColDef, GridFilterModel, GridPaginationModel, GridRowsProp, GridSlotsComponentsProps, GridSortModel, GridValidRowModel } from "@mui/x-data-grid";
 import type { Dayjs } from "dayjs";
 import type { MuiTelInputProps } from "mui-tel-input";
 import type { FocusEvent, ReactNode } from "react";
@@ -158,6 +158,9 @@ export interface CommonDataGridProps {
   isExport?: boolean;
   fileName?: string;
   pagination?: boolean;
+
+  slots?: any;
+  slotProps?: GridSlotsComponentsProps;
 }
 
 export interface CustomToolbarProps {

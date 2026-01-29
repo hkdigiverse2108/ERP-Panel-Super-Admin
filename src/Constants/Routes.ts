@@ -32,6 +32,10 @@ export const ROUTES = {
   CATEGORY: {
     BASE: "/category",
   },
+  MATERIAL_CONSUMPTION: {
+    BASE: "/material-consumption",
+    ADD_EDIT: "/material-consumption/add-edit",
+  },
   BRANCH: {
     BASE: "/branch",
     ADD_EDIT: "/branch/add-edit",
@@ -46,6 +50,14 @@ export const ROUTES = {
   },
   ACCOUNT: {
     BASE: "/account",
+  },
+  DEBIT_NOTE: {
+    BASE: "/debit-note",
+    ADD_EDIT: "/debit-note/add-edit",
+  },
+  CREDIT_NOTE: {
+    BASE: "/credit-note",
+    ADD_EDIT: "/credit-note/add-edit",
   },
   ROLE: {
     BASE: "/role",

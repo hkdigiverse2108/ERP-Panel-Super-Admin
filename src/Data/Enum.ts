@@ -69,7 +69,6 @@ export const USER_TYPE = [
   { label: "Employee", value: "employee" },
   { label: "Admin", value: "admin" },
   { label: "Super Admin", value: "super-admin" },
-
 ];
 
 export const BAUD_RATE = [
@@ -190,12 +189,12 @@ export const ROLE_OPTIONS = [
   { label: "Employee", value: "employee" },
 ];
 
-export const CONSUMPTION_TYPE= [
+export const CONSUMPTION_TYPE = [
   { label: "Expired", value: "expired" },
   { label: "Sample", value: "sample" },
   { label: "Production", value: "production" },
-  { label: "Scrap/Wastage", value: "scrap/wastage" },
-]
+  { label: "Scrap / Wastage", value: "scrap_wastage" },
+];
 
 export const DATE_FORMATS = [
   { label: "DD/MM/YYYY", value: "DD/MM/YYYY" },
@@ -204,30 +203,28 @@ export const DATE_FORMATS = [
   { label: "DD Month YYYY", value: "DD MMMM YYYY" },
 ];
 
-export const ACCOUNTING_TYPE= [
-  { label: "Centralized", value: "centralized" },
-]
+export const ACCOUNTING_TYPE = [{ label: "Centralized", value: "centralized" }];
 
-export const LOCATION_TYPE= [
+export const LOCATION_TYPE = [
   { label: "Country", value: "country" },
   { label: "State", value: "state" },
   { label: "City", value: "city" },
-]
-export const ACCOUNT_TYPE= [
+];
+export const ACCOUNT_TYPE = [
   { label: "Bank", value: "bank" },
   { label: "Cash", value: "cash" },
   { label: "Other", value: "other" },
-]
+];
 export const ORDER_STATUS = [
- { label: "IN_PROGRESS", value: "IN_PROGRESS"},
- { label: "COMPLETED", value: "COMPLETED"},
- { label: "CANCELLED", value: "CANCELLED"},
- ]
+  { label: "IN_PROGRESS", value: "IN_PROGRESS" },
+  { label: "COMPLETED", value: "COMPLETED" },
+  { label: "CANCELLED", value: "CANCELLED" },
+];
 export const TAX_TYPE = [
   { label: "GST", value: "GST" },
   { label: "CGST", value: "CGST" },
   { label: "SGST", value: "SGST" },
   { label: "IGST", value: "IGST" },
-]
+];
 
-export  const BANK_UI_FIELDS: (keyof BranchFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber"];
+export const BANK_UI_FIELDS: (keyof BranchFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber"];

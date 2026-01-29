@@ -20,7 +20,7 @@ const Product = () => {
   const [isRemoveItem, setRemoveItem] = useState(false);
   const [gridRows, setGridRows] = useState<ProductWithRemoveQty[]>([]);
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.PRODUCT.BASE);
-  const permissionItem = usePagePermission(PAGE_TITLE.INVENTORY.STOCK);
+  const permissionItem = usePagePermission(PAGE_TITLE.INVENTORY.STOCK.BASE);
 
   const { data: productData, isLoading: productDataLoading, isFetching: productDataFetching } = Queries.useGetProduct(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
@@ -51,10 +51,10 @@ const Product = () => {
     deleteProductMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
   };
 
-  const handleRemoveItem = async (values: { remark: string }) => {
+  const handleRemoveItem = async (values: { type: string }) => {
     const obj = {
       items: data,
-      remark: values.remark,
+      type: values.type,
       companyId: advancedFilter?.companyFilter?.[0] || "",
     };
     await addStockBulkAdjustment(obj, {
@@ -81,14 +81,16 @@ const Product = () => {
             flex: 1,
             minWidth: 150,
             renderCell: (params: GridRenderCellParams) => (
-              <CommonTextField
-                type="number"
-                value={params.value ?? 0}
-                onChange={(event) => {
-                  const newValue = Number(event || 0);
-                  setGridRows((prev) => prev.map((r) => (r.id === params.id ? { ...r, removeQty: newValue } : r)));
-                }}
-              />
+              <Box sx={{ justifyContent: "center", alignItems: "center", display: "flex", height: "100%", width: "100%" }}>
+                <CommonTextField
+                  type="number"
+                  value={params.value ?? 0}
+                  onChange={(event) => {
+                    const newValue = Number(event || 0);
+                    setGridRows((prev) => prev.map((r) => (r.id === params.id ? { ...r, removeQty: newValue } : r)));
+                  }}
+                />
+              </Box>
             ),
           },
         ]
@@ -167,10 +169,10 @@ const Product = () => {
         </CommonCard>
         <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
         <CommonModal title="Remove Item" isOpen={openModal} onClose={() => setOpenModal(!openModal)} className="max-w-125 m-2 sm:m-5">
-          <Formik initialValues={{ remark: "" }} enableReinitialize validationSchema={ProductItemRemoveFormSchema} onSubmit={handleRemoveItem}>
+          <Formik initialValues={{ type: "" }} enableReinitialize validationSchema={ProductItemRemoveFormSchema} onSubmit={handleRemoveItem}>
             <Form noValidate>
               <Grid sx={{ p: 1 }} container spacing={2}>
-                <CommonValidationSelect name="remark" label="Consumption Type" options={CONSUMPTION_TYPE} grid={{ xs: 12 }} required />
+                <CommonValidationSelect name="type" label="Consumption Type" options={CONSUMPTION_TYPE} grid={{ xs: 12 }} required />
                 <CommonButton type="submit" variant="contained" title="Save" size="medium" loading={isAddLoading} fullWidth grid={{ xs: 12 }} />
               </Grid>
             </Form>

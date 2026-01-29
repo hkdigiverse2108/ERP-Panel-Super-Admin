@@ -2,7 +2,6 @@ import { PAGE_TITLE, ROUTES } from "../Constants";
 import type { NavItem } from "../Types";
 import { AdminPanelSettings, Apartment, GridViewRounded, MyLocation, People, ReceiptLong, Settings, AccountTree, ViewModule, Work } from "@mui/icons-material";
 
-
 export const NavItems: NavItem[] = [
   { icon: <GridViewRounded />, name: PAGE_TITLE.DASHBOARD, path: ROUTES.DASHBOARD },
   { icon: <People />, name: PAGE_TITLE.USER.BASE, path: ROUTES.USER.BASE },
@@ -20,6 +19,7 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.INVENTORY.CATEGORY.BASE, path: ROUTES.CATEGORY.BASE, pro: false },
       { name: PAGE_TITLE.INVENTORY.UOM.BASE, path: ROUTES.UOM.BASE, pro: false },
       { name: PAGE_TITLE.INVENTORY.TAX.BASE, path: ROUTES.TAX.BASE, pro: false },
+      { name: PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE, path: ROUTES.MATERIAL_CONSUMPTION.BASE, pro: false },
     ],
   },
   {
@@ -28,6 +28,8 @@ export const NavItems: NavItem[] = [
     children: [
       { name: PAGE_TITLE.ACCOUNT_GROUP.BASE, path: ROUTES.ACCOUNT_GROUP.BASE },
       { name: PAGE_TITLE.ACCOUNT.BASE, path: ROUTES.ACCOUNT.BASE },
+      { name: PAGE_TITLE.DEBIT_NOTE.BASE, path: ROUTES.DEBIT_NOTE.BASE },
+      { name: PAGE_TITLE.CREDIT_NOTE.BASE, path: ROUTES.CREDIT_NOTE.BASE },
     ],
   },
   {
@@ -36,4 +38,3 @@ export const NavItems: NavItem[] = [
     children: [{ name: PAGE_TITLE.PURCHASE_ORDER.BASE, path: ROUTES.PURCHASE_ORDER.BASE }],
   },
 ];
-  
