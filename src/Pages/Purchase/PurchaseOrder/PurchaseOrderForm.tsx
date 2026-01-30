@@ -31,14 +31,14 @@ const PurchaseOrderForm = () => {
     orderNo: data?.orderNo || "",
     shippingDate: data?.shippingDate || "",
     shippingNote: data?.shippingNote || "",
-    taxType: data?.taxType || "",
+    // taxType: data?.taxType || "",
 
     items: data?.items?.length
       ? data.items
       : [
           {
             productId: "",
-            qty: 1,
+            qty: 1, 
             unitCost: 0,
             total: 0,
           },
@@ -53,7 +53,7 @@ const PurchaseOrderForm = () => {
     netAmount: data?.netAmount || 0,
 
     notes: data?.notes || "", 
-    status: data?.status || ORDER_STATUS.IN_PROGRESS,
+    // status: data?.status || ORDER_STATUS.PENDING,
   };
 
   const PurchaseOrderCalcSync = () => {
@@ -82,16 +82,20 @@ const PurchaseOrderForm = () => {
 };
 
   const handleSubmit = async (values: PurchaseOrderFormValues, { resetForm }: FormikHelpers<PurchaseOrderFormValues>) => {
+    const { _submitAction, ...rest } = values;
+
+    const handleSuccess = () => {
+      if (_submitAction === "saveAndNew") resetForm();
+      else navigate(-1);
+    };
     if (isEditing) {
-      const changedFields = GetChangedFields(values, data);
-      editPurchaseOrder({ ...changedFields, purchaseOrderId: data._id }, { onSuccess: () => navigate(-1) });
+      const changedFields = GetChangedFields(rest, data);
+     await editPurchaseOrder({ ...changedFields, purchaseOrderId: data._id }, { onSuccess: handleSuccess});
     } else {
-      addPurchaseOrder(RemoveEmptyFields(values), {
-        onSuccess: () => resetForm(),
-      });
+     await addPurchaseOrder(RemoveEmptyFields(rest), {onSuccess: handleSuccess});
     }
   };
-
+  
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE_ORDER[pageMode]} breadcrumbs={BREADCRUMBS.PURCHASE_ORDER[pageMode]} />
@@ -186,3 +190,5 @@ const PurchaseOrderForm = () => {
 };
 
 export default PurchaseOrderForm;
+
+

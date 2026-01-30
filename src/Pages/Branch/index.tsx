@@ -29,10 +29,10 @@ const Branch = () => {
   const handleAdd = () => navigate(ROUTES.BRANCH.ADD_EDIT);
 
   const columns: GridColDef<BranchBase>[] = [
-    { field: "name", headerName: "Branch Name", flex: 1 },
-    { field: "displayName", headerName: "Display Name", flex: 1 },
-    { field: "userName", headerName: "User Name", flex: 1 },
-    { field: "contactName", headerName: "Contact Name", flex: 1 },
+    { field: "name", headerName: "Branch Name",width: 200 },
+    { field: "displayName", headerName: "Display Name", width: 200 },
+    { field: "userName", headerName: "User Name",width: 200 },
+    { field: "contactName", headerName: "Contact Name", width: 250 },
     { field: "email", headerName: "Email", flex: 1 },
     ...(permission?.edit || permission?.delete
       ? [

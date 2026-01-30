@@ -1,9 +1,17 @@
-import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { CommonDataType, PageStatus, MessageStatus } from "./Common";
+// import { TAX_TYPE, ORDER_STATUS } from "../../Data";
+
+
+export interface PurchaseOrderBase
+  extends PurchaseOrderFormValues,
+    CommonDataType {
+  _id: string;
+}
 
 export interface PurchaseOrderItem {
   productId: string;
   qty: number;
-  uom?: string | null;
+  uomId?: string;
   unitCost?: number;
   tax?: string | null;
   landingCost?: string | null;
@@ -12,46 +20,46 @@ export interface PurchaseOrderItem {
 }
 export interface PurchaseOrderFormValues {
   supplierId?: string;
+
   orderDate?: string | Date;
   orderNo?: string | null;
+
   shippingDate?: string | Date | null;
   shippingNote?: string | null;
 
-  taxType?: string;
+  // taxType?: TAX_TYPE;
 
   items?: PurchaseOrderItem[];
 
-  finalQty?: string | null;
-  finalTax?: string | null;
-  finalTotal?: string | null;
+  termsAndConditionIds?: string[];
+
+  notes?: string | null;
+
+  totalQty?: string | null;
+  totalTax?: string | null;
+  total?: string | null;
 
   flatDiscount?: number;
   grossAmount?: number;
   discountAmount?: number;
   taxableAmount?: number;
-  tax?: number;
+  tax?: number; 
   roundOff?: number;
   netAmount?: number;
 
-  notes?: string | null;
-  status?: string;
+  // status?: ORDER_STATUS; 
 
   isActive?: boolean;
   _submitAction?: string;
 }
-
-export type AddPurchaseOrderPayload = PurchaseOrderFormValues;
-
-export type EditPurchaseOrderPayload = PurchaseOrderFormValues & {
+export interface AddPurchaseOrderPayload extends Omit<PurchaseOrderFormValues, "supplierId" | "items"> {
+  supplierId: string;
+  items: PurchaseOrderItem[];
+}
+export interface EditPurchaseOrderPayload extends PurchaseOrderFormValues {
   purchaseOrderId: string;
-};
-
-export interface PurchaseOrderBase extends PurchaseOrderFormValues, CommonDataType {
-  _id: string;
-  
   
 }
-
 export interface PurchaseOrderDataResponse extends PageStatus {
   purchase_orders: PurchaseOrderBase[];
 }

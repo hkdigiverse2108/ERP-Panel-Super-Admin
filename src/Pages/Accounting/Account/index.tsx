@@ -33,10 +33,10 @@ const Account = () => {
   const handleEdit = (row: AccountBase) => dispatch(setAccountModal({ open: true, data: row }));
 
   const columns: AppGridColDef<AccountBase>[] = [
-    { field: "name", headerName: "Account Name", width: 350, flex: 1 },
+    { field: "name", headerName: "Account Name", width: 350,  },
     CommonObjectPropertyColumn<AccountBase>("GroupName", "groupId", "name", { headerName: "Group Name", width: 300 }),
-    { field: "type", headerName: "Account Type", width: 200, flex: 1 },
-    { field: "updatedAt", headerName: "UpdatedAt", width: 200, flex: 1 },
+    { field: "type", headerName: "Account Type", width: 200,  },
+    { field: "updatedAt", headerName: "UpdatedAt", width: 200, flex:1},
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<AccountBase>({
