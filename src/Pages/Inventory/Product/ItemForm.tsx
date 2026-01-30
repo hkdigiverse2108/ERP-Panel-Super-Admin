@@ -15,7 +15,7 @@ import { useEffect } from "react";
 const ItemForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK);
+  const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK.BASE);
 
   const { data } = location.state || {};
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();

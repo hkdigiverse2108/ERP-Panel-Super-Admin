@@ -5,7 +5,7 @@ import type { CommonDataGridProps } from "../../../Types";
 import CustomToolbar from "./CustomToolbar";
 import NoRowsOverlay from "./NoRowsOverlay";
 
-const CommonDataGrid: FC<CommonDataGridProps> = ({ isExport, pagination, fileName, columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, defaultHidden = [], BoxClass, handleAdd, isActive, setActive }) => {
+const CommonDataGrid: FC<CommonDataGridProps> = ({ slots, slotProps, isExport, pagination, fileName, columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, defaultHidden = [], BoxClass, handleAdd, isActive, setActive }) => {
   const apiRef = useGridApiRef();
 
   const visibilityModel = useMemo(() => {
@@ -50,8 +50,9 @@ const CommonDataGrid: FC<CommonDataGridProps> = ({ isExport, pagination, fileNam
         slots={{
           toolbar: () => <CustomToolbar filterModel={filterModel} onFilterModelChange={onFilterModelChange} isExport={isExport} fileName={fileName} apiRef={apiRef} columns={fixedColumns} rows={rows} rowCount={rowCount} handleAdd={handleAdd} isActive={isActive} setActive={setActive} />,
           noRowsOverlay: () => <NoRowsOverlay />,
-          // noResultsOverlay: () => <Box sx={{ p: 2, textAlign: "center" }}>No matching results</Box>,
+          bottomContainer: (props) => <>{slots?.bottomContainer?.(props)}</>,
         }}
+        slotProps={slotProps}
         showToolbar
         initialState={{
           columns: { columnVisibilityModel: visibilityModel },

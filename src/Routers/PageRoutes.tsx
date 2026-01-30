@@ -28,11 +28,17 @@ import NotFound from "../Pages/NotFound";
 import AccessDenied from "../Pages/AccessDenied";
 import PurchaseOrder from "../Pages/Purchase/PurchaseOrder";
 import PurchaseOrderForm from "../Pages/Purchase/PurchaseOrder/PurchaseOrderForm";
+import DebitNote from "../Pages/Accounting/DebitNote";
+import DebitNoteForm from "../Pages/Accounting/DebitNote/DebitNoteForm";
+import CreditNote from "../Pages/Accounting/CreditNote";
+import CreditNoteForm from "../Pages/Accounting/CreditNote/CreditNoteForm";
+import MaterialConsumption from "../Pages/Inventory/MaterialConsumption";
+import MaterialConsumptionForm from "../Pages/Inventory/MaterialConsumption/MaterialConsumptionForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
 
-  { path: ROUTES.DASHBOARD , name: PAGE_TITLE.DASHBOARD, element: <Dashboard /> },
+  { path: ROUTES.DASHBOARD, name: PAGE_TITLE.DASHBOARD, element: <Dashboard /> },
 
   { path: ROUTES.USER.BASE, name: PAGE_TITLE.USER.BASE, element: <Users /> },
   { path: ROUTES.USER.PERMISSION_ADD_EDIT, name: PAGE_TITLE.USER.BASE, element: <Permission /> },
@@ -49,7 +55,10 @@ export const PageRoutes = [
 
   { path: ROUTES.PRODUCT.BASE, name: PAGE_TITLE.INVENTORY.PRODUCT.BASE, element: <Product /> },
   { path: ROUTES.PRODUCT.ADD_EDIT, name: PAGE_TITLE.INVENTORY.PRODUCT.BASE, element: <ProductForm /> },
-  { path: ROUTES.PRODUCT.ITEM_ADD_EDIT, name: PAGE_TITLE.INVENTORY.PRODUCT.ITEM.BASE, element: <ItemForm /> },
+  { path: ROUTES.PRODUCT.ITEM_ADD_EDIT, name: PAGE_TITLE.INVENTORY.STOCK.BASE, element: <ItemForm /> },
+
+  { path: ROUTES.MATERIAL_CONSUMPTION.BASE, name: PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE, element: <MaterialConsumption /> },
+  { path: ROUTES.MATERIAL_CONSUMPTION.ADD_EDIT, name: PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE, element: <MaterialConsumptionForm /> },
 
   { path: ROUTES.BRAND.BASE, name: PAGE_TITLE.INVENTORY.BRAND.BASE, element: <Brand /> },
 
@@ -64,6 +73,12 @@ export const PageRoutes = [
 
   { path: ROUTES.ACCOUNT.BASE, name: PAGE_TITLE.ACCOUNT.BASE, element: <Account /> },
 
+  { path: ROUTES.DEBIT_NOTE.BASE, name: PAGE_TITLE.DEBIT_NOTE.BASE, element: <DebitNote /> },
+  { path: ROUTES.DEBIT_NOTE.ADD_EDIT, name: PAGE_TITLE.DEBIT_NOTE.BASE, element: <DebitNoteForm /> },
+
+  { path: ROUTES.CREDIT_NOTE.BASE, name: PAGE_TITLE.CREDIT_NOTE.BASE, element: <CreditNote /> },
+  { path: ROUTES.CREDIT_NOTE.ADD_EDIT, name: PAGE_TITLE.CREDIT_NOTE.BASE, element: <CreditNoteForm /> },
+
   { path: ROUTES.ROLE.BASE, name: PAGE_TITLE.ROLE.BASE, element: <Role /> },
 
   { path: ROUTES.MODULE.BASE, name: PAGE_TITLE.MODULE.BASE, element: <Module /> },
@@ -72,8 +87,7 @@ export const PageRoutes = [
   { path: ROUTES.ACCESS_DENIED, element: <AccessDenied /> },
 
   { path: ROUTES.PURCHASE_ORDER.BASE, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseOrder /> },
-  { path: ROUTES.PURCHASE_ORDER.ADD_EDIT, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseOrderForm /> },
-  
+  { Path: ROUTES.PURCHASE_ORDER.ADD_EDIT, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseOrderForm /> },
 ];
 
 export const AuthRoutes = [
