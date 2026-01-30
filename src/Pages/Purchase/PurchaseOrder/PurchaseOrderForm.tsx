@@ -2,11 +2,11 @@ import { Box, Grid, Button, IconButton } from "@mui/material";
 import { Form, Formik, FieldArray, useFormikContext } from "formik";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Add, Delete } from "@mui/icons-material";
-import { Mutations, Queries } from "../../../Api";
+import { Mutations } from "../../../Api";
 import { CommonValidationTextField, CommonValidationSelect } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
- import { TAX_TYPE, ORDER_STATUS, BREADCRUMBS } from "../../../Data";
+ import { TAX_TYPE, BREADCRUMBS } from "../../../Data";
 import { GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import type { FormikHelpers } from "formik";
 import type { PurchaseOrderFormValues } from "../../../Types";
@@ -21,9 +21,9 @@ const PurchaseOrderForm = () => {
   const { mutate: addPurchaseOrder, isPending: addLoading } = Mutations.useAddPurchaseOrder();    
   const { mutate: editPurchaseOrder, isPending: editLoading } = Mutations.useEditPurchaseOrder();
 
-   const { data: supplierData } = Queries. useGetPurchaseOrderDropdown();
-   const { data: productData } = Queries.useGetProductDropdown();
-   
+  //  const { data: supplierData } = Queries. useGetPurchaseOrderDropdown();
+  //  const { data: productData } = Queries.useGetProductDropdown();
+  //  
   const pageMode = isEditing ? "EDIT" : "ADD";
   const initialValues: PurchaseOrderFormValues = {
     supplierId: data?.supplierId?._id || "",
@@ -92,7 +92,7 @@ const PurchaseOrderForm = () => {
       const changedFields = GetChangedFields(rest, data);
      await editPurchaseOrder({ ...changedFields, purchaseOrderId: data._id }, { onSuccess: handleSuccess});
     } else {
-     await addPurchaseOrder(RemoveEmptyFields(rest), {onSuccess: handleSuccess});
+     await addPurchaseOrder(RemoveEmptyFields(rest) as any, {onSuccess: handleSuccess});
     }
   };
   
@@ -110,7 +110,7 @@ const PurchaseOrderForm = () => {
                 {/* BASIC DETAILS */}
                 <CommonCard title="Purchase Order Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonValidationSelect name="supplierId" label="Supplier" options={supplierData?.data || []} required grid={{ xs: 12, md: 4 }} />
+                    {/* <CommonValidationSelect name="supplierId" label="Supplier" options={supplierData?.data || []} required grid={{ xs: 12, md: 4 }} /> */}
 
                     <CommonValidationTextField name="orderDate" label="Order Date" type="date" required grid={{ xs: 12, md: 4 }} />
 
@@ -127,7 +127,7 @@ const PurchaseOrderForm = () => {
                       <>
                        {values.items?.map((_, index) => (
                           <Grid container spacing={2} sx={{ p: 2 }} key={index}>
-                            <CommonValidationSelect name={`items.${index}.productId`} label="Product" options={productData?.data || []} required grid={{ xs: 12, md: 3 }} />
+                            {/* <CommonValidationSelect name={`items.${index}.productId`} label="Product" options={productData?.data || []} required grid={{ xs: 12, md: 3 }} /> */}
 
                             <CommonValidationTextField name={`items.${index}.qty`} label="Qty" type="number" required grid={{ xs: 12, md: 2 }} />
 
