@@ -1,21 +1,24 @@
 import { Box } from "@mui/material";
-import type { GridColDef } from "@mui/x-data-grid";
+import { type GridColDef } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
+import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { MaterialConsumptionBase } from "../../../Types";
-import { FormatDate } from "../../../Utils";
+import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 
 const MaterialConsumption = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE);
 
   const { data: materialConsumptionData, isLoading: materialConsumptionDataLoading, isFetching: materialConsumptionDataFetching } = Queries.useGetMaterialConsumption(params);
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const companyId = advancedFilter?.companyFilter?.[0] || "";
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
   const { mutate: deleteMaterialConsumptionMutate } = Mutations.useDeleteMaterialConsumption();
   const { mutate: editMaterialConsumption, isPending: isEditLoading } = Mutations.useEditMaterialConsumption();
 
@@ -31,12 +34,13 @@ const MaterialConsumption = () => {
 
   const columns: GridColDef<MaterialConsumptionBase>[] = [
     CommonObjectNameColumn<MaterialConsumptionBase>("companyId", { headerName: "Company", width: 200 }),
-    { field: "consumptionNo", headerName: "Consumption No", width: 150 },
-    { field: "totalAmount", headerName: "Total Amount", width: 100 },
-    CommonObjectNameColumn<MaterialConsumptionBase>("fromAccountId", { headerName: "From Account", width: 200 }),
-    CommonObjectNameColumn<MaterialConsumptionBase>("toAccountId", { headerName: "To Account", width: 200 }),
-    { field: "date", headerName: "Date", width: 100, renderCell: (params) => FormatDate(params.row.date) },
-    { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
+    CommonObjectNameColumn<MaterialConsumptionBase>("branchId", { headerName: "Branch", width: 200 }),
+    { field: "number", headerName: "MC No.", width: 100 },
+    { field: "type", headerName: "Type", width: 150 },
+    { field: "totalQty", type: "number", headerName: "Total Qty", width: 150 },
+    { field: "totalAmount", type: "number", headerName: "Total Amount", width: 150 },
+    { field: "date", headerName: "Date", width: 150, renderCell: (params) => FormatDate(params.row.date) },
+    { field: "remark", headerName: "Remark", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<MaterialConsumptionBase>({
@@ -44,11 +48,15 @@ const MaterialConsumption = () => {
               active: (row) => editMaterialConsumption({ materialConsumptionId: row?._id, isActive: !row.isActive }),
               editRoute: ROUTES.MATERIAL_CONSUMPTION.ADD_EDIT,
             }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.consumptionNo }) }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.number }) }),
           }),
         ]
       : []),
   ];
+
+  const summary = useMemo(() => {
+    return CalculateGridSummary(allMaterialConsumptions, ["totalQty", "totalAmount"]);
+  }, [allMaterialConsumptions]);
 
   const CommonDataGridOption = {
     columns,
@@ -64,12 +72,21 @@ const MaterialConsumption = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    slots: {
+      bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
+    },
   };
+
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), // categoryFilter
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }), // branchFilter
+  ];
 
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.MATERIAL_CONSUMPTION.BASE} />
-      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

@@ -87,7 +87,7 @@ export const PageRoutes = [
   { path: ROUTES.ACCESS_DENIED, element: <AccessDenied /> },
 
   { path: ROUTES.PURCHASE_ORDER.BASE, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseOrder /> },
-  { Path: ROUTES.PURCHASE_ORDER.ADD_EDIT, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseOrderForm /> },
+  { path: ROUTES.PURCHASE_ORDER.ADD_EDIT, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseOrderForm /> },
 ];
 
 export const AuthRoutes = [

@@ -97,9 +97,11 @@
   @apply bg-gray-700;
 }
 
+.MuiDataGrid-virtualScroller .MuiDataGrid-filler,
+.MuiDataGrid-scrollbar,
 .MuiDataGrid-scrollbar::-webkit-scrollbar,
 .MuiTelInput-Menu .MuiPaper-root.MuiPopover-paper::-webkit-scrollbar {
-  @apply size-1.5;
+  @apply size-1.5 hidden! h-0!;
 }
 
 .MuiTelInput-Menu .MuiPaper-root.MuiPopover-paper::-webkit-scrollbar-thumb,
