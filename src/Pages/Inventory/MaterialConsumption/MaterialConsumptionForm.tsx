@@ -25,6 +25,7 @@ const MaterialConsumptionForm = () => {
 
   const { mutate: addMaterialConsumption, isPending: isAddLoading } = Mutations.useAddMaterialConsumption();
   const { mutate: editMaterialConsumption, isPending: isEditLoading } = Mutations.useEditMaterialConsumption();
+console.log(data);
 
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
@@ -153,7 +154,7 @@ const MaterialConsumptionForm = () => {
                       {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                     </Grid>
                   </CommonCard>
-                  <CommonBottomActionBar save={isEditing} clear={!isEditing} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                  <CommonBottomActionBar save isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
                 </Grid>
               </Form>
               <Grid container>
