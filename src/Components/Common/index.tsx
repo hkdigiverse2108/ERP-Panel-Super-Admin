@@ -12,5 +12,6 @@ import { CommonImageBox } from "./CommonUploadImage/CommonImageBox";
 import { CommonPhoneColumns, CommonObjectNameColumn } from "./CommonDataGrid/CommonColumns";
 import AdvancedSearch from "./AdvancedSearch";
 import CommonTabPanel from "./CommonTabPanel";
+import { CommonDataGridSummaryFooter, CalculateGridSummary } from "./CommonDataGrid/CommonDataGridSummaryFooter";
 
-export { CommonTabPanel, DependentSelect, CommonDrawer, CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonUpload, CommonModal, CommonActionColumn, CommonDeleteModal, CommonBottomActionBar, CommonImageBox, CommonPhoneColumns, CommonObjectNameColumn, AdvancedSearch };
+export { CommonDataGridSummaryFooter, CalculateGridSummary, CommonTabPanel, DependentSelect, CommonDrawer, CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonUpload, CommonModal, CommonActionColumn, CommonDeleteModal, CommonBottomActionBar, CommonImageBox, CommonPhoneColumns, CommonObjectNameColumn, AdvancedSearch };

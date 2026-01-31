@@ -1,20 +1,22 @@
 import type { BranchBase } from "./Branch";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { CompanyBase } from "./Company";
+import type { ProductBase } from "./Product";
 
 export interface MaterialConsumptionRow {
   productId: string;
-  name: string;
   qty: number;
   price: number;
   totalPrice: number;
+}
+export interface MaterialConsumptionItem extends MaterialConsumptionRow {
+  name: string;
 }
 
 export interface MaterialConsumptionFormValues {
   companyId?: string;
   branchId?: string;
-  prefix?: string;
-  consumptionNo?: string;
+  number?: string;
   date?: string;
   type?: string;
   remark?: string;
@@ -27,11 +29,14 @@ export interface MaterialConsumptionFormValues {
 
 export type AddMaterialConsumptionPayload = MaterialConsumptionFormValues;
 
-export type EditMaterialConsumptionPayload = MaterialConsumptionFormValues & { materialConsumptionId: string };
+export type EditMaterialConsumptionPayload = MaterialConsumptionFormValues & { materialConsumptionId?: string };
 
-export interface MaterialConsumptionBase extends Omit<MaterialConsumptionFormValues, "companyId" | "branchId">, CommonDataType {
+export interface MaterialConsumptionBase extends Omit<MaterialConsumptionFormValues, "companyId" | "branchId" | "items">, CommonDataType {
   companyId: CompanyBase;
   branchId: BranchBase;
+  items: (Omit<MaterialConsumptionItem, "productId"> & {
+    productId: ProductBase;
+  })[];
 }
 
 export interface MaterialConsumptionDataResponse extends PageStatus {
