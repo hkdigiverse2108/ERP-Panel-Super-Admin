@@ -1,6 +1,7 @@
 import { KEYS, URL_KEYS } from "../Constants";
 import type { AccountGroupApiResponse, AccountGroupDropdownApiResponse, AccountGroupTreeApiResponse, AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, CompanyDropdownApiResponse, CountryApiResponse, CreditNoteApiResponse, DebitNoteApiResponse, LocationApiResponse, MaterialConsumptionApiResponse, ModuleApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, ProductApiResponse, ProductDropDownApiResponse, RoleApiResponse, RoleDropdownApiResponse, SingleCompanyApiResponse, TaxApiResponse, TaxDropdownApiResponse, UomApiResponse, UomDropdownApiResponse, UploadResponse, UserApiResponse, UserModulePermissionApiResponse } from "../Types";
 import type { AccountApiResponse, AccountDropdownApiResponse } from "../Types/Account";
+import type { ContactDropdownApiResponse } from "../Types/Contact";
 import type { BankApiResponse, BankDropdownApiResponse } from "../Types/Bank";
 import type { PurchaseOrderApiResponse, PurchaseOrderDropdownApiResponse } from "../Types/PurchaseOrder";
 import { Get } from "./Methods";
@@ -69,6 +70,7 @@ export const Queries = {
   //*************** Account **************** */
   useGetAccount: (params?: Params) => useQueries<AccountApiResponse>([KEYS.ACCOUNT.BASE, params], () => Get(URL_KEYS.ACCOUNT.ALL, params)),
   useGetAccountDropdown: (params?: Params) => useQueries<AccountDropdownApiResponse>([KEYS.ACCOUNT.BASE, params], () => Get(URL_KEYS.ACCOUNT.DROPDOWN, params)),
+  useGetContactDropdown: (params?: Params) => useQueries<ContactDropdownApiResponse>([KEYS.CONTACT.DROPDOWN, params], () => Get(URL_KEYS.CONTACT.DROPDOWN, params)),
 
   //*************** Purchase Order *********
   useGetPurchaseOrder: (params?: Params) => useQueries<PurchaseOrderApiResponse>([KEYS.PURCHASE_ORDER.BASE, params], () => Get(URL_KEYS.PURCHASE_ORDER.ALL, params)),

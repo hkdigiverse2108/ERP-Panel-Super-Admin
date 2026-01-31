@@ -17,6 +17,11 @@ export const KEYS = {
     DELETE: "company-delete",
   },
 
+  CONTACT: {
+    BASE: "contact",
+    DROPDOWN: "contact-dropdown",
+  },
+
   USER: {
     BASE: "user",
     ADD: "user-add",

@@ -20,6 +20,7 @@ export interface PurchaseOrderItem {
 }
 export interface PurchaseOrderFormValues {
   supplierId?: string;
+  contactId?: string;
 
   orderDate?: string | Date;
   orderNo?: string | null;

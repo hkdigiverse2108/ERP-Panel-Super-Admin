@@ -16,6 +16,9 @@ export const URL_KEYS = {
     ADD: "/company/add",
     EDIT: "/company/edit",
   },
+  CONTACT: {
+    DROPDOWN: "/contact/dropdown",
+  },
   USER: {
     BASE: "/user",
     ALL: "/user/all",
@@ -158,11 +161,10 @@ export const URL_KEYS = {
 
   // ----------------------------- purchase -----------------------------
   PURCHASE_ORDER: {
-    BASE: "purchase-order",
-    ADD: "purchase-order-add",
-    EDIT: "purchase-order-edit",
-    DELETE: "purchase-order-delete",
-    ALL: "purchase-order-all",
-    DROPDOWN: "purchase-order-dropdown",
+    BASE: "/purchase-order",
+    ADD: "/purchase-order/add",
+    EDIT: "/purchase-order/edit",
+    ALL: "/purchase-order/all",
+    DROPDOWN: "/purchase-order/dropdown",
   },
 } as const;

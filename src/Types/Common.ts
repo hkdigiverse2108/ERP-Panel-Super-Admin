@@ -235,6 +235,8 @@ export interface CommonValidationTextFieldProps {
   focused?: boolean;
   rows?: number;
   onCurrencyLog?: (value: string) => void;
+  sx?: object;
+  size?: "small" | "medium";
 }
 export interface CommonTextFieldProps extends Omit<CommonValidationTextFieldProps, "name"> {
   value: string | number;

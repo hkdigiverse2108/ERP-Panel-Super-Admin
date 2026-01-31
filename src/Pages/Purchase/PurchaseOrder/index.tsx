@@ -29,12 +29,12 @@ const PurchaseOrder = () => {
 
   const columns: AppGridColDef<PurchaseOrderBase>[] = [
     { field: "status", headerName: "Status", width: 170 },
-    { field: "productId", headerName: "ProductId ", width: 170 },
-    { field: "orderNo", headerName: "PurchaseOrder No", width: 170 },
-    { field: "shippingDate", headerName: "ShippingDate", width: 240 },
-    { field: "contactName", headerName: "contactName", width: 150 },
+    { field: "productId", headerName: "Product", width: 170 },
+    { field: "orderNo", headerName: "Order No", width: 170 },
+    { field: "shippingDate", headerName: "Shipping Date", width: 240 },
+    // { field: "supplier", headerName: "Supplier", width: 150, valueGetter: (params) => params.row?.supplierId?.name || params.row?.contactName || "N/A" },
 
-    { field: "webSite", headerName: "webSite", width: 170 },
+    { field: "webSite", headerName: "Website", width: 170 },
     { field: "notes", headerName: "Notes", flex: 1, minWidth: 150 },
     CommonActionColumn({
       active: (row) => editPurchaseOrder({ purchaseOrderId: row?._id, isActive: !row.isActive }),
