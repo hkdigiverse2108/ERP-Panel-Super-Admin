@@ -2,13 +2,11 @@ import type { CommonDataType, PageStatus, MessageStatus } from "./Common";
 import type { ContactBase } from "./Contact";
 // import { TAX_TYPE, ORDER_STATUS } from "../../Data";
 
-
-export interface PurchaseOrderBase
-  extends Omit<PurchaseOrderFormValues, "supplierId">,
-    CommonDataType {
+export interface PurchaseOrderBase extends Omit<PurchaseOrderFormValues, "supplierId">, CommonDataType {
   _id: string;
   supplierId?: ContactBase;
 }
+export type Supplier = ContactBase;
 
 export interface PurchaseOrderItem {
   productId: string;
@@ -23,6 +21,7 @@ export interface PurchaseOrderItem {
 export interface PurchaseOrderFormValues {
   supplierId?: string;
   contactId?: string;
+  companyId?: string;
 
   date?: string | Date;
   orderDate?: string | Date;
@@ -47,22 +46,22 @@ export interface PurchaseOrderFormValues {
   grossAmount?: number;
   discountAmount?: number;
   taxableAmount?: number;
-  tax?: number; 
+  tax?: number;
   roundOff?: number;
   netAmount?: number;
 
-  // status?: ORDER_STATUS; 
- 
+  status?: string;
+  taxType?: string;
+
   isActive?: boolean;
   _submitAction?: string;
 }
-export interface AddPurchaseOrderPayload extends Omit<PurchaseOrderFormValues, "supplierId" | "items"> {
+export interface AddPurchaseOrderPayload extends Omit<PurchaseOrderFormValues, "supplierId" | "contact"> {
   supplierId: string;
   items: PurchaseOrderItem[];
 }
 export interface EditPurchaseOrderPayload extends PurchaseOrderFormValues {
   purchaseOrderId: string;
-  
 }
 export interface PurchaseOrderDataResponse extends PageStatus {
   purchaseOrder_data: PurchaseOrderBase[];

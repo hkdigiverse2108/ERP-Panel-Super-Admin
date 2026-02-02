@@ -46,7 +46,7 @@ const AccountForm = () => {
       editAccount( { ...changedFields, accountId: isEdit?._id, } , { onSuccess: onSuccessHandler });
     } else {
       addAccount(RemoveEmptyFields(values) as AddAccountPayload, { onSuccess: onSuccessHandler });
-      addAccount(RemoveEmptyFields(values) as AddAccountPayload, { onSuccess: onSuccessHandler });
+      // addAccount(RemoveEmptyFields(values) as AddAccountPayload, { onSuccess: onSuccessHandler });
     }
   };
 

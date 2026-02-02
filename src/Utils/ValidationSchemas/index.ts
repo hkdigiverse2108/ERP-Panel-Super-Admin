@@ -307,3 +307,18 @@ export const MaterialConsumptionFormSchema = Yup.object({
   type: Validation("string", "Type", { required: false }),
   remark: Validation("string", "Remark", { required: false, extraRules: (s) => s?.trim().max(200, "Maximum 200 characters allowed") }),
 });
+
+export const PurchaseOrderFormSchema = Yup.object({
+  supplierId: Validation("string", "Supplier"),
+  date: Validation("string", "Order Date"),
+  shippingDate: Validation("string", "Shipping Date"),
+  taxType: Validation("string", "Tax Type", { required: false }),
+  items: Yup.array()
+    .of(
+      Yup.object({
+        productId: Validation("string", "Product"),
+        qty: Validation("number", "Quantity", { extraRules: (s) => s.min(1, "Quantity must be at least 1") }),
+      }),
+    )
+    .min(1, "At least one item is required"),
+});
