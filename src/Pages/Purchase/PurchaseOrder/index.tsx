@@ -2,11 +2,12 @@ import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, PurchaseOrderBase } from "../../../Types";
 import { useDataGrid } from "../../../Utils/Hooks";
+import { FormatDate } from "../../../Utils";
 
 const PurchaseOrder = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -16,7 +17,7 @@ const PurchaseOrder = () => {
   const { mutate: deletePurchaseOrderMutate } = Mutations.useDeletePurchaseOrder();
   const { mutate: editPurchaseOrder, isPending: isEditLoading } = Mutations.useEditPurchaseOrder();
 
-  const allPurchaseOrder = useMemo(() => purchaseOrderData?.data?.purchase_orders?.map((purchaseOrder) => ({ ...purchaseOrder, id: purchaseOrder._id })) || [], [purchaseOrderData]);
+  const allPurchaseOrder = useMemo(() => purchaseOrderData?.data?.purchaseOrder_data?.map((purchaseOrder) => ({ ...purchaseOrder, id: purchaseOrder._id })) || [], [purchaseOrderData]);
 
   const totalRows = purchaseOrderData?.data?.totalData || 0;
 
@@ -28,13 +29,11 @@ const PurchaseOrder = () => {
   const handleAdd = () => navigate(ROUTES.PURCHASE_ORDER.ADD_EDIT);
 
   const columns: AppGridColDef<PurchaseOrderBase>[] = [
-    { field: "status", headerName: "Status", width: 170 },
-    { field: "productId", headerName: "Product", width: 170 },
-    { field: "orderNo", headerName: "Order No", width: 170 },
-    { field: "shippingDate", headerName: "Shipping Date", width: 240 },
-    // { field: "supplier", headerName: "Supplier", width: 150, valueGetter: (params) => params.row?.supplierId?.name || params.row?.contactName || "N/A" },
-
-    { field: "webSite", headerName: "Website", width: 170 },
+    { field: "orderNo", headerName: "Order No", width: 150 },
+    CommonObjectNameColumn<PurchaseOrderBase>("supplierId", { headerName: "Supplier", width: 250 }),
+    { field: "date", headerName: "Order Date", width: 150, renderCell: (params) => FormatDate(params.row.date || params.row.orderDate) },
+    { field: "netAmount", headerName: "Amount", width: 170 },
+    { field: "status", headerName: "Status", width: 150 },
     { field: "notes", headerName: "Notes", flex: 1, minWidth: 150 },
     CommonActionColumn({
       active: (row) => editPurchaseOrder({ purchaseOrderId: row?._id, isActive: !row.isActive }),
