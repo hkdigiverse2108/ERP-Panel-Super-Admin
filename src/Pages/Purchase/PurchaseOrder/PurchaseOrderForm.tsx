@@ -4,13 +4,13 @@ import type { FormikHelpers } from "formik";
 import { FieldArray, Form, Formik, useFormikContext } from "formik";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Mutations } from "../../../Api";
-import { CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
+import { Mutations, Queries } from "../../../Api";
+import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, TAX_TYPE } from "../../../Data";
 import type { PurchaseOrderFormValues } from "../../../Types";
-import { GetChangedFields, RemoveEmptyFields } from "../../../Utils";
+import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 
 const PurchaseOrderForm = () => {
   const navigate = useNavigate();
@@ -22,31 +22,31 @@ const PurchaseOrderForm = () => {
   const { mutate: addPurchaseOrder, isPending: addLoading } = Mutations.useAddPurchaseOrder();
   const { mutate: editPurchaseOrder, isPending: editLoading } = Mutations.useEditPurchaseOrder();
 
-  //  const { data: supplierData } = Queries. useGetPurchaseOrderDropdown();
-  //  const { data: productData } = Queries.useGetProductDropdown();
-  //  
+  const { data: supplierData } = Queries.useGetContactDropdown({ type: "supplier" });
+  const { data: productData } = Queries.useGetProductDropdown();
+   
   const pageMode = isEditing ? "EDIT" : "ADD";
   const initialValues: PurchaseOrderFormValues = {
     supplierId: data?.supplierId?._id || "",
     contactId: data?.contactId?._id || "",
-    orderDate: data?.orderDate || "",
+    date: data?.date || data?.orderDate || "",
     orderNo: data?.orderNo || "",
     shippingDate: data?.shippingDate || "",
     shippingNote: data?.shippingNote || "",
-    // taxType: data?.taxType || "",
+    taxType: data?.taxType || "",
 
     items: data?.items?.length
       ? data.items
       : [
           {
-            productId: "",
+            productId: "",  
             qty: 1,
             unitCost: 0,
             total: 0,
           },
         ],
 
-    flatDiscount: data?.flatDiscount || 0,
+    flatDiscount: data?.flatDiscount || 0, 
     grossAmount: data?.grossAmount || 0,
     discountAmount: data?.discountAmount || 0,
     taxableAmount: data?.taxableAmount || 0,
@@ -55,7 +55,7 @@ const PurchaseOrderForm = () => {
     netAmount: data?.netAmount || 0,
 
     notes: data?.notes || "",
-    // status: data?.status || ORDER_STATUS.PENDING,
+    status: data?.status || "PENDING",
   };
 
   const PurchaseOrderCalcSync = () => {
@@ -79,7 +79,7 @@ const PurchaseOrderForm = () => {
       const netAmount = taxableAmount + taxAmount + roundOff;
 
       if (values.grossAmount !== itemsTotal) setFieldValue("grossAmount", itemsTotal);
-      if (values.taxableAmount !== taxableAmount) setFieldValue("taxableAmount", taxableAmount);
+      if (values.taxableAmount !== taxableAmount) setFieldValue("taxableAmount", taxableAmount); 
       if (values.netAmount !== netAmount) setFieldValue("netAmount", netAmount);
     }, [values.items, values.flatDiscount, values.tax, values.roundOff, setFieldValue, values.grossAmount, values.taxableAmount, values.netAmount]);
 
@@ -87,7 +87,7 @@ const PurchaseOrderForm = () => {
   };
 
   const handleSubmit = async (values: PurchaseOrderFormValues, { resetForm }: FormikHelpers<PurchaseOrderFormValues>) => {
-    const { _submitAction, ...rest } = values;
+    const { _submitAction, ...rest } = values;  
 
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
@@ -109,15 +109,15 @@ const PurchaseOrderForm = () => {
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
           {({ values, dirty }) => (
             <Form noValidate>
-              <PurchaseOrderCalcSync />
+              <PurchaseOrderCalcSync /> 
 
               <Grid container spacing={2}>
                 {/* BASIC DETAILS */}
                 <CommonCard title="Purchase Order Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    {/* <CommonValidationSelect name="supplierId" label="Supplier" options={supplierData?.data || []} required grid={{ xs: 12, md: 4 }} /> */}
+                    <CommonValidationSelect name="supplierId" label="Supplier" options={GenerateOptions(supplierData?.data)} required grid={{ xs: 12, md: 4 }} /> 
 
-                    <CommonValidationTextField name="orderDate" label="Order Date" type="date" required grid={{ xs: 12, md: 4 }} />
+                     <CommonValidationDatePicker name="date" label="OrderDate" grid={{ xs: 12, md: 4 }} required />
 
                     <CommonValidationTextField name="orderNo" label="Order No" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="taxType" label="Tax Type" options={TAX_TYPE} grid={{ xs: 12, md: 4 }} />
@@ -131,7 +131,7 @@ const PurchaseOrderForm = () => {
                       <>
                        {values.items?.map((_, index) => (
                           <Grid container spacing={2} sx={{ p: 2 }} key={index}>
-                            {/* <CommonValidationSelect name={`items.${index}.productId`} label="Product" options={productData?.data || []} required grid={{ xs: 12, md: 3 }} /> */}
+                            <CommonValidationSelect name={`items.${index}.productId`} label="Product" options={GenerateOptions(productData?.data)} required grid={{ xs: 12, md: 3 }} />
 
                               <CommonValidationTextField name={`items.${index}.qty`} label="Qty" type="number" required grid={{ xs: 12, md: 2 }} />
 

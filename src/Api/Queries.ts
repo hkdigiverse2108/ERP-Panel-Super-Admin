@@ -70,7 +70,7 @@ export const Queries = {
   //*************** Account **************** */
   useGetAccount: (params?: Params) => useQueries<AccountApiResponse>([KEYS.ACCOUNT.BASE, params], () => Get(URL_KEYS.ACCOUNT.ALL, params)),
   useGetAccountDropdown: (params?: Params) => useQueries<AccountDropdownApiResponse>([KEYS.ACCOUNT.BASE, params], () => Get(URL_KEYS.ACCOUNT.DROPDOWN, params)),
-  useGetContactDropdown: (params?: Params) => useQueries<ContactDropdownApiResponse>([KEYS.CONTACT.DROPDOWN, params], () => Get(URL_KEYS.CONTACT.DROPDOWN, params)),
+ useGetContactDropdown: (params?: Params) => useQueries<ContactDropdownApiResponse>([KEYS.CONTACT.DROPDOWN, params], () => Get(URL_KEYS.CONTACT.DROPDOWN, params)),
 
   //*************** Purchase Order *********
   useGetPurchaseOrder: (params?: Params) => useQueries<PurchaseOrderApiResponse>([KEYS.PURCHASE_ORDER.BASE, params], () => Get(URL_KEYS.PURCHASE_ORDER.ALL, params)),

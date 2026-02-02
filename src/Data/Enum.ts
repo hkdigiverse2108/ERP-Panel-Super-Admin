@@ -216,6 +216,7 @@ export const ACCOUNT_TYPE = [
   { label: "Other", value: "other" },
 ];
 export const ORDER_STATUS = [
+  { label: "PENDING", value: "PENDING" },
   { label: "IN_PROGRESS", value: "IN_PROGRESS" },
   { label: "COMPLETED", value: "COMPLETED" },
   { label: "CANCELLED", value: "CANCELLED" },

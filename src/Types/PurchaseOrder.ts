@@ -1,11 +1,13 @@
 import type { CommonDataType, PageStatus, MessageStatus } from "./Common";
+import type { ContactBase } from "./Contact";
 // import { TAX_TYPE, ORDER_STATUS } from "../../Data";
 
 
 export interface PurchaseOrderBase
-  extends PurchaseOrderFormValues,
+  extends Omit<PurchaseOrderFormValues, "supplierId">,
     CommonDataType {
   _id: string;
+  supplierId?: ContactBase;
 }
 
 export interface PurchaseOrderItem {
@@ -22,6 +24,7 @@ export interface PurchaseOrderFormValues {
   supplierId?: string;
   contactId?: string;
 
+  date?: string | Date;
   orderDate?: string | Date;
   orderNo?: string | null;
 
@@ -49,7 +52,7 @@ export interface PurchaseOrderFormValues {
   netAmount?: number;
 
   // status?: ORDER_STATUS; 
-
+ 
   isActive?: boolean;
   _submitAction?: string;
 }
@@ -62,7 +65,7 @@ export interface EditPurchaseOrderPayload extends PurchaseOrderFormValues {
   
 }
 export interface PurchaseOrderDataResponse extends PageStatus {
-  purchase_orders: PurchaseOrderBase[];
+  purchaseOrder_data: PurchaseOrderBase[];
 }
 
 export interface PurchaseOrderApiResponse extends MessageStatus {
