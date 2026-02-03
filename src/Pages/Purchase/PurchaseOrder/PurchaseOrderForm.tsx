@@ -11,8 +11,6 @@ import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, TAX_TYPE } from "../../../Data";
 import type { PurchaseOrderFormValues, Supplier } from "../../../Types";
 import { GenerateOptions, GetChangedFields, PurchaseOrderFormSchema, RemoveEmptyFields } from "../../../Utils";
-import type { PurchaseOrderFormValues } from "../../../Types";
-import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 
 const PurchaseOrderForm = () => {
   const navigate = useNavigate();
