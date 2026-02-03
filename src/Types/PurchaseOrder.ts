@@ -1,16 +1,24 @@
 import type { CommonDataType, PageStatus, MessageStatus } from "./Common";
-import type { ContactBase } from "./Contact";
+import type { SupplierBase } from "./Contact";
 // import { TAX_TYPE, ORDER_STATUS } from "../../Data";
 
 export interface PurchaseOrderBase extends Omit<PurchaseOrderFormValues, "supplierId">, CommonDataType {
   _id: string;
-  supplierId?: ContactBase;
+  supplierId?: SupplierBase;
 }
-export type Supplier = ContactBase;
+export type Supplier = SupplierBase;
 
 export interface PurchaseOrderItem {
   productId: string;
   qty: number;
+  freeQty?: number;
+  mrp?: number;
+  sellingPrice?: number;
+  discount1?: number;
+  discount2?: number;
+  taxableAmount?: number;
+  itemCode?: string;
+  unit?: string;
   uomId?: string;
   unitCost?: number;
   tax?: string | null;

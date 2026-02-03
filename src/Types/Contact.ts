@@ -11,7 +11,7 @@ export interface ContactAddress {
   pinCode?: string;
 }
 
-export interface ContactBase {
+export interface SupplierBase {
   _id: string;
   name: string;
   phone?: string;
@@ -21,8 +21,8 @@ export interface ContactBase {
 }
 
 export interface ContactApiResponse extends MessageStatus {
-  data: ContactBase[];
+  data: SupplierBase[];
 }
 export interface ContactDropdownApiResponse extends MessageStatus {
-  data: ContactBase[];
+  data: SupplierBase[];
 }

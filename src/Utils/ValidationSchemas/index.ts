@@ -322,3 +322,9 @@ export const PurchaseOrderFormSchema = Yup.object({
     )
     .min(1, "At least one item is required"),
 });
+
+export const TermsConditionFormSchema = Yup.object({
+  termsCondition: Validation("string", "Terms and Condition"),
+  isDefault: Validation("boolean", "Is Default", { required: false }),
+  isActive: Validation("boolean", "is Active", { required: false }),
+});

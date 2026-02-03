@@ -2,7 +2,9 @@ export * from "./Common";
 export * from "./Layout";
 export * from "./Api";
 export * from "./Auth";
+export * from "./TermsCondition";
 export * from "./User";
+
 export * from "./Branch";
 export * from "./Announcement";
 export * from "./CallRequest";
