@@ -1,4 +1,4 @@
-import { Add, Clear, Delete } from "@mui/icons-material";
+import { Add, Clear } from "@mui/icons-material";
 import { Box, Grid, Tab, Tabs } from "@mui/material";
 import type { FormikHelpers } from "formik";
 import { FieldArray, Form, Formik, useFormikContext } from "formik";
@@ -230,7 +230,7 @@ const PurchaseOrderForm = () => {
                     </Box>
 
                     {/* ================= TAB 1 : PRODUCT DETAILS ================= */}
-                    <CommonTabPanel value={tabValue} index={0} style={{ width: "100%" }}>
+                    <CommonTabPanel value={tabValue} index={0}>
                       <Box sx={{ mt: 2, overflowX: "auto" }}>
                         <Box sx={{ minWidth: 1400 }}>
                           <table className="w-full text-sm">
@@ -250,7 +250,7 @@ const PurchaseOrderForm = () => {
                             <FieldArray name="items">
                               {({ push, remove }) => (
                                 <tbody>
-                                  {values.items?.map((item, index) => (
+                                  {values.items?.map((_, index) => (
                                     <tr key={index} className="text-center align-top">
                                       <td className="p-2 flex justify-center gap-1">
                                         <Box display="flex" gap={1}>
@@ -323,7 +323,7 @@ const PurchaseOrderForm = () => {
                     </CommonTabPanel>
 
                     {/* ================= TAB 2 : TERMS ================= */}
-                    <CommonTabPanel value={tabValue} index={1} style={{ width: "100%" }}>
+                    <CommonTabPanel value={tabValue} index={1}>
                       <Box sx={{ mt: 2, display: "grid", gridTemplateColumns: { xs: "1fr", md: "2fr 1fr" }, gap: 3 }}>
                         <Box>
                           <Box display="flex" justifyContent="space-between" mb={2}>
