@@ -1,4 +1,4 @@
-import type { BranchFormValues } from "../Types";
+  import type { BranchFormValues } from "../Types";
 
 export const PRODUCT_TYPE = ["finished", "raw_material", "semi_finished", "service", "non_inventory"] as const;
 

@@ -24,9 +24,9 @@ const ProductForm = () => {
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.PRODUCT.BASE);
 
   const { data } = location.state || {};
-  const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown();
+  const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true });
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
-  const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown();
+  const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true });
 
   const { mutate: addProduct, isPending: isAddLoading } = Mutations.useAddProduct();
   const { mutate: editProduct, isPending: isEditLoading } = Mutations.useEditProduct();

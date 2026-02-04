@@ -205,6 +205,24 @@ export interface CommonActionColumnProps<T> {
   onDelete?: (row: T) => void;
   active?: (row: T) => void;
 }
+export interface CommonTableColumn<T> {
+  key: string;
+  header: string;
+  headerClass?: string;
+  bodyClass?: string;
+  render?: (row: T, index: number) => ReactNode;
+  footer?: ReactNode | ((data: T[]) => ReactNode);
+  footerClass?: string;
+}
+
+export interface CommonTableProps<T> {
+  data: T[];
+  columns: CommonTableColumn<T>[];
+  rowKey: (row: T) => string;
+  getRowClass?: (row: T, index: number) => string;
+  showFooter?: boolean;
+}
+
 
 // ************ Table End ***********
 

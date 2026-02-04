@@ -24,11 +24,11 @@ const Product = () => {
 
   const { data: productData, isLoading: productDataLoading, isFetching: productDataFetching } = Queries.useGetProduct(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
-  const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown();
+  const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true});
   const brandId = advancedFilter?.brandFilter?.[0] || "";
   const { data: subBrandData, isLoading: subBrandDataLoading } = Queries.useGetBrandDropdown({ parentBrandFilter: brandId }, Boolean(brandId));
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
-  const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown();
+  const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true });
   const subCategoryId = advancedFilter?.categoryFilter?.[0] || "";
   const { data: subCategoryData, isLoading: subCategoryDataLoading } = Queries.useGetCategoryDropdown({ parentCategoryFilter: subCategoryId }, Boolean(subCategoryId));
 
@@ -75,36 +75,36 @@ const Product = () => {
     { field: "openingQty", headerName: "Opening Qty", flex: 1, minWidth: 150 },
     ...(isRemoveItem
       ? [
-          {
-            field: "removeQty",
-            headerName: "Remove Qty",
-            flex: 1,
-            minWidth: 150,
-            renderCell: (params: GridRenderCellParams) => (
-              <Box sx={{ justifyContent: "center", alignItems: "center", display: "flex", height: "100%", width: "100%" }}>
-                <CommonTextField
-                  type="number"
-                  value={params.value ?? 0}
-                  onChange={(event) => {
-                    const newValue = Number(event || 0);
-                    setGridRows((prev) => prev.map((r) => (r.id === params.id ? { ...r, removeQty: newValue } : r)));
-                  }}
-                />
-              </Box>
-            ),
-          },
-        ]
+        {
+          field: "removeQty",
+          headerName: "Remove Qty",
+          flex: 1,
+          minWidth: 150,
+          renderCell: (params: GridRenderCellParams) => (
+            <Box sx={{ justifyContent: "center", alignItems: "center", display: "flex", height: "100%", width: "100%" }}>
+              <CommonTextField
+                type="number"
+                value={params.value ?? 0}
+                onChange={(event) => {
+                  const newValue = Number(event || 0);
+                  setGridRows((prev) => prev.map((r) => (r.id === params.id ? { ...r, removeQty: newValue } : r)));
+                }}
+              />
+            </Box>
+          ),
+        },
+      ]
       : []),
     ...(permission?.edit || permission?.delete
       ? [
-          CommonActionColumn<ProductBase>({
-            ...(permission?.edit && {
-              active: (row) => editProduct({ productId: row?._id, isActive: !row.isActive }),
-              editRoute: ROUTES.PRODUCT.ADD_EDIT,
-            }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+        CommonActionColumn<ProductBase>({
+          ...(permission?.edit && {
+            active: (row) => editProduct({ productId: row?._id, isActive: !row.isActive }),
+            editRoute: ROUTES.PRODUCT.ADD_EDIT,
           }),
-        ]
+          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+        }),
+      ]
       : []),
   ];
 
