@@ -16,7 +16,7 @@ import { CategoryFormSchema } from "../../../Utils/ValidationSchemas";
 const CategoryForm = () => {
   const { mutate: addCategory, isPending: isAddLoading } = Mutations.useAddCategory();
   const { mutate: editCategory, isPending: isEditLoading } = Mutations.useEditCategory();
-  const { data: categoryData, isLoading: categoryDataLoading } = Queries.useGetCategoryDropdown();
+  const { data: categoryData, isLoading: categoryDataLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true });
 
   const dispatch = useDispatch();
   const { isCategoryModal } = useAppSelector((state) => state.modal);
@@ -83,7 +83,7 @@ const CategoryForm = () => {
 
             <Grid container spacing={2} sx={{ p: 1 }}>
               <CommonValidationTextField name="name" label="Category Name" required grid={{ xs: 12 }} />
-              <CommonValidationTextField name="code" label="Code" required grid={{ xs: 12 }} />
+              <CommonValidationTextField name="code" label="Code"  grid={{ xs: 12 }} />
               <CommonValidationTextField name="description" label="Description" grid={{ xs: 12 }} />
               <CommonValidationSelect name="parentCategoryId" label="Parent Category" isLoading={categoryDataLoading} options={GenerateOptions(categoryData?.data)} grid={{ xs: 12 }} />
               <CommonFormImageBox name="image" label="Image" type="image" grid={{ xs: 12 }} onUpload={handleUpload} onDelete={() => setFieldValue("image", null)} />
