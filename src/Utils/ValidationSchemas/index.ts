@@ -310,7 +310,7 @@ export const MaterialConsumptionFormSchema = Yup.object({
 
 export const PurchaseOrderFormSchema = Yup.object({
   supplierId: Validation("string", "Supplier"),
-  date: Validation("string", "Order Date"),
+  orderDate: Validation("string", "Order Date"),
   shippingDate: Validation("string", "Shipping Date"),
   taxType: Validation("string", "Tax Type", { required: false }),
   items: Yup.array()

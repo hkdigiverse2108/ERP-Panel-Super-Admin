@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import type { FC } from "react";
-import type { TermsAndCondition } from "../../../Types/PurchaseOrder";
+import type { TermsConditionBase } from "../../../Types/TermsCondition";
 import { CommonCard, CommonModal } from "../../../Components/Common";
 import { CommonButton, CommonValidationTextField } from "../../../Attribute";
 
@@ -9,7 +9,7 @@ import { CommonButton, CommonValidationTextField } from "../../../Attribute";
 interface TermsAndConditionModalProps {
   openModal: boolean;
   setOpenModal: (value: boolean) => void;
-  onSave: (term: TermsAndCondition) => void;
+  onSave: (term: TermsConditionBase) => void;
 }
 
 interface FormValues {
@@ -22,8 +22,8 @@ const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ openModal, se
   };
 
   const handleSubmit = (values: FormValues, { resetForm }: FormikHelpers<FormValues>) => {
-    const newTerm: TermsAndCondition = {
-      _id: Date.now().toString(), 
+    const newTerm: TermsConditionBase = {
+      _id: Date.now().toString(),
       termsCondition: values.termsCondition,
     };
 

@@ -19,7 +19,7 @@ const ItemForm = () => {
 
   const { data } = location.state || {};
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
-  const { data: ProductData, isLoading: ProductDataLoading } = Queries.useGetProductDropdown();
+  const { data: ProductData, isLoading: ProductDataLoading } = Queries.useGetProduct();
   const { data: UOMData, isLoading: UOMDataLoading } = Queries.useGetUomDropdown();
 
   const { mutate: addStock, isPending: isAddLoading } = Mutations.useAddStock();
@@ -68,7 +68,7 @@ const ItemForm = () => {
                   <CommonCard hideDivider>
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       <CommonValidationSelect name="companyId" label="Select company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, sm: 6, xl: 4 }} required />
-                      <CommonValidationSelect name="productId" label="Select Product" options={GenerateOptions(ProductData?.data)} isLoading={ProductDataLoading} grid={{ xs: 12, sm: 6, xl: 4 }} required />
+                      <CommonValidationSelect name="productId" label="Select Product" options={GenerateOptions(ProductData?.data?.product_data)} isLoading={ProductDataLoading} grid={{ xs: 12, sm: 6, xl: 4 }} required />
                       <CommonValidationSelect name="uomId" label="Select UOM" options={GenerateOptions(UOMData?.data)} isLoading={UOMDataLoading} grid={{ xs: 12, sm: 6, xl: 4 }} required />
                       <CommonValidationTextField name="landingCost" label="Landing Cost" type="number" required grid={{ xs: 12, sm: 6, xl: 4 }} />
                       <CommonValidationTextField name="purchasePrice" label="Purchase Price" type="number" required grid={{ xs: 12, sm: 6, xl: 4 }} />

@@ -222,10 +222,10 @@ export const ORDER_STATUS = [
   { label: "CANCELLED", value: "CANCELLED" },
 ];
 export const TAX_TYPE = [
-  { label: "GST", value: "GST" },
-  { label: "CGST", value: "CGST" },
-  { label: "SGST", value: "SGST" },
-  { label: "IGST", value: "IGST" },
+  { label: "Default", value: "default" },
+  { label: "Tax Inclusive", value: "taxInclusive" },
+  { label: "Tax Exclusive", value: "taxExclusive" },
+  { label: "Out Of Scope", value: "outOfScope" },
 ];
 
 export const BANK_UI_FIELDS: (keyof BranchFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber"];
