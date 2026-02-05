@@ -19,7 +19,7 @@ const CommonTable = <T,>({ data, columns, rowKey, getRowClass, showFooter }: Com
       {/* ---------- BODY ---------- */}
       <tbody>
         {data.map((row, i) => (
-          <tr key={rowKey(row)} className={`text-gray-600 dark:text-gray-300 ${getRowClass?.(row, i)}`}>
+          <tr key={rowKey(row, i)} className={`text-gray-600 dark:text-gray-300 ${getRowClass?.(row, i)}`}>
             {columns.map((col) => (
               <td key={col.key} className={`p-2 text-center ${col.bodyClass}`}>
                 {col.render ? col.render(row, i) : (row as Record<string, string | number>)[col.key]}

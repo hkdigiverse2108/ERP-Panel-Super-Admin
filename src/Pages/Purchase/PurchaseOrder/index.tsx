@@ -2,20 +2,24 @@ import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn, CommonStatsCard } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BREADCRUMBS } from "../../../Data";
+import { BREADCRUMBS, ORDER_STATUS } from "../../../Data";
 import type { AppGridColDef, PurchaseOrderBase } from "../../../Types";
 import { useDataGrid } from "../../../Utils/Hooks";
-import { FormatDate } from "../../../Utils";
+import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 
 const PurchaseOrder = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const navigate = useNavigate();
 
   const { data: purchaseOrderData, isLoading: purchaseOrderDataLoading, isFetching: purchaseOrderDataFetching } = Queries.useGetPurchaseOrder(params);
   const { mutate: deletePurchaseOrderMutate } = Mutations.useDeletePurchaseOrder();
   const { mutate: editPurchaseOrder, isPending: isEditLoading } = Mutations.useEditPurchaseOrder();
+
+  // Filter Data Queries
+  const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
+  const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier" });
 
   const allPurchaseOrder = useMemo(() => purchaseOrderData?.data?.purchaseOrder_data?.map((purchaseOrder) => ({ ...purchaseOrder, id: purchaseOrder._id })) || [], [purchaseOrderData]);
 
@@ -57,12 +61,27 @@ const PurchaseOrder = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
   };
-  
+
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(companyData?.data), companyDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Supplier", "supplierFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(supplierData?.data), supplierDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ORDER_STATUS, false, { xs: 12, sm: 6, md: 3 }),
+  ];
+
+  const stats = [
+    { label: "All Orders", value: totalRows || 0, color: "primary" },
+    { label: "Delivered", value: allPurchaseOrder.filter((item) => item.status === "delivered").length, color: "success" },
+    { label: "Exceed", value: allPurchaseOrder.filter((item) => item.status === "exceed").length, color: "error" },
+    { label: "Completed", value: allPurchaseOrder.filter((item) => item.status === "completed").length, color: "info" },
+    { label: "Cancelled", value: allPurchaseOrder.filter((item) => item.status === "cancelled").length, color: "warning" },
+  ];
 
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE_ORDER.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.PURCHASE_ORDER.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <CommonStatsCard stats={stats} grid={{ xs: 6, sm: 4, md: 2.4 }} />
+        <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

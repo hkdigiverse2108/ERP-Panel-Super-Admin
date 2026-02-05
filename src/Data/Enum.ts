@@ -216,16 +216,18 @@ export const ACCOUNT_TYPE = [
   { label: "Other", value: "other" },
 ];
 export const ORDER_STATUS = [
-  { label: "PENDING", value: "PENDING" },
-  { label: "IN_PROGRESS", value: "IN_PROGRESS" },
-  { label: "COMPLETED", value: "COMPLETED" },
-  { label: "CANCELLED", value: "CANCELLED" },
+  { label: "Exceed", value: "exceed" },
+  { label: "In Progress", value: "in_progress" },
+  { label: "Delivered", value: "delivered" },
+  { label: "Partially Delivered", value: "partially_delivered" },
+  { label: "Completed", value: "completed" },
+  { label: "Cancelled", value: "cancelled" },
 ];
 export const TAX_TYPE = [
   { label: "Default", value: "default" },
-  { label: "Tax Inclusive", value: "taxInclusive" },
-  { label: "Tax Exclusive", value: "taxExclusive" },
-  { label: "Out Of Scope", value: "outOfScope" },
+  { label: "Tax Inclusive", value: "tax_inclusive"  },
+  { label: "Tax Exclusive", value: "tax_exclusive" },
+  { label: "Out Of Scope", value: "out_of_scope" },
 ];
 
 export const BANK_UI_FIELDS: (keyof BranchFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber"];

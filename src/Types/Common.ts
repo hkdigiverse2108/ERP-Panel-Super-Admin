@@ -218,7 +218,7 @@ export interface CommonTableColumn<T> {
 export interface CommonTableProps<T> {
   data: T[];
   columns: CommonTableColumn<T>[];
-  rowKey: (row: T) => string;
+  rowKey: (row: T, index: number) => string;
   getRowClass?: (row: T, index: number) => string;
   showFooter?: boolean;
 }
