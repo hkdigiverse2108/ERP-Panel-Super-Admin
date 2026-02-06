@@ -2,9 +2,9 @@ import { Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import type { FC } from "react";
 import * as Yup from "yup";
-import type { TermsConditionBase } from "../../../Types/TermsCondition";
-import { CommonCard, CommonModal } from "../../../Components/Common";
 import { CommonButton, CommonValidationTextField } from "../../../Attribute";
+import { CommonCard, CommonModal } from "../../../Components/Common";
+import type { TermsConditionBase } from "../../../Types/TermsCondition";
 
 
 interface TermsAndConditionModalProps {
