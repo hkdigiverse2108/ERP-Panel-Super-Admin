@@ -23,14 +23,7 @@ const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate
       <Grid container spacing={2}>
         {/* BASIC DETAILS */}
         <CommonCard title="Purchase Order Details" grid={{ xs: 12 }}>
-          <Box
-            sx={{
-              p: 2,
-              display: "grid",
-              gridTemplateColumns: { xs: "1fr", md: "340px 1fr" },
-              gap: 2,
-            }}
-          >
+          <Box sx={{ p: 2, display: "grid", gridTemplateColumns: { xs: "1fr", md: "340px 1fr" }, gap: 2 }}>
             {/* ================= LEFT SIDE ================= */}
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
               <CommonValidationSelect
@@ -73,13 +66,7 @@ const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate
             </Box>
 
             {/* ================= RIGHT SIDE ================= */}
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: { xs: "1fr", md: "repeat(4, 1fr)" },
-                gap: 2,
-              }}
-            >
+            <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: 2 }}>
               <CommonValidationSelect
                 name="companyId"
                 label="Select Company"
@@ -197,7 +184,7 @@ const PurchaseOrderForm = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE_ORDER[pageMode]} breadcrumbs={BREADCRUMBS.PURCHASE_ORDER[pageMode]} />
 
-      <Box sx={{ p: 3, mb: 8 }}>
+      <Box sx={{ p: 3 }}>
         <Formik initialValues={initialValues} validationSchema={PurchaseOrderFormSchema} onSubmit={handleSubmit}>
           {(formikProps) => (
             <PurchaseOrderFormContent

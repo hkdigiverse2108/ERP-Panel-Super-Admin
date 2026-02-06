@@ -1,4 +1,4 @@
-import { Add, Clear } from "@mui/icons-material";
+import { Add, Clear, Delete } from "@mui/icons-material";
 import { Box, Tab, Tabs } from "@mui/material";
 import { FieldArray, useFormikContext } from "formik";
 import { useEffect, useRef, useState } from "react";
@@ -8,6 +8,7 @@ import { CommonCard, CommonTabPanel } from "../../../Components/Common";
 import CommonTable from "../../../Components/Common/CommonTable";
 import { GenerateOptions } from "../../../Utils";
 import type { PurchaseOrderFormValues } from "../../../Types";
+import TaxDetailsTable from "./TaxDetailsTable";
 import TermsConditionModal from "./TermsConditionModal";
 
 const ProductSelectCell = ({ index, productData, taxData, isLoading }: any) => {
@@ -18,9 +19,9 @@ const ProductSelectCell = ({ index, productData, taxData, isLoading }: any) => {
     useEffect(() => {
         if (productId && productId !== prevProductId.current) {
             // Product Changed
-            const product = productData?.data?.product_data?.find((p: any) => p._id === productId);
+            const productList = productData?.data?.product_data || productData?.data || [];
+            const product = productList?.find((p: any) => p._id === productId);
             if (product) {
-
                 const taxId = typeof product.purchaseTaxId === "object" ? (product.purchaseTaxId as any)?._id : product.purchaseTaxId;
                 const tax = taxData?.data?.find((t: any) => t._id === taxId);
 
@@ -34,28 +35,36 @@ const ProductSelectCell = ({ index, productData, taxData, isLoading }: any) => {
         }
     }, [productId, productData, taxData, setFieldValue, index]);
 
-    return <CommonValidationSelect name={`items.${index}.productId`} label="Search Product" isLoading={isLoading} options={GenerateOptions(productData?.data?.product_data)} required />;
+    return <CommonValidationSelect name={`items.${index}.productId`} label="Search Product" isLoading={isLoading} options={GenerateOptions(productData?.data?.product_data || productData?.data)} required />;
 };
 
 const PurchaseOrderProductAndBilling = () => {
     const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
     const [tabValue, setTabValue] = useState(0);
     const [openTermsModal, setOpenTermsModal] = useState(false);
+    const [showTaxDetails, setShowTaxDetails] = useState(false);
+    // const { data: productData, isLoading: productDataLoading } = Queries.useGetProduct({ companyFilter: values.companyId || undefined });
+    const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown({ companyFilter: values.companyId || undefined });
 
-    const { data: productData, isLoading: productDataLoading } = Queries.useGetProduct({ supplierId: values.supplierId });
     const { data: termsData, refetch: refetchTerms } = Queries.useGetTermsConditionDropdown();
     const { data: taxData } = Queries.useGetTaxDropdown();
     const { mutate: addTerm } = Mutations.useAddTermsCondition();
+    const { mutate: deleteTerm } = Mutations.useDeleteTermsCondition();
+
+    const handleDeleteTerm = (id: string) => {
+        deleteTerm(id, {
+            onSuccess: () => {
+                refetchTerms();
+            },
+        });
+    };
 
     const handleSaveTerm = (term: any) => {
-        addTerm(
-            { termsCondition: term.termsCondition } as any,
-            {
-                onSuccess: () => {
-                    refetchTerms();
-                },
-            }
-        );
+        addTerm({ termsCondition: term.termsCondition } as any, {
+            onSuccess: () => {
+                refetchTerms();
+            },
+        });
     };
 
     // Logic Sync - from previous PurchaseOrderBilling
@@ -118,29 +127,31 @@ const PurchaseOrderProductAndBilling = () => {
                                             bodyClass: "text-center",
                                             render: (_row: any, index: number) => (
                                                 <Box display="flex" justifyContent="center" gap={1}>
-                                                    <CommonButton
-                                                        size="small"
-                                                        variant="outlined"
-                                                        onClick={() =>
-                                                            push({
-                                                                productId: "",
-                                                                qty: 1,
-                                                                freeQty: 0,
-                                                                mrp: 0,
-                                                                sellingPrice: 0,
-                                                                discount1: 0,
-                                                                discount2: 0,
-                                                                taxableAmount: 0,
-                                                                unitCost: 0,
-                                                                tax: "0",
-                                                                landingCost: "0",
-                                                                margin: "0",
-                                                                total: 0,
-                                                            })
-                                                        }
-                                                    >
-                                                        <Add fontSize="small" />
-                                                    </CommonButton>
+                                                    {index === (values.items?.length || 0) - 1 && (
+                                                        <CommonButton
+                                                            size="small"
+                                                            variant="outlined"
+                                                            onClick={() =>
+                                                                push({
+                                                                    productId: "",
+                                                                    qty: 1,
+                                                                    freeQty: 0,
+                                                                    mrp: 0,
+                                                                    sellingPrice: 0,
+                                                                    discount1: 0,
+                                                                    discount2: 0,
+                                                                    taxableAmount: 0,
+                                                                    unitCost: 0,
+                                                                    tax: "0",
+                                                                    landingCost: "0",
+                                                                    margin: "0",
+                                                                    total: 0,
+                                                                })
+                                                            }
+                                                        >
+                                                            <Add fontSize="small" />
+                                                        </CommonButton>
+                                                    )}
 
                                                     {(values.items?.length || 0) > 1 && (
                                                         <CommonButton size="small" color="error" variant="outlined" onClick={() => remove(index)}>
@@ -154,26 +165,19 @@ const PurchaseOrderProductAndBilling = () => {
                                         {
                                             key: "sr",
                                             header: "#",
+                                            bodyClass: "align-middle text-center",
                                             render: (_row: any, index: number) => index + 1,
                                         },
                                         {
                                             key: "productId",
-                                            header: "Product",
+                                            header: "Product*",
                                             bodyClass: "min-w-[240px]",
-                                            render: (_row: any, index: number) => (
-                                                <ProductSelectCell
-                                                    index={index}
-                                                    productData={productData}
-                                                    taxData={taxData}
-                                                    isLoading={productDataLoading}
-                                                />
-                                            ),
+                                            render: (_row: any, index: number) => <ProductSelectCell index={index} productData={productData} taxData={taxData} isLoading={productDataLoading} />,
                                         },
                                         {
                                             key: "qty",
                                             header: "Qty",
                                             render: (_row: any, index: number) => <CommonValidationTextField name={`items.${index}.qty`} type="number" />,
-
                                         },
                                         {
                                             key: "tax",
@@ -185,13 +189,11 @@ const PurchaseOrderProductAndBilling = () => {
                                             key: "landingCost",
                                             header: "Landing",
                                             render: (_row: any, index: number) => <CommonValidationTextField name={`items.${index}.landingCost`} type="number" />,
-
                                         },
                                         {
                                             key: "margin",
                                             header: "Margin",
                                             render: (_row: any, index: number) => <CommonValidationTextField name={`items.${index}.margin`} type="number" />,
-
                                         },
                                         {
                                             key: "total",
@@ -214,9 +216,7 @@ const PurchaseOrderProductAndBilling = () => {
                             <Box>
                                 <Box display="flex" justifyContent="space-between" mb={2}>
                                     <Box fontWeight={600}>Terms & Conditions</Box>
-                                    <CommonButton startIcon={<Add />} onClick={() => setOpenTermsModal(true)} variant="outlined" title="new term">
-
-                                    </CommonButton>
+                                    <CommonButton startIcon={<Add />} onClick={() => setOpenTermsModal(true)} variant="outlined" title="new term"></CommonButton>
                                 </Box>
 
                                 <Box sx={{ overflowX: "auto" }}>
@@ -225,16 +225,19 @@ const PurchaseOrderProductAndBilling = () => {
                                             <tr>
                                                 <th className="p-2 w-10">#</th>
                                                 <th className="p-2 text-left">Condition</th>
+                                                <th className="p-2 w-10 text-center">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {termsData?.data?.map((term, index) => (
-                                                <tr
-                                                    key={term._id}
-                                                    className="text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark border-b border-gray-100 dark:border-gray-700"
-                                                >
+                                                <tr key={term._id} className="text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark border-b border-gray-100 dark:border-gray-700">
                                                     <td className="p-2">{index + 1}</td>
                                                     <td className="p-2">{term.termsCondition}</td>
+                                                    <td className="p-2 text-center">
+                                                        <CommonButton size="small" color="error" variant="text" onClick={() => handleDeleteTerm(term._id)}>
+                                                            <Delete fontSize="small" />
+                                                        </CommonButton>
+                                                    </td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -248,7 +251,6 @@ const PurchaseOrderProductAndBilling = () => {
                                     Note
                                 </Box>
                                 <CommonValidationTextField name="notes" multiline rows={4} placeholder="Enter a note (max 200 characters)" />
-                               
                             </Box>
                         </Box>
                     </CommonTabPanel>
@@ -256,56 +258,60 @@ const PurchaseOrderProductAndBilling = () => {
             </CommonCard>
 
             {/* BILLING SUMMARY - Separated outside TabPanel */}
-            <CommonCard grid={{ xs: 12 }}>
-                <Box sx={{ p: 2, display: "flex", justifyContent: "flex-end" }}>
-                    <Box className="border border-gray-200 text-sm w-full md:w-1/3">
+            <CommonCard hideDivider grid={{ xs: 12 }}>
+                <Box sx={{ p: 2, display: "flex", gap: 2, flexDirection: { xs: "column", md: "row" }, justifyContent: "space-between", alignItems: "flex-start" }}>
+                    <Box sx={{ width: { xs: "100%", md: "60%" } }}>
+                        {showTaxDetails && <TaxDetailsTable items={values.items || []} />}
+                    </Box>
+
+                    <Box className="border text-sm w-full md:w-1/3">
                         {/* Row 1: Flat Discount */}
-                        <Box className="grid grid-cols-[140px_1fr] border-b border-gray-200 dark:border-gray-700">
+                        <Box className="grid grid-cols-[150px_1fr] border-b border-gray-200 dark:border-gray-700">
                             <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex items-center justify-end font-medium">Flat Discount</Box>
                             <Box className="p-1 px-2">
-                                <CommonValidationTextField name="flatDiscount" label="" type="number" isCurrency sx={{ "& input": { textAlign: "right" } }} />
+                                <CommonValidationTextField name="flatDiscount" label="" type="number" size="small" sx={{ "& input": { textAlign: "left" } }} isCurrency currencyDisabled />
                             </Box>
                         </Box>
 
                         {/* Gross Amount */}
-                        <Box className="grid grid-cols-[140px_1fr] border-b">
+                        <Box className="grid grid-cols-[150px_1fr] border-b">
                             <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium">Gross Amount</Box>
                             <Box className="p-2 text-right font-medium">{summary.grossAmount.toFixed(2)}</Box>
                         </Box>
 
                         {/* Discount */}
-                        <Box className="grid grid-cols-[140px_1fr] border-b">
+                        <Box className="grid grid-cols-[150px_1fr] border-b">
                             <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium">Discount</Box>
                             <Box className="p-2 text-right">{summary.discountAmount.toFixed(2)}</Box>
                         </Box>
 
                         {/* Taxable Amount */}
-                        <Box className="grid grid-cols-[140px_1fr] border-b">
+                        <Box className="grid grid-cols-[150px_1fr] border-b">
                             <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium">Taxable Amount</Box>
                             <Box className="p-2 text-right">{summary.taxableAmount.toFixed(2)}</Box>
                         </Box>
 
                         {/* Tax */}
-                        <Box className="grid grid-cols-[140px_1fr] border-b">
-                            <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium text-blue-500">Tax (%)</Box>
-                            <Box className="p-1 px-2 flex justify-end gap-2 items-center">
-                                <Box width="80px">
-                                    <CommonValidationTextField name="tax" label="" type="number" sx={{ "& input": { textAlign: "right" } }} disabled />
-                                </Box>
-                                <span className="font-medium">{summary.taxAmount.toFixed(2)}</span>
+                        <Box className="grid grid-cols-[150px_1fr] border-b cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => setShowTaxDetails(!showTaxDetails)}>
+                            <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium text-blue-500 gap-1 items-center">
+                                Tax (%)
+                                <span className="text-gray-900 dark:text-gray-100 font-bold ml-1">{values.tax || 0}</span>
+                            </Box>
+                            <Box className="p-2 flex justify-end items-center">
+                                <span className="font-medium align-middle">{summary.taxAmount.toFixed(2)}</span>
                             </Box>
                         </Box>
 
                         {/* Roundoff */}
-                        <Box className="grid grid-cols-[140px_1fr] border-b">
+                        <Box className="grid grid-cols-[150px_1fr] border-b">
                             <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium text-blue-500">Roundoff</Box>
                             <Box className="p-1 px-2">
-                                <CommonValidationTextField name="roundOff" label="" type="number" sx={{ "& input": { textAlign: "right" } }} />
+                                <CommonValidationTextField name="roundOff" label="" type="number" size="small" sx={{ "& input": { textAlign: "right" } }} />
                             </Box>
                         </Box>
 
                         {/* Net Amount */}
-                        <Box className="grid grid-cols-[140px_1fr]">
+                        <Box className="grid grid-cols-[150px_1fr]">
                             <Box className="bg-gray-50 dark:bg-gray-800 p-3 flex justify-end font-bold text-lg">Net Amount</Box>
                             <Box className="p-3 text-right font-bold text-lg">{summary.netAmount.toFixed(2)}</Box>
                         </Box>
