@@ -25,7 +25,6 @@ const ProductForm = () => {
 
   const { data } = location.state || {};
   const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true });
-  const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
   const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true });
 
   const { mutate: addProduct, isPending: isAddLoading } = Mutations.useAddProduct();
@@ -42,12 +41,8 @@ const ProductForm = () => {
       hsnCode: data?.hsnCode || "",
       categoryId: data?.categoryId?._id || "",
       subCategoryId: data?.subCategoryId?._id || "",
-      purchaseTaxId: data?.purchaseTaxId?._id || "",
-      isPurchaseTaxIncluding: data?.isPurchaseTaxIncluding || false,
       brandId: data?.brandId?._id || "",
       subBrandId: data?.subBrandId?._id || "",
-      salesTaxId: data?.salesTaxId?._id || "",
-      isSalesTaxIncluding: data?.isSalesTaxIncluding || false,
       cessPercentage: data?.cessPercentage || null,
       // uomId: data?.uomId || "",
       manageMultipleBatch: data?.manageMultipleBatch || true,
@@ -62,20 +57,6 @@ const ProductForm = () => {
       nutrition: [...(data?.nutrition?.map((nutrition: NutritionInfo) => ({ name: nutrition.name, value: nutrition.value })) || [{ name: "", value: "" }])],
       netWeight: data?.netWeight || null,
       masterQty: data?.masterQty || null,
-      purchasePrice: data?.purchasePrice || null,
-      landingCost: data?.landingCost || null,
-      mrp: data?.mrp || null,
-      sellingDiscount: data?.sellingDiscount || null,
-      sellingPrice: data?.sellingPrice || null,
-      sellingMargin: data?.sellingMargin || null,
-      retailerDiscount: data?.retailerDiscount || null,
-      retailerPrice: data?.retailerPrice || null,
-      retailerMargin: data?.retailerMargin || null,
-      wholesalerDiscount: data?.wholesalerDiscount || null,
-      wholesalerMargin: data?.wholesalerMargin || null,
-      wholesalerPrice: data?.wholesalerPrice || null,
-      minimumQty: data?.minimumQty || null,
-      openingQty: data?.openingQty || null,
       images: data?.images || [],
       isActive: data?.isActive || true,
     }),
@@ -151,14 +132,9 @@ const ProductForm = () => {
                       <CommonValidationTextField name="hsnCode" label="HSN Code" grid={{ xs: 12, sm: 6, xl: 3 }} />
                       <CommonValidationSelect name="categoryId" label="Category" isLoading={CategoryDataLoading} options={GenerateOptions(CategoryData?.data)} grid={{ xs: 12, sm: 6, xl: 3 }} required />
                       <SubCategorySelect id={values.categoryId || ""} />
-                      <CommonValidationSelect name="purchaseTaxId" label="Purchase Tax" isLoading={TaxDataLoading} syncFieldName="salesTaxId" options={GenerateOptions(TaxData?.data)} grid={{ xs: 12, sm: 6, xl: 3 }} required />
-                      <CommonValidationSwitch name="isPurchaseTaxIncluding" label="Purchase Tax Including" grid={{ xs: 12, sm: 6, xl: 3 }} />
                       <CommonValidationSelect name="brandId" label="Brand" isLoading={BrandsDataLoading} options={GenerateOptions(BrandsData?.data)} grid={{ xs: 12, sm: 6, xl: 3 }} required />
                       <SubBrandSelect id={values.brandId || ""} />
-                      <CommonValidationSelect name="salesTaxId" label="Sales Tax" isLoading={TaxDataLoading} options={GenerateOptions(TaxData?.data)} grid={{ xs: 12, sm: 6, xl: 3 }} required />
-                      <CommonValidationSwitch name="isSalesTaxIncluding" label="Sales Tax Including" grid={{ xs: 12, sm: 6, xl: 3 }} />
                       <CommonValidationTextField name="cessPercentage" label="cess Percentage" type="number" grid={{ xs: 12, sm: 6, xl: 3 }} />
-                      {/* <CommonValidationSelect name="uomId" label="Select UOM" options={TAX_OPTIONS} grid={{ xs: 12, sm: 6, xl: 3 }} required /> */}
                       <CommonValidationTextField name="ingredients" label="ingredients" grid={{ xs: 12, sm: 6, xl: 3 }} />
                       <CommonValidationSwitch name="manageMultipleBatch" label="Manage Multiple Batch" syncFieldName="hasExpiry" grid={{ xs: 12, sm: 6, xl: 3 }} />
                       {values.manageMultipleBatch && <CommonValidationSwitch name="hasExpiry" label="hasExpiry" grid={{ xs: 12, sm: 6, xl: 3 }} />}
@@ -201,25 +177,6 @@ const ProductForm = () => {
                       </Grid>
                       <CommonValidationTextField name="netWeight" label="Net Weight" type="number" grid={{ xs: 12, md: 6 }} />
                       <CommonValidationTextField name="masterQty" label="master Qty" type="number" grid={{ xs: 12, md: 6 }} />
-                    </Grid>
-                  </CommonCard>
-
-                  <CommonCard title="Pricing Details" grid={{ xs: 12 }}>
-                    <Grid container spacing={2} sx={{ p: 2 }}>
-                      <CommonValidationTextField name="purchasePrice" label="Purchase Price" type="number" required grid={{ xs: 12, sm: 6, xl: 3 }} />
-                      <CommonValidationTextField name="landingCost" label="Landing Cost" type="number" required grid={{ xs: 12, sm: 6, xl: 3 }} />
-                      <CommonValidationTextField name="mrp" label="MRP" type="number" required grid={{ xs: 12, sm: 6, xl: 3 }} />
-                      <CommonValidationTextField name="sellingDiscount" label="selling Discount" type="number" required grid={{ xs: 12, sm: 6, xl: 3 }} isCurrency currencyDisabled />
-                      <CommonValidationTextField name="sellingPrice" label="Selling Price" type="number" required grid={{ xs: 12, sm: 6, xl: 3 }} />
-                      <CommonValidationTextField name="sellingMargin" label="selling Margin" type="number" required grid={{ xs: 12, sm: 6, xl: 3 }} isCurrency currencyDisabled />
-                      <CommonValidationTextField name="retailerDiscount" label="retailer Discount" type="number" required grid={{ xs: 12, sm: 6, xl: 3 }} isCurrency currencyDisabled />
-                      <CommonValidationTextField name="retailerPrice" label="retailer Price" type="number" required grid={{ xs: 12, sm: 6, xl: 3 }} />
-                      <CommonValidationTextField name="retailerMargin" label="retailer Margin" type="number" required grid={{ xs: 12, sm: 6, xl: 3 }} isCurrency currencyDisabled />
-                      <CommonValidationTextField name="wholesalerDiscount" label="wholesaler Discount" type="number" required grid={{ xs: 12, sm: 6, xl: 3 }} isCurrency currencyDisabled />
-                      <CommonValidationTextField name="wholesalerPrice" label="wholesaler Price" type="number" required grid={{ xs: 12, sm: 6, xl: 3 }} />
-                      <CommonValidationTextField name="wholesalerMargin" label="wholesaler Margin" type="number" required grid={{ xs: 12, sm: 6, xl: 3 }} isCurrency currencyDisabled />
-                      <CommonValidationTextField name="minimumQty" label="minimum Qty" type="number" required grid={{ xs: 12, sm: 6, xl: 3 }} />
-                      <CommonValidationTextField name="openingQty" label="opening Qty" type="number" grid={{ xs: 12, sm: 6, xl: 3 }} />
                       {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                     </Grid>
                   </CommonCard>

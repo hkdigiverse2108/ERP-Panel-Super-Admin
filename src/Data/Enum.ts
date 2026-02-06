@@ -6,7 +6,6 @@ export const RECIPE_TYPE = ["assemble", "unassemble"] as const;
 
 export const PRODUCT_STATUS = ["active", "inactive"] as const;
 // export const ACCOUNT_TYPE = ["bank", "cash", "other"] as const;
-export const ACCOUNT_NATURE = ["assets", "liabilities", "income", "expenses"] as const;
 export const CONTACT_TYPE = ["customer", "supplier", "transporter", "both"] as const;
 export const CUSTOMER_TYPE = ["retailer", "wholesaler", "merchant", "other"] as const;
 export const SUPPLIER_TYPE = ["manufacturer", "stockiest", "trader", "other"] as const;
@@ -231,3 +230,11 @@ export const TAX_TYPE = [
 ];
 
 export const BANK_UI_FIELDS: (keyof BranchFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber"];
+
+export const ACCOUNT_NATURE = [
+  { label: "Assets", value: "assets" },
+  { label: "Liabilities", value: "liabilities" },
+  { label: "Income", value: "income" },
+  { label: "Expenses", value: "expenses" },
+];
+
