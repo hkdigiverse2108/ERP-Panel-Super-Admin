@@ -1,45 +1,30 @@
 import { Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import type { FC } from "react";
-import * as Yup from "yup";
 import { CommonButton, CommonValidationTextField } from "../../../Attribute";
 import { CommonCard, CommonModal } from "../../../Components/Common";
-import type { TermsConditionBase } from "../../../Types/TermsCondition";
-
-
-interface TermsAndConditionModalProps {
-  openModal: boolean;
-  setOpenModal: (value: boolean) => void;
-  onSave: (term: TermsConditionBase) => void;
-}
-
-interface FormValues {
-  termsCondition: string;
-}
+import type { TermsAndConditionModalProps, TermsConditionBase, TermsConditionFormValues } from "../../../Types/TermsCondition";
+import { PurchaseOrderFormSchema } from "../../../Utils/ValidationSchemas";
 
 const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ openModal, setOpenModal, onSave }) => {
-  const initialValues: FormValues = {
+  const initialValues: TermsConditionFormValues = {
     termsCondition: "",
   };
 
-  const validationSchema = Yup.object().shape({
-    termsCondition: Yup.string().required("Terms & Condition is required"),
-  });
-
-  const handleSubmit = (values: FormValues, { resetForm }: FormikHelpers<FormValues>) => {
+  const handleSubmit = (values: TermsConditionFormValues, { resetForm }: FormikHelpers<TermsConditionFormValues>) => {
     const newTerm: TermsConditionBase = {
       _id: Date.now().toString(),
       termsCondition: values.termsCondition,
+      isActive: true, // Assuming default active
+      isDefault: false
     };
-
     onSave(newTerm);
     resetForm();
     setOpenModal(false);
   };
-
   return (
     <CommonModal title="Add Terms & Conditions" isOpen={openModal} onClose={() => setOpenModal(false)} className="max-w-125 m-2 sm:m-5">
-      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
+      <Formik initialValues={initialValues} validationSchema={PurchaseOrderFormSchema} onSubmit={handleSubmit}>
         {({ dirty, isValid }) => (
           <Form noValidate>
             <Grid container spacing={2}>

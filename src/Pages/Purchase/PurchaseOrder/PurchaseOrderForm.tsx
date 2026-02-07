@@ -184,7 +184,7 @@ const PurchaseOrderForm = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE_ORDER[pageMode]} breadcrumbs={BREADCRUMBS.PURCHASE_ORDER[pageMode]} />
 
-      <Box sx={{ p: 3 }}>
+      <Box sx={{ p: 3, pb: 14 }}>
         <Formik initialValues={initialValues} validationSchema={PurchaseOrderFormSchema} onSubmit={handleSubmit}>
           {(formikProps) => (
             <PurchaseOrderFormContent
