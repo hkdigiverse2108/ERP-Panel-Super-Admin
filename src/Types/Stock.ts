@@ -1,8 +1,13 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 
 export interface StockFormValues {
+  companyId?: string;
   productId?: string;
   uomId?: string;
+  purchaseTaxId?: string;
+  salesTaxId?: string;
+  isPurchaseTaxIncluding?: boolean;
+  isSalesTaxIncluding?: boolean;
   purchasePrice?: number | null;
   landingCost?: number | null;
   mrp?: number | null;

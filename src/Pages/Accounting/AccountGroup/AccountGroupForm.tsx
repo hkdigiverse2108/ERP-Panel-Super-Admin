@@ -9,6 +9,7 @@ import { useAppSelector } from "../../../Store/hooks";
 import { setAccountGroupModal } from "../../../Store/Slices/ModalSlice";
 import type { AccountGroupFormValues } from "../../../Types";
 import { AccountGroupFormSchema, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
+import { ACCOUNT_NATURE } from "../../../Data";
 
 const AccountGroupForm = () => {
   const { isAccountGroupModal } = useAppSelector((state) => state.modal);
@@ -26,6 +27,7 @@ const AccountGroupForm = () => {
 
   const initialValues: AccountGroupFormValues = {
     name: isEdit?.name || "",
+    nature: isEdit?.nature || "",
     parentGroupId: isEdit?.parentGroupId?._id || "",
     isActive: isEdit?.isActive ?? true,
   };
@@ -71,6 +73,7 @@ const AccountGroupForm = () => {
           <Form noValidate>
             <Grid container spacing={2} sx={{ p: 1 }}>
               <CommonValidationTextField name="name" label="Group Name" required grid={{ xs: 12 }} />
+              <CommonValidationSelect name="nature" label="Group Nature" options={ACCOUNT_NATURE} grid={{ xs: 12 }} required />
               <CommonValidationSelect name="parentGroupId" label="Parent Group" isLoading={AccountGroupDataLoading} options={GenerateOptions(AccountGroupData?.data)} grid={{ xs: 12 }} />
               <GroupDetails value={values.parentGroupId} />
 
