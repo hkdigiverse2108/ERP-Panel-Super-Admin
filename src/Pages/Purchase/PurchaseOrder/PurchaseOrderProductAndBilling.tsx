@@ -1,9 +1,9 @@
-import { Add, Clear, Delete } from "@mui/icons-material";
+import { Add, Clear, Delete, Edit } from "@mui/icons-material";
 import { Box, Tab, Tabs } from "@mui/material";
 import { FieldArray, useFormikContext } from "formik";
 import { useEffect, useRef, useState } from "react";
 import { Mutations, Queries } from "../../../Api";
-import { CommonButton, CommonValidationTextField, CommonValidationSelect } from "../../../Attribute";
+import { CommonButton, CommonTextField, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
 import { CommonCard, CommonTabPanel } from "../../../Components/Common";
 import CommonTable from "../../../Components/Common/CommonTable";
 import { GenerateOptions } from "../../../Utils";
@@ -27,10 +27,11 @@ const ProductSelectCell = ({ index, productData, taxData, isLoading }: any) => {
 
                 if (tax && tax.percentage !== undefined) {
                     setFieldValue(`items.${index}.tax`, tax.percentage);
+                    setFieldValue(`items.${index}.taxName`, tax.name || tax.taxName || "");
                 }
                 setFieldValue(`items.${index}.qty`, 1);
                 // Set Unit Cost from product (assuming costPrice or landingCost as base)
-                // If product has landingCost saved, we might treat it as UnitCost for now? 
+                // If product has landingCost saved, we might treat it as UnitCost for now?
                 // Or default to 0.
                 setFieldValue(`items.${index}.unitCost`, product.landingCost || 0);
                 setFieldValue(`items.${index}.mrp`, product.mrp || 0);
@@ -39,7 +40,40 @@ const ProductSelectCell = ({ index, productData, taxData, isLoading }: any) => {
         }
     }, [productId, productData, taxData, setFieldValue, index]);
 
-    return <CommonValidationSelect name={`items.${index}.productId`} label="Search Product" isLoading={isLoading} options={GenerateOptions(productData?.data?.product_data || productData?.data)} required />;
+    return <CommonValidationSelect name={`items.${index}.productId`} label="Search Product" isLoading={isLoading} options={GenerateOptions(productData?.data?.product_data || productData?.data)} required size="small" />;
+};
+
+const TotalInputCell = ({ index }: any) => {
+    const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
+    const item = values.items?.[index];
+
+    if (!item) return null;
+
+    const handleTotalChange = (value: any) => {
+        const newTotal = Number(value) || 0;
+        setFieldValue(`items.${index}.total`, newTotal);
+
+        const qty = Number(item.qty) || 0;
+        const taxPercent = Number(item.tax) || 0;
+        const isTaxInclusive = values.taxType === "tax_inclusive";
+
+        if (qty > 0) {
+            const landingCost = newTotal / qty;
+            let unitCost = 0;
+
+            if (isTaxInclusive) {
+                // Tax Inclusive: Unit Cost is same as Landing Cost (Total / Qty)
+                unitCost = landingCost;
+            } else {
+                // Tax Exclusive: Landing Cost = Unit Cost * (1 + Tax / 100)
+                // Therefore: Unit Cost = Landing Cost / (1 + Tax / 100)
+                unitCost = landingCost / (1 + taxPercent / 100);
+            }
+            setFieldValue(`items.${index}.unitCost`, unitCost);
+        }
+    };
+
+    return <CommonTextField type="number" onChange={handleTotalChange} value={item.total || 0} />;
 };
 
 const PurchaseOrderProductAndBilling = () => {
@@ -53,7 +87,9 @@ const PurchaseOrderProductAndBilling = () => {
     const { data: termsData, refetch: refetchTerms } = Queries.useGetTermsConditionDropdown();
     const { data: taxData } = Queries.useGetTaxDropdown();
     const { mutate: addTerm } = Mutations.useAddTermsCondition();
+    const { mutate: editTerm } = Mutations.useEditTermsCondition();
     const { mutate: deleteTerm } = Mutations.useDeleteTermsCondition();
+    const [selectedTerm, setSelectedTerm] = useState<any>(null);
 
     const handleDeleteTerm = (id: string) => {
         deleteTerm(id, {
@@ -63,12 +99,33 @@ const PurchaseOrderProductAndBilling = () => {
         });
     };
 
+    const handleEditTerm = (term: any) => {
+        setSelectedTerm(term);
+        setOpenTermsModal(true);
+    };
+
+    const handleOpenAddTerm = () => {
+        setSelectedTerm(null);
+        setOpenTermsModal(true);
+    };
+
     const handleSaveTerm = (term: any) => {
-        addTerm({ termsCondition: term.termsCondition } as any, {
-            onSuccess: () => {
-                refetchTerms();
-            },
-        });
+        if (selectedTerm) {
+            editTerm({ termsConditionId: term._id, termsCondition: term.termsCondition, isDefault: term.isDefault } as any, {
+                onSuccess: () => {
+                    refetchTerms();
+                    setOpenTermsModal(false);
+                    setSelectedTerm(null);
+                }
+            })
+        } else {
+            addTerm({ termsCondition: term.termsCondition, isDefault: term.isDefault } as any, {
+                onSuccess: () => {
+                    refetchTerms();
+                    setOpenTermsModal(false);
+                },
+            });
+        }
     };
 
     useEffect(() => {
@@ -76,27 +133,33 @@ const PurchaseOrderProductAndBilling = () => {
         const newItems = values.items?.map((item: any) => {
             // 1. Calculate Landing Cost
             const unitCost = Number(item.unitCost) || 0;
-            const taxPercent = Number(item.tax) || 0;
+            const isOutOfScope = values.taxType === "out_of_scope";
+            const taxPercent = isOutOfScope ? 0 : (Number(item.tax) || 0);
             const isTaxInclusive = values.taxType === "tax_inclusive";
 
             let landingCost = 0;
-            if (isTaxInclusive) {
+            let taxAmount = 0;
+
+            if (isTaxInclusive && !isOutOfScope) {
                 landingCost = unitCost;
+                const qty = Number(item.qty) || 0;
+                const totalCtx = qty * unitCost;
+                taxAmount = totalCtx - (totalCtx / (1 + taxPercent / 100))
             } else {
                 landingCost = unitCost + (unitCost * taxPercent) / 100;
+                // Exclusive
+                const qty = Number(item.qty) || 0;
+                taxAmount = (qty * unitCost) * (taxPercent / 100);
             }
-
-            // 2. Calculate Selling Price & Margin
             const mrp = Number(item.mrp) || 0;
             const discount = Number(item.discount1) || 0;
             const sellingPrice = mrp - discount;
-            const margin = sellingPrice - landingCost;
+            const margin = sellingPrice > 0 ? sellingPrice - unitCost : 0;
 
             // 3. Calculate Line Total
             const quantity = Number(item.qty) || 0;
             const total = quantity * landingCost;
 
-            // Check if updates are needed to avoid infinite loop
             const newItem = { ...item };
             let itemChanged = false;
 
@@ -116,6 +179,10 @@ const PurchaseOrderProductAndBilling = () => {
                 newItem.total = total.toFixed(2);
                 itemChanged = true;
             }
+            if (Number(newItem.taxAmount) !== Number(taxAmount.toFixed(2))) {
+                newItem.taxAmount = taxAmount.toFixed(2);
+                itemChanged = true;
+            }
 
             if (itemChanged) hasChanges = true;
             return newItem;
@@ -129,31 +196,76 @@ const PurchaseOrderProductAndBilling = () => {
         const itemsTotal = newItems?.reduce((sum: number, item: any) => sum + (Number(item.total) || 0), 0) || 0;
         const totalUnitCost = newItems?.reduce((sum: number, item: any) => sum + (Number(item.qty) * Number(item.unitCost) || 0), 0) || 0;
 
+        // Calculate Tax Manually from Items
+        const totalCalculatedTax = newItems?.reduce((acc: number, item: any) => {
+            const qty = Number(item.qty) || 0;
+            const unitCost = Number(item.unitCost) || 0;
+            const isOutOfScope = values.taxType === "out_of_scope";
+            const rate = isOutOfScope ? 0 : (Number(item.tax) || 0);
+
+            if (values.taxType === "tax_inclusive" && !isOutOfScope) {
+                const totalCtx = qty * unitCost;
+                return acc + (totalCtx - (totalCtx / (1 + rate / 100)));
+            } else {
+                return acc + ((qty * unitCost) * (rate / 100));
+            }
+        }, 0) || 0;
+
         // Gross Amount = Sum(Qty * Unit Cost)
         const grossAmount = totalUnitCost;
-        const discount = Number(values.flatDiscount) || 0;
 
-        // Taxable is Gross
+        const discountInput = Number(values.flatDiscount) || 0;
         const taxableAmount = grossAmount;
 
         if (values.grossAmount !== grossAmount) setFieldValue("grossAmount", grossAmount);
         if (values.taxableAmount !== taxableAmount) setFieldValue("taxableAmount", taxableAmount);
-
-        // Recalculate Global Tax and Net
-        const globalTaxPercent = Number(values.tax) || 0;
-        const globalTaxAmount = taxableAmount * (globalTaxPercent / 100);
+        if (values.discountAmount !== discountInput) setFieldValue("discountAmount", discountInput);
         const roundOff = Number(values.roundOff) || 0;
-        const net = taxableAmount + globalTaxAmount - discount + roundOff;
+
+        // Net Amount Calculation
+        let net = 0;
+        if (values.taxType === "tax_inclusive") {
+            // Gross includes Tax. ItemTotal includes Tax.
+            // If Out of Scope, tax is 0. But in Inclusive mode, Gross implies Tax is inside.
+            // If we calculate tax=0, then Net = Gross.
+            // Wait, if out_of_scope, is it still "tax_inclusive"?
+            // usually out_of_scope acts like exclusive with 0 tax.
+            // But if user switched from inclusive -> out_of_scope?
+            // The item total (qty*unitCost) is just cost.
+
+            // If values.taxType is "out_of_scope", then it's NOT "tax_inclusive".
+            // So we fall to else block usually?
+            // "if (values.taxType === 'tax_inclusive')" will be false.
+
+            net = grossAmount - discountInput + roundOff;
+        } else {
+            // Exclusive, Out of Scope (behaves like exclusive 0 tax)
+            net = grossAmount + totalCalculatedTax - discountInput + roundOff;
+        }
 
         if (values.netAmount !== net) setFieldValue("netAmount", net);
-
     }, [values.items, values.taxType, values.flatDiscount, values.tax, values.roundOff, setFieldValue]);
+
+    // Render Scope Calculation for Display
+    const calculatedTaxAmount = (values.items || []).reduce((acc: number, item: any) => {
+        const qty = Number(item.qty) || 0;
+        const unitCost = Number(item.unitCost) || 0;
+        const isOutOfScope = values.taxType === "out_of_scope";
+        const rate = isOutOfScope ? 0 : (Number(item.tax) || 0);
+
+        if (values.taxType === "tax_inclusive" && !isOutOfScope) {
+            const totalCtx = qty * unitCost;
+            return acc + (totalCtx - (totalCtx / (1 + rate / 100)));
+        } else {
+            return acc + ((qty * unitCost) * (rate / 100));
+        }
+    }, 0);
 
     const summary = {
         grossAmount: Number(values.grossAmount) || 0,
         discountAmount: Number(values.discountAmount) || 0,
         taxableAmount: Number(values.taxableAmount) || 0,
-        taxAmount: (Number(values.taxableAmount) || 0) * ((Number(values.tax) || 0) / 100),
+        taxAmount: calculatedTaxAmount,
         netAmount: Number(values.netAmount) || 0,
     };
 
@@ -171,7 +283,7 @@ const PurchaseOrderProductAndBilling = () => {
                     {/* TAB 0: PRODUCT DETAILS */}
                     <CommonTabPanel value={tabValue} index={0}>
                         <Box sx={{ overflowX: "auto" }}>
-                            <Box sx={{ minWidth: 800 }}>
+                            <Box sx={{ minWidth: 1400 }}>
                                 <FieldArray name="items">
                                     {({ push, remove }) => {
                                         const columns = [
@@ -179,7 +291,7 @@ const PurchaseOrderProductAndBilling = () => {
                                                 key: "action",
                                                 header: "",
                                                 headerClass: "text-center",
-                                                bodyClass: "text-center",
+                                                bodyClass: "text-center w-[100px]",
                                                 render: (_row: any, index: number) => (
                                                     <Box display="flex" justifyContent="center" gap={1}>
                                                         {index === (values.items?.length || 0) - 1 && (
@@ -220,60 +332,61 @@ const PurchaseOrderProductAndBilling = () => {
                                             {
                                                 key: "sr",
                                                 header: "#",
-                                                bodyClass: "align-middle text-center",
+                                                bodyClass: "align-middle text-center w-[50px]",
                                                 render: (_row: any, index: number) => index + 1,
                                             },
                                             {
                                                 key: "productId",
                                                 header: "Product*",
-                                                bodyClass: "min-w-[240px]",
+                                                bodyClass: "min-w-[250px]",
                                                 render: (_row: any, index: number) => <ProductSelectCell index={index} productData={productData} taxData={taxData} isLoading={productDataLoading} />,
-                                            },
-                                            {
-                                                key: "unitCost",
-                                                header: "Unit Cost",
-                                                render: (_row: any, index: number) => <CommonValidationTextField name={`items.${index}.unitCost`} type="number" />,
-                                            },
-                                            {
-                                                key: "qty",
-                                                header: "Qty",
-                                                render: (_row: any, index: number) => <CommonValidationTextField name={`items.${index}.qty`} type="number" />,
-                                            },
-                                            {
-                                                key: "tax",
-                                                header: "Tax",
-                                                render: (_row: any, index: number) => <CommonValidationTextField name={`items.${index}.tax`} type="number" />,
-                                                // Don't sum Tax % in footer
-                                            },
-                                            {
-                                                key: "landingCost",
-                                                header: "Landing Cost",
-                                                render: (_row: any, index: number) => <CommonValidationTextField name={`items.${index}.landingCost`} type="number" disabled />,
                                             },
                                             {
                                                 key: "mrp",
                                                 header: "MRP",
-                                                render: (_row: any, index: number) => <CommonValidationTextField name={`items.${index}.mrp`} type="number" />,
+                                                bodyClass: "min-w-[120px]",
+                                                render: (_row: any, index: number) => <CommonValidationTextField name={`items.${index}.mrp`} type="number" size="small" />,
                                             },
                                             {
-                                                key: "discount",
-                                                header: "Discount",
-                                                render: (_row: any, index: number) => <CommonValidationTextField name={`items.${index}.discount1`} type="number" />,
+                                                key: "qty",
+                                                header: "Qty",
+                                                bodyClass: "min-w-[100px]",
+                                                render: (_row: any, index: number) => <CommonValidationTextField name={`items.${index}.qty`} type="number" size="small" />,
                                             },
                                             {
-                                                key: "sellingPrice",
-                                                header: "Selling Price",
-                                                render: (_row: any, index: number) => <CommonValidationTextField name={`items.${index}.sellingPrice`} type="number" disabled />,
+                                                key: "unitCost",
+                                                header: "Unit Cost",
+                                                bodyClass: "min-w-[120px]",
+                                                render: (_row: any, index: number) => <CommonValidationTextField name={`items.${index}.unitCost`} type="number" size="small" />,
+                                            },
+                                            {
+                                                key: "tax",
+                                                header: "Tax",
+                                                bodyClass: "min-w-[140px] text-center",
+                                                render: (row: any) => (
+                                                    <Box className="flex flex-col items-center">
+                                                        <span className="text-sm font-medium">{row.tax}% (₹{row.taxAmount})</span>
+                                                        <span className="text-xs text-gray-500">{row.taxName}</span>
+                                                    </Box>
+                                                ),
+                                            },
+                                            {
+                                                key: "landingCost",
+                                                header: "Landing Cost",
+                                                bodyClass: "min-w-[120px]",
+                                                render: (_row: any, index: number) => <CommonValidationTextField name={`items.${index}.landingCost`} type="number" disabled size="small" />,
                                             },
                                             {
                                                 key: "margin",
                                                 header: "Margin",
-                                                render: (_row: any, index: number) => <CommonValidationTextField name={`items.${index}.margin`} type="number" disabled />,
+                                                bodyClass: "min-w-[120px]",
+                                                render: (_row: any, index: number) => <CommonValidationTextField name={`items.${index}.margin`} type="number" disabled size="small" />,
                                             },
                                             {
                                                 key: "total",
                                                 header: "Total",
-                                                render: (_row: any, index: number) => <CommonValidationTextField name={`items.${index}.total`} type="number" disabled />,
+                                                bodyClass: "min-w-[140px]",
+                                                render: (_row: any, index: number) => <TotalInputCell index={index} />,
                                                 footer: (data: any[]) => data.reduce((sum, item) => sum + (Number(item.total) || 0), 0).toFixed(2),
                                             },
                                         ];
@@ -292,7 +405,7 @@ const PurchaseOrderProductAndBilling = () => {
                             <Box>
                                 <Box display="flex" justifyContent="space-between" mb={2}>
                                     <Box fontWeight={600}>Terms & Conditions</Box>
-                                    <CommonButton startIcon={<Add />} onClick={() => setOpenTermsModal(true)} variant="outlined" title="new term"></CommonButton>
+                                    <CommonButton startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined" title="new term"></CommonButton>
                                 </Box>
 
                                 <Box sx={{ overflowX: "auto" }}>
@@ -302,7 +415,7 @@ const PurchaseOrderProductAndBilling = () => {
                                                 <tr>
                                                     <th className="p-2 w-10">#</th>
                                                     <th className="p-2 text-left">Condition</th>
-                                                    <th className="p-2 w-10 text-center">Action</th>
+                                                    <th className="p-2 w-20 text-center">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -311,9 +424,14 @@ const PurchaseOrderProductAndBilling = () => {
                                                         <td className="p-2">{index + 1}</td>
                                                         <td className="p-2">{term.termsCondition}</td>
                                                         <td className="p-2 text-center">
-                                                            <CommonButton size="small" color="error" variant="text" onClick={() => handleDeleteTerm(term._id)}>
-                                                                <Delete fontSize="small" />
-                                                            </CommonButton>
+                                                            <Box display="flex" justifyContent="center" gap={1}>
+                                                                <CommonButton size="small" color="primary" variant="text" onClick={() => handleEditTerm(term)}>
+                                                                    <Edit fontSize="small" />
+                                                                </CommonButton>
+                                                                <CommonButton size="small" color="error" variant="text" onClick={() => handleDeleteTerm(term._id)}>
+                                                                    <Delete fontSize="small" />
+                                                                </CommonButton>
+                                                            </Box>
                                                         </td>
                                                     </tr>
                                                 ))}
@@ -321,8 +439,8 @@ const PurchaseOrderProductAndBilling = () => {
                                         </table>
                                     </Box>
                                 </Box>
-                            </Box> {/* Closing Terms Box */}
-
+                            </Box>{" "}
+                            {/* Closing Terms Box */}
                             {/* Note Section */}
                             <Box>
                                 <Box fontWeight={600} mb={1}>
@@ -330,7 +448,8 @@ const PurchaseOrderProductAndBilling = () => {
                                 </Box>
                                 <CommonValidationTextField name="notes" multiline rows={4} placeholder="Enter a note (max 200 characters)" />
                             </Box>
-                        </Box> {/* Closing Grid Box */}
+                        </Box>{" "}
+                        {/* Closing Grid Box */}
                     </CommonTabPanel>
                 </Box>
             </CommonCard>
@@ -338,14 +457,14 @@ const PurchaseOrderProductAndBilling = () => {
             {/* BILLING SUMMARY - Separated outside TabPanel */}
             <CommonCard hideDivider grid={{ xs: 12 }}>
                 <Box sx={{ p: 2, display: "flex", gap: 2, flexDirection: { xs: "column", md: "row" }, justifyContent: "space-between", alignItems: "flex-start" }}>
-                    <Box sx={{ width: { xs: "100%", md: "60%" } }}>{showTaxDetails && <TaxDetailsTable items={values.items || []} />}</Box>
+                    <Box sx={{ width: { xs: "100%", md: "60%" } }}>{showTaxDetails && <TaxDetailsTable items={values.items || []} productData={(productData?.data as any)?.product_data || productData?.data || []} taxType={values.taxType} />}</Box>
 
                     <Box className="border text-sm w-full md:w-1/3">
                         {/* Row 1: Flat Discount */}
                         <Box className="grid grid-cols-[150px_1fr] border-b border-gray-200 dark:border-gray-700">
                             <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex items-center justify-end font-medium">Flat Discount</Box>
                             <Box className="p-1 px-2">
-                                <CommonValidationTextField name="flatDiscount" label="" type="number" size="small" sx={{ "& input": { textAlign: "left" } }} isCurrency currencyDisabled />
+                                <CommonValidationTextField name="flatDiscount" label="" type="number" size="small" sx={{ "& input": { textAlign: "right" } }} isCurrency currencyDisabled />
                             </Box>
                         </Box>
 
@@ -371,7 +490,7 @@ const PurchaseOrderProductAndBilling = () => {
                         <Box className="grid grid-cols-[150px_1fr] border-b cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => setShowTaxDetails(!showTaxDetails)}>
                             <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium text-blue-500 gap-1 items-center">
                                 Tax (%)
-                                <span className="text-gray-900 dark:text-gray-100 font-bold ml-1">{values.tax || 0}</span>
+                                <span className="text-gray-900 dark:text-gray-100 font-bold ml-1">{values.tax || ""}</span>
                             </Box>
                             <Box className="p-2 flex justify-end items-center">
                                 <span className="font-medium align-middle">{summary.taxAmount.toFixed(2)}</span>
@@ -393,9 +512,8 @@ const PurchaseOrderProductAndBilling = () => {
                     </Box>
                 </Box>
             </CommonCard>
-            <TermsConditionModal openModal={openTermsModal} setOpenModal={setOpenTermsModal} onSave={handleSaveTerm} />
+            <TermsConditionModal openModal={openTermsModal} setOpenModal={setOpenTermsModal} onSave={handleSaveTerm} initialValues={selectedTerm} />
         </>
     );
 };
-
 export default PurchaseOrderProductAndBilling;

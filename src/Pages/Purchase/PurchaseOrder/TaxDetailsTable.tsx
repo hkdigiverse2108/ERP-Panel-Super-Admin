@@ -4,44 +4,45 @@ import CommonTable from "../../../Components/Common/CommonTable";
 
 interface TaxDetailsTableProps {
   items: any[];
+  productData: any[];
+  taxType?: string;
 }
 
-const TaxDetailsTable: FC<TaxDetailsTableProps> = ({ items }) => {
-  // Group items by tax rate
-  const taxSummary = items.reduce((acc: any, item: any) => {
-    const rate = Number(item.tax) || 0;
-    const amount = (Number(item.qty) || 0) * (Number(item.landingCost) || 0); // Item total
-    const taxAmount = amount * (rate / 100);
+const TaxDetailsTable: FC<TaxDetailsTableProps> = ({ items, productData, taxType }) => {
+  const tableData = items
+    .map((item: any, index: number) => {
+      const productId = item.productId;
+      const product = productData.find((p: any) => p._id === productId);
+      const productName = product ? (product.productName || product.name || product.title || "") : "";
+      const rate = Number(item.tax) || 0;
+      const qty = Number(item.qty) || 0;
+      const unitCost = Number(item.unitCost) || 0;
 
-    if (!acc[rate]) {
-      acc[rate] = {
-        rate: rate,
-        taxableAmount: 0,
-        taxAmount: 0,
+      let taxAmount = 0;
+
+      if (taxType === "tax_inclusive") {
+        const totalCtx = qty * unitCost;
+        taxAmount = totalCtx - (totalCtx / (1 + rate / 100));
+      } else {
+        taxAmount = (qty * unitCost) * (rate / 100);
+      }
+
+      return {
+        id: index,
+        productName,
+        rate,
+        taxAmount,
       };
-    }
-    acc[rate].taxableAmount += amount;
-    acc[rate].taxAmount += taxAmount;
-    return acc;
-  }, {});
-
-  const tableData = Object.values(taxSummary).sort((a: any, b: any) => b.rate - a.rate);
-
+    })
+    .filter((row) => row.taxAmount > 0);
   const columns = [
     {
-      key: "rate",
-      header: "Result",
-      render: (row: any) => (
-        <Box>
-          <Box fontWeight={600}>Tax {row.rate}%</Box>
-          <Box fontSize="12px" color="text.secondary">
-            (Tax Rate)
-          </Box>
-        </Box>
-      ),
+      key: "productName",
+      header: "Product",
+      render: (row: any) => <Box fontWeight={600}>{row.productName}</Box>,
     },
     {
-      key: "rateVal",
+      key: "rate",
       header: "Tax Rate",
       render: (row: any) => `${row.rate}%`,
     },
@@ -54,7 +55,7 @@ const TaxDetailsTable: FC<TaxDetailsTableProps> = ({ items }) => {
 
   return (
     <Box className="border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden">
-      <CommonTable data={tableData} columns={columns} rowKey={(row: any) => row.rate.toString()} />
+      <CommonTable data={tableData} columns={columns} rowKey={(row: any) => row.id.toString()} />
     </Box>
   );
 };

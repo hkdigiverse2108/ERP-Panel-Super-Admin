@@ -29,8 +29,10 @@ export interface TermsAndConditionModalProps {
   openModal: boolean;
   setOpenModal: (value: boolean) => void;
   onSave: (term: TermsConditionBase) => void;
+  initialValues?: TermsConditionBase | null;
 }
 
 export interface TermsConditionFormValues {
   termsCondition: string;
+  isDefault?: boolean;
 }
