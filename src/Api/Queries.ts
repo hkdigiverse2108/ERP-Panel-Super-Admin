@@ -82,8 +82,8 @@ export const Queries = {
   useGetPurchaseOrderDropdown: (params?: Params) => useQueries<PurchaseOrderDropdownApiResponse>([KEYS.PURCHASE_ORDER.BASE, params], () => Get(URL_KEYS.PURCHASE_ORDER.DROPDOWN, params)),
 
   //*************** Terms and Condition *********
-  useGetTermsCondition: (params?: Params) => useQueries<TermsConditionApiResponse>([KEYS.TERMS_CONDITION.BASE, params], () => Get(URL_KEYS.TERMS_CONDITION.ALL, params)),
-  useGetTermsConditionDropdown: (params?: Params) => useQueries<TermsConditionDropdownApiResponse>([KEYS.TERMS_CONDITION.BASE, params], () => Get(URL_KEYS.TERMS_CONDITION.DROPDOWN, params)),
+  useGetTermsCondition: (params?: Params, options?: AppQueryOptions<TermsConditionApiResponse>) => useQueries<TermsConditionApiResponse>([KEYS.TERMS_CONDITION.BASE, params], () => Get(URL_KEYS.TERMS_CONDITION.ALL, params), options),
+  useGetTermsConditionDropdown: (params?: Params, options?: AppQueryOptions<TermsConditionDropdownApiResponse>) => useQueries<TermsConditionDropdownApiResponse>([KEYS.TERMS_CONDITION.BASE, params], () => Get(URL_KEYS.TERMS_CONDITION.DROPDOWN, params), options),
 
   //*************** Module **************** */
   useGetModule: (params?: Params) => useQueries<ModuleApiResponse>([KEYS.MODULE.BASE, params], () => Get(URL_KEYS.MODULE.ALL, params)),
