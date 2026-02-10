@@ -1,4 +1,4 @@
-  import type { BranchFormValues } from "../Types";
+import type { BranchFormValues } from "../Types";
 
 export const PRODUCT_TYPE = ["finished", "raw_material", "semi_finished", "service", "non_inventory"] as const;
 
@@ -224,7 +224,7 @@ export const ORDER_STATUS = [
 ];
 export const TAX_TYPE = [
   { label: "Default", value: "default" },
-  { label: "Tax Inclusive", value: "tax_inclusive"  },
+  { label: "Tax Inclusive", value: "tax_inclusive" },
   { label: "Tax Exclusive", value: "tax_exclusive" },
   { label: "Out Of Scope", value: "out_of_scope" },
 ];
@@ -232,9 +232,12 @@ export const TAX_TYPE = [
 export const BANK_UI_FIELDS: (keyof BranchFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber"];
 
 export const ACCOUNT_NATURE = [
+  { label: "Sales", value: "sales" },
+  { label: "Sales Return", value: "sales_return" },
+  { label: "Purchase", value: "purchase" },
+  { label: "Purchase Return", value: "purchase_return" },
   { label: "Assets", value: "assets" },
   { label: "Liabilities", value: "liabilities" },
   { label: "Income", value: "income" },
   { label: "Expenses", value: "expenses" },
 ];
-
