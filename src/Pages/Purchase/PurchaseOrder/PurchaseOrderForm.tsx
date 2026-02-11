@@ -82,6 +82,7 @@ const PurchaseOrderForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { data } = location.state || {};
+
   const isEditing = Boolean(data?._id);
 
   const { mutate: addPurchaseOrder, isPending: addLoading } = Mutations.useAddPurchaseOrder();
@@ -129,7 +130,7 @@ const PurchaseOrderForm = () => {
     notes: data?.notes || "",
     status: ["in_progress", "delivered", "partially_delivered", "exceed", "completed", "cancelled"].includes(data?.status) ? data.status : "in_progress",
     taxType: data?.taxType || "",
-    termsAndConditionIds: data?.termsAndConditionIds || [],
+    termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
   };
 
   const handleSubmit = async (values: PurchaseOrderFormValues, { resetForm }: FormikHelpers<PurchaseOrderFormValues>) => {

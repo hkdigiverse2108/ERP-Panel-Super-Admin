@@ -1,22 +1,19 @@
 import { Grid, Box } from "@mui/material";
-import { Form, Formik, type FormikHelpers } from "formik";
+import { Form, Formik } from "formik";
 import type { FC } from "react";
-import { useEffect } from "react";
 import { CommonButton, CommonSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonCard, CommonModal } from "../../../Components/Common";
-import { Queries } from "../../../Api/Queries";
 import type { TermsAndConditionModalProps, TermsConditionBase, TermsConditionFormValues } from "../../../Types/TermsCondition";
 import { TermsConditionFormSchema } from "../../../Utils/ValidationSchemas";
 
-const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ openModal, setOpenModal, onSave, initialValues }) => {
-  const { data } = Queries.useGetTermsCondition({ pageNumber: 1, pageSize: 10 }, { enabled: !!openModal && !initialValues });
+const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ openModal, setOpenModal, onSave, initialValues, isLoading }) => {
 
   const formInitialValues: TermsConditionFormValues = {
     termsCondition: initialValues?.termsCondition || "",
     isDefault: initialValues?.isDefault || false,
   };
 
-  const handleSubmit = (values: TermsConditionFormValues, { resetForm }: FormikHelpers<TermsConditionFormValues>) => {
+  const handleSubmit = (values: TermsConditionFormValues) => {
     const newTerm: TermsConditionBase = {
       _id: initialValues?._id || Date.now().toString(),
       termsCondition: values.termsCondition,
@@ -24,8 +21,6 @@ const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ openModal, se
       isDefault: values.isDefault || false,
     };
     onSave(newTerm);
-    resetForm();
-    setOpenModal(false);
   };
   return (
     <CommonModal
@@ -40,7 +35,6 @@ const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ openModal, se
             <Grid container spacing={2}>
               <CommonCard hideDivider grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
-                  <AutoPopulateTerms data={data?.data} setFieldValue={setFieldValue} initialValues={initialValues} />
                   <CommonValidationTextField label="Terms & Conditions" name="termsCondition" multiline rows={4} placeholder="Enter terms & conditions" required />
 
                   <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
@@ -49,7 +43,7 @@ const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ openModal, se
 
                   <Grid sx={{ display: "flex", gap: 2, ml: "auto" }}>
                     <CommonButton variant="outlined" title="Cancel" onClick={() => setOpenModal(false)} />
-                    <CommonButton type="submit" variant="contained" title={initialValues ? "Update" : "Save"} disabled={!dirty || !isValid} />
+                    <CommonButton type="submit" variant="contained" title={initialValues ? "Update" : "Save"} disabled={!dirty || !isValid || isLoading} />
                   </Grid>
                 </Grid>
               </CommonCard>
@@ -59,18 +53,6 @@ const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ openModal, se
       </Formik>
     </CommonModal >
   );
-};
-
-
-const AutoPopulateTerms = ({ data, setFieldValue, initialValues }: { data: TermsConditionBase[] | undefined; setFieldValue: (field: string, value: any) => void; initialValues?: TermsConditionBase | null }) => {
-  useEffect(() => {
-    if (!initialValues && data && data.length > 0) {
-      const defaultTerm = data.find((item) => item.isDefault) || data[0];
-      setFieldValue("termsCondition", defaultTerm.termsCondition);
-    }
-  }, [data, setFieldValue, initialValues]);
-
-  return null;
 };
 
 export default TermsAndConditionModal;

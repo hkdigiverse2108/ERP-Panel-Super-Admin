@@ -12,7 +12,7 @@ export interface AddTermsConditionPayload {
   isDefault?: boolean;
 }
 
-export interface EditTermsConditionPayload extends AddTermsConditionPayload {
+export interface  EditTermsConditionPayload extends AddTermsConditionPayload {
   termsConditionId: string;
   isActive?: boolean;
 }
@@ -30,6 +30,7 @@ export interface TermsAndConditionModalProps {
   setOpenModal: (value: boolean) => void;
   onSave: (term: TermsConditionBase) => void;
   initialValues?: TermsConditionBase | null;
+  isLoading?: boolean;
 }
 
 export interface TermsConditionFormValues {

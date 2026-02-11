@@ -1,4 +1,4 @@
-import { Add, Clear, Delete, Edit } from "@mui/icons-material";
+import { Add, Clear, Edit } from "@mui/icons-material";
 import { Box, Tab, Tabs } from "@mui/material";
 import { FieldArray, useFormikContext } from "formik";
 import { useEffect, useRef, useState } from "react";
@@ -9,7 +9,9 @@ import CommonTable from "../../../Components/Common/CommonTable";
 import { GenerateOptions } from "../../../Utils";
 import type { AddTermsConditionPayload, CommonTableColumn, EditTermsConditionPayload, ProductBase, ProductSelectCellProps, PurchaseOrderFormValues, PurchaseOrderItem, TaxBase, TermsConditionBase } from "../../../Types";
 import TermsConditionModal from "./TermsConditionModal";
-import BillingSummary from "./BillingSummary"; // Import BillingSummary
+import BillingSummary from "./BillingSummary";
+import SelectTermsModal from "./SelectTermsModal";
+
 
 const ProductSelectCell = ({ index, productData, taxData, isLoading }: ProductSelectCellProps) => {
   const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
@@ -74,17 +76,23 @@ const ProductAndTerm = () => {
   const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
   const [tabValue, setTabValue] = useState(0);
   const [openTermsModal, setOpenTermsModal] = useState(false);
+  const [openSelectTermsModal, setOpenSelectTermsModal] = useState(false);
   // const { data: productData, isLoading: productDataLoading } = Queries.useGetProduct({ companyFilter: values.companyId || undefined });
   const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown({ companyFilter: values.companyId || undefined });
 
-  const { data: termsData, refetch: refetchTerms } = Queries.useGetTermsConditionDropdown();
+  const { data: termsData } = Queries.useGetTermsConditionDropdown();
   const { data: taxData } = Queries.useGetTaxDropdown();
-  const { mutate: addTerm ,isPending: addTermLoading} = Mutations.useAddTermsCondition();
-  const { mutate: editTerm } = Mutations.useEditTermsCondition();
-  const { mutate: deleteTerm } = Mutations.useDeleteTermsCondition();
+  const { mutate: addTerm, isPending: addTermLoading } = Mutations.useAddTermsCondition();
+  const { mutate: editTerm, isPending: editTermLoading } = Mutations.useEditTermsCondition();
+
   const [selectedTerm, setSelectedTerm] = useState<TermsConditionBase | null>(null);
 
-  const handleDeleteTerm = (id: string) => deleteTerm(id, { onSuccess: () => refetchTerms() });
+
+
+  const handleRemoveTermFromPO = (id: string) => {
+    const currentIds = values.termsAndConditionIds || [];
+    setFieldValue("termsAndConditionIds", currentIds.filter((termId) => termId !== id));
+  };
 
   const handleEditTerm = (term: TermsConditionBase) => {
     setSelectedTerm(term);
@@ -100,7 +108,6 @@ const ProductAndTerm = () => {
     if (selectedTerm) {
       editTerm({ termsConditionId: term._id, termsCondition: term.termsCondition, isDefault: term.isDefault } as EditTermsConditionPayload, {
         onSuccess: () => {
-          refetchTerms();
           setOpenTermsModal(false);
           setSelectedTerm(null);
         },
@@ -108,12 +115,13 @@ const ProductAndTerm = () => {
     } else {
       addTerm({ termsCondition: term.termsCondition, isDefault: term.isDefault } as AddTermsConditionPayload, {
         onSuccess: () => {
-          refetchTerms();
           setOpenTermsModal(false);
         },
       });
     }
   };
+
+
 
   useEffect(() => {
     let hasChanges = false;
@@ -299,7 +307,10 @@ const ProductAndTerm = () => {
               <Box>
                 <Box display="flex" justifyContent="space-between" mb={2}>
                   <Box fontWeight={600}>Terms & Conditions</Box>
-                  <CommonButton startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined" title="new term"></CommonButton>
+                  <Box display="flex" gap={1}>
+                    <CommonButton title="Select Terms" onClick={() => setOpenSelectTermsModal(true)} variant="outlined" />
+                    <CommonButton startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined" title="new term" />
+                  </Box>
                 </Box>
 
                 <Box sx={{ overflowX: "hidden" }}>
@@ -313,7 +324,7 @@ const ProductAndTerm = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {termsData?.data?.map((term, index) => (
+                        {termsData?.data?.filter(term => values.termsAndConditionIds?.includes(term._id)).map((term, index) => (
                           <tr key={term._id} className="text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark border-b border-gray-100 dark:border-gray-700">
                             <td className="p-2">{index + 1}</td>
                             <td className="p-2">{term.termsCondition}</td>
@@ -322,8 +333,8 @@ const ProductAndTerm = () => {
                                 <CommonButton size="small" color="primary" variant="text" onClick={() => handleEditTerm(term)}>
                                   <Edit fontSize="small" />
                                 </CommonButton>
-                                <CommonButton size="small" color="error" variant="text" onClick={() => handleDeleteTerm(term._id)}>
-                                  <Delete fontSize="small" />
+                                <CommonButton size="small" color="error" variant="text" onClick={() => handleRemoveTermFromPO(term._id)}>
+                                  <Clear fontSize="small" />
                                 </CommonButton>
                               </Box>
                             </td>
@@ -347,7 +358,13 @@ const ProductAndTerm = () => {
 
       {/* BILLING SUMMARY - Separated outside TabPanel */}
       <BillingSummary productData={productData} />
-      <TermsConditionModal openModal={openTermsModal} setOpenModal={setOpenTermsModal} onSave={handleSaveTerm} initialValues={selectedTerm} />
+      <TermsConditionModal openModal={openTermsModal} setOpenModal={setOpenTermsModal} onSave={handleSaveTerm} initialValues={selectedTerm} isLoading={addTermLoading || editTermLoading} />
+      <SelectTermsModal
+        open={openSelectTermsModal}
+        onClose={() => setOpenSelectTermsModal(false)}
+        onSave={(selected) => setFieldValue("termsAndConditionIds", selected.map((t) => t._id))}
+        alreadySelected={termsData?.data?.filter((t) => values.termsAndConditionIds?.includes(t._id)) || []}
+      />
     </>
   );
 };

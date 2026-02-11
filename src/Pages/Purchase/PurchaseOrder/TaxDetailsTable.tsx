@@ -41,7 +41,7 @@ const TaxDetailsTable: FC<TaxDetailsTableProps> = ({ items, productData, taxType
       header: "Product",
       render: (row: TableRow) => <Box fontWeight={600}>{row.productName}</Box>,
     },
-    {
+    { 
       key: "rate",
       header: "Tax Rate",
       render: (row: TableRow) => `${row.rate}%`,
