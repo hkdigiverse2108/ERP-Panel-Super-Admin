@@ -2,8 +2,9 @@ import type { FormikProps } from "formik";
 import type { NavigateFunction } from "react-router-dom";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { SupplierBase } from "./Contact";
-import type { ProductDropDownApiResponse } from "./Product";
+import type { ProductBase, ProductDropDownApiResponse } from "./Product";
 import type { TaxDropdownApiResponse } from "./Tax";
+import type { TermsConditionBase } from "./TermsCondition";
 // import { TAX_TYPE, ORDER_STATUS } from "../../Data";
 
 export interface PurchaseOrderBase extends Omit<PurchaseOrderFormValues, "supplierId">, CommonDataType {
@@ -110,4 +111,17 @@ export interface PurchaseOrderFormContentProps extends FormikProps<PurchaseOrder
   editLoading: boolean;
   navigate: NavigateFunction;
   supplierQueryEnabled?: boolean;
+}
+
+export interface SelectTermsModalProps {
+  open: boolean;
+  onClose: () => void;
+  onSave: (selected: TermsConditionBase[]) => void;
+  alreadySelected: TermsConditionBase[];
+}
+
+export interface TaxDetailsTableProps {
+  items: PurchaseOrderItem[];
+  productData: ProductBase[];
+  taxType?: string;
 }

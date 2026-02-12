@@ -2,7 +2,9 @@ import { Add, Clear, Edit } from "@mui/icons-material";
 import { Box, Tab, Tabs } from "@mui/material";
 import { FieldArray, useFormikContext } from "formik";
 import { useEffect, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Mutations, Queries } from "../../../Api";
+import { KEYS } from "../../../Constants";
 import { CommonButton, CommonTextField, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
 import { CommonCard, CommonTabPanel } from "../../../Components/Common";
 import CommonTable from "../../../Components/Common/CommonTable";
@@ -72,15 +74,37 @@ const TotalInputCell = ({ index }: { index: number }) => {
   return <CommonTextField type="number" onChange={handleTotalChange} value={item.total || 0} />;
 };
 
-const ProductAndTerm = () => {
+const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
   const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
+  const queryClient = useQueryClient();
   const [tabValue, setTabValue] = useState(0);
+
+  // ... (rest of the component)
+
+
   const [openTermsModal, setOpenTermsModal] = useState(false);
   const [openSelectTermsModal, setOpenSelectTermsModal] = useState(false);
   // const { data: productData, isLoading: productDataLoading } = Queries.useGetProduct({ companyFilter: values.companyId || undefined });
   const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown({ companyFilter: values.companyId || undefined });
 
-  const { data: termsData } = Queries.useGetTermsConditionDropdown();
+  const { data: termsData } = Queries.useGetTermsCondition({ all: true });
+
+  // Helper to handle both array and paginated response
+  const termsList = Array.isArray(termsData?.data) ? termsData.data : (termsData?.data as unknown as { data: TermsConditionBase[] })?.data || [];
+
+  const defaultsInitialized = useRef(false);
+
+  useEffect(() => {
+    if (!isEditing && termsList.length > 0 && !defaultsInitialized.current) {
+      const defaultTerms = termsList.filter((t: TermsConditionBase) => t.isDefault).map((t: TermsConditionBase) => t._id);
+      if (defaultTerms.length > 0) {
+        if (!values.termsAndConditionIds || values.termsAndConditionIds.length === 0) {
+          setFieldValue("termsAndConditionIds", defaultTerms);
+        }
+        defaultsInitialized.current = true;
+      }
+    }
+  }, [isEditing, termsList, setFieldValue, values.termsAndConditionIds]);
   const { data: taxData } = Queries.useGetTaxDropdown();
   const { mutate: addTerm, isPending: addTermLoading } = Mutations.useAddTermsCondition();
   const { mutate: editTerm, isPending: editTermLoading } = Mutations.useEditTermsCondition();
@@ -108,6 +132,7 @@ const ProductAndTerm = () => {
     if (selectedTerm) {
       editTerm({ termsConditionId: term._id, termsCondition: term.termsCondition, isDefault: term.isDefault } as EditTermsConditionPayload, {
         onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: [KEYS.TERMS_CONDITION.BASE] });
           setOpenTermsModal(false);
           setSelectedTerm(null);
         },
@@ -115,6 +140,7 @@ const ProductAndTerm = () => {
     } else {
       addTerm({ termsCondition: term.termsCondition, isDefault: term.isDefault } as AddTermsConditionPayload, {
         onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: [KEYS.TERMS_CONDITION.BASE] });
           setOpenTermsModal(false);
         },
       });
@@ -308,8 +334,8 @@ const ProductAndTerm = () => {
                 <Box display="flex" justifyContent="space-between" mb={2}>
                   <Box fontWeight={600}>Terms & Conditions</Box>
                   <Box display="flex" gap={1}>
-                    <CommonButton title="Select Terms" onClick={() => setOpenSelectTermsModal(true)} variant="outlined" />
                     <CommonButton startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined" title="new term" />
+                    <CommonButton onClick={() => setOpenSelectTermsModal(true)} variant="outlined"><Edit /></CommonButton>
                   </Box>
                 </Box>
 
@@ -324,7 +350,7 @@ const ProductAndTerm = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {termsData?.data?.filter(term => values.termsAndConditionIds?.includes(term._id)).map((term, index) => (
+                        {termsList.filter((term: TermsConditionBase) => values.termsAndConditionIds?.includes(term._id)).map((term: TermsConditionBase, index: number) => (
                           <tr key={term._id} className="text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark border-b border-gray-100 dark:border-gray-700">
                             <td className="p-2">{index + 1}</td>
                             <td className="p-2">{term.termsCondition}</td>
@@ -363,7 +389,7 @@ const ProductAndTerm = () => {
         open={openSelectTermsModal}
         onClose={() => setOpenSelectTermsModal(false)}
         onSave={(selected) => setFieldValue("termsAndConditionIds", selected.map((t) => t._id))}
-        alreadySelected={termsData?.data?.filter((t) => values.termsAndConditionIds?.includes(t._id)) || []}
+        alreadySelected={termsList.filter((t: TermsConditionBase) => values.termsAndConditionIds?.includes(t._id)) || []}
       />
     </>
   );

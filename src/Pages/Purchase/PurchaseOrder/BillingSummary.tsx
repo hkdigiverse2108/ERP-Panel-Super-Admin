@@ -85,6 +85,7 @@ const BillingSummary = ({ productData }: BillingSummaryProps) => {
           <Box className="grid grid-cols-[150px_1fr] border-b border-gray-200 dark:border-gray-700">
             <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex items-center justify-end font-medium">Flat Discount</Box>
             <Box className="p-1 px-2 flex justify-end">
+
               <CommonValidationTextField name="flatDiscount" label="" type="number" size="small" sx={{ width: "50%", "& input": { textAlign: "right" } }} isCurrency currencyDisabled />
             </Box>
           </Box>
@@ -113,7 +114,7 @@ const BillingSummary = ({ productData }: BillingSummaryProps) => {
               Tax (%)
               <span className="text-gray-900 dark:text-gray-100 font-bold ml-1">{values.tax || ""}</span>
             </Box>
-            <Box className="p-2 flex justify-end items-center">
+            <Box className="p-2 flex justify-end items-center"> 
               <span className="font-medium align-middle">{summary.taxAmount.toFixed(2)}</span>
             </Box>
           </Box>

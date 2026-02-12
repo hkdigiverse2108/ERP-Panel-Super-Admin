@@ -31,7 +31,14 @@ const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ openModal, se
     >
       <Formik initialValues={formInitialValues} validationSchema={TermsConditionFormSchema} onSubmit={handleSubmit} enableReinitialize>
         {({ dirty, isValid, values, setFieldValue }) => (
-          <Form noValidate>
+          <form
+            noValidate
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleSubmit(values);
+            }}
+          >
             <Grid container spacing={2}>
               <CommonCard hideDivider grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
@@ -48,7 +55,7 @@ const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ openModal, se
                 </Grid>
               </CommonCard>
             </Grid>
-          </Form>
+          </form>
         )}
       </Formik>
     </CommonModal >

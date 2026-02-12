@@ -1,13 +1,7 @@
 import { Box } from "@mui/material";
 import type { FC } from "react";
 import CommonTable from "../../../Components/Common/CommonTable";
-import type { ProductBase, PurchaseOrderItem } from "../../../Types";
-
-interface TaxDetailsTableProps {
-  items: PurchaseOrderItem[];
-  productData: ProductBase[];
-  taxType?: string;
-}
+import type { ProductBase, PurchaseOrderItem, TaxDetailsTableProps } from "../../../Types";
 
 const TaxDetailsTable: FC<TaxDetailsTableProps> = ({ items, productData, taxType }) => {
   const tableData = items
@@ -41,7 +35,7 @@ const TaxDetailsTable: FC<TaxDetailsTableProps> = ({ items, productData, taxType
       header: "Product",
       render: (row: TableRow) => <Box fontWeight={600}>{row.productName}</Box>,
     },
-    { 
+    {
       key: "rate",
       header: "Tax Rate",
       render: (row: TableRow) => `${row.rate}%`,

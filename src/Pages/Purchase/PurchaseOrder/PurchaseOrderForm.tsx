@@ -70,7 +70,7 @@ const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate
           </Box>
         </CommonCard>
 
-        <ProductAndTerm />
+        <ProductAndTerm isEditing={isEditing} />
 
         <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={addLoading || editLoading} onClear={() => (isEditing ? navigate(-1) : resetForm())} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
       </Grid>
