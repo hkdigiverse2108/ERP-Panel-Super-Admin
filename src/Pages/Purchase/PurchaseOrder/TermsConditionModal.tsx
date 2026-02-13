@@ -1,5 +1,5 @@
 import { Grid, Box } from "@mui/material";
-import { Form, Formik } from "formik";
+import { Formik } from "formik";
 import type { FC } from "react";
 import { CommonButton, CommonSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonCard, CommonModal } from "../../../Components/Common";
@@ -10,15 +10,16 @@ const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ openModal, se
 
   const formInitialValues: TermsConditionFormValues = {
     termsCondition: initialValues?.termsCondition || "",
-    isDefault: initialValues?.isDefault || false,
+    isDefault: initialValues ? !!initialValues.isDefault : true,
   };
 
   const handleSubmit = (values: TermsConditionFormValues) => {
     const newTerm: TermsConditionBase = {
       _id: initialValues?._id || Date.now().toString(),
       termsCondition: values.termsCondition,
-      isActive: true, // Assuming default active
-      isDefault: values.isDefault || false,
+      isActive: true, // Assuming 
+      // default active
+      isDefault: values.isDefault || true,
     };
     onSave(newTerm);
   };
@@ -30,15 +31,8 @@ const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ openModal, se
       className="max-w-125 m-2 sm:m-5"
     >
       <Formik initialValues={formInitialValues} validationSchema={TermsConditionFormSchema} onSubmit={handleSubmit} enableReinitialize>
-        {({ dirty, isValid, values, setFieldValue }) => (
-          <form
-            noValidate
-            onSubmit={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleSubmit(values);
-            }}
-          >
+        {({ dirty, isValid, values, setFieldValue, submitForm }) => (
+          <Box className="w-full">
             <Grid container spacing={2}>
               <CommonCard hideDivider grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
@@ -50,12 +44,12 @@ const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ openModal, se
 
                   <Grid sx={{ display: "flex", gap: 2, ml: "auto" }}>
                     <CommonButton variant="outlined" title="Cancel" onClick={() => setOpenModal(false)} />
-                    <CommonButton type="submit" variant="contained" title={initialValues ? "Update" : "Save"} disabled={!dirty || !isValid || isLoading} />
+                    <CommonButton type="button" variant="contained" title={initialValues ? "Update" : "Save"} disabled={!dirty || !isValid || isLoading} onClick={() => submitForm()} />
                   </Grid>
                 </Grid>
               </CommonCard>
             </Grid>
-          </form>
+          </Box>
         )}
       </Formik>
     </CommonModal >

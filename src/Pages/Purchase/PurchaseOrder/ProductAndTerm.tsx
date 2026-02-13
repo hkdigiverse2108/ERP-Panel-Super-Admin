@@ -90,7 +90,7 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
   const { data: termsData } = Queries.useGetTermsCondition({ all: true });
 
   // Helper to handle both array and paginated response
-  const termsList = Array.isArray(termsData?.data) ? termsData.data : (termsData?.data as unknown as { data: TermsConditionBase[] })?.data || [];
+  const termsList = termsData?.data?.termsCondition_data || [];
 
   const defaultsInitialized = useRef(false);
 
@@ -111,8 +111,6 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
 
   const [selectedTerm, setSelectedTerm] = useState<TermsConditionBase | null>(null);
 
-
-
   const handleRemoveTermFromPO = (id: string) => {
     const currentIds = values.termsAndConditionIds || [];
     setFieldValue("termsAndConditionIds", currentIds.filter((termId) => termId !== id));
@@ -122,15 +120,15 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
     setSelectedTerm(term);
     setOpenTermsModal(true);
   };
-
   const handleOpenAddTerm = () => {
     setSelectedTerm(null);
     setOpenTermsModal(true);
   };
-
   const handleSaveTerm = (term: TermsConditionBase) => {
+    // const payload = { ...term, companyId: values.companyId };
+
     if (selectedTerm) {
-      editTerm({ termsConditionId: term._id, termsCondition: term.termsCondition, isDefault: term.isDefault } as EditTermsConditionPayload, {
+      editTerm({ termsConditionId: term._id, termsCondition: term.termsCondition, isDefault: term.isDefault, companyId: values.companyId } as EditTermsConditionPayload, {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: [KEYS.TERMS_CONDITION.BASE] });
           setOpenTermsModal(false);
@@ -138,10 +136,14 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
         },
       });
     } else {
-      addTerm({ termsCondition: term.termsCondition, isDefault: term.isDefault } as AddTermsConditionPayload, {
-        onSuccess: () => {
+      addTerm({ termsCondition: term.termsCondition, isDefault: term.isDefault, companyId: values.companyId } as AddTermsConditionPayload, {
+        onSuccess: (data: any) => {
           queryClient.invalidateQueries({ queryKey: [KEYS.TERMS_CONDITION.BASE] });
           setOpenTermsModal(false);
+          if (term.isDefault && data?.data?._id) {
+            const currentIds = values.termsAndConditionIds || [];
+            setFieldValue("termsAndConditionIds", [...currentIds, data.data._id]);
+          }
         },
       });
     }
@@ -228,7 +230,7 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
 
           {/* TAB 0: PRODUCT DETAILS */}
           <CommonTabPanel value={tabValue} index={0}>
-            <Box sx={{ overflowX: "auto" }}>
+            <Box sx={{ overflowX: "hidden" }}>
               <Box sx={{ minWidth: 1400 }}>
                 <FieldArray name="items">
                   {({ push, remove }) => {

@@ -10,15 +10,24 @@ export interface TermsConditionBase {
 export interface AddTermsConditionPayload {
   termsCondition: string;
   isDefault?: boolean;
+  companyId?: string;
 }
 
 export interface  EditTermsConditionPayload extends AddTermsConditionPayload {
   termsConditionId: string;
   isActive?: boolean;
+  companyId?: string;
+}
+
+export interface TermsConditionDataResponse extends MessageStatus {
+  termsCondition_data: TermsConditionBase[];
+  totalPages?: number;
+  page?: number | null;
+  limit?: number | null;
 }
 
 export interface TermsConditionApiResponse extends MessageStatus {
-  data: TermsConditionBase[];
+  data: TermsConditionDataResponse;
 }
 
 export interface TermsConditionDropdownApiResponse extends MessageStatus {

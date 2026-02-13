@@ -6,7 +6,10 @@ import { CommonModal } from "../../../Components/Common";
 import type { SelectTermsModalProps } from "../../../Types";
 
 const SelectTermsModal = ({ open, onClose, onSave, alreadySelected }: SelectTermsModalProps) => {
-    const { data: termsData, isLoading } = Queries.useGetTermsCondition();
+    const { data: termsData, isLoading } = Queries.useGetTermsCondition({ all: true });
+    // Helper to handle both array and paginated response
+    const termsList = termsData?.data?.termsCondition_data || [];
+
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
     useEffect(() => {
@@ -29,8 +32,8 @@ const SelectTermsModal = ({ open, onClose, onSave, alreadySelected }: SelectTerm
     };
 
     const handleSave = () => {
-        if (termsData?.data) {
-            const selectedTerms = termsData.data.filter((t) => selectedIds.includes(t._id));
+        if (termsList) {
+            const selectedTerms = termsList.filter((t) => selectedIds.includes(t._id));
             onSave(selectedTerms);
         }
         onClose();
@@ -54,16 +57,16 @@ const SelectTermsModal = ({ open, onClose, onSave, alreadySelected }: SelectTerm
                         <Box p={3} textAlign="center">
                             <Typography>Loading terms...</Typography>
                         </Box>
-                    ) : termsData?.data && termsData.data.length > 0 ? (
+                    ) : termsList && termsList.length > 0 ? (
                         <List dense disablePadding>
-                            {termsData.data.map((term, index) => {
+                            {termsList.map((term, index) => {
                                 const labelId = `checkbox-list-label-${term._id}`;
                                 const isSelected = selectedIds.indexOf(term._id) !== -1;
                                 return (
                                     <ListItem
                                         key={term._id}
                                         disablePadding
-                                        divider={index !== (termsData.data?.length || 0) - 1}
+                                        divider={index !== (termsList.length || 0) - 1}
                                         sx={{
                                             "&:hover": { bgcolor: "action.hover" },
                                         }}
@@ -92,7 +95,6 @@ const SelectTermsModal = ({ open, onClose, onSave, alreadySelected }: SelectTerm
                         </Box>
                     )}
                 </Box>
-
                 {/* Footer */}
                 <Box display="flex" justifyContent="flex-end" alignItems="center" pt={1}>
                     <Box display="flex" gap={2}>
