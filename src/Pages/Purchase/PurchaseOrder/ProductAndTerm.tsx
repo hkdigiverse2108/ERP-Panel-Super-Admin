@@ -80,14 +80,12 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
   const [tabValue, setTabValue] = useState(0);
 
   // ... (rest of the component)
-
-
   const [openTermsModal, setOpenTermsModal] = useState(false);
   const [openSelectTermsModal, setOpenSelectTermsModal] = useState(false);
   // const { data: productData, isLoading: productDataLoading } = Queries.useGetProduct({ companyFilter: values.companyId || undefined });
   const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown({ companyFilter: values.companyId || undefined });
 
-  const { data: termsData } = Queries.useGetTermsCondition({ all: true });
+  const { data: termsData } = Queries.useGetTermsCondition({ all: true, companyId: values.companyId || undefined }, { enabled: !!values.companyId });
 
   // Helper to handle both array and paginated response
   const termsList = termsData?.data?.termsCondition_data || [];
@@ -148,8 +146,6 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
       });
     }
   };
-
-
 
   useEffect(() => {
     let hasChanges = false;
@@ -336,8 +332,8 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
                 <Box display="flex" justifyContent="space-between" mb={2}>
                   <Box fontWeight={600}>Terms & Conditions</Box>
                   <Box display="flex" gap={1}>
-                    <CommonButton startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined" title="new term" />
-                    <CommonButton onClick={() => setOpenSelectTermsModal(true)} variant="outlined"><Edit /></CommonButton>
+                    <CommonButton startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined" title="new term" disabled={!values.companyId} />
+                    <CommonButton onClick={() => setOpenSelectTermsModal(true)} variant="outlined" disabled={!values.companyId}><Edit /></CommonButton>
                   </Box>
                 </Box>
 
@@ -392,6 +388,7 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
         onClose={() => setOpenSelectTermsModal(false)}
         onSave={(selected) => setFieldValue("termsAndConditionIds", selected.map((t) => t._id))}
         alreadySelected={termsList.filter((t: TermsConditionBase) => values.termsAndConditionIds?.includes(t._id)) || []}
+        companyId={values.companyId}
       />
     </>
   );

@@ -5,8 +5,8 @@ import { CommonButton } from "../../../Attribute";
 import { CommonModal } from "../../../Components/Common";
 import type { SelectTermsModalProps } from "../../../Types";
 
-const SelectTermsModal = ({ open, onClose, onSave, alreadySelected }: SelectTermsModalProps) => {
-    const { data: termsData, isLoading } = Queries.useGetTermsCondition({ all: true });
+const SelectTermsModal = ({ open, onClose, onSave, alreadySelected, companyId }: SelectTermsModalProps) => {
+    const { data: termsData, isLoading } = Queries.useGetTermsCondition({ all: true, companyId: companyId || undefined }, { enabled: !!companyId });
     // Helper to handle both array and paginated response
     const termsList = termsData?.data?.termsCondition_data || [];
 
@@ -98,7 +98,7 @@ const SelectTermsModal = ({ open, onClose, onSave, alreadySelected }: SelectTerm
                 {/* Footer */}
                 <Box display="flex" justifyContent="flex-end" alignItems="center" pt={1}>
                     <Box display="flex" gap={2}>
-                        <CommonButton title="Cancel" variant="outlined" color="inherit" onClick={onClose} />
+                        <CommonButton title="Cancel" variant="outlined" onClick={onClose} />
                         <CommonButton title={`Save (${selectedIds.length})`} variant="contained" onClick={handleSave} />
                     </Box>
                 </Box>

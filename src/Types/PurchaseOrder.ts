@@ -118,6 +118,7 @@ export interface SelectTermsModalProps {
   onClose: () => void;
   onSave: (selected: TermsConditionBase[]) => void;
   alreadySelected: TermsConditionBase[];
+  companyId?: string;
 }
 
 export interface TaxDetailsTableProps {
