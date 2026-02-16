@@ -163,4 +163,17 @@ export const KEYS = {
     EDIT: "terms-condition-edit",
     DELETE: "terms-condition-delete",
   },
+  SUPPLIER_BILL: {
+    BASE: "supplier-bill",
+    ADD: "supplier-bill-add",
+    EDIT: "supplier-bill-edit",
+    DELETE: "supplier-bill-delete",
+  },
+  ADDITIONAL_CHARGE: {
+    BASE: "additional-charge",
+    DROPDOWN: "additional-charge-dropdown",
+    ADD: "additional-charge-add",
+    EDIT: "additional-charge-edit",
+    DELETE: "additional-charge-delete",
+  },
 };

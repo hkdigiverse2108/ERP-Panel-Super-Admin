@@ -29,7 +29,7 @@ const SelectTermsModal = ({ open, onClose, onSave, alreadySelected, companyId }:
         }
 
         setSelectedIds(newChecked);
-    };
+    };  
 
     const handleSave = () => {
         if (termsList) {

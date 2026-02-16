@@ -1,5 +1,6 @@
 import { KEYS, URL_KEYS } from "../Constants";
 import type { AccountGroupApiResponse, AccountGroupDropdownApiResponse, AccountGroupTreeApiResponse, AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, CompanyDropdownApiResponse, CountryApiResponse, CreditNoteApiResponse, DebitNoteApiResponse, LocationApiResponse, MaterialConsumptionApiResponse, ModuleApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, ProductApiResponse, ProductDropDownApiResponse, PurchaseOrderApiResponse, PurchaseOrderDropdownApiResponse, RoleApiResponse, RoleDropdownApiResponse, SingleCompanyApiResponse, TaxApiResponse, TaxDropdownApiResponse, TermsConditionApiResponse, TermsConditionDropdownApiResponse, UomApiResponse, UomDropdownApiResponse, UploadResponse, UserApiResponse, UserModulePermissionApiResponse } from "../Types";
+import type { SupplierBillApiResponse } from "../Types/SupplierBill";
 import type { AccountApiResponse, AccountDropdownApiResponse } from "../Types/Account";
 import type { ContactApiResponse, ContactDropdownApiResponse } from "../Types/Contact";
 import type { BankApiResponse, BankDropdownApiResponse } from "../Types/Bank";
@@ -99,4 +100,10 @@ export const Queries = {
 
   //*************** Material Consumption **************** */
   useGetMaterialConsumption: (params?: Params) => useQueries<MaterialConsumptionApiResponse>([KEYS.MATERIAL_CONSUMPTION.BASE, params], () => Get(URL_KEYS.MATERIAL_CONSUMPTION.ALL, params)),
+
+  //*************** Supplier Bill **************** */
+  useGetSupplierBillDetails: (params?: Params) => useQueries<SupplierBillApiResponse>([KEYS.SUPPLIER_BILL.BASE, params], () => Get(URL_KEYS.SUPPLIER_BILL.ALL, params)),
+
+  //*************** Additional Charge **************** */
+  useGetAdditionalChargeDropdown: (params?: Params, enabled?: boolean) => useQueries<any>([KEYS.ADDITIONAL_CHARGE.BASE, params], () => Get(URL_KEYS.ADDITIONAL_CHARGE.DROPDOWN, params), { enabled: enabled }),
 };

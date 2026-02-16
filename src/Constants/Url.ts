@@ -176,4 +176,17 @@ export const URL_KEYS = {
     ALL: "/terms-condition/all",
     DROPDOWN: "/terms-condition/dropdown",
   },
+  SUPPLIER_BILL: {
+    BASE: "/supplier-bill",
+    ADD: "/supplier-bill/add",
+    EDIT: "/supplier-bill/edit",
+    ALL: "/supplier-bill/all",
+  },
+  ADDITIONAL_CHARGE: {
+    BASE: "/additional-charge",
+    DROPDOWN: "/additional-charge/dropdown",
+    ADD: "/additional-charge/add",
+    EDIT: "/additional-charge/edit",
+    ALL: "/additional-charge/all",
+  },
 } as const;

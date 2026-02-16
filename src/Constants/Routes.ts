@@ -74,4 +74,8 @@ export const ROUTES = {
     BASE: "/purchase-order",
     ADD_EDIT: "/purchase-order/add-edit",
   },
+  SUPPLIER_BILL: {
+    BASE: "/supplier-bill",
+    ADD_EDIT: "/supplier-bill/add-edit",
+  },
 } as const;

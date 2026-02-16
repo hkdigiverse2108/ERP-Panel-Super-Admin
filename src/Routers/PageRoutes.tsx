@@ -34,6 +34,8 @@ import CreditNote from "../Pages/Accounting/CreditNote";
 import CreditNoteForm from "../Pages/Accounting/CreditNote/CreditNoteForm";
 import MaterialConsumption from "../Pages/Inventory/MaterialConsumption";
 import MaterialConsumptionForm from "../Pages/Inventory/MaterialConsumption/MaterialConsumptionForm";
+import SupplierBill from "../Pages/Purchase/SupplierBill";
+import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -88,6 +90,9 @@ export const PageRoutes = [
 
   { path: ROUTES.PURCHASE_ORDER.BASE, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseOrder /> },
   { path: ROUTES.PURCHASE_ORDER.ADD_EDIT, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseOrderForm /> },
+
+  { path: ROUTES.SUPPLIER_BILL.BASE, name: PAGE_TITLE.PURCHASE.BASE, element: <SupplierBill /> },
+  { path: ROUTES.SUPPLIER_BILL.ADD_EDIT, name: PAGE_TITLE.PURCHASE.BASE, element: <SupplierBillForm /> },
 ];
 
 export const AuthRoutes = [

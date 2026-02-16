@@ -26,4 +26,5 @@ export * from "./PurchaseOrder";
 export * from "./DebitNote";
 export * from "./CreditNote";
 export * from "./MaterialConsumption";
+export * from "./SupplierBill";
 

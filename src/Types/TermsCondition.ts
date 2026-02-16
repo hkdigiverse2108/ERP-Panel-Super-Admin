@@ -46,3 +46,7 @@ export interface TermsConditionFormValues {
   termsCondition: string;
   isDefault?: boolean;
 }
+
+export interface TermsSelectionFormValues {
+  selected: string[];
+}
