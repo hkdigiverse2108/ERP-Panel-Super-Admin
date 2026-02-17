@@ -11,7 +11,7 @@ import type { ProductRow, SupplierBillTabsProps } from "../../../../Types/Suppli
 import { useDispatch } from "react-redux";
 import { setTermsAndConditionModal, setTermsSelectionModal } from "../../../../Store/Slices/ModalSlice";
 
-const SupplierBillTabs = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange, handleDeleteTerm }: SupplierBillTabsProps) => {
+const SupplierBillTabs = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange, handleDeleteTerm, isProductDisabled, isTermsDisabled }: SupplierBillTabsProps) => {
   const dispatch = useDispatch();
   const ProductRowColumns: CommonTableColumn<ProductRow>[] = [
     {
@@ -36,7 +36,7 @@ const SupplierBillTabs = ({ tabValue, setTabValue, rows, handleAdd, handleCut, h
       footerClass: "text-right",
     },
     { key: "sr", header: "#", render: (_, i) => i + 1, footer: "" },
-    { key: "productId", header: "Product", bodyClass: "min-w-60", render: (row, index) => <CommonSelect label="Search Product" value={row.productId ? [row.productId] : []} options={productOptions} isLoading={isProductLoading} onChange={(v) => handleRowChange(index, "productId", v)} required />, footer: "" },
+    { key: "productId", header: "Product", bodyClass: "min-w-60", render: (row, index) => <CommonSelect label="Search Product" value={row.productId ? [row.productId] : []} options={productOptions} isLoading={isProductLoading} onChange={(v) => handleRowChange(index, "productId", v)} required disabled={isProductDisabled} />, footer: "" },
     { key: "qty", header: "Qty", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="number" value={row.qty} onChange={(v) => handleRowChange(index, "qty", v)} />, footer: (data) => data.reduce((a, b) => a + (+b.qty || 0), 0) },
     { key: "freeQty", header: "Free Qty", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="number" value={row.freeQty} onChange={(v) => handleRowChange(index, "freeQty", v)} />, footer: (data) => data.reduce((a, b) => a + (+b.freeQty || 0), 0) },
     { key: "mrp", header: "MRP", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="number" value={row.mrp} onChange={(v) => handleRowChange(index, "mrp", v)} /> },
@@ -162,10 +162,10 @@ const SupplierBillTabs = ({ tabValue, setTabValue, rows, handleAdd, handleCut, h
             title="Terms & Conditions"
             topContent={
               <Box display="flex" gap={1}>
-                <CommonButton startIcon={<AddIcon />} onClick={() => dispatch(setTermsAndConditionModal({ open: true, data: null }))}>
+                <CommonButton startIcon={<AddIcon />} onClick={() => dispatch(setTermsAndConditionModal({ open: true, data: null }))} disabled={isTermsDisabled}>
                   New Term
                 </CommonButton>
-                <CommonButton startIcon={<EditIcon />} onClick={() => dispatch(setTermsSelectionModal({ open: true, data: termsList.map((t: TermsConditionBase) => t._id) }))}>
+                <CommonButton startIcon={<EditIcon />} onClick={() => dispatch(setTermsSelectionModal({ open: true, data: termsList.map((t: TermsConditionBase) => t._id) }))} disabled={isTermsDisabled}>
                   Edit Terms
                 </CommonButton>
               </Box>

@@ -253,3 +253,7 @@ export const PAYMENT_STATUS_OPTIONS = [
   { label: "Paid", value: "paid" },
   { label: "Unpaid", value: "unpaid" },
 ];
+export const OPTION_TYPE = [
+  { label: "Purchase", value: "purchase" },
+  { label: "Sales", value: "sales" },
+];

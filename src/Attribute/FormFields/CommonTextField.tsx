@@ -148,7 +148,7 @@ export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ 
   );
 };
 
-export const CommonTextField: FC<CommonTextFieldProps> = ({ label, value, onChange, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, isCurrency, onCurrencyLog, ...props }) => {
+export const CommonTextField: FC<CommonTextFieldProps> = ({currencyDisabled, label, value, onChange, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, isCurrency, onCurrencyLog, ...props }) => {
   const [focused, setFocused] = useState(false);
   const isPassword = type === "password";
   const [show, setShow] = useState(false);
@@ -244,7 +244,7 @@ export const CommonTextField: FC<CommonTextFieldProps> = ({ label, value, onChan
       {isCurrency ? (
         <Box display="flex" alignItems="start">
           <IconButton
-            disabled={disabled}
+            disabled={currencyDisabled || disabled}
             className="currency-btn"
             size="small"
             onClick={() => {

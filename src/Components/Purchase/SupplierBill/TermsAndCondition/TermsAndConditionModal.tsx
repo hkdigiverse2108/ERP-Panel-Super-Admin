@@ -8,7 +8,7 @@ import { setTermsAndConditionModal } from "../../../../Store/Slices/ModalSlice";
 import { Mutations } from "../../../../Api";
 import type { TermsAndConditionModalProps, TermsConditionBase, TermsConditionFormValues } from "../../../../Types";
 
-const TermsAndConditionModal = ({ onSave }: Pick<TermsAndConditionModalProps, 'onSave'>) => {
+const TermsAndConditionModal = ({ onSave, companyId }: Pick<TermsAndConditionModalProps, "onSave" | "companyId">) => {
   const { isTermsAndConditionModal } = useAppSelector((state) => state.modal);
   const dispatch = useDispatch();
   const openModal = isTermsAndConditionModal.open;
@@ -31,9 +31,9 @@ const TermsAndConditionModal = ({ onSave }: Pick<TermsAndConditionModalProps, 'o
       closeModal();
     };
     if (isEditing && data?._id) {
-      editTerm({ termsConditionId: data._id, termsCondition: values.termsCondition, isDefault: values.isDefault }, { onSuccess: (res: any) => onSuccessHandler(res.data) });
+      editTerm({ termsConditionId: data._id, termsCondition: values.termsCondition, isDefault: values.isDefault, companyId: companyId }, { onSuccess: (res: any) => onSuccessHandler(res.data) });
     } else {
-      addTerm({ termsCondition: values.termsCondition, isDefault: values.isDefault }, { onSuccess: (res: any) => onSuccessHandler(res.data) });
+      addTerm({ termsCondition: values.termsCondition, isDefault: values.isDefault, companyId: companyId }, { onSuccess: (res: any) => onSuccessHandler(res.data) });
     }
   };
 
