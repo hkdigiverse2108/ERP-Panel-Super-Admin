@@ -119,4 +119,9 @@ export const Mutations = {
   useAddSupplierBill: () => useMutations<any, void>([KEYS.SUPPLIER_BILL.ADD, KEYS.SUPPLIER_BILL.BASE], (input) => Post(URL_KEYS.SUPPLIER_BILL.ADD, input)),
   useEditSupplierBill: () => useMutations<any, void>([KEYS.SUPPLIER_BILL.EDIT, KEYS.SUPPLIER_BILL.BASE], (input) => Put(URL_KEYS.SUPPLIER_BILL.EDIT, input)),
   useDeleteSupplierBill: () => useMutations<string, void>([KEYS.SUPPLIER_BILL.DELETE, KEYS.SUPPLIER_BILL.BASE], (id) => Delete(`${URL_KEYS.SUPPLIER_BILL.BASE}/${id}`)),
+
+  //*************** Additional Charge **************** */
+  useAddAdditionalCharges: () => useMutations<any, void>([KEYS.ADDITIONAL_CHARGE.ADD, KEYS.ADDITIONAL_CHARGE.BASE], (input) => Post(URL_KEYS.ADDITIONAL_CHARGE.ADD, input)),
+  useEditAdditionalCharges: () => useMutations<any, void>([KEYS.ADDITIONAL_CHARGE.EDIT, KEYS.ADDITIONAL_CHARGE.BASE], (input) => Put(URL_KEYS.ADDITIONAL_CHARGE.EDIT, input)),
+  useDeleteAdditionalCharges: () => useMutations<string, void>([KEYS.ADDITIONAL_CHARGE.DELETE, KEYS.ADDITIONAL_CHARGE.BASE], (id) => Delete(`${URL_KEYS.ADDITIONAL_CHARGE.BASE}/${id}`)),
 };

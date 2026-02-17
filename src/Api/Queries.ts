@@ -105,5 +105,6 @@ export const Queries = {
   useGetSupplierBillDetails: (params?: Params) => useQueries<SupplierBillApiResponse>([KEYS.SUPPLIER_BILL.BASE, params], () => Get(URL_KEYS.SUPPLIER_BILL.ALL, params)),
 
   //*************** Additional Charge **************** */
-  useGetAdditionalChargeDropdown: (params?: Params, enabled?: boolean) => useQueries<any>([KEYS.ADDITIONAL_CHARGE.BASE, params], () => Get(URL_KEYS.ADDITIONAL_CHARGE.DROPDOWN, params), { enabled: enabled }),
+  useGetAdditionalChargesDropdown: (params?: Params, enabled?: boolean) => useQueries<any>([KEYS.ADDITIONAL_CHARGE.BASE, params], () => Get(URL_KEYS.ADDITIONAL_CHARGE.DROPDOWN, params), { enabled: enabled }),
+  useGetAdditionalCharges: (params?: Params, options?: AppQueryOptions<any>) => useQueries<any>([KEYS.ADDITIONAL_CHARGE.BASE, params], () => Get(URL_KEYS.ADDITIONAL_CHARGE.ALL, params), options),
 };

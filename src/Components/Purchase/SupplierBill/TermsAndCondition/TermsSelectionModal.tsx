@@ -7,9 +7,9 @@ import { CommonCheckbox, CommonButton } from "../../../../Attribute";
 import { useAppSelector } from "../../../../Store/hooks";
 import { Queries } from "../../../../Api";
 import { setTermsSelectionModal } from "../../../../Store/Slices/ModalSlice";
-import type { TermsConditionApiResponse, TermsConditionBase, TermsSelectionFormValues } from "../../../../Types";
+import type { TermsConditionApiResponse, TermsConditionBase, TermsSelectionFormValues, TermsSelectionModalProps } from "../../../../Types";
 
-const TermsSelectionModal = () => {
+const TermsSelectionModal = ({ companyId }: TermsSelectionModalProps) => {
   const dispatch = useDispatch();
 
   const { isTermsSelectionModal } = useAppSelector((state) => state.modal);
@@ -18,8 +18,8 @@ const TermsSelectionModal = () => {
   const selectedIds: string[] = isTermsSelectionModal.data || [];
 
   const { data, isLoading } = Queries.useGetTermsCondition({
-    enabled: openModal,
-  });
+    companyId: companyId,
+  }, { enabled: openModal && !!companyId });
 
   const [terms, setTerms] = useState<TermsConditionBase[]>([]);
 

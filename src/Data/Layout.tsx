@@ -40,4 +40,10 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.SUPPLIER_BILL.BASE, path: ROUTES.SUPPLIER_BILL.BASE },
     ],
   },
+  {
+    name: PAGE_TITLE.SETTINGS.BASE,
+    icon: <Settings />,
+    children: [
+      { name: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE, path: ROUTES.ADDITIONAL_CHARGES.BASE }, ], // Settings
+  },
 ];

@@ -118,4 +118,11 @@ export const PAGE_TITLE = {
     ADD: "Add Supplier Bill",
     EDIT: "Edit Supplier Bill",
   },
+  SETTINGS: {
+    BASE: "Settings",
+    ADDITIONAL_CHARGES: { 
+      BASE: "Additional Charges", 
+      ADD: "Add Additional Charge", 
+      EDIT: "Edit Additional Charge" },
+  },
 } as const;

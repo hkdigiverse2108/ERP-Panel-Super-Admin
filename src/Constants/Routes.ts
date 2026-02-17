@@ -78,4 +78,8 @@ export const ROUTES = {
     BASE: "/supplier-bill",
     ADD_EDIT: "/supplier-bill/add-edit",
   },
+  ADDITIONAL_CHARGES: {
+    BASE: "/additional-charge",
+    ADD_EDIT: "/additional-charge/add-edit",
+  },
 } as const;

@@ -2,13 +2,13 @@ import { Box } from "@mui/material";
 import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../../Attribute";
 import { PAYMENT_TERMS, REVERSE_CHARGE, TAX_TYPE } from "../../../../Data";
 import type { SupplierBillDetailsProps } from "../../../../Types";
-const SupplierBillDetails = ({ supplierOptions, selectedSupplier, isEditing, companyOptions, isCompanyLoading }: SupplierBillDetailsProps) => {
+const SupplierBillDetails = ({ supplierOptions, selectedSupplier, isEditing, companyOptions, isCompanyLoading, isSupplierDisabled }: SupplierBillDetailsProps) => {
   return (
     <Box sx={{ p: 2, display: "grid", gridTemplateColumns: { xs: "1fr", md: "340px 1fr" }, gap: 2 }}>
       {/* ================= LEFT SIDE ================= */}
       <Box display="flex" flexDirection="column" gap={2}>
         <CommonValidationSelect name="companyId" label="Select Company" required options={companyOptions} isLoading={isCompanyLoading} />
-        <CommonValidationSelect name="supplierId" label="Select Supplier" required options={supplierOptions} />
+        <CommonValidationSelect name="supplierId" label="Select Supplier" required options={supplierOptions} disabled={isSupplierDisabled} />
         <Box display="flex" gap={1}>
           <Box fontWeight={600}>Place of Supply:</Box>
           <Box color="text.secondary">{selectedSupplier?.address?.[0]?.state?.name || "-"}</Box>

@@ -40,6 +40,7 @@ export interface TermsAndConditionModalProps {
   onSave: (term: TermsConditionBase) => void;
   initialValues?: TermsConditionBase | null;
   isLoading?: boolean;
+  companyId?: string;
 }
 
 export interface TermsConditionFormValues {
@@ -49,4 +50,8 @@ export interface TermsConditionFormValues {
 
 export interface TermsSelectionFormValues {
   selected: string[];
+}
+
+export interface TermsSelectionModalProps {
+  companyId?: string;
 }

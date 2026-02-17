@@ -13,6 +13,7 @@ import type { TaxBase } from "./Tax";
 import type { UomBase } from "./Uom";
 import type { TermsConditionBase } from "./TermsCondition";
 import type { AccountBase } from "./Account";
+import type { AdditionalChargesBase } from "./AdditionalCharges";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -451,6 +452,7 @@ export interface ModalStateSlice {
   isAccountModal: { open: boolean; data: AccountBase | null };
   isTermsAndConditionModal: { open: boolean; data: TermsConditionBase | null };
   isTermsSelectionModal: { open: boolean; data: any | null };
+   isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
 }
 
 // ************ Modal End ***********

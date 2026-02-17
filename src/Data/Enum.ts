@@ -251,3 +251,7 @@ export const ACCOUNT_NATURE = [
   { label: "Paid", value: "paid" },
   { label: "Unpaid", value: "unpaid" },
 ];
+export const OPTION_TYPE = [
+  { label: "Purchase", value: "purchase" },
+  { label: "Sales", value: "sales" },
+];

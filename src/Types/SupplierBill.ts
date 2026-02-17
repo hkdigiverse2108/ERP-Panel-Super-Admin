@@ -185,6 +185,7 @@ export interface SupplierBillDetailsProps {
   isEditing: boolean;
   companyOptions: SelectOptionType[];
   isCompanyLoading: boolean;
+  isSupplierDisabled?: boolean;
 }
 
 /* ===================== API BASE ===================== */
@@ -278,4 +279,6 @@ export interface SupplierBillTabsProps {
   handleReturnRowChange: (index: number, field: keyof ProductRow, value: string | number | string[]) => void;
   returnRoundOffAmount: string | number;
   onReturnRoundOffAmountChange: (value: string | number) => void;
+  isProductDisabled?: boolean;
+  isTermsDisabled?: boolean;
 }

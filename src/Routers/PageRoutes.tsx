@@ -36,6 +36,8 @@ import MaterialConsumption from "../Pages/Inventory/MaterialConsumption";
 import MaterialConsumptionForm from "../Pages/Inventory/MaterialConsumption/MaterialConsumptionForm";
 import SupplierBill from "../Pages/Purchase/SupplierBill";
 import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
+import AdditionalCharges from "../Components/Settings/AdditionalCharges";
+import AdditionalChargesForm from "../Components/Settings/AdditionalCharges/AdditionalChargesForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -93,6 +95,9 @@ export const PageRoutes = [
 
   { path: ROUTES.SUPPLIER_BILL.BASE, name: PAGE_TITLE.PURCHASE.BASE, element: <SupplierBill /> },
   { path: ROUTES.SUPPLIER_BILL.ADD_EDIT, name: PAGE_TITLE.PURCHASE.BASE, element: <SupplierBillForm /> },
+
+  { path: ROUTES.ADDITIONAL_CHARGES.BASE, name: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE, element: <AdditionalCharges /> },
+  { path: ROUTES.ADDITIONAL_CHARGES.ADD_EDIT, name: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE, element: <AdditionalChargesForm /> },
 ];
 
 export const AuthRoutes = [

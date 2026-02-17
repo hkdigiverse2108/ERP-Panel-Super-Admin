@@ -24,6 +24,20 @@ const TaxTypeWatcher = ({ onChange }: { onChange: (taxType: string) => void }) =
   }, [values.taxType]);
   return null;
 };
+const CompanyWatcher = ({ selectedCompanyId, onChange }: { selectedCompanyId: string; onChange: (companyId: string) => void }) => {
+  const { values, setFieldValue } = useFormikContext<SupplierBillFormValues>();
+  useEffect(() => {
+    const newCompanyId = values.companyId || "";
+    if (newCompanyId !== selectedCompanyId) {
+      onChange(newCompanyId);
+      if (selectedCompanyId) {
+        setFieldValue("supplierId", "");
+        setFieldValue("termsAndConditionIds", []);
+      }
+    }
+  }, [values.companyId, selectedCompanyId, onChange, setFieldValue]);
+  return null;
+};
 const SupplierWatcher = ({ suppliers, onChange }: { suppliers: Supplier[]; onChange: (supplier: Supplier | null) => void }) => {
   const { values } = useFormikContext<SupplierBillFormValues>();
   useEffect(() => {
@@ -42,7 +56,16 @@ const SupplierBillForm = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.SUPPLIER_BILL.BASE);
   const data = location.state?.data;
-  const { data: supplierData } = Queries.useGetContactDropdown({ activeFilter: true, typeFilter: "supplier" });
+
+  const { _id, createdAt, updatedAt, isDeleted, createdBy, updatedBy, __v, ...cleanData } = data || {};
+  const defaultValues: SupplierBillFormValues = { supplierId: "", supplierBillNo: "", supplierBillDate: DateConfig.utc().toISOString(), taxType: "exclusive", paymentTerm: "", dueDate: "", reverseCharge: false, shippingDate: "", invoiceAmount: "", termsAndConditionIds: [], notes: "", paidAmount: 0, balanceAmount: 0, paymentStatus: "unpaid", status: "active", isActive: true };
+  const initialValues: SupplierBillFormValues = { ...defaultValues, ...cleanData, supplierId: cleanData?.supplierId?._id || cleanData?.supplierId || defaultValues.supplierId, companyId: cleanData?.companyId?._id || cleanData?.companyId || "", branchId: cleanData?.branchId?._id || cleanData?.branchId || "", reverseCharge: Boolean(cleanData?.reverseCharge), termsAndConditionIds: data?.termsAndConditionIds?.map((t: { _id: string }) => t._id) || [] };
+
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string>(initialValues.companyId || "");
+
+  const { data: companyData, isLoading: isCompanyLoading } = Queries.useGetCompanyDropdown();
+  const companyOptions = GenerateOptions(companyData?.data || []);
+  const { data: supplierData } = Queries.useGetContactDropdown({ activeFilter: true, typeFilter: "supplier", companyId: selectedCompanyId }, !!selectedCompanyId);
   const suppliers = (supplierData?.data || []) as Supplier[];
   const supplierOptions = GenerateOptions(suppliers);
   const isEditing = Boolean(data?._id);
@@ -54,6 +77,15 @@ const SupplierBillForm = () => {
     }
   }, [isEditing, permission, navigate]);
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
+
+  const handleCompanyChange = (newCompanyId: string) => {
+    setSelectedCompanyId(newCompanyId);
+    if (newCompanyId) {
+      setRows([emptyRow]);
+      setReturnRows([emptyRow]);
+      setSelectedTermIds([]);
+    }
+  };
   const emptyRow: ProductRow = { productId: "", itemCode: "", qty: "", freeQty: "", unit: "", unitCost: "", mrp: "", sellingPrice: "", disc1: "", disc2: "", taxableAmount: "", itemTax: "", landingCost: "", margin: "", totalAmount: "", mfgDate: "", expiryDate: "", taxRate: "", taxName: "" };
   const additionalChargeEmptyRow: AdditionalChargeRow = { chargeId: "", taxableAmount: "", tax: "", taxAmount: "", totalAmount: "" };
   const [rows, setRows] = useState<ProductRow[]>([emptyRow]);
@@ -68,11 +100,11 @@ const SupplierBillForm = () => {
   const [showAdditionalCharge, setShowAdditionalCharge] = useState(false);
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
   const taxOptions = GenerateOptions(TaxData?.data || []);
-  const { data: ProductsData, isLoading: ProductsDataLoading } = Queries.useGetProductDropdown();
+  const { data: ProductsData, isLoading: ProductsDataLoading } = Queries.useGetProductDropdown({ companyFilter: selectedCompanyId }, !!selectedCompanyId);
   const productOptions = GenerateOptions(ProductsData?.data);
   const [flatDiscount, setFlatDiscount] = useState<string | number>(0);
-  const { data: additionalchargedata, isLoading: additionalchargeLoading } = Queries.useGetAdditionalChargeDropdown();
-  const { data: termsConditionData } = Queries.useGetTermsCondition();
+  const { data: additionalchargedata, isLoading: additionalchargeLoading } = Queries.useGetAdditionalChargesDropdown({ companyFilter: selectedCompanyId }, !!selectedCompanyId);
+  const { data: termsConditionData } = Queries.useGetTermsCondition({ companyId: selectedCompanyId }, { enabled: !!selectedCompanyId });
   const additionalChargeOptions = GenerateOptions(additionalchargedata?.data);
   const [roundOffAmount, setRoundOffAmount] = useState<string | number>(0);
   const [returnRoundOffAmount, setReturnRoundOffAmount] = useState<string | number>(0);
@@ -84,7 +116,7 @@ const SupplierBillForm = () => {
   }, [isTermsSelectionModal]);
   const calculateSummary = () => {
     const itemDiscount = rows.reduce((s, r) => s + (Number(r.disc1) || 0) + (Number(r.disc2) || 0), 0);
-    const itemTaxable = rows.reduce((s, r) => s + (Number(r.taxableAmount) || 0), 0);
+    const itemTaxable = rows.reduce((s, r) => s + (Number(r.taxableAmount) || 0), 0); 
     const itemTax = rows.reduce((s, r) => s + (Number(r.itemTax) || 0), 0);
     const itemGross = rows.reduce((s, r) => s + (Number(r.qty) || 0) * (Number(r.sellingPrice) || 0), 0);
     const additionalTaxable = additionalChargeRows.reduce((s, r) => s + (Number(r.taxableAmount) || 0), 0);
@@ -131,13 +163,13 @@ const SupplierBillForm = () => {
     const response = termsConditionData.data;
     const all: TermsConditionBase[] = Array.isArray(response) ? response : (response.termsCondition_data ?? []);
     setAllTerms(all);
-    if (isEditing && data?.termsAndConditionIds) {
+    if (isEditing && data?.termsAndConditionIds && data.companyId?._id === selectedCompanyId) {
       setSelectedTermIds(data.termsAndConditionIds.map((t: TermsConditionBase) => t._id));
     } else {
       const defaultTerms = all.filter((t) => t.isDefault);
       setSelectedTermIds(defaultTerms.map((t) => t._id));
     }
-  }, [termsConditionData, isEditing, data]);
+  }, [termsConditionData, isEditing, data, selectedCompanyId]);
   useEffect(() => {
     if (isEditing && data) {
       if (data.productDetails?.item) {
@@ -163,8 +195,8 @@ const SupplierBillForm = () => {
       if (data.returnProductDetails?.summary?.roundOff) {
         setReturnRoundOffAmount(data.returnProductDetails.summary.roundOff);
       }
-      setSelectedTermIds(data.termsAndConditionIds.map((t: TermsConditionBase) => t._id));
     }
+    // termsAndConditionIds handling moved to terms effect
   }, [data, isEditing]);
 
   const mapProductRows = (): SupplierBillProductDetails => {
@@ -330,12 +362,6 @@ const SupplierBillForm = () => {
     setSelectedTermIds((prev) => prev.filter((termId) => termId !== id));
     setAllTerms((prev) => prev.filter((term) => term._id !== id));
   };
-  const defaultValues: SupplierBillFormValues = { supplierId: "", supplierBillNo: "", supplierBillDate: DateConfig.utc().toISOString(), taxType: "exclusive", paymentTerm: "", dueDate: "", reverseCharge: false, shippingDate: "", invoiceAmount: "", termsAndConditionIds: [], notes: "", paidAmount: 0, balanceAmount: 0, paymentStatus: "unpaid", status: "active", isActive: true };
-
-  const { _id, createdAt, updatedAt, isDeleted, createdBy, updatedBy, __v, ...cleanData } = data || {};
-
-  const initialValues: SupplierBillFormValues = { ...defaultValues, ...cleanData, supplierId: cleanData?.supplierId?._id || cleanData?.supplierId || defaultValues.supplierId, companyId: cleanData?.companyId?._id || cleanData?.companyId || "", branchId: cleanData?.branchId?._id || cleanData?.branchId || "", reverseCharge: Boolean(cleanData?.reverseCharge), termsAndConditionIds: data?.termsAndConditionIds?.map((t: { _id: string }) => t._id) || [] };
-
   const handleSubmit = async (values: SupplierBillFormValues, { resetForm }: FormikHelpers<SupplierBillFormValues>) => {
     const { taxSummary, ...restSummary } = summary;
     const payload: SupplierBillFormValues = { ...values, productDetails: mapProductRows(), additionalCharges: mapAdditionalCharges(), termsAndConditionIds: selectedTermIds, summary: restSummary };
@@ -360,6 +386,7 @@ const SupplierBillForm = () => {
           {() => (
             <>
               <Form noValidate>
+                <CompanyWatcher selectedCompanyId={selectedCompanyId} onChange={handleCompanyChange} />
                 <SupplierWatcher suppliers={suppliers} onChange={setSelectedSupplier} />
                 <TaxTypeWatcher
                   onChange={(type) => {
@@ -368,15 +395,13 @@ const SupplierBillForm = () => {
                   }}
                 />
                 <CommonCard title="Supplier Bill Details">
-                  <SupplierBillDetails supplierOptions={supplierOptions} selectedSupplier={selectedSupplier} isEditing={isEditing} />
+                  <SupplierBillDetails supplierOptions={supplierOptions} selectedSupplier={selectedSupplier} isEditing={isEditing} companyOptions={companyOptions} isCompanyLoading={isCompanyLoading} isSupplierDisabled={!selectedCompanyId} />
                 </CommonCard>
               </Form>
               <CommonCard hideDivider>
-                <SupplierBillTabs tabValue={tabValue} setTabValue={setTabValue} rows={rows} handleAdd={handleAdd} handleCut={handleCut} handleRowChange={handleRowChange} returnRows={returnRows} handleAddReturn={handleAddReturn} handleCutReturn={handleCutReturn} handleReturnRowChange={handleReturnRowChange} termsList={displayTerms} handleDeleteTerm={handleDeleteTerm} productOptions={productOptions} isProductLoading={ProductsDataLoading} returnRoundOffAmount={returnRoundOffAmount} onReturnRoundOffAmountChange={setReturnRoundOffAmount} />
+                <SupplierBillTabs tabValue={tabValue} setTabValue={setTabValue} rows={rows} handleAdd={handleAdd} handleCut={handleCut} handleRowChange={handleRowChange} returnRows={returnRows} handleAddReturn={handleAddReturn} handleCutReturn={handleCutReturn} handleReturnRowChange={handleReturnRowChange} termsList={displayTerms} handleDeleteTerm={handleDeleteTerm} productOptions={productOptions} isProductLoading={ProductsDataLoading} returnRoundOffAmount={returnRoundOffAmount} onReturnRoundOffAmountChange={setReturnRoundOffAmount} isProductDisabled={!selectedCompanyId} isTermsDisabled={!selectedCompanyId} />
               </CommonCard>
-              <CommonCard grid={{ xs: 12 }} hideDivider>
-                <AdditionalChargesSection show={showAdditionalCharge} onToggle={setShowAdditionalCharge} rows={additionalChargeRows} onAdd={handleAddAdditionalCharge} onRemove={handleCutAdditionalCharge} onChange={handleAdditionalChargeRowChange} taxOptions={taxOptions} isTaxLoading={TaxDataLoading} flatDiscount={flatDiscount} onFlatDiscountChange={setFlatDiscount} summary={summary} isAdditionalChargeLoading={additionalchargeLoading} additionalChargeOptions={additionalChargeOptions} roundOffAmount={roundOffAmount} onRoundOffAmountChange={setRoundOffAmount} />
-              </CommonCard>
+              <AdditionalChargesSection show={showAdditionalCharge} onToggle={setShowAdditionalCharge} rows={additionalChargeRows} onAdd={handleAddAdditionalCharge} onRemove={handleCutAdditionalCharge} onChange={handleAdditionalChargeRowChange} taxOptions={taxOptions} isTaxLoading={TaxDataLoading} flatDiscount={flatDiscount} onFlatDiscountChange={setFlatDiscount} summary={summary} isAdditionalChargeLoading={additionalchargeLoading} additionalChargeOptions={additionalChargeOptions} roundOffAmount={roundOffAmount} onRoundOffAmountChange={setRoundOffAmount} />
               <CommonBottomActionBar save isLoading={isAddLoading || isEditLoading} onSave={() => formikRef.current?.submitForm()} />
             </>
           )}
@@ -401,10 +426,10 @@ const SupplierBillForm = () => {
             }
           });
         }}
+        companyId={selectedCompanyId}
       />
-      <TermsSelectionModal />
+      <TermsSelectionModal companyId={selectedCompanyId} />
     </>
   );
 };
 export default SupplierBillForm;
-  

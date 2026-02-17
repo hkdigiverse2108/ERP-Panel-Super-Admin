@@ -16,7 +16,7 @@ const AdditionalChargesSection = ({ show, onToggle, rows, onAdd, onRemove, onCha
       header: "",
       bodyClass: "p-2 flex justify-center gap-1",
       render: (_, index) => (
-        <>  
+        <>
           {index === rows.length - 1 && (
             <CommonButton size="small" variant="outlined" onClick={onAdd}>
               <AddIcon />
