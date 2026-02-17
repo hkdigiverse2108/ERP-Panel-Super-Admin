@@ -109,6 +109,7 @@ export const BrandFormSchema = Yup.object({
 });
 
 export const ProductFormSchema = Yup.object({
+  sku: Validation("string", "sku", { required: false }),
   productType: Validation("string", "Product Type"),
   name: Validation("string", "Product Name"),
   printName: Validation("string", "Print Name"),
