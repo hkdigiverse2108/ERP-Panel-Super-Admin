@@ -11,6 +11,7 @@ import type { LocationBase } from "./Location";
 import type { RoleBase } from "./Role";
 import type { TaxBase } from "./Tax";
 import type { UomBase } from "./Uom";
+import type { TermsConditionBase } from "./TermsCondition";
 import type { AccountBase } from "./Account";
 
 export type GridType = number | object | "auto" | "grow";
@@ -448,6 +449,8 @@ export interface ModalStateSlice {
   isAccountGroupModal: { open: boolean; data: AccountGroupBase | null };
   isRoleModal: { open: boolean; data: RoleBase | null };
   isAccountModal: { open: boolean; data: AccountBase | null };
+  isTermsAndConditionModal: { open: boolean; data: TermsConditionBase | null };
+  isTermsSelectionModal: { open: boolean; data: any | null };
 }
 
 // ************ Modal End ***********

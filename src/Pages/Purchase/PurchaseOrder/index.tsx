@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn, CommonStatsCard } from "../../../Components/Common";
+import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonObjectNameColumn, CommonStatsCard } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, ORDER_STATUS } from "../../../Data";
 import type { AppGridColDef, PurchaseOrderBase } from "../../../Types";
@@ -22,8 +22,11 @@ const PurchaseOrder = () => {
   const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier" });
 
   const allPurchaseOrder = useMemo(() => purchaseOrderData?.data?.purchaseOrder_data?.map((purchaseOrder) => ({ ...purchaseOrder, id: purchaseOrder._id })) || [], [purchaseOrderData]);
-
   const totalRows = purchaseOrderData?.data?.totalData || 0;
+
+  const summary = useMemo(() => {
+    return CalculateGridSummary(allPurchaseOrder, ["netAmount"]);
+  }, [allPurchaseOrder]);
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
@@ -36,7 +39,7 @@ const PurchaseOrder = () => {
     { field: "orderNo", headerName: "Order No", width: 150 },
     CommonObjectNameColumn<PurchaseOrderBase>("supplierId", { headerName: "Supplier", width: 250 }),
     { field: "date", headerName: "Order Date", width: 150, renderCell: (params) => FormatDate(params.row.date || params.row.orderDate) },
-    { field: "netAmount", headerName: "Amount", width: 170 },
+    { field: "netAmount", headerName: "Amount", width: 170, type: "number" },
     { field: "status", headerName: "Status", width: 150 },
     { field: "notes", headerName: "Notes", flex: 1, minWidth: 150 },
     CommonActionColumn({
@@ -60,6 +63,9 @@ const PurchaseOrder = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    slots: {
+      bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
+    },
   };
 
   const filter = [

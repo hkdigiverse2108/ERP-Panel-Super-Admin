@@ -113,4 +113,9 @@ export const PAGE_TITLE = {
     ADD: "Add Purchase Order",
     EDIT: "Edit Purchase Order",
   },
+  SUPPLIER_BILL: {
+    BASE: "Supplier Bill",
+    ADD: "Add Supplier Bill",
+    EDIT: "Edit Supplier Bill",
+  },
 } as const;

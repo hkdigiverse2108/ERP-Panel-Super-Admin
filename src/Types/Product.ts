@@ -1,5 +1,6 @@
 import type { BrandBase } from "./Brand";
 import type { CategoryBase } from "./Category";
+import type { TaxBase } from "./Tax";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 
 export type ProductWithRemoveQty = ProductBase & { id: string; removeQty: number | null };
@@ -11,6 +12,7 @@ export interface NutritionInfo {
 }
 
 export interface ProductFormValues {
+  sku?: string;
   productType?: string;
   name?: string;
   printName?: string;
@@ -59,11 +61,15 @@ export type AddProductPayload = ProductFormValues;
 
 export type EditProductPayload = AddProductPayload & { productId: string };
 
-export interface ProductBase extends Omit<ProductFormValues, "categoryId" | "subCategoryId" | "brandId" | "subBrandId">, CommonDataType {
+export interface ProductBase extends Omit<ProductFormValues, "categoryId" | "subCategoryId" | "brandId" | "subBrandId" | "purchaseTaxId" | "salesTaxId">, CommonDataType {
   categoryId?: CategoryBase;
   subCategoryId?: CategoryBase;
   brandId?: BrandBase;
   subBrandId?: BrandBase;
+  purchaseTaxId?: TaxBase;
+  salesTaxId?: TaxBase;
+  itemCode?: string;
+  unit?: string;
 }
 
 export interface ProductDataResponse extends PageStatus {

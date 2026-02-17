@@ -1,63 +1,58 @@
-import { Grid } from "@mui/material";
-import { Form, Formik, type FormikHelpers } from "formik";
+import { Grid, Box } from "@mui/material";
+import { Formik } from "formik";
 import type { FC } from "react";
-import * as Yup from "yup";
-import { CommonButton, CommonValidationTextField } from "../../../Attribute";
+import { CommonButton, CommonSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonCard, CommonModal } from "../../../Components/Common";
-import type { TermsConditionBase } from "../../../Types/TermsCondition";
+import type { TermsAndConditionModalProps, TermsConditionBase, TermsConditionFormValues } from "../../../Types/TermsCondition";
+import { TermsConditionFormSchema } from "../../../Utils/ValidationSchemas";
 
+const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ openModal, setOpenModal, onSave, initialValues, isLoading }) => {
 
-interface TermsAndConditionModalProps {
-  openModal: boolean;
-  setOpenModal: (value: boolean) => void;
-  onSave: (term: TermsConditionBase) => void;
-}
-
-interface FormValues {
-  termsCondition: string;
-}
-
-const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ openModal, setOpenModal, onSave }) => {
-  const initialValues: FormValues = {
-    termsCondition: "",
+  const formInitialValues: TermsConditionFormValues = {
+    termsCondition: initialValues?.termsCondition || "",
+    isDefault: initialValues ? !!initialValues.isDefault : true,
   };
 
-  const validationSchema = Yup.object().shape({
-    termsCondition: Yup.string().required("Terms & Condition is required"),
-  });
-
-  const handleSubmit = (values: FormValues, { resetForm }: FormikHelpers<FormValues>) => {
+  const handleSubmit = (values: TermsConditionFormValues) => {
     const newTerm: TermsConditionBase = {
-      _id: Date.now().toString(),
+      _id: initialValues?._id || Date.now().toString(),
       termsCondition: values.termsCondition,
+      isActive: true, // Assuming 
+      // default active
+      isDefault: values.isDefault || true,
     };
-
     onSave(newTerm);
-    resetForm();
-    setOpenModal(false);
   };
-
   return (
-    <CommonModal title="Add Terms & Conditions" isOpen={openModal} onClose={() => setOpenModal(false)} className="max-w-125 m-2 sm:m-5">
-      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
-        {({ dirty, isValid }) => (
-          <Form noValidate>
+    <CommonModal
+      title={initialValues ? "Edit Terms & Conditions" : "Add Terms & Conditions"}
+      isOpen={openModal}
+      onClose={() => setOpenModal(false)}
+      className="max-w-125 m-2 sm:m-5"
+    >
+      <Formik initialValues={formInitialValues} validationSchema={TermsConditionFormSchema} onSubmit={handleSubmit} enableReinitialize>
+        {({ dirty, isValid, values, setFieldValue, submitForm }) => (
+          <Box className="w-full">
             <Grid container spacing={2}>
               <CommonCard hideDivider grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
                   <CommonValidationTextField label="Terms & Conditions" name="termsCondition" multiline rows={4} placeholder="Enter terms & conditions" required />
 
+                  <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
+                    <CommonSwitch label="Default" name="isDefault" onChange={(checked) => setFieldValue("isDefault", checked)} value={values.isDefault} />
+                  </Box>
+
                   <Grid sx={{ display: "flex", gap: 2, ml: "auto" }}>
                     <CommonButton variant="outlined" title="Cancel" onClick={() => setOpenModal(false)} />
-                    <CommonButton type="submit" variant="contained" title="Save" disabled={!dirty || !isValid} />
+                    <CommonButton type="button" variant="contained" title={initialValues ? "Update" : "Save"} disabled={!dirty || !isValid || isLoading} onClick={() => submitForm()} />
                   </Grid>
                 </Grid>
               </CommonCard>
             </Grid>
-          </Form>
+          </Box>
         )}
       </Formik>
-    </CommonModal>
+    </CommonModal >
   );
 };
 

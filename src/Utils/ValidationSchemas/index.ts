@@ -109,6 +109,7 @@ export const BrandFormSchema = Yup.object({
 });
 
 export const ProductFormSchema = Yup.object({
+  sku: Validation("string", "sku", { required: false }),
   productType: Validation("string", "Product Type"),
   name: Validation("string", "Product Name"),
   printName: Validation("string", "Print Name"),
@@ -296,7 +297,9 @@ export const PurchaseOrderFormSchema = Yup.object({
   orderDate: Validation("string", "Order Date"),
   shippingDate: Validation("string", "Shipping Date"),
   taxType: Validation("string", "Tax Type", { required: false }),
+  termsCondition: Validation("string", "Terms & Condition", { required: false }),
   notes: Validation("string", "Notes", { required: false, extraRules: (s) => s?.trim().max(200, "Maximum 200 characters allowed") }),
+
   items: Yup.array()
     .of(
       Yup.object({

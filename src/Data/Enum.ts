@@ -177,6 +177,11 @@ export const PRODUCT_EXPIRY_TYPE = [
   { label: "EXP", value: "expiry" },
 ];
 
+export const REVERSE_CHARGE = [
+  { label: "Yes", value: "true" },
+  { label: "No", value: "false" },
+];
+
 export const COMPANY = [
   { label: "Dhruvi Bakery", value: "Dhruvi Bakery" },
   { label: "Rakesh Enterprises", value: "Rakesh Enterprises" },
@@ -236,8 +241,15 @@ export const ACCOUNT_NATURE = [
   { label: "Sales Return", value: "sales_return" },
   { label: "Purchase", value: "purchase" },
   { label: "Purchase Return", value: "purchase_return" },
+  { label: "Assets", value: "assets" },
   { label: "Liabilities", value: "liabilities" },
   { label: "Assets", value: "assets" },
   { label: "Income", value: "income" },
   { label: "Expenses", value: "expenses" },
+];
+
+export const PAYMENT_STATUS_OPTIONS = [
+  { label: "All", value: "" },
+  { label: "Paid", value: "paid" },
+  { label: "Unpaid", value: "unpaid" },
 ];

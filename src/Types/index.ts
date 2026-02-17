@@ -4,7 +4,6 @@ export * from "./Api";
 export * from "./Auth";
 export * from "./TermsCondition";
 export * from "./User";
-
 export * from "./Branch";
 export * from "./Announcement";
 export * from "./CallRequest";
@@ -27,3 +26,5 @@ export * from "./PurchaseOrder";
 export * from "./DebitNote";
 export * from "./CreditNote";
 export * from "./MaterialConsumption";
+export * from "./SupplierBill";
+

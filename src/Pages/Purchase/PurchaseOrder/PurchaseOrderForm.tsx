@@ -7,11 +7,11 @@ import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationTex
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, ORDER_STATUS, TAX_TYPE } from "../../../Data";
-import type { PurchaseOrderFormValues, Supplier } from "../../../Types";
+import type { AddPurchaseOrderPayload, PurchaseOrderFormContentProps, PurchaseOrderFormValues, Supplier } from "../../../Types";
 import { GenerateOptions, GetChangedFields, PurchaseOrderFormSchema, RemoveEmptyFields } from "../../../Utils";
-import PurchaseOrderProductAndBilling from "./PurchaseOrderProductAndBilling";
+import ProductAndTerm from "./ProductAndTerm";
 
-const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate, resetForm, setFieldValue, dirty, supplierQueryEnabled }: any) => {
+const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate, resetForm, setFieldValue, dirty, supplierQueryEnabled }: PurchaseOrderFormContentProps) => {
   const { values } = useFormikContext<PurchaseOrderFormValues>();
   const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier", companyId: values.companyId || undefined }, supplierQueryEnabled);
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
@@ -26,15 +26,7 @@ const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate
           <Box sx={{ p: 2, display: "grid", gridTemplateColumns: { xs: "1fr", md: "340px 1fr" }, gap: 2 }}>
             {/* ================= LEFT SIDE ================= */}
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <CommonValidationSelect
-                name="supplierId"
-                label="Select Supplier"
-                required
-                isLoading={supplierDataLoading}
-                options={GenerateOptions(supplierData?.data)}
-                grid={{ xs: 12 }}
-                disabled={!values.companyId}
-              />
+              <CommonValidationSelect name="supplierId" label="Select Supplier" required isLoading={supplierDataLoading} options={GenerateOptions(supplierData?.data)} grid={{ xs: 12 }} disabled={!values.companyId} />
 
               {/* PLACE OF SUPPLY */}
               <Box display="flex" gap={1} flexWrap="wrap">
@@ -49,7 +41,7 @@ const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate
               </Box>
 
               {/* BILLING ADDRESS */}
-              <Box display="flex" gap={1} flexWrap="wrap">
+              <Box display="flex" gap={1} >
                 <Box fontWeight={600}>Billing Address:</Box>
                 {selectedSupplier?.address?.length ? (
                   <Box color="text.secondary">
@@ -67,14 +59,7 @@ const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate
 
             {/* ================= RIGHT SIDE ================= */}
             <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: 2 }}>
-              <CommonValidationSelect
-                name="companyId"
-                label="Select Company"
-                required
-                isLoading={companyDataLoading}
-                options={GenerateOptions(companyData?.data)}
-                grid={{ xs: 12 }}
-              />
+              <CommonValidationSelect name="companyId" label="Select Company" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12 }} />
               <CommonValidationDatePicker name="orderDate" label="Purchase Order Date" required grid={{ xs: 12 }} />
               <CommonValidationDatePicker name="shippingDate" label="Shipping Date" required grid={{ xs: 12 }} />
               <CommonValidationTextField name="shippingNote" label="Shipping Note" grid={{ xs: 12 }} />
@@ -85,17 +70,9 @@ const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate
           </Box>
         </CommonCard>
 
-        <PurchaseOrderProductAndBilling />
+        <ProductAndTerm isEditing={isEditing} />
 
-        <CommonBottomActionBar
-          save={isEditing}
-          clear={!isEditing}
-          disabled={!dirty}
-          isLoading={addLoading || editLoading}
-          onClear={() => (isEditing ? navigate(-1) : resetForm())}
-          onSave={() => setFieldValue("_submitAction", "save")}
-          onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")}
-        />
+        <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={addLoading || editLoading} onClear={() => (isEditing ? navigate(-1) : resetForm())} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
       </Grid>
     </Form>
   );
@@ -105,6 +82,7 @@ const PurchaseOrderForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { data } = location.state || {};
+
   const isEditing = Boolean(data?._id);
 
   const { mutate: addPurchaseOrder, isPending: addLoading } = Mutations.useAddPurchaseOrder();
@@ -152,7 +130,7 @@ const PurchaseOrderForm = () => {
     notes: data?.notes || "",
     status: ["in_progress", "delivered", "partially_delivered", "exceed", "completed", "cancelled"].includes(data?.status) ? data.status : "in_progress",
     taxType: data?.taxType || "",
-    termsAndConditionIds: data?.termsAndConditionIds || [],
+    termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
   };
 
   const handleSubmit = async (values: PurchaseOrderFormValues, { resetForm }: FormikHelpers<PurchaseOrderFormValues>) => {
@@ -160,7 +138,7 @@ const PurchaseOrderForm = () => {
 
     const payload = {
       ...rest,
-      items: rest.items?.map(({ freeQty, mrp, sellingPrice, discount1, discount2, taxableAmount, unitCost, ...item }) => ({
+      items: rest.items?.map(({ taxAmount, taxName, freeQty, mrp, sellingPrice, discount1, discount2, taxableAmount, unitCost, ...item }) => ({
         ...item,
         tax: String(item.tax || 0),
         landingCost: String(item.landingCost || 0),
@@ -176,7 +154,7 @@ const PurchaseOrderForm = () => {
       const changedFields = GetChangedFields(payload, data);
       await editPurchaseOrder({ ...changedFields, purchaseOrderId: data._id }, { onSuccess: handleSuccess });
     } else {
-      await addPurchaseOrder(RemoveEmptyFields(payload) as any, { onSuccess: handleSuccess });
+      await addPurchaseOrder(RemoveEmptyFields(payload) as unknown as AddPurchaseOrderPayload, { onSuccess: handleSuccess });
     }
   };
 
@@ -184,17 +162,9 @@ const PurchaseOrderForm = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE_ORDER[pageMode]} breadcrumbs={BREADCRUMBS.PURCHASE_ORDER[pageMode]} />
 
-      <Box sx={{ p: 3 }}>
+      <Box sx={{ p: 3, pb: 14 }}>
         <Formik initialValues={initialValues} validationSchema={PurchaseOrderFormSchema} onSubmit={handleSubmit}>
-          {(formikProps) => (
-            <PurchaseOrderFormContent
-              {...formikProps}
-              isEditing={isEditing}
-              addLoading={addLoading}
-              editLoading={editLoading}
-              navigate={navigate}
-            />
-          )}
+          {(formikProps) => <PurchaseOrderFormContent {...formikProps} isEditing={isEditing} addLoading={addLoading} editLoading={editLoading} navigate={navigate} />}
         </Formik>
       </Box>
     </>
