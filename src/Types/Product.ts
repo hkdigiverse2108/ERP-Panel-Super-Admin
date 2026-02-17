@@ -12,6 +12,7 @@ export interface NutritionInfo {
 }
 
 export interface ProductFormValues {
+  sku?: string;
   productType?: string;
   name?: string;
   printName?: string;
