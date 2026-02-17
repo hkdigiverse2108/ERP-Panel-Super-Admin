@@ -578,4 +578,10 @@ export interface TabPanelProps {
   value: number;
 }
 
-// ************ Tab Select End ***********
+// ************ Common Terms And Condition Start ***********
+
+export interface CommonTermsAndConditionProps {
+  selectedTermIds: string[];
+  onChange: (ids: string[]) => void;
+  isView?: boolean;
+}

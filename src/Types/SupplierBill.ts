@@ -150,6 +150,7 @@ export interface AdditionalChargeRow {
   tax: string;
   taxAmount: string;
   totalAmount: string;
+  
 }
 
 export interface AdditionalChargesSectionProps {

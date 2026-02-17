@@ -33,10 +33,11 @@ const AdditionalCharges = () => {
 
   const columns: AppGridColDef<AdditionalChargesBase>[] = [
     { field: "name", headerName: "Additional Charge", width: 170 },
-    { field: "defaultValue", headerName: "Default Value", width: 150},
+    { field: "defaultValue", headerName: "Default Value", width: 150 },
+    { field: "companyId", headerName: "Company", width: 150, valueGetter: (_v, row) => (typeof row.companyId === "object" ? row.companyId?.name : row.companyId) || "" },
     { field: "hsnSac", headerName: "HSN Code", width: 150 },
     { field: "accountGroupId", headerName: "Account Group", width: 140, valueGetter: (_v, row) => (typeof row.accountGroupId === "object" ? row.accountGroupId?.name : row.accountGroupId) },
-    { field: "taxId", headerName: "Tax", flex: 1, valueGetter: (_v, row) => (typeof row.taxId === "object" ? row.taxId?.name : row.taxId) },
+    { field: "taxId", headerName: "Tax", flex: 1, valueGetter: (_v, row) => (typeof row.taxId === "object" ? row.taxId?.name : row.taxId)},
     CommonActionColumn<AdditionalChargesBase>({
       active: (row) =>
         editAdditionalCharges({
@@ -54,7 +55,7 @@ const AdditionalCharges = () => {
     rowCount: totalRows,
     loading: additionalChargesDataLoading || additionalChargesDataFetching || isEditLoading,
     isActive,
-    setActive,  
+    setActive,
     handleAdd,
     paginationModel,
     onPaginationModelChange: setPaginationModel,
@@ -66,7 +67,7 @@ const AdditionalCharges = () => {
 
   return (
     <>
-      <CommonCard title={PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE}>
+      <CommonCard title={PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE} >
         <CommonDataGrid {...CommonDataGridOption} />
       </CommonCard>
       <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
@@ -76,3 +77,4 @@ const AdditionalCharges = () => {
 };
 
 export default AdditionalCharges;
+
