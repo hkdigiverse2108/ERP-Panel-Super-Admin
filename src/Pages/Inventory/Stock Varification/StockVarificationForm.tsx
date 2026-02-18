@@ -63,9 +63,9 @@ const StockVerificationForm = () => {
     price: product.purchasePrice ?? 0,
     mrp: product.mrp ?? 0,
     sellingPrice: product.sellingPrice ?? 0,
-    systemQty: (product as any).qty ?? 0,
+    systemQty: (product as ProductBase).qty ?? 0,
     physicalQty: 0,
-    differenceQty: 0 - ((product as any).qty ?? 0),
+    differenceQty: 0 - ((product as ProductBase).qty ?? 0),
     differenceAmount: (product.landingCost ?? 0) * (0 - ((product as any).qty ?? 0)),
     approvedQty: 0,
   });
