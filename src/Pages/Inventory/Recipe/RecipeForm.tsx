@@ -87,7 +87,7 @@ const RecipeForm = () => {
                         {values.rawProducts?.map((_, index) => {
                           const rawProducts = values.rawProducts || [];
                           return (
-                            <Box key={index} display="flex" flexWrap="wrap" gap={2}>
+                            <Box key={index} display="flex" flexWrap="wrap" gap={2} sx={{ mb: 2 }}>
                               <DependentSelect name={`rawProducts.${index}.productId`} label="Product" query={Queries.useGetProductDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} required grid={{ xs: 12, md: 4 }} />
                               <CommonValidationTextField name={`rawProducts.${index}.useQty`} label="Use Qty" type="number" required grid={{ xs: 12, md: 3 }} />
                               <CommonValidationTextField name={`rawProducts.${index}.mrp`} label="MRP" type="number" grid={{ xs: 12, md: 3 }} />
