@@ -131,6 +131,13 @@ export const URL_KEYS = {
     ADD: "/material-consumption/add",
     EDIT: "/material-consumption/edit",
   },
+  RECIPE: {
+    BASE: "/recipe",
+    DROPDOWN: "/recipe/dropdown",
+    ALL: "/recipe/all",
+    ADD: "/recipe/add",
+    EDIT: "/recipe/edit",
+  },
 
   // ----------------------------- accounts -----------------------------
   ACCOUNT_GROUP: {

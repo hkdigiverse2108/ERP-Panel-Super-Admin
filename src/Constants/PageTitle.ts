@@ -59,6 +59,11 @@ export const PAGE_TITLE = {
       ADD: "Add Material Consumption",
       EDIT: "Edit Material Consumption",
     },
+    RECIPE: {
+      BASE: "Recipe",
+      ADD: "Add Recipe",
+      EDIT: "Edit Recipe",
+    },
   },
   CUSTOMER: {
     BASE: "Customer",
@@ -120,9 +125,10 @@ export const PAGE_TITLE = {
   },
   SETTINGS: {
     BASE: "Settings",
-    ADDITIONAL_CHARGES: { 
-      BASE: "Additional Charges", 
-      ADD: "Add Additional Charge", 
-      EDIT: "Edit Additional Charge" },
+    ADDITIONAL_CHARGES: {
+      BASE: "Additional Charges",
+      ADD: "Add Additional Charge",
+      EDIT: "Edit Additional Charge",
+    },
   },
 } as const;

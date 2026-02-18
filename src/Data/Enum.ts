@@ -63,6 +63,11 @@ export const ORDER_TYPE = [
   { label: "Delivery", value: "Delivery" },
 ];
 
+export const RECIPE_TYPE_OPTIONS = [
+  { label: "Assemble", value: "assemble" },
+  { label: "Unassemble", value: "unassemble" },
+];
+
 export const USER_TYPE = [
   { label: "User", value: "user" },
   { label: "Employee", value: "employee" },

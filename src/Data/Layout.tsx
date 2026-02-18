@@ -20,6 +20,7 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.INVENTORY.UOM.BASE, path: ROUTES.UOM.BASE, pro: false },
       { name: PAGE_TITLE.INVENTORY.TAX.BASE, path: ROUTES.TAX.BASE, pro: false },
       { name: PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE, path: ROUTES.MATERIAL_CONSUMPTION.BASE, pro: false },
+      { name: PAGE_TITLE.INVENTORY.RECIPE.BASE, path: ROUTES.RECIPE.BASE, pro: false },
     ],
   },
   {
@@ -43,7 +44,6 @@ export const NavItems: NavItem[] = [
   {
     name: PAGE_TITLE.SETTINGS.BASE,
     icon: <Settings />,
-    children: [
-      { name: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE, path: ROUTES.ADDITIONAL_CHARGES.BASE }, ], // Settings
+    children: [{ name: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE, path: ROUTES.ADDITIONAL_CHARGES.BASE }], // Settings
   },
 ];

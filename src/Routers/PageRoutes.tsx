@@ -38,6 +38,8 @@ import SupplierBill from "../Pages/Purchase/SupplierBill";
 import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
 import AdditionalCharges from "../Components/Settings/AdditionalCharges";
 import AdditionalChargesForm from "../Components/Settings/AdditionalCharges/AdditionalChargesForm";
+import Recipe from "../Pages/Inventory/Recipe";
+import RecipeForm from "../Pages/Inventory/Recipe/RecipeForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -98,6 +100,9 @@ export const PageRoutes = [
 
   { path: ROUTES.ADDITIONAL_CHARGES.BASE, name: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE, element: <AdditionalCharges /> },
   { path: ROUTES.ADDITIONAL_CHARGES.ADD_EDIT, name: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE, element: <AdditionalChargesForm /> },
+  
+  { path: ROUTES.RECIPE.BASE, name: PAGE_TITLE.INVENTORY.RECIPE.BASE, element: <Recipe /> },
+  { path: ROUTES.RECIPE.ADD_EDIT, name: PAGE_TITLE.INVENTORY.RECIPE.BASE, element: <RecipeForm /> },
 ];
 
 export const AuthRoutes = [

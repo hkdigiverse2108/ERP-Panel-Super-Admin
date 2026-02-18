@@ -323,3 +323,27 @@ export const AdditionalChargesFormSchema = Yup.object({
   defaultValue: Validation("number", "Default value", { required: false }).nullable(),
   isActive: Yup.boolean(),
 });
+
+export const RecipeFormSchema = Yup.object({
+  name: Validation("string", "name"),
+  date: Yup.mixed().required("Date is required"),
+  number: Validation("string", "number"),
+  type: Validation("string", "type"),
+
+  rawProducts: Yup.array()
+    .of(
+      Yup.object({
+        productId: Validation("string", "Product").required("Product is required"),
+        useQty: Validation("number", "Use Qty").required("Use Qty is required"),
+        mrp: Validation("number", "MRP").nullable(),
+      }),
+    )
+    .min(1, "At least one raw product is required")
+    .required("Raw products are required"),
+
+  finalProducts: Yup.object({
+    productId: Validation("string", "Product").required("Product is required"),
+    qtyGenerate: Validation("number", "Qty Generate").required("Qty Generate is required"),
+    mrp: Validation("number", "MRP").nullable(),
+  }).required("Final product is required"),
+});
