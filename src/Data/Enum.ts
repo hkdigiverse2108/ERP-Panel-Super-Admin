@@ -243,10 +243,12 @@ export const ACCOUNT_NATURE = [
   { label: "Purchase Return", value: "purchase_return" },
   { label: "Assets", value: "assets" },
   { label: "Liabilities", value: "liabilities" },
+  { label: "Assets", value: "assets" },
   { label: "Income", value: "income" },
   { label: "Expenses", value: "expenses" },
 ];
-  export const PAYMENT_STATUS_OPTIONS = [
+
+export const PAYMENT_STATUS_OPTIONS = [
   { label: "All", value: "" },
   { label: "Paid", value: "paid" },
   { label: "Unpaid", value: "unpaid" },
