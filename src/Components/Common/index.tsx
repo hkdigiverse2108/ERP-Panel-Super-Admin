@@ -16,5 +16,6 @@ import { CommonDataGridSummaryFooter, CalculateGridSummary } from "./CommonDataG
 import CommonStatsCard from "./CommonStatsCard";
 
 import CommonTable from "./CommonTable";
+import CommonTermsAndCondition from "./TermsAndConditions/CommonTermsAndCondition";
 
-export { CommonDataGridSummaryFooter, CalculateGridSummary, CommonTabPanel, DependentSelect, CommonDrawer, CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonUpload, CommonModal, CommonActionColumn, CommonDeleteModal, CommonBottomActionBar, CommonImageBox, CommonPhoneColumns, CommonObjectNameColumn, AdvancedSearch, CommonStatsCard, CommonTable };
+export { CommonTermsAndCondition, CommonDataGridSummaryFooter, CalculateGridSummary, CommonTabPanel, DependentSelect, CommonDrawer, CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonUpload, CommonModal, CommonActionColumn, CommonDeleteModal, CommonBottomActionBar, CommonImageBox, CommonPhoneColumns, CommonObjectNameColumn, AdvancedSearch, CommonStatsCard, CommonTable };

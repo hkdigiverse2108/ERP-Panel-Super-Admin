@@ -48,7 +48,7 @@ const PurchaseOrder = () => {
       onDelete: (row) => setRowToDelete({ _id: row?._id }),
     }),
   ];
-
+``
   const CommonDataGridOption = {
     columns,
     rows: allPurchaseOrder,
@@ -70,14 +70,14 @@ const PurchaseOrder = () => {
 
   const filter = [
     CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(companyData?.data), companyDataLoading, { xs: 12, sm: 6, md: 3 }),
-    CreateFilter("Select Supplier", "supplierFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(supplierData?.data), supplierDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Supplier", "supplier", advancedFilter, updateAdvancedFilter, GenerateOptions(supplierData?.data), supplierDataLoading, { xs: 12, sm: 6, md: 3 }),
     CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ORDER_STATUS, false, { xs: 12, sm: 6, md: 3 }),
   ];
 
   const stats = [
     { label: "All Orders", value: totalRows || 0, color: "primary" },
     { label: "Delivered", value: allPurchaseOrder.filter((item) => item.status === "delivered").length, color: "success" },
-    { label: "Exceed", value: allPurchaseOrder.filter((item) => item.status === "exceed").length, color: "error" },
+    { label: "Exceed", value: allPurchaseOrder.filter((item) => item.status === "exceed").length, color: "error" }, 
     { label: "Completed", value: allPurchaseOrder.filter((item) => item.status === "completed").length, color: "info" },
     { label: "Cancelled", value: allPurchaseOrder.filter((item) => item.status === "cancelled").length, color: "warning" },
   ];

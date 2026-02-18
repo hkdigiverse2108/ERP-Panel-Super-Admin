@@ -6,9 +6,9 @@ import { useEffect, useState } from "react";
 import { Mutations, Queries } from "../../../Api";
 import { CommonButton, CommonCheckbox, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonCard, CommonModal, CommonTable } from "../index";
-import type { CommonTableColumn, CommonTermsAndConditionProps, TermsAndConditionModalProps, TermsConditionApiResponse, TermsConditionBase, TermsConditionFormValues, TermsSelectionFormValues } from "../../../Types";
+import type { CommonTableColumn, CommonTermsAndConditionProps, TermsConditionApiResponse, TermsConditionBase, TermsConditionFormValues, TermsSelectionFormValues } from "../../../Types";
 
-const AddTermModal = ({ open, term, onClose, onSave }: { open: boolean; term: TermsConditionBase | null; onClose: () => void } & TermsAndConditionModalProps) => {
+const AddTermModal = ({ open, term, onClose, onSave, companyId }: { open: boolean; term: TermsConditionBase | null; onClose: () => void; onSave: (term: TermsConditionBase) => void; companyId?: string }) => {
   const isEditing = Boolean(term?._id);
   const initialValues: TermsConditionFormValues = {
     termsCondition: term?.termsCondition || "",
@@ -27,11 +27,11 @@ const AddTermModal = ({ open, term, onClose, onSave }: { open: boolean; term: Te
 
     if (isEditing && term?._id) {
       editTerm(
-        { termsConditionId: term._id, termsCondition: values.termsCondition, isDefault: values.isDefault },
+        { termsConditionId: term._id, termsCondition: values.termsCondition, isDefault: values.isDefault, companyId },
         { onSuccess: () => onSuccessHandler({ ...term, ...values, _id: term._id }) }, // Optimistic or response based
       );
     } else {
-      addTerm({ termsCondition: values.termsCondition, isDefault: values.isDefault }, { onSuccess: (res: any) => onSuccessHandler(res.data) });
+      addTerm({ termsCondition: values.termsCondition, isDefault: values.isDefault, companyId }, { onSuccess: (res: any) => onSuccessHandler(res.data) });
     }
   };
 
@@ -59,8 +59,8 @@ const AddTermModal = ({ open, term, onClose, onSave }: { open: boolean; term: Te
   );
 };
 
-const SelectTermsModal = ({ open, selectedIds, onClose, onSave }: { open: boolean; selectedIds: string[]; onClose: () => void; onSave: (ids: string[]) => void }) => {
-  const { data, isLoading } = Queries.useGetTermsCondition({ enabled: open });
+const SelectTermsModal = ({ open, selectedIds, onClose, onSave, companyId }: { open: boolean; selectedIds: string[]; onClose: () => void; onSave: (ids: string[]) => void; companyId?: string }) => {
+  const { data, isLoading } = Queries.useGetTermsCondition({ companyId }, { enabled: open && !!companyId });
   const [terms, setTerms] = useState<TermsConditionBase[]>([]);
 
   useEffect(() => {
@@ -127,9 +127,9 @@ const SelectTermsModal = ({ open, selectedIds, onClose, onSave }: { open: boolea
   );
 };
 
-const CommonTermsAndCondition = ({ selectedTermIds, onChange }: CommonTermsAndConditionProps) => {
+const CommonTermsAndCondition = ({ selectedTermIds, onChange, companyId, isView }: CommonTermsAndConditionProps) => {
   const [allTerms, setAllTerms] = useState<TermsConditionBase[]>([]);
-  const { data: termsConditionData, refetch } = Queries.useGetTermsCondition();
+  const { data: termsConditionData, refetch } = Queries.useGetTermsCondition({ companyId }, { enabled: !!companyId });
 
   // Modals state
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -203,19 +203,21 @@ const CommonTermsAndCondition = ({ selectedTermIds, onChange }: CommonTermsAndCo
         <Box fontWeight={600}>Terms & Conditions</Box>
 
         <Box display="flex" gap={1}>
-          <CommonButton type="button" size="small" startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined">
+          <CommonButton type="button" size="small" startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined" disabled={isView}>
             New Term
           </CommonButton>
-          <CommonButton type="button" size="small" onClick={() => setSelectModalOpen(true)} variant="outlined">
+          <CommonButton type="button" size="small" onClick={() => setSelectModalOpen(true)} variant="outlined" disabled={isView}>
             <Edit fontSize="small" /> Edit Terms
           </CommonButton>
         </Box>
       </Box>
 
       {/* TABLE */}
-      <Box sx={{ border: "1px solid", borderColor: "divider", borderRadius: 2, overflow: "hidden" }}>
-        <CommonTable data={displayTerms} columns={columns} rowKey={(row: TermsConditionBase) => row._id || ""} />
-      </Box>
+      {!isView && (
+        <Box sx={{ border: "1px solid", borderColor: "divider", borderRadius: 2, overflow: "hidden" }}>
+          <CommonTable data={displayTerms} columns={columns} rowKey={(row: TermsConditionBase) => row._id || ""} />
+        </Box>
+      )}
 
       {/* NOTE */}
       <Box mt={3}>
@@ -223,8 +225,8 @@ const CommonTermsAndCondition = ({ selectedTermIds, onChange }: CommonTermsAndCo
       </Box>
 
       {/* MODALS */}
-      <AddTermModal open={addModalOpen} term={editingTerm} onClose={() => setAddModalOpen(false)} onSave={handleSaveTerm} />
-      <SelectTermsModal open={selectModalOpen} selectedIds={selectedTermIds} onClose={() => setSelectModalOpen(false)} onSave={handleSaveSelection} />
+      <AddTermModal open={addModalOpen} term={editingTerm} onClose={() => setAddModalOpen(false)} onSave={handleSaveTerm} companyId={companyId} />
+      <SelectTermsModal open={selectModalOpen} selectedIds={selectedTermIds} onClose={() => setSelectModalOpen(false)} onSave={handleSaveSelection} companyId={companyId} />
     </Box>
   );
 };

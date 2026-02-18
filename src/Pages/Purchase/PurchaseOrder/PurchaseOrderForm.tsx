@@ -16,7 +16,7 @@ const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate
   const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier", companyId: values.companyId || undefined }, supplierQueryEnabled);
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
 
-  const selectedSupplier = (supplierData?.data as Supplier[])?.find((s) => s._id === values.supplierId);
+  const selectedSupplier = (supplierData?.data as unknown as Supplier[])?.find((s) => s._id === values.supplierId);
 
   return (
     <Form noValidate>
@@ -34,7 +34,7 @@ const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate
                 <Box color="text.secondary">{selectedSupplier?.address?.[0]?.state?.name || "-"}</Box>
               </Box>
 
-              {/* GSTIN */}
+              {/* GSTIN */} 
               <Box display="flex" gap={1} flexWrap="wrap">
                 <Box fontWeight={600}>GSTIN:</Box>
                 <Box color="text.secondary">{selectedSupplier?.address?.[0]?.gstIn || "-"}</Box>

@@ -82,4 +82,12 @@ export const ROUTES = {
     BASE: "/additional-charge",
     ADD_EDIT: "/additional-charge/add-edit",
   },
+  // TERMS_CONDITION: {
+  //   BASE: "/terms-condition",
+  //   ADD_EDIT: "/terms-condition/add-edit",
+  // },
+  CONTACT: {
+    BASE: "/contact",
+    ADD_EDIT: "/contact/add-edit",
+  },
 } as const;

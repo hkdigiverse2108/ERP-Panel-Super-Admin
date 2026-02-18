@@ -17,10 +17,10 @@ export const KEYS = {
     DELETE: "company-delete",
   },
 
-  CONTACT: {
-    BASE: "contact",
-    // DROPDOWN: "contact-dropdown",
-  },
+  // CONTACT: {
+  //   BASE: "contact",
+  //   // DROPDOWN: "contact-dropdown",
+  // },
 
   USER: {
     BASE: "user",
@@ -175,5 +175,11 @@ export const KEYS = {
     ADD: "additional-charge-add",
     EDIT: "additional-charge-edit",
     DELETE: "additional-charge-delete",
+  },
+  CONTACT: {
+    BASE: "contact",
+    ADD: "contact-add", // dropdown can also use this key as it is used for fetching contact list for dropdown                    
+    EDIT: "contact-edit",
+    DELETE: "contact-delete",
   },
 };
