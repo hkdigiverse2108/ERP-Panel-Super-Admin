@@ -123,11 +123,17 @@ export const KEYS = {
     EDIT: "material-consumption-edit",
     DELETE: "material-consumption-delete",
   },
-    RECIPE: {
+  RECIPE: {
     BASE: "recipe",
     ADD: "recipe-add",
     EDIT: "recipe-edit",
     DELETE: "recipe-delete",
+  },
+  STOCK_VERIFICATION: {
+    BASE: "stock-verification",
+    ADD: "stock-verification-add",
+    EDIT: "stock-verification-edit",
+    DELETE: "stock-verification-delete",
   },
 
   // ----------------------------- accounts -----------------------------

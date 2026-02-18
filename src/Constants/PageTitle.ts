@@ -64,6 +64,11 @@ export const PAGE_TITLE = {
       ADD: "Add Recipe",
       EDIT: "Edit Recipe",
     },
+    STOCK_VERIFICATION: {
+      BASE: "Stock Verification",
+      ADD: "Add Stock Verification",
+      EDIT: "Edit Stock Verification",
+    },
   },
   CUSTOMER: {
     BASE: "Customer",

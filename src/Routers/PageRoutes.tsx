@@ -41,6 +41,8 @@ import AdditionalChargesForm from "../Components/Settings/AdditionalCharges/Addi
 import Recipe from "../Pages/Inventory/Recipe";
 import RecipeForm from "../Pages/Inventory/Recipe/RecipeForm";
 import Stock from "../Pages/Inventory/Stock";
+import StockVerification from "../Pages/Inventory/Stock Varification";
+import StockVerificationForm from "../Pages/Inventory/Stock Varification/StockVarificationForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -106,6 +108,9 @@ export const PageRoutes = [
   { path: ROUTES.RECIPE.ADD_EDIT, name: PAGE_TITLE.INVENTORY.RECIPE.BASE, element: <RecipeForm /> },
 
   { path: ROUTES.STOCK.BASE, name: PAGE_TITLE.INVENTORY.STOCK.BASE, element: <Stock /> },
+
+  { path: ROUTES.STOCK_VERIFICATION.BASE, name: PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE, element: <StockVerification /> },
+  { path: ROUTES.STOCK_VERIFICATION.ADD_EDIT, name: PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE, element: <StockVerificationForm /> },
 ];
 
 export const AuthRoutes = [

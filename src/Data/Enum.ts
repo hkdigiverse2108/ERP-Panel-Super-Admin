@@ -68,6 +68,12 @@ export const RECIPE_TYPE_OPTIONS = [
   { label: "Unassemble", value: "unassemble" },
 ];
 
+export const DATA_STATUS = [
+  { label: "Pending", value: "pending" },
+  { label: "Approved", value: "approved" },
+  { label: "Rejected", value: "rejected" },
+];
+
 export const USER_TYPE = [
   { label: "User", value: "user" },
   { label: "Employee", value: "employee" },

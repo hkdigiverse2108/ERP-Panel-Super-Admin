@@ -89,4 +89,8 @@ export const ROUTES = {
   STOCK: {
     BASE: "/stock",
   },
+   STOCK_VERIFICATION: {
+    BASE: "/stock-verification",
+    ADD_EDIT: "/stock-verification/add-edit",
+  },
 } as const;
