@@ -71,11 +71,11 @@ const RecipeForm = () => {
                 {/* BASIC DETAILS */}
                 <CommonCard title="Recipe Details">
                   <Box p={2} display="flex" flexWrap="wrap" gap={2}>
-                    <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 3 }} required />
-                    <CommonValidationTextField name="name" label="Recipe Name" required grid={{ xs: 12, md: 3 }} />
-                    <CommonValidationTextField name="number" label="Recipe No" required grid={{ xs: 12, md: 3 }} />
-                    <CommonValidationDatePicker name="date" label="Recipe Date" grid={{ xs: 12, md: 3 }} />
-                    <CommonValidationSelect name="type" label="Recipe Type" options={RECIPE_TYPE_OPTIONS} required grid={{ xs: 12, md: 3 }} />
+                    <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 4 }} required />
+                    <CommonValidationTextField name="name" label="Recipe Name" required grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="number" label="Recipe No" required grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationDatePicker name="date" label="Recipe Date" grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="type" label="Recipe Type" options={RECIPE_TYPE_OPTIONS} required grid={{ xs: 12, md: 4 }} />
                   </Box>
                 </CommonCard>
 
