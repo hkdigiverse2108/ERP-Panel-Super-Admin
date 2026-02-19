@@ -1,4 +1,4 @@
-import { COLUMNS_DIMENSION_PROPERTIES } from "@mui/x-data-grid/internals";
+
 
 export const PAGE_TITLE = {
   DASHBOARD: "Dashboard",
