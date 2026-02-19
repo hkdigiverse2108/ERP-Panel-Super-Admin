@@ -49,3 +49,9 @@ export interface StockVerificationDataResponse extends PageStatus {
 export interface StockVerificationApiResponse extends MessageStatus {
   data: StockVerificationDataResponse;
 }
+
+export interface StockVerificationFilter {
+  companyFilter?: string;
+  categoryFilter?: string;
+  brandFilter?: string;
+}

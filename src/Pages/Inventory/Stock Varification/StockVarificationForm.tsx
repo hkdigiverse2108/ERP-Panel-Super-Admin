@@ -8,7 +8,7 @@ import { CommonButton, CommonSelect, CommonTextField, CommonValidationSelect } f
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonTable } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, DATA_STATUS } from "../../../Data";
-import type { CommonTableColumn, ProductBase, StockVerificationBase, StockVerificationFormValues, StockVerificationRow } from "../../../Types";
+import type { CommonTableColumn, ProductBase, StockVerificationBase, StockVerificationFilter, StockVerificationFormValues, StockVerificationRow } from "../../../Types";
 import { GenerateOptions, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 
@@ -26,7 +26,7 @@ const StockVerificationForm = () => {
   const [searchValue, setSearchValue] = useState<string[]>([""]);
   const location = useLocation();
   const updateData = location.state?.data as StockVerificationBase | undefined;
-  const [filter, setFilter] = useState<any>({ companyFilter: updateData?.companyId?._id });
+  const [filter, setFilter] = useState<StockVerificationFilter>({ companyFilter: updateData?.companyId?._id });
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE);
   const navigate = useNavigate();
   const [enterRemark, setEnterRemark] = useState(updateData?.remark || "");
@@ -37,7 +37,7 @@ const StockVerificationForm = () => {
 
   const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true });
   const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true });
-  const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown(filter);
+  const { data: productData, isLoading: productDataLoading, isFetching: productDataFetching } = Queries.useGetProductDropdown({ companyFilter: filter.companyFilter }, Boolean(filter.companyFilter));
 
   const { mutate: addStock, isPending: isAddLoading } = Mutations.useAddStockVerification();
   const { mutate: editStock, isPending: isEditLoading } = Mutations.useEditStockVerification();
@@ -165,13 +165,7 @@ const StockVerificationForm = () => {
   ];
 
   if (isEditing) {
-    columns.push({
-      key: "approvedQty",
-      header: "Approve Qty",
-      bodyClass: "min-w-35 w-35",
-      render: (row) => <CommonTextField type="number" value={row.approvedQty} onChange={(e) => updateRow(row.productId, { approvedQty: Number(e) })} />,
-      footer: (data) => data.reduce((sum, r) => sum + (r.approvedQty || 0), 0),
-    });
+    columns.push({ key: "approvedQty", header: "Approve Qty", bodyClass: "min-w-35 w-35", render: (row) => <CommonTextField type="number" value={row.approvedQty} onChange={(e) => updateRow(row.productId, { approvedQty: Number(e) })} />, footer: (data) => data.reduce((sum, r) => sum + (r.approvedQty || 0), 0) });
   }
 
   columns.push({
@@ -196,7 +190,14 @@ const StockVerificationForm = () => {
                 <Formik enableReinitialize initialValues={{ categoryId: "", brandId: "", companyId: "" }} onSubmit={handleSubmit}>
                   {({ dirty }) => (
                     <Form noValidate>
-                      <CompanyWatcher currentCompanyId={filter.companyFilter} onChange={(id) => setFilter((prev: any) => ({ ...prev, companyFilter: id }))} />
+                      <CompanyWatcher
+                        currentCompanyId={filter.companyFilter ?? ""}
+                        onChange={(id) => {
+                          setFilter((prev) => ({ ...prev, companyFilter: id }));
+                          setRows([]);
+                          setSearchValue([""]);
+                        }}
+                      />
                       <Grid container spacing={2}>
                         <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 4 }} required />
                         <CommonValidationSelect name="categoryId" label="Category" placeholder="Category Selection" options={GenerateOptions(CategoryData?.data)} isLoading={CategoryDataLoading} grid={{ xs: 12, sm: 6, md: 4 }} />
@@ -215,10 +216,10 @@ const StockVerificationForm = () => {
                   value={searchValue}
                   label="Search Product"
                   placeholder="Search Product"
-                  options={GenerateOptions(productData?.data)}
+                  options={productDataLoading || productDataFetching ? [] : GenerateOptions(productData?.data)}
                   grid={{ xs: 12, sm: isEditing ? 4 : 6 }}
                   disabled={!filter?.companyFilter}
-                  isLoading={productDataLoading}
+                  isLoading={productDataLoading || productDataFetching}
                   onChange={(selected: string[]) => {
                     setSearchValue(selected);
                     if (!selected.length) return;
