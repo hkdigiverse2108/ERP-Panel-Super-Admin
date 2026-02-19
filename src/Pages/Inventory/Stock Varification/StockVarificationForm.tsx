@@ -46,9 +46,9 @@ const StockVerificationForm = () => {
   const [rows, setRows] = useState<StockVerificationRow[]>([]);
 
   useEffect(() => {
-    if (isEditing && updateData?.items?.length) {
+    if (isEditing && updateData?.items?.length && productData?.data?.length) {
       setRows(
-        updateData?.items?.map((item) => ({
+        updateData.items.map((item) => ({
           productId: item.productId._id ?? item.productId,
           name: item.productId.name ?? "",
           landingCost: item.landingCost,
@@ -62,9 +62,11 @@ const StockVerificationForm = () => {
           approvedQty: item.approvedQty ?? item.physicalQty,
         })),
       );
+
       setEnterRemark(updateData.remark ?? "");
+      setSearchValue(updateData.items.map((item) => item.productId._id ?? item.productId));
     }
-  }, [isEditing, updateData]);
+  }, [isEditing, updateData, productData]);
 
   const createRowFromProduct = (product: ProductBase): StockVerificationRow => ({
     productId: product._id,
@@ -94,7 +96,10 @@ const StockVerificationForm = () => {
     );
   };
 
-  const removeRow = (id: string) => setRows((prev) => prev.filter((r) => r.productId !== id));
+  const removeRow = (id: string) => {
+    setRows((prev) => prev.filter((r) => r.productId !== id));
+    setSearchValue((prev) => prev.filter((v) => v !== id));
+  };
   const totalDifferenceQty = rows.reduce((sum, r) => sum + r?.physicalQty, 0);
 
   const totalApprovedQty = rows.reduce((sum, r) => sum + r?.approvedQty, 0);
@@ -156,12 +161,7 @@ const StockVerificationForm = () => {
       footer: (data) => data.reduce((sum, r) => sum + (r.physicalQty || 0), 0),
     },
     { key: "differenceQty", header: "Difference Qty", footer: "" },
-    {
-      key: "differenceAmount",
-      header: "Difference Amount",
-      render: (row) => row.differenceAmount.toFixed(2),
-      footer: (data) => data.reduce((sum, r) => sum + (r.differenceAmount || 0), 0).toFixed(2),
-    },
+    { key: "differenceAmount", header: "Difference Amount", render: (row) => row.differenceAmount.toFixed(2), footer: (data) => data.reduce((sum, r) => sum + (r.differenceAmount || 0), 0).toFixed(2) },
   ];
 
   if (isEditing) {
@@ -185,68 +185,68 @@ const StockVerificationForm = () => {
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <CommonCard hideDivider>
           <Grid container spacing={2} sx={{ p: 2 }}>
-            {!isEditing && (
-              <Grid size={12}>
-                <Formik enableReinitialize initialValues={{ categoryId: "", brandId: "", companyId: "" }} onSubmit={handleSubmit}>
-                  {({ dirty }) => (
-                    <Form noValidate>
-                      <CompanyWatcher
-                        currentCompanyId={filter.companyFilter ?? ""}
-                        onChange={(id) => {
-                          setFilter((prev) => ({ ...prev, companyFilter: id }));
-                          setRows([]);
-                          setSearchValue([""]);
+            <Grid size={12}>
+              <Formik enableReinitialize initialValues={{ categoryId: "", brandId: "", companyId: updateData?.companyId?._id || "" }} onSubmit={handleSubmit}>
+                {({ dirty }) => (
+                  <Form noValidate>
+                    <CompanyWatcher
+                      currentCompanyId={filter.companyFilter ?? ""}
+                      onChange={(id) => {
+                        setFilter((prev) => ({ ...prev, companyFilter: id }));
+                        if (isEditing && id === updateData?.companyId?._id) return;
+                        setRows([]);
+                        setSearchValue([""]);
+                      }}
+                    />
+                    <Grid container spacing={2}>
+                      <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: isEditing ? 6 : 3 }} required />
+
+                      {!isEditing && (
+                        <>
+                          <CommonValidationSelect name="categoryId" label="Category" placeholder="Category Selection" options={GenerateOptions(CategoryData?.data)} isLoading={CategoryDataLoading} grid={{ xs: 12, md: 3 }} />
+                          <CommonValidationSelect name="brandId" label="Brand" placeholder="Brand Selection" options={GenerateOptions(BrandsData?.data)} isLoading={BrandsDataLoading} grid={{ xs: 12, md: 3 }} />
+                          <CommonButton type="submit" variant="contained" title="Apply" disabled={!dirty} grid={{ xs: 12, md: 3 }} />
+                        </>
+                      )}
+
+                      {isEditing && <CommonSelect label="Status" options={DATA_STATUS} value={status} onChange={(e) => setStatus(e)} grid={{ xs: 12, md: 6 }} />}
+
+                      <CommonSelect
+                        value={searchValue}
+                        label="Search Product"
+                        placeholder="Search Product"
+                        multiple
+                        limitTags={2}
+                        options={productDataLoading || productDataFetching ? [] : GenerateOptions(productData?.data)}
+                        grid={{ xs: 12, md: isEditing ? 6 : 6 }}
+                        disabled={!filter?.companyFilter}
+                        isLoading={productDataLoading || productDataFetching}
+                        onChange={(selected: string[]) => {
+                          setSearchValue(selected);
+
+                          setRows((prev) => {
+                            const newIds = new Set(selected);
+                            const existingRows = prev.filter((r) => newIds.has(r.productId));
+                            const existingIds = new Set(existingRows.map((r) => r.productId));
+
+                            const idsToAdd = selected.filter((id) => !existingIds.has(id));
+
+                            const newRows = idsToAdd
+                              .map((id) => {
+                                const product = productData?.data.find((p) => p._id === id);
+                                return product ? createRowFromProduct(product) : null;
+                              })
+                              .filter((r): r is StockVerificationRow => Boolean(r));
+
+                            return [...existingRows, ...newRows];
+                          });
                         }}
                       />
-                      <Grid container spacing={2}>
-                        <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 4 }} required />
-                        <CommonValidationSelect name="categoryId" label="Category" placeholder="Category Selection" options={GenerateOptions(CategoryData?.data)} isLoading={CategoryDataLoading} grid={{ xs: 12, sm: 6, md: 4 }} />
-                        <CommonValidationSelect name="brandId" label="Brand" placeholder="Brand Selection" options={GenerateOptions(BrandsData?.data)} isLoading={BrandsDataLoading} grid={{ xs: 12, md: 4 }} />
-                        <CommonButton type="submit" variant="contained" title="Apply" disabled={!dirty} />
-                      </Grid>
-                    </Form>
-                  )}
-                </Formik>
-              </Grid>
-            )}
-            <Grid size={12}>
-              <Grid container spacing={2}>
-                {isEditing && <CommonSelect label="Status" options={DATA_STATUS} value={status} onChange={(e) => setStatus(e)} grid={{ xs: 12, sm: 2 }} />}
-                <CommonSelect
-                  value={searchValue}
-                  label="Search Product"
-                  placeholder="Search Product"
-                  options={productDataLoading || productDataFetching ? [] : GenerateOptions(productData?.data)}
-                  grid={{ xs: 12, sm: isEditing ? 4 : 6 }}
-                  disabled={!filter?.companyFilter}
-                  isLoading={productDataLoading || productDataFetching}
-                  onChange={(selected: string[]) => {
-                    setSearchValue(selected);
-                    if (!selected.length) return;
-
-                    const product = productData?.data.find((p) => p._id === selected[0]);
-                    if (!product) return;
-
-                    setRows((prev) => {
-                      const existing = prev.find((r) => r.productId === product._id);
-
-                      if (existing) {
-                        return prev.map((r) => {
-                          const physicalQty = r.physicalQty + 1;
-                          const approvedQty = isEditing ? r.approvedQty + 1 : 0;
-                          const differenceQty = (isEditing ? approvedQty : physicalQty) - r.systemQty;
-                          const differenceAmount = (r.landingCost ?? 0) * (isEditing ? approvedQty : physicalQty);
-
-                          return r.productId === product._id ? { ...r, physicalQty, differenceQty, differenceAmount, approvedQty } : r;
-                        });
-                      }
-
-                      return [createRowFromProduct(product), ...prev];
-                    });
-                  }}
-                />
-                <CommonTextField label="Enter Remark" placeholder="Enter Remark" grid={{ xs: 12, sm: 6 }} value={enterRemark} onChange={(e) => setEnterRemark(e)} multiline />
-              </Grid>
+                      <CommonTextField label="Enter Remark" placeholder="Enter Remark" grid={{ xs: 12, md: isEditing ? 6 : 6 }} value={enterRemark} onChange={(e) => setEnterRemark(e)} multiline />
+                    </Grid>
+                  </Form>
+                )}
+              </Formik>
             </Grid>
 
             <Grid size={12}>
