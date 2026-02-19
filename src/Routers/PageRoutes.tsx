@@ -101,8 +101,8 @@ export const PageRoutes = [
   { path: ROUTES.ADDITIONAL_CHARGES.BASE, name: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE, element: <AdditionalCharges /> },
   { path: ROUTES.ADDITIONAL_CHARGES.ADD_EDIT, name: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE, element: <AdditionalChargesForm /> },
 
-  { path: ROUTES.CONTACT.BASE, name: PAGE_TITLE.CONTACT.BASE, element: <Contact /> },
-  { path: ROUTES.CONTACT.ADD_EDIT, name: PAGE_TITLE.CONTACT.BASE, element: <ContactForm /> },
+  { path: ROUTES.CONTACTS.BASE, name: PAGE_TITLE.CONTACT.BASE, element: <Contact /> },
+  { path: ROUTES.CONTACTS.ADD_EDIT, name: PAGE_TITLE.CONTACT.BASE, element: <ContactForm /> },
 ];
 
 export const AuthRoutes = [

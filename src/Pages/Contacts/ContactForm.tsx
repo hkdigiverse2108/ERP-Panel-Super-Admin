@@ -35,8 +35,8 @@ const ContactForm = () => {
   const companyId = user?.companyId?._id;
   const permission = usePagePermission(PAGE_TITLE.CONTACT.BASE);
 
-  const { mutate: addContact, isPending: isAddLoading } = Mutations.useAddContact();
-  const { mutate: editContact, isPending: isEditLoading } = Mutations.useEditContact();
+  const { mutate: addContact, isPending: isAddLoading } = Mutations.useAddContacts();
+  const { mutate: editContact, isPending: isEditLoading } = Mutations.useEditContacts();
 
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";

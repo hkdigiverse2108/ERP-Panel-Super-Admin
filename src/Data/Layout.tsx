@@ -5,7 +5,7 @@ import { AdminPanelSettings, Apartment, GridViewRounded, MyLocation, People, Rec
 export const NavItems: NavItem[] = [
   { icon: <GridViewRounded />, name: PAGE_TITLE.DASHBOARD, path: ROUTES.DASHBOARD },
   { icon: <People />, name: PAGE_TITLE.USER.BASE, path: ROUTES.USER.BASE },
-    { icon: <PersonRounded />, name: PAGE_TITLE.CONTACT.BASE, path: ROUTES.CONTACT.BASE },
+    { icon: <PersonRounded />, name: PAGE_TITLE.CONTACT.BASE, path: ROUTES.CONTACTS.BASE },
 
   { icon: <Apartment />, name: PAGE_TITLE.COMPANY.BASE, path: ROUTES.COMPANY.BASE },
   { icon: <AccountTree />, name: PAGE_TITLE.BRANCH.BASE, path: ROUTES.BRANCH.BASE },

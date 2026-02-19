@@ -17,9 +17,9 @@ const Contact = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.CONTACT.BASE);
 
-  const { data: contactData, isLoading: contactDataLoading, isFetching: contactDataFetching } = Queries.useGetContact(params);
-  const { mutate: deleteContactMutate, isPending: isDeleteLoading } = Mutations.useDeleteContact();
-  const { mutate: editContact, isPending: isEditLoading } = Mutations.useEditContact();
+  const { data: contactData, isLoading: contactDataLoading, isFetching: contactDataFetching } = Queries.useGetContacts(params);
+  const { mutate: deleteContactMutate, isPending: isDeleteLoading } = Mutations.useDeleteContacts();
+  const { mutate: editContact, isPending: isEditLoading } = Mutations.useEditContacts();
 
   const allContact = contactData?.data?.contact_data?.map((contact: ContactBase) => ({ ...contact, id: contact?._id })) || [];
   const totalRows = contactData?.data?.totalData || 0;
@@ -31,14 +31,14 @@ const Contact = () => {
     });
   };
 
-  const handleAdd = () => navigate(ROUTES.CONTACT.ADD_EDIT);
+  const handleAdd = () => navigate(ROUTES.CONTACTS.ADD_EDIT);
 
   const handleContactTypeChange = (value: string) => {
-    updateAdvancedFilter("contactType", [value]);
+    updateAdvancedFilter("contact_type", [value]);
   };
 
   useEffect(() => {
-    updateAdvancedFilter("contactType", [CONTACT_TYPE[0]]);
+    updateAdvancedFilter("contact_type", [CONTACT_TYPE[0]]);
   }, []);
 
   const columns: AppGridColDef<ContactBase>[] = [
@@ -110,7 +110,7 @@ const Contact = () => {
         CommonActionColumn<ContactBase>({
           ...(permission?.edit && {
             active: (row) => editContact({ contactId: row?._id, isActive: !row.isActive }),
-            editRoute: ROUTES.CONTACT.ADD_EDIT,
+            editRoute: ROUTES.CONTACTS.ADD_EDIT,
           }),
           ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.firstName }) }),
         }),
@@ -135,7 +135,7 @@ const Contact = () => {
     defaultHidden: ["email", "companyName", "dob", "anniversaryDate", "customerType", "telephoneNo", "panNo", "accountNumber", "branchName", "ifscCode", "bankName", "addressLine1", "addressLine2", "city", "state", "country", "pinCode", "gstIn", "gstType", "transporterId", "tanNo"],
   };
 
-  const topContent = <CommonRadio value={advancedFilter?.contactType?.[0]} onChange={handleContactTypeChange} options={CONTACT_TYPE.map(c => ({ label: c, value: c }))} grid={{ xs: "auto" }} />;
+  const topContent = <CommonRadio value={advancedFilter?.contact_type?.[0]} onChange={handleContactTypeChange} options={CONTACT_TYPE.map(c => ({ label: c, value: c }))} grid={{ xs: "auto" }} />;
 
   return (
     <>

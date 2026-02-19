@@ -86,8 +86,8 @@ export const ROUTES = {
   //   BASE: "/terms-condition",
   //   ADD_EDIT: "/terms-condition/add-edit",
   // },
-  CONTACT: {
-    BASE: "/contact",
-    ADD_EDIT: "/contact/add-edit",
+  CONTACTS: {
+    BASE: "/contacts",
+    ADD_EDIT: "/contacts/add-edit",
   },
 } as const;
