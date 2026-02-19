@@ -1,16 +1,26 @@
 import ClearIcon from "@mui/icons-material/Clear";
 import { Box, Grid } from "@mui/material";
-import { Form, Formik } from "formik";
+import { Form, Formik, useFormikContext } from "formik";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { CommonButton, CommonSelect, CommonTextField, CommonValidationSelect } from "../../../Attribute";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonTable } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, DATA_STATUS } from "../../../Data";
-import type { ProductBase, StockVerificationBase, StockVerificationFormValues, StockVerificationRow } from "../../../Types";
+import type { CommonTableColumn, ProductBase, StockVerificationBase, StockVerificationFormValues, StockVerificationRow } from "../../../Types";
 import { GenerateOptions, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
+
+const CompanyWatcher = ({ currentCompanyId, onChange }: { currentCompanyId: string; onChange: (id: string) => void }) => {
+  const { values } = useFormikContext<{ companyId: string }>();
+  useEffect(() => {
+    if (values.companyId !== currentCompanyId) {
+      onChange(values.companyId);
+    }
+  }, [values.companyId, currentCompanyId, onChange]);
+  return null;
+};
 
 const StockVerificationForm = () => {
   const [searchValue, setSearchValue] = useState<string[]>([""]);
@@ -129,6 +139,52 @@ const StockVerificationForm = () => {
     const hasAccess = isEditing ? permission.edit : permission.add;
     if (!hasAccess) navigate(-1);
   }, [isEditing, permission, navigate]);
+
+  const columns: CommonTableColumn<StockVerificationRow>[] = [
+    { key: "sr", header: "Sr No.", render: (_, i) => i + 1, footer: "" },
+    { key: "name", header: "Product", bodyClass: "min-w-60 w-60 text-start", footer: "" },
+    { key: "landingCost", header: "Landing Cost", footer: "" },
+    { key: "price", header: "Price", footer: "" },
+    { key: "mrp", header: "MRP", footer: "" },
+    { key: "sellingPrice", header: "Selling Price", footer: "" },
+    { key: "systemQty", header: "System Qty", footer: "" },
+    {
+      key: "physicalQty",
+      header: "Physical Qty",
+      bodyClass: "min-w-35 w-35",
+      render: (row) => <CommonTextField type="number" value={row.physicalQty} onChange={(e) => updateRow(row.productId, { physicalQty: Number(e) })} />,
+      footer: (data) => data.reduce((sum, r) => sum + (r.physicalQty || 0), 0),
+    },
+    { key: "differenceQty", header: "Difference Qty", footer: "" },
+    {
+      key: "differenceAmount",
+      header: "Difference Amount",
+      render: (row) => row.differenceAmount.toFixed(2),
+      footer: (data) => data.reduce((sum, r) => sum + (r.differenceAmount || 0), 0).toFixed(2),
+    },
+  ];
+
+  if (isEditing) {
+    columns.push({
+      key: "approvedQty",
+      header: "Approve Qty",
+      bodyClass: "min-w-35 w-35",
+      render: (row) => <CommonTextField type="number" value={row.approvedQty} onChange={(e) => updateRow(row.productId, { approvedQty: Number(e) })} />,
+      footer: (data) => data.reduce((sum, r) => sum + (r.approvedQty || 0), 0),
+    });
+  }
+
+  columns.push({
+    key: "actions",
+    header: "Action",
+    render: (row) => (
+      <CommonButton color="error" variant="outlined" size="small" onClick={() => removeRow(row.productId)}>
+        <ClearIcon />
+      </CommonButton>
+    ),
+    footer: "",
+  });
+
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.STOCK_VERIFICATION[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.STOCK_VERIFICATION[pageMode]} />
@@ -140,6 +196,7 @@ const StockVerificationForm = () => {
                 <Formik enableReinitialize initialValues={{ categoryId: "", brandId: "", companyId: "" }} onSubmit={handleSubmit}>
                   {({ dirty }) => (
                     <Form noValidate>
+                      <CompanyWatcher currentCompanyId={filter.companyFilter} onChange={(id) => setFilter((prev: any) => ({ ...prev, companyFilter: id }))} />
                       <Grid container spacing={2}>
                         <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 4 }} required />
                         <CommonValidationSelect name="categoryId" label="Category" placeholder="Category Selection" options={GenerateOptions(CategoryData?.data)} isLoading={CategoryDataLoading} grid={{ xs: 12, sm: 6, md: 4 }} />
@@ -194,65 +251,7 @@ const StockVerificationForm = () => {
             <Grid size={12}>
               <div className="w-full bg-white dark:bg-gray-dark">
                 <div className="lg:h-[500px] max-h-[500px] overflow-x-auto custom-scrollbar border border-gray-200 dark:border-gray-600 rounded-md">
-                  <table className="w-full text-sm ">
-                    <thead className="sticky top-0 z-10 bg-gray-100 dark:text-gray-100 text-gray-700 dark:bg-gray-900">
-                      <tr>
-                        <th className="p-2">Sr No.</th>
-                        <th className="p-2 text-start">Product</th>
-                        <th className="p-2">Landing Cost</th>
-                        <th className="p-2">Price</th>
-                        <th className="p-2">MRP</th>
-                        <th className="p-2">Selling Price</th>
-                        <th className="p-2">System Qty</th>
-                        <th className="p-2">Physical Qty</th>
-                        <th className="p-2">Difference Qty</th>
-                        <th className="p-2">Difference Amount</th>
-                        {isEditing && <th className="p-2">Approve Qty</th>}
-                        <th className="p-2">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {rows.map((row, i) => {
-                        return (
-                          <tr key={row.productId} className="text-center bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark text-gray-600 dark:text-gray-300">
-                            <td className="p-2 text-center">{i + 1}</td>
-                            <td className="p-2 min-w-60 w-60 text-start">{row.name}</td>
-                            <td className="p-2">{row.landingCost}</td>
-                            <td className="p-2">{row.price}</td>
-                            <td className="p-2">{row.mrp}</td>
-                            <td className="p-2">{row.sellingPrice}</td>
-                            <td className="p-2">{row.systemQty}</td>
-                            <td className="p-2 min-w-35 w-35">
-                              <CommonTextField type="number" value={row.physicalQty} onChange={(e) => updateRow(row.productId, { physicalQty: Number(e) })} />
-                            </td>
-                            <td className="p-2 ">{row.differenceQty}</td>
-                            <td className="p-2">{row.differenceAmount.toFixed(2)}</td>
-                            {isEditing && (
-                              <td className="p-2 min-w-35 w-35">
-                                <CommonTextField type="number" value={row.approvedQty} onChange={(e) => updateRow(row.productId, { approvedQty: Number(e) })} />
-                              </td>
-                            )}
-                            <td className="p-2">
-                              <CommonButton color="error" variant="outlined" size="small" onClick={() => removeRow(row.productId)}>
-                                <ClearIcon />
-                              </CommonButton>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                    <tfoot>
-                      <tr className="sticky bottom-0 bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-100">
-                        <td colSpan={7} />
-                        <td className="p-3 text-center font-semibold">{totalDifferenceQty}</td>
-                        <td />
-                        <td className="p-3 text-center font-semibold">{totalDifferenceAmount.toFixed(2)}</td>
-
-                        {isEditing && <td className="p-3 text-center font-semibold">{totalApprovedQty}</td>}
-                        <td />
-                      </tr>
-                    </tfoot>
-                  </table>
+                  <CommonTable data={rows} columns={columns} rowKey={(row) => row.productId} showFooter />
                 </div>
               </div>
             </Grid>
