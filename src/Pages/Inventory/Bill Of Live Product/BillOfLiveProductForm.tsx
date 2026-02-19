@@ -5,10 +5,10 @@ import type { FormikProps } from "formik";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Mutations, Queries } from "../../../Api";
 import { CommonButton, CommonTextField, CommonValidationDatePicker, CommonValidationTextField, CommonDatePicker, CommonValidationSelect, CommonValidationSwitch } from "../../../Attribute";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonTable } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { BillOfLiveProductBase, BillOfLiveProductDetailUI, BillOfLiveProductFormValues, ProductBase, RecipeBase } from "../../../Types";
+import type { BillOfLiveProductBase, BillOfLiveProductDetailUI, BillOfLiveProductFormValues, ProductBase, RecipeBase, CommonTableColumn } from "../../../Types";
 import { GenerateOptions, DateConfig } from "../../../Utils";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePagePermission } from "../../../Utils/Hooks";
@@ -281,115 +281,64 @@ const BillOfLiveProductForm = () => {
             {/* ================= TABLE ================= */}
             <Grid size={12}>
               <CommonCard title="Product Details">
-                <div className="w-full bg-white dark:bg-gray-dark">
-                  <div className="lg:max-h-[500px] min-h-auto! overflow-x-auto custom-scrollbar">
-                    <table className="w-full text-sm ">
-                      <thead className="sticky top-0 z-10 bg-gray-100 dark:text-gray-100 text-gray-700 dark:bg-gray-900">
-                        <tr>
-                          <th className="p-2">Sr No</th>
-                          <th className="p-2 text-start">Product</th>
-                          <th className="p-2">Qty</th>
-                          <th className="p-2">Purchase Price</th>
-                          <th className="p-2">Landing Cost</th>
-                          <th className="p-2">MRP</th>
-                          <th className="p-2">Selling Price</th>
-                          <th className="p-2">MFG Date</th>
-                          <th className="p-2">Expiry Days</th>
-                          <th className="p-2">EXP Date</th>
-                          <th className="p-2">Action</th>
-                        </tr>
-                      </thead>
+                <Box sx={{ display: "grid", gap: 3, p: 2 }}>
+                  {rows.map((row) => {
+                    const recipe = recipeData?.data?.recipe_data.find((r) => r._id === row.recipeId);
 
-                      <tbody>
-                        {rows.map((row, i) => {
-                          const recipe = recipeData?.data?.recipe_data.find((r) => r._id === row.recipeId);
+                    const productColumns: CommonTableColumn<BomRow>[] = [
+                      { key: "sr", header: "Sr No", render: (_, idx) => idx + 1, bodyClass: "w-10" },
+                      { key: "name", header: "Product", bodyClass: "text-start min-w-40", render: (r) => r.name },
+                      { key: "qty", header: "Qty", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.qty} onChange={(v) => updateRow(r.id, { qty: Number(v) })} /> },
+                      { key: "purchasePrice", header: "Purchase Price", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.purchasePrice} onChange={(v) => updateRow(r.id, { purchasePrice: Number(v) })} /> },
+                      { key: "landingCost", header: "Landing Cost", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.landingCost} onChange={(v) => updateRow(r.id, { landingCost: Number(v) })} /> },
+                      { key: "mrp", header: "MRP", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.mrp} onChange={(v) => updateRow(r.id, { mrp: Number(v) })} /> },
+                      { key: "sellingPrice", header: "Selling Price", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.sellingPrice} onChange={(v) => updateRow(r.id, { sellingPrice: Number(v) })} /> },
+                      { key: "mfgDate", header: "MFG Date", bodyClass: "min-w-30", render: (r) => <CommonDatePicker name="mfgDate" value={r.mfgDate} onChange={(v) => updateRow(r.id, { mfgDate: v })} /> },
+                      { key: "expiryDays", header: "Expiry Days", render: (r) => r.expiryDays },
+                      { key: "expDate", header: "EXP Date", bodyClass: "min-w-30", render: (r) => <CommonDatePicker name="expDate" value={r.expDate ?? ""} onChange={(v) => updateRow(r.id, { expDate: v })} /> },
+                      {
+                        key: "actions",
+                        header: "Action",
+                        render: (r) => (
+                          <CommonButton size="small" color="error" variant="outlined" onClick={() => handleCut(r.recipeId)}>
+                            <ClearIcon />
+                          </CommonButton>
+                        ),
+                      },
+                    ];
 
-                          return (
-                            <>
-                              <tr className="bg-blue-50 dark:bg-blue-900/20">
-                                <td colSpan={11} className="px-3 py-2 font-semibold text-blue-600 dark:text-blue-400">
-                                  {recipe?.name}
-                                </td>
-                              </tr>
-                              {/* ===== FINAL PRODUCT ===== */}
-                              <tr className="text-center bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark text-gray-600 dark:text-gray-300">
-                                <td className="p-2 text-center">{i + 1}</td>
+                    const rawColumns: CommonTableColumn<{ productId: ProductBase; availableQty: number; useQty: number }>[] = [
+                      { key: "sr", header: "Sr No", render: (_, idx) => idx + 1, bodyClass: "w-10" },
+                      { key: "name", header: "Raw Product", bodyClass: "text-start min-w-60", render: (raw) => raw.productId?.name },
+                      { key: "availableQty", header: "Available Qty", render: (raw) => raw.availableQty },
+                      { key: "useQty", header: "Use Qty", bodyClass: "min-w-30", render: (raw, index) => <CommonTextField type="number" value={raw.useQty ?? 0} onChange={(v) => updateRawQty(row.id, index, Number(v))} /> },
+                    ];
 
-                                <td className="p-2 min-w-35 w-35 text-start">{row.name}</td>
+                    return (
+                      <Box key={row.id} sx={{ border: "1px solid", borderColor: "divider", borderRadius: 1, overflow: "hidden" }}>
+                        {/* Recipe Header */}
+                        <Box sx={{ p: 1.5, bgcolor: "action.hover", borderBottom: "1px solid", borderColor: "divider", fontWeight: "bold", color: "text.primary" }}>{recipe?.name}</Box>
 
-                                <td className="p-2 min-w-30 w-30">
-                                  <CommonTextField type="number" value={row.qty} onChange={(v) => updateRow(row.id, { qty: Number(v) })} />
-                                </td>
+                        {/* Final Product Table */}
+                        <Box sx={{ overflowX: "auto" }} className="custom-scrollbar">
+                          <CommonTable data={[row]} columns={productColumns} rowKey={(r) => r.id} />
+                        </Box>
 
-                                <td className="p-2 min-w-30 w-30">
-                                  <CommonTextField type="number" value={row.purchasePrice} onChange={(v) => updateRow(row.id, { purchasePrice: Number(v) })} />
-                                </td>
-                                <td className="p-2 min-w-30 w-30">
-                                  <CommonTextField type="number" value={row.landingCost} onChange={(v) => updateRow(row.id, { landingCost: Number(v) })} />
-                                </td>
-
-                                <td className="p-2 min-w-30 w-30">
-                                  <CommonTextField type="number" value={row.mrp} onChange={(v) => updateRow(row.id, { mrp: Number(v) })} />
-                                </td>
-
-                                <td className="p-2 min-w-30 w-30">
-                                  <CommonTextField type="number" value={row.sellingPrice} onChange={(v) => updateRow(row.id, { sellingPrice: Number(v) })} />
-                                </td>
-
-                                <td className="p-2 min-w-30 w-30">
-                                  <CommonDatePicker name="mfgDate" value={row.mfgDate} onChange={(v) => updateRow(row.id, { mfgDate: v })} />
-                                </td>
-
-                                <td>{row.expiryDays}</td>
-
-                                <td className="p-2 min-w-30 w-30">
-                                  <CommonDatePicker name="expDate" value={row.expDate ?? ""} onChange={(v) => updateRow(row.id, { expDate: v })} />
-                                </td>
-
-                                <td className="p-2">
-                                  <CommonButton size="small" color="error" variant="outlined" onClick={() => handleCut(row.recipeId)}>
-                                    <ClearIcon />
-                                  </CommonButton>
-                                </td>
-                              </tr>
-                              {/* ===== RAW MATERIAL TABLE ===== */}
-                              {row.rawProducts?.length ? (
-                                <tr className="bg-white dark:bg-gray-800">
-                                  <td colSpan={11} className="p-4">
-                                    <div className="border border-gray-200 dark:border-gray-600 rounded-md overflow-hidden">
-                                      <table className="w-full text-sm">
-                                        <thead className="bg-gray-100 dark:bg-gray-900">
-                                          <tr>
-                                            <th className="p-2">Sr No</th>
-                                            <th className="p-2 text-start">Raw Product</th>
-                                            <th className="p-2">Available Qty</th>
-                                            <th className="p-2">Use Qty</th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          {row.rawProducts.map((raw, index) => (
-                                            <tr key={index} className="even:bg-gray-50 dark:even:bg-gray-dark">
-                                              <td className="text-center p-2">{index + 1}</td>
-                                              <td className="text-start p-2">{raw.productId?.name}</td>
-                                              <td className="text-center p-2">{raw.availableQty}</td>
-                                              <td className="text-center p-2">
-                                                <CommonTextField type="number" value={raw.useQty ?? 0} onChange={(v) => updateRawQty(row.id, index, Number(v))} />
-                                              </td>
-                                            </tr>
-                                          ))}
-                                        </tbody>
-                                      </table>
-                                    </div>
-                                  </td>
-                                </tr>
-                              ) : null}
-                            </>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                        {/* Raw Materials Section */}
+                        {row.rawProducts?.length ? (
+                          <Box sx={{ p: 2, bgcolor: "action.hover" }}>
+                            <Box sx={{ mb: 1, fontWeight: "500", fontSize: "0.875rem" }}>Raw Materials</Box>
+                            <Box sx={{ bgcolor: "background.paper", borderRadius: 1, border: "1px solid", borderColor: "divider", overflow: "hidden" }}>
+                              <Box sx={{ overflowX: "auto" }} className="custom-scrollbar">
+                                <CommonTable data={row.rawProducts} columns={rawColumns} rowKey={(_, idx) => idx.toString()} />
+                              </Box>
+                            </Box>
+                          </Box>
+                        ) : null}
+                      </Box>
+                    );
+                  })}
+                </Box>
               </CommonCard>
             </Grid>
             <CommonBottomActionBar save isLoading={isAddLoading || isEditLoading} onSave={() => formikRef.current?.submitForm()} />
