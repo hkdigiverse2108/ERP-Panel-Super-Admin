@@ -101,4 +101,16 @@ export const ROUTES = {
     BASE: "/stock-verification",
     ADD_EDIT: "/stock-verification/add-edit",
   },
+  BANK: {
+    BASE: "/bank",
+    ADD_EDIT: "/bank/add-edit",
+  },
+   COUPON: {
+    BASE: "/coupon",
+    ADD_EDIT: "/coupon/add-edit",
+  },
+  LOYALTY: {
+    BASE: "/loyalty",
+    ADD_EDIT: "/loyalty/add-edit",
+  },
 } as const;

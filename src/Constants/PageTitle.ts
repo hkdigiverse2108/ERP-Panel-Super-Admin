@@ -143,4 +143,25 @@ export const PAGE_TITLE = {
     ADD: "Add Contact",
     EDIT: "Edit Contact",
   },
+   BANK_CASH: {
+    BASE: "Bank / Cash",
+  },
+  BANK: {
+    BASE: "Bank",
+    ADD: "Add Bank",
+    EDIT: "Edit Bank",
+  },
+   CRM: {
+    BASE: "CRM",
+    COUPON: {
+      BASE: "Coupon",
+      ADD: "Add Coupon",
+      EDIT: "Edit Coupon",
+    },
+    LOYALTY: {
+      BASE: "Loyalty",
+      ADD: "Add Loyalty",
+      EDIT: "Edit Loyalty",
+    },
+  },
 } as const;

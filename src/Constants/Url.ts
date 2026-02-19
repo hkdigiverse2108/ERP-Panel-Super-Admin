@@ -76,6 +76,7 @@ export const URL_KEYS = {
     DROPDOWN: "/bank/dropdown",
     ALL: "/bank/all",
     ADD: "/bank/add",
+    EDIT: "/bank/edit",
   },
 
   // ----------------------------- inventory -----------------------------
@@ -205,4 +206,22 @@ export const URL_KEYS = {
     EDIT: "/contacts/edit",
     ALL: "/contacts/all",
   },
+  COUPON: {
+    BASE: "/coupon",
+    DROPDOWN: "/coupon/dropdown",
+    APPLY: "/coupon/apply",
+    ALL: "/coupon/all",
+    ADD: "/coupon/add",
+    EDIT: "/coupon/edit",
+  },
+  LOYALTY: {
+    BASE: "/loyalty",
+    DROPDOWN: "/loyalty/dropdown",
+    POINTS: "/loyalty-points",
+    POINTS_ADD: "/loyalty-points",
+    ALL: "/loyalty/all",
+    ADD: "/loyalty/add",
+    EDIT: "/loyalty/edit",
+  },
+ 
 } as const;

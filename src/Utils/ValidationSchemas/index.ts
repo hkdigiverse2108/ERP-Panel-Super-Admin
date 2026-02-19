@@ -406,3 +406,65 @@ export const getContactFormSchema = Yup.object({
   supplierType: Validation("string", "Supplier Type", { required: false }),
   transporterId: RequiredWhen("contactType", ["transporter"], "Transporter Id", "string"),
 });
+export const BankFormSchema = Yup.object().shape({
+  companyId: Validation("string", "Company"),
+  name: Validation("string", "Name"),
+  branchName: Validation("string", "Branch Name"),
+  accountHolderName: Validation("string", "Account Holder Name"),
+  bankAccountNumber: Validation("string", "Account Number"),
+  ifscCode: Validation("string", "IFSC Code"),
+  swiftCode: Validation("string", "Swift Code", { required: false }),
+  upiId: Validation("string", "UPI ID", { required: false, extraRules: (s) => s.trim().matches(/^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/, "Invalid UPI ID") }),
+  openingBalance: Yup.object({
+    creditBalance: Validation("number", "Credit Balance", { required: false }).nullable(),
+    debitBalance: Validation("number", "Debit Balance", { required: false }).nullable(),
+  }).nullable(),
+  address: Yup.object({
+    addressLine1: Validation("string", "Address Line1"),
+    addressLine2: Validation("string", "Address Line2", { required: false }),
+    country: Validation("string", "Country"),
+    state: Validation("string", "State"),
+    city: Validation("string", "City"),
+    pinCode: Validation("string", "Pin Code", { extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid Pin Code") }),
+  }).nullable(),
+  
+});
+export const CouponFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
+  name: Validation("string", "Name"),
+  couponPrice: Validation("number", "Coupon Price"),
+  redeemValue: Validation("number", "Redeem Value"),
+  usageLimit: Validation("number", "Usage Limit"),
+  expiryDays: Validation("number", "Expiry Days"),
+  startDate: Validation("string", "Start Date"),
+  endDate: Validation("string", "End Date"),
+  redemptionType: Validation("string", "Redemption Type"),
+  singleTimeUse: Validation("boolean", "Single Time Use"),
+  status: Validation("string", "Status"),
+  isActive: Validation("boolean", "Is Active"),
+});
+
+export const LoyaltyFormSchema = Yup.object({
+  name: Validation("string", "Name"),
+  discountValue: Validation("number", "Discount Value"),
+  type: Validation("string", "Type"),
+  minimumPurchaseAmount: Validation("number", "Minimum Purchase Amount"),
+  redemptionPoints: Validation("number", "Redemption Points"),
+  singleTimeUse: Validation("boolean", "Single Time Use"),
+  usageLimit: Validation("number", "Usage Limit"),
+  campaignExpiryDate: Validation("string", "Campaign Expiry Date"),
+  campaignLaunchDate: Validation("string", "Campaign Launch Date"),
+  description: Validation("string", "Description", { required: false }),
+  isActive: Validation("boolean", "Is Active"),
+});
+export const PointSetupSchema = Yup.object({
+  amount: Validation("string", "Amount", {
+    required: true,
+    extraRules: (s) => s.min(1, "Amount must be at least 1").max(5, "Amount must not be greater than 5"),
+  }),
+
+  points: Validation("string", "Points", {
+    required: true,
+    extraRules: (s) => s.min(1, "Points must be at least 1").max(5, "Points must not be greater than 5"),
+  }),
+});

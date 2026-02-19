@@ -77,6 +77,8 @@ export const KEYS = {
   BANK: {
     BASE: "bank",
     ADD: "bank-add",
+    EDIT: "bank-edit",
+    DELETE: "bank-delete",
   },
 
   // ----------------------------- inventory -----------------------------
@@ -193,5 +195,20 @@ export const KEYS = {
     ADD: "contact-add", // dropdown can also use this key as it is used for fetching contact list for dropdown                    
     EDIT: "contact-edit",
     DELETE: "contact-delete",
+  },
+    COUPON: {
+    BASE: "coupon",
+    ADD: "coupon-add",
+    APPLY: "coupon-apply",
+    EDIT: "coupon-edit",
+    DELETE: "coupon-delete",
+  },
+  LOYALTY: {
+    BASE: "loyalty",
+    ADD: "loyalty-add",
+    EDIT: "loyalty-edit",
+    DELETE: "loyalty-delete",
+    POINTS: "loyalty-points",
+    POINTS_ADD: "loyalty-points-add",
   },
 };

@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AccountGroupApiResponse, AccountGroupDropdownApiResponse, AccountGroupTreeApiResponse, AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, CompanyDropdownApiResponse, CountryApiResponse, CreditNoteApiResponse, DebitNoteApiResponse, LocationApiResponse, MaterialConsumptionApiResponse, ModuleApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, ProductApiResponse, ProductDropDownApiResponse, PurchaseOrderApiResponse, PurchaseOrderDropdownApiResponse, RoleApiResponse, RoleDropdownApiResponse, SingleCompanyApiResponse, StockApiResponse, StockVerificationApiResponse, TaxApiResponse, TaxDropdownApiResponse, TermsConditionApiResponse, TermsConditionDropdownApiResponse, UomApiResponse, UomDropdownApiResponse, UploadResponse, UserApiResponse, UserModulePermissionApiResponse } from "../Types";
+import type { AccountGroupApiResponse, AccountGroupDropdownApiResponse, AccountGroupTreeApiResponse, AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, CompanyDropdownApiResponse, CountryApiResponse, CouponApiResponse, CouponDropdownApiResponse, CreditNoteApiResponse, DebitNoteApiResponse, LocationApiResponse, LoyaltyApiResponse, LoyaltyDropdownApiResponse, LoyaltyPointsApiResponse, MaterialConsumptionApiResponse, ModuleApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, ProductApiResponse, ProductDropDownApiResponse, PurchaseOrderApiResponse, PurchaseOrderDropdownApiResponse, RoleApiResponse, RoleDropdownApiResponse, SingleCompanyApiResponse, StockApiResponse, StockVerificationApiResponse, TaxApiResponse, TaxDropdownApiResponse, TermsConditionApiResponse, TermsConditionDropdownApiResponse, UomApiResponse, UomDropdownApiResponse, UploadResponse, UserApiResponse, UserModulePermissionApiResponse } from "../Types";
 import type { SupplierBillApiResponse } from "../Types/SupplierBill";
 import type { AccountApiResponse, AccountDropdownApiResponse } from "../Types/Account";
 import type { ContactApiResponse, ContactDropdownApiResponse } from "../Types/Contacts";
@@ -119,5 +119,15 @@ export const Queries = {
 
   //*************** stock verification **************** */
   useGetStockVerification: (params?: Params) => useQueries<StockVerificationApiResponse>([KEYS.STOCK_VERIFICATION.BASE, params], () => Get(URL_KEYS.STOCK_VERIFICATION.ALL, params)),
+
+  //*************** coupon **************** */
+  useGetCoupon: (params?: Params) => useQueries<CouponApiResponse>([KEYS.COUPON.BASE, params], () => Get(URL_KEYS.COUPON.ALL, params)),
+  useGetCouponDropdown: (params?: Params, enabled?: boolean) => useQueries<CouponDropdownApiResponse>([KEYS.COUPON.BASE, params], () => Get(URL_KEYS.COUPON.DROPDOWN, params), { enabled: enabled }),
+
+   //*************** Loyalty *********
+  useGetLoyalty: (params?: Params) => useQueries<LoyaltyApiResponse>([KEYS.LOYALTY.BASE, params], () => Get(URL_KEYS.LOYALTY.ALL, params)),
+  useGetLoyaltyDropdown: (params?: Params, enabled?: boolean) => useQueries<LoyaltyDropdownApiResponse>([KEYS.LOYALTY.BASE, params], () => Get(URL_KEYS.LOYALTY.DROPDOWN, params), { enabled: enabled }),
+  useGetLoyaltyPoints: (params?: Params, enabled?: boolean) => useQueries<LoyaltyPointsApiResponse>([KEYS.LOYALTY.BASE, params], () => Get(URL_KEYS.LOYALTY.POINTS, params), { enabled: enabled }),
+
 
 };
