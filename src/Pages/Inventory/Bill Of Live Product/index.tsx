@@ -37,8 +37,8 @@ const BillOfLiveProduct = () => {
   };
 
   const columns: AppGridColDef<BillOfLiveProductBase>[] = [
-    CommonObjectNameColumn("companyId", { headerName: "Company Name", width: 200 }),
-    { field: "number", headerName: "Bill Of Live Product No.", width: 250 },
+    CommonObjectNameColumn("companyId", { headerName: "Company Name", width: 280 }),
+    { field: "number", headerName: "Bill Of Live Product No.", width: 280 },
     { field: "date", headerName: "Bill Of Live Product Date", valueGetter: (v) => FormatDate(v), flex: 1 },
 
     ...(permission?.edit || permission?.delete
