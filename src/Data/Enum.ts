@@ -63,6 +63,17 @@ export const ORDER_TYPE = [
   { label: "Delivery", value: "Delivery" },
 ];
 
+export const RECIPE_TYPE_OPTIONS = [
+  { label: "Assemble", value: "assemble" },
+  { label: "Unassemble", value: "unassemble" },
+];
+
+export const DATA_STATUS = [
+  { label: "Pending", value: "pending" },
+  { label: "Approved", value: "approved" },
+  { label: "Rejected", value: "rejected" },
+];
+
 export const USER_TYPE = [
   { label: "User", value: "user" },
   { label: "Employee", value: "employee" },
@@ -243,10 +254,12 @@ export const ACCOUNT_NATURE = [
   { label: "Purchase Return", value: "purchase_return" },
   { label: "Assets", value: "assets" },
   { label: "Liabilities", value: "liabilities" },
+  { label: "Assets", value: "assets" },
   { label: "Income", value: "income" },
   { label: "Expenses", value: "expenses" },
 ];
-  export const PAYMENT_STATUS_OPTIONS = [
+
+export const PAYMENT_STATUS_OPTIONS = [
   { label: "All", value: "" },
   { label: "Paid", value: "paid" },
   { label: "Unpaid", value: "unpaid" },

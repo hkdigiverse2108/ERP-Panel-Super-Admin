@@ -61,6 +61,16 @@ export const PAGE_TITLE = {
       ADD: "Add Material Consumption",
       EDIT: "Edit Material Consumption",
     },
+    RECIPE: {
+      BASE: "Recipe",
+      ADD: "Add Recipe",
+      EDIT: "Edit Recipe",
+    },
+    STOCK_VERIFICATION: {
+      BASE: "Stock Verification",
+      ADD: "Add Stock Verification",
+      EDIT: "Edit Stock Verification",
+    },
   },
   CUSTOMER: {
     BASE: "Customer",
@@ -122,10 +132,11 @@ export const PAGE_TITLE = {
   },
   SETTINGS: {
     BASE: "Settings",
-    ADDITIONAL_CHARGES: { 
-      BASE: "Additional Charges", 
-      ADD: "Add Additional Charge", 
-      EDIT: "Edit Additional Charge" },
+    ADDITIONAL_CHARGES: {
+      BASE: "Additional Charges",
+      ADD: "Add Additional Charge",
+      EDIT: "Edit Additional Charge",
+    },
   },
   CONTACT: {
     BASE: "Contact",

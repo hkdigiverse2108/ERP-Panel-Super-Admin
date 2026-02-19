@@ -1,11 +1,12 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AccountGroupApiResponse, AccountGroupDropdownApiResponse, AccountGroupTreeApiResponse, AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, CompanyDropdownApiResponse, CountryApiResponse, CreditNoteApiResponse, DebitNoteApiResponse, LocationApiResponse, MaterialConsumptionApiResponse, ModuleApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, ProductApiResponse, ProductDropDownApiResponse, PurchaseOrderApiResponse, PurchaseOrderDropdownApiResponse, RoleApiResponse, RoleDropdownApiResponse, SingleCompanyApiResponse, TaxApiResponse, TaxDropdownApiResponse, TermsConditionApiResponse, TermsConditionDropdownApiResponse, UomApiResponse, UomDropdownApiResponse, UploadResponse, UserApiResponse, UserModulePermissionApiResponse } from "../Types";
+import type { AccountGroupApiResponse, AccountGroupDropdownApiResponse, AccountGroupTreeApiResponse, AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, CompanyDropdownApiResponse, CountryApiResponse, CreditNoteApiResponse, DebitNoteApiResponse, LocationApiResponse, MaterialConsumptionApiResponse, ModuleApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, ProductApiResponse, ProductDropDownApiResponse, PurchaseOrderApiResponse, PurchaseOrderDropdownApiResponse, RoleApiResponse, RoleDropdownApiResponse, SingleCompanyApiResponse, StockApiResponse, StockVerificationApiResponse, TaxApiResponse, TaxDropdownApiResponse, TermsConditionApiResponse, TermsConditionDropdownApiResponse, UomApiResponse, UomDropdownApiResponse, UploadResponse, UserApiResponse, UserModulePermissionApiResponse } from "../Types";
 import type { SupplierBillApiResponse } from "../Types/SupplierBill";
 import type { AccountApiResponse, AccountDropdownApiResponse } from "../Types/Account";
 import type { ContactApiResponse, ContactDropdownApiResponse } from "../Types/Contacts";
 import type { BankApiResponse, BankDropdownApiResponse } from "../Types/Bank";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
+import type { RecipeApiResponse, RecipeDropdownApiResponse } from "../Types/Recipe";
 
 export const Queries = {
   // ************ Upload ***********
@@ -109,6 +110,14 @@ export const Queries = {
   useGetAdditionalChargesDropdown: (params?: Params, enabled?: boolean) => useQueries<any>([KEYS.ADDITIONAL_CHARGE.BASE, params], () => Get(URL_KEYS.ADDITIONAL_CHARGE.DROPDOWN, params), { enabled: enabled }),
   useGetAdditionalCharges: (params?: Params, options?: AppQueryOptions<any>) => useQueries<any>([KEYS.ADDITIONAL_CHARGE.BASE, params], () => Get(URL_KEYS.ADDITIONAL_CHARGE.ALL, params), options),
 
-  //*************** contact **************** */
- 
+   //************ recipe ********/
+  useGetRecipe: (params?: Params) => useQueries<RecipeApiResponse>([KEYS.RECIPE.BASE, params], () => Get(URL_KEYS.RECIPE.ALL, params)),
+  useGetRecipeDropdown: (params?: Params, enabled?: boolean) => useQueries<RecipeDropdownApiResponse>([KEYS.RECIPE.BASE, params], () => Get(URL_KEYS.RECIPE.DROPDOWN, params), { enabled: enabled }),
+
+  //*************** stock **************** */
+  useGetStock: (params?: Params) => useQueries<StockApiResponse>([KEYS.STOCK.BASE, params], () => Get(URL_KEYS.STOCK.ALL, params)),
+
+  //*************** stock verification **************** */
+  useGetStockVerification: (params?: Params) => useQueries<StockVerificationApiResponse>([KEYS.STOCK_VERIFICATION.BASE, params], () => Get(URL_KEYS.STOCK_VERIFICATION.ALL, params)),
+
 };

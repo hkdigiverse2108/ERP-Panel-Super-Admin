@@ -198,7 +198,7 @@ const ModuleAccess: FC<ModuleAccessProps> = ({ data }) => {
   };
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box sx={{ p: 2 , display: "grid"}}>
       <CommonCard title={`${data?.displayName} (${data?.tabName})`} topContent={topContent}>
         <CommonDataGrid {...CommonDataGridOption} />
       </CommonCard>

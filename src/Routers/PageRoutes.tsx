@@ -38,6 +38,11 @@ import SupplierBill from "../Pages/Purchase/SupplierBill";
 import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
 import AdditionalCharges from "../Components/Settings/AdditionalCharges";
 import AdditionalChargesForm from "../Components/Settings/AdditionalCharges/AdditionalChargesForm";
+import Recipe from "../Pages/Inventory/Recipe";
+import RecipeForm from "../Pages/Inventory/Recipe/RecipeForm";
+import Stock from "../Pages/Inventory/Stock";
+import StockVerification from "../Pages/Inventory/Stock Varification";
+import StockVerificationForm from "../Pages/Inventory/Stock Varification/StockVarificationForm";
 import ContactForm from "../Pages/Contacts/ContactForm";
 import Contact from "../Pages/Contacts";
 
@@ -103,6 +108,13 @@ export const PageRoutes = [
 
   { path: ROUTES.CONTACTS.BASE, name: PAGE_TITLE.CONTACT.BASE, element: <Contact /> },
   { path: ROUTES.CONTACTS.ADD_EDIT, name: PAGE_TITLE.CONTACT.BASE, element: <ContactForm /> },
+  { path: ROUTES.RECIPE.BASE, name: PAGE_TITLE.INVENTORY.RECIPE.BASE, element: <Recipe /> },
+  { path: ROUTES.RECIPE.ADD_EDIT, name: PAGE_TITLE.INVENTORY.RECIPE.BASE, element: <RecipeForm /> },
+
+  { path: ROUTES.STOCK.BASE, name: PAGE_TITLE.INVENTORY.STOCK.BASE, element: <Stock /> },
+
+  { path: ROUTES.STOCK_VERIFICATION.BASE, name: PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE, element: <StockVerification /> },
+  { path: ROUTES.STOCK_VERIFICATION.ADD_EDIT, name: PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE, element: <StockVerificationForm /> },
 ];
 
 export const AuthRoutes = [

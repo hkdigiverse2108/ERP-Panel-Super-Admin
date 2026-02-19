@@ -127,6 +127,19 @@ export const URL_KEYS = {
     ADD: "/material-consumption/add",
     EDIT: "/material-consumption/edit",
   },
+  RECIPE: {
+    BASE: "/recipe",
+    DROPDOWN: "/recipe/dropdown",
+    ALL: "/recipe/all",
+    ADD: "/recipe/add",
+    EDIT: "/recipe/edit",
+  },
+  STOCK_VERIFICATION: {
+    BASE: "/stock-verification",
+    ALL: "/stock-verification/all",
+    ADD: "/stock-verification/add",
+    EDIT: "/stock-verification/edit",
+  },
 
   // ----------------------------- accounts -----------------------------
   ACCOUNT_GROUP: {

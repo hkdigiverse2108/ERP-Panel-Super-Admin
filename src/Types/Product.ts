@@ -70,6 +70,7 @@ export interface ProductBase extends Omit<ProductFormValues, "categoryId" | "sub
   salesTaxId?: TaxBase;
   itemCode?: string;
   unit?: string;
+  qty?: number;
 }
 
 export interface ProductDataResponse extends PageStatus {

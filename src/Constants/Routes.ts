@@ -90,4 +90,15 @@ export const ROUTES = {
     BASE: "/contacts",
     ADD_EDIT: "/contacts/add-edit",
   },
+  RECIPE: {
+    BASE: "/recipe",
+    ADD_EDIT: "/recipe/add-edit",
+  },
+  STOCK: {
+    BASE: "/stock",
+  },
+   STOCK_VERIFICATION: {
+    BASE: "/stock-verification",
+    ADD_EDIT: "/stock-verification/add-edit",
+  },
 } as const;

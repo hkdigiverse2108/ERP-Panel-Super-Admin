@@ -1,7 +1,6 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AddAccountGroupPayload, AddAdditionalChargesPayload, AddBranchPayload, AddBrandPayload, AddCategoryPayload, AddCompanyPayload, AddCreditNotePayload, AddDebitNotePayload, AddLocationPayload, AddMaterialConsumptionPayload, AddModulePayload, AddModulePermissionPayload, AddProductPayload, AddRolePayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddSupplierBillPayload, AddTaxPayload, AddUomPayload, AddUserPayload, CallRequestFormValues, EditAccountGroupPayload, EditAdditionalChargesPayload, EditBranchPayload, EditBrandPayload, EditCategoryPayload, EditCompanyPayload, EditCreditNotePayload, EditDebitNotePayload, EditLocationPayload, EditMaterialConsumptionPayload, EditModulePayload, EditPermissionPayload, EditProductPayload, EditRolePayload, EditSupplierBillPayload, EditTaxPayload, EditUomPayload, EditUserPayload, LoginPayload, LoginResponse, UploadResponse, UserApiResponse } from "../Types";
+import type { AddAccountGroupPayload, AddAdditionalChargesPayload, AddBranchPayload, AddBrandPayload, AddCategoryPayload, AddCompanyPayload, AddContactPayload, AddCreditNotePayload, AddDebitNotePayload, AddLocationPayload, AddMaterialConsumptionPayload, AddModulePayload, AddModulePermissionPayload, AddProductPayload, AddRecipePayload, AddRolePayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddStockVerificationPayload, AddSupplierBillPayload, AddTaxPayload, AddUomPayload, AddUserPayload, CallRequestFormValues, EditAccountGroupPayload, EditAdditionalChargesPayload, EditBranchPayload, EditBrandPayload, EditCategoryPayload, EditCompanyPayload, EditContactPayload, EditCreditNotePayload, EditDebitNotePayload, EditLocationPayload, EditMaterialConsumptionPayload, EditModulePayload, EditPermissionPayload, EditProductPayload, EditRecipePayload, EditRolePayload, EditStockVerificationPayload, EditSupplierBillPayload, EditTaxPayload, EditUomPayload, EditUserPayload, LoginPayload, LoginResponse, UploadResponse, UserApiResponse } from "../Types";
 import type { AddAccountPayload, EditAccountPayload } from "../Types/Account";
-import type { AddContactPayload, EditContactPayload } from "../Types/Contacts";
 import type { AddPurchaseOrderPayload, EditPurchaseOrderPayload } from "../Types/PurchaseOrder";
 import type { AddTermsConditionPayload, EditTermsConditionPayload } from "../Types/TermsCondition";
 import { Delete, Post, Put } from "./Methods";
@@ -130,4 +129,14 @@ export const Mutations = {
   useAddContacts: () => useMutations<AddContactPayload, void>([KEYS.CONTACT.ADD, KEYS.CONTACT.BASE], (input) => Post(URL_KEYS.CONTACT.ADD, input)),
   useEditContacts: () => useMutations<EditContactPayload, void>([KEYS.CONTACT.EDIT, KEYS.CONTACT.BASE], (input) => Put(URL_KEYS.CONTACT.EDIT, input)),
   useDeleteContacts: () => useMutations<string, void>([KEYS.CONTACT.DELETE, KEYS.CONTACT.BASE], (id) => Delete(`${URL_KEYS.CONTACT.BASE}/${id}`)),
+  //************** recipe **************** */
+  useAddRecipe: () => useMutations<AddRecipePayload, void>([KEYS.RECIPE.ADD, KEYS.RECIPE.BASE], (input) => Post(URL_KEYS.RECIPE.ADD, input)),
+  useEditRecipe: () => useMutations<EditRecipePayload, void>([KEYS.RECIPE.EDIT, KEYS.RECIPE.BASE], (input) => Put(URL_KEYS.RECIPE.EDIT, input)),
+  useDeleteRecipe: () => useMutations<string, void>([KEYS.RECIPE.DELETE, KEYS.RECIPE.BASE], (id) => Delete(`${URL_KEYS.RECIPE.BASE}/${id}`)),
+
+  // ************ Stock Verification ***********
+  useAddStockVerification: () => useMutations<AddStockVerificationPayload, void>([KEYS.STOCK_VERIFICATION.ADD, KEYS.STOCK_VERIFICATION.BASE], (input) => Post(URL_KEYS.STOCK_VERIFICATION.ADD, input)),
+  useEditStockVerification: () => useMutations<EditStockVerificationPayload, void>([KEYS.STOCK_VERIFICATION.EDIT, KEYS.STOCK_VERIFICATION.BASE], (input) => Put(URL_KEYS.STOCK_VERIFICATION.EDIT, input)),
+  useDeleteStockVerification: () => useMutations<string, void>([KEYS.STOCK_VERIFICATION.DELETE, KEYS.STOCK_VERIFICATION.BASE], (id) => Delete(`${URL_KEYS.STOCK_VERIFICATION.BASE}/${id}`)),
+
 };
