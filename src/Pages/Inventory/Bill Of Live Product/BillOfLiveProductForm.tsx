@@ -266,11 +266,11 @@ const BillOfLiveProductForm = () => {
                       }}
                     />
                     <Grid container spacing={2}>
-                      <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 3 }} required />
-                      <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 3 }} />
-                      <CommonValidationTextField name="text" label="BOLP" disabled grid={{ xs: 12, md: 2 }} />
-                      <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 2 }} />
-                      <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 2 }} disabled={!filter.companyFilter} options={recipeLoading || recipeFetching ? [] : GenerateOptions(recipeData?.data?.recipe_data || [])} isLoading={recipeLoading || recipeFetching} />
+                      <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 4 }} required />
+                      <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 4 }} />
+                      <CommonValidationTextField name="text" label="BOLP" disabled grid={{ xs: 12, md: 4 }} />
+                      <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 4 }} />
+                      <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 4 }} disabled={!filter.companyFilter} options={recipeLoading || recipeFetching ? [] : GenerateOptions(recipeData?.data?.recipe_data || [])} isLoading={recipeLoading || recipeFetching} />
                       <CommonValidationSwitch name="allowReverseCalculation" label="Allow Reverse Calculation" />
                     </Grid>
                   </Form>
