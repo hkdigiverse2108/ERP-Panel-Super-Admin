@@ -50,6 +50,17 @@ const RecipeWatcher = ({ onChange }: { onChange: (ids: string[]) => void }) => {
   }, [idsKey]);
   return null;
 };
+
+const CompanyWatcher = ({ currentCompanyId, onChange }: { currentCompanyId: string; onChange: (id: string) => void }) => {
+  const { values } = useFormikContext<BillOfLiveProductFormValues>();
+  useEffect(() => {
+    if (values.companyId !== currentCompanyId) {
+      onChange(values.companyId || "");
+    }
+  }, [values.companyId, currentCompanyId, onChange]);
+  return null;
+};
+
 const BOLP_PREFIX = "BOLP";
 const parseBimNumber = (value?: string) => {
   if (!value) return "";
@@ -61,15 +72,18 @@ const formatBimNumber = (num?: string | number) => {
   return `${BOLP_PREFIX} ${num}`;
 };
 const BillOfLiveProductForm = () => {
-  const { data: recipeData } = Queries.useGetRecipe({ activeFilter: true });
-
-  const navigate = useNavigate();
   const location = useLocation();
-  const permission = usePagePermission(PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE);
   const { data, no } = location.state as {
     data?: BillOfLiveProductBase;
     no?: number;
   };
+
+  const [filter, setFilter] = useState({ companyFilter: data?.companyId?._id || "" });
+  const { data: recipeData, isLoading: recipeLoading, isFetching: recipeFetching } = Queries.useGetRecipe({ activeFilter: true, companyFilter: filter.companyFilter });
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+
+  const navigate = useNavigate();
+  const permission = usePagePermission(PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE);
 
   const isEditing = Boolean(data?._id);
 
@@ -186,6 +200,7 @@ const BillOfLiveProductForm = () => {
     () => ({
       number: isEditing ? parseBimNumber(data?.number) : bomNumber,
       date: isEditing ? data?.date : DateConfig.utc().toISOString(),
+      companyId: data?.companyId?._id || "",
       allowReverseCalculation: data?.allowReverseCalculation ?? false,
       recipeId: data?.recipeId?.map((b: RecipeBase) => b._id) ?? [],
     }),
@@ -222,9 +237,9 @@ const BillOfLiveProductForm = () => {
     }));
 
     if (isEditing) {
-      editBOM({ billOfLiveProductId: data!._id, recipeId: values.recipeId, productDetails, number: formatBimNumber(values.number) }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
+      editBOM({ billOfLiveProductId: data!._id, recipeId: values.recipeId, productDetails, number: formatBimNumber(values.number), companyId: values.companyId }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
     } else {
-      addBOM({ number: formatBimNumber(values.number), date: values.date, allowReverseCalculation: values.allowReverseCalculation, recipeId: values.recipeId, productDetails }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
+      addBOM({ number: formatBimNumber(values.number), date: values.date, allowReverseCalculation: values.allowReverseCalculation, recipeId: values.recipeId, productDetails, companyId: values.companyId }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
     }
   };
   useEffect(() => {
@@ -238,22 +253,29 @@ const BillOfLiveProductForm = () => {
         <CommonCard hideDivider>
           <Grid container spacing={2} sx={{ p: 2 }}>
             <Grid size={12}>
-              {(recipeData?.data?.recipe_data?.length ?? 0) > 0 && (
-                <Formik enableReinitialize innerRef={formikRef} initialValues={initialValues} onSubmit={handleSubmit}>
-                  {() => (
-                    <Form noValidate>
-                      <RecipeWatcher onChange={syncRowsFromRecipeIds} />
-                      <Grid container spacing={2}>
-                        <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 3 }} />
-                        <CommonValidationTextField name="text" label="BOLP" disabled grid={{ xs: 12, md: 2 }} />
-                        <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 2 }} />
-                        <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 5 }} options={GenerateOptions(recipeData?.data?.recipe_data)} />
-                        <CommonValidationSwitch name="allowReverseCalculation" label="Allow Reverse Calculation" />
-                      </Grid>
-                    </Form>
-                  )}
-                </Formik>
-              )}
+              <Formik enableReinitialize={isEditing} innerRef={formikRef} initialValues={initialValues} onSubmit={handleSubmit}>
+                {() => (
+                  <Form noValidate>
+                    <RecipeWatcher onChange={syncRowsFromRecipeIds} />
+                    <CompanyWatcher
+                      currentCompanyId={filter.companyFilter || ""}
+                      onChange={(id) => {
+                        setFilter({ companyFilter: id });
+                        formikRef.current?.setFieldValue("recipeId", []);
+                        setRows([]);
+                      }}
+                    />
+                    <Grid container spacing={2}>
+                      <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 3 }} required />
+                      <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 3 }} />
+                      <CommonValidationTextField name="text" label="BOLP" disabled grid={{ xs: 12, md: 2 }} />
+                      <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 2 }} />
+                      <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 2 }} disabled={!filter.companyFilter} options={recipeLoading || recipeFetching ? [] : GenerateOptions(recipeData?.data?.recipe_data || [])} isLoading={recipeLoading || recipeFetching} />
+                      <CommonValidationSwitch name="allowReverseCalculation" label="Allow Reverse Calculation" />
+                    </Grid>
+                  </Form>
+                )}
+              </Formik>
             </Grid>
 
             {/* ================= TABLE ================= */}
