@@ -1,3 +1,5 @@
+import { COLUMNS_DIMENSION_PROPERTIES } from "@mui/x-data-grid/internals";
+
 export const PAGE_TITLE = {
   DASHBOARD: "Dashboard",
   USER: {
@@ -135,5 +137,10 @@ export const PAGE_TITLE = {
       ADD: "Add Additional Charge",
       EDIT: "Edit Additional Charge",
     },
+  },
+  CONTACT: {
+    BASE: "Contact",
+    ADD: "Add Contact",
+    EDIT: "Edit Contact",
   },
 } as const;

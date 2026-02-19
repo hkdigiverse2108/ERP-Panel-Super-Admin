@@ -18,7 +18,7 @@ export * from "./Tax";
 export * from "./Stock";
 export * from "./Location";
 export * from "./AccountGroup";
-export * from "./Contact";
+export * from "./Contacts";
 export * from "./Account";
 export * from "./Bank";
 export * from "./Module";

@@ -268,3 +268,21 @@ export const OPTION_TYPE = [
   { label: "Purchase", value: "purchase" },
   { label: "Sales", value: "sales" },
 ];
+export const CUSTOMER_CATEGORY = [
+  { label: "Retail", value: "retail" },
+  { label: "Customer", value: "customer" },
+];
+
+export const CONTACT_CATEGORY_CUSTOMER = [
+  { label: "Retailer", value: "retailer" },
+  { label: "Wholesaler", value: "wholesaler" },
+  { label: "Merchant", value: "merchant" },
+  { label: "Other", value: "other" },
+];
+
+export const CONTACT_CATEGORY_SUPPLIER = [
+  { label: "Manufacturer", value: "manufacturer" },
+  { label: "Stockiest", value: "stockiest" },
+  { label: "Trader", value: "trader" },
+  { label: "Other", value: "other" },
+];

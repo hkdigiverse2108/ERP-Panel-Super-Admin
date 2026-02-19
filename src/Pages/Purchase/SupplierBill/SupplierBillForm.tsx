@@ -7,15 +7,12 @@ import { DateConfig, GenerateOptions, GetChangedFields, RemoveEmptyFields } from
 import { BREADCRUMBS } from "../../../Data";
 import { Mutations, Queries } from "../../../Api";
 import { useEffect, useRef, useState } from "react";
-import TermsAndConditionModal from "../../../Components/Purchase/SupplierBill/TermsAndCondition/TermsAndConditionModal";
 import SupplierBillTabs from "../../../Components/Purchase/SupplierBill/SupplierBillDetails/SupplierBillTab";
 import AdditionalChargesSection from "../../../Components/Purchase/SupplierBill/AdditionalChargeSection";
 import SupplierBillDetails from "../../../Components/Purchase/SupplierBill/SupplierBillDetails/SupplierBillDetails";
 import type { AdditionalChargeDetails, AdditionalChargeItem, AdditionalChargeRow, BillSupplier as Supplier, ProductRow, SupplierBillFormValues, SupplierBillProductDetails, SupplierBillProductItem } from "../../../Types/SupplierBill";
 import type { ProductBase, TermsConditionBase } from "../../../Types";
-import TermsSelectionModal from "../../../Components/Purchase/SupplierBill/TermsAndCondition/TermsSelectionModal";
 import { usePagePermission } from "../../../Utils/Hooks";
-import { useAppSelector } from "../../../Store/hooks";
 
 const TaxTypeWatcher = ({ onChange }: { onChange: (taxType: string) => void }) => {
   const { values } = useFormikContext<SupplierBillFormValues>();
@@ -66,7 +63,7 @@ const SupplierBillForm = () => {
   const { data: companyData, isLoading: isCompanyLoading } = Queries.useGetCompanyDropdown();
   const companyOptions = GenerateOptions(companyData?.data || []);
   const { data: supplierData } = Queries.useGetContactDropdown({ activeFilter: true, typeFilter: "supplier", companyId: selectedCompanyId }, !!selectedCompanyId);
-  const suppliers = (supplierData?.data || []) as Supplier[];
+  const suppliers: Supplier[] = (supplierData?.data || []).map((s) => ({ ...s, name: s.companyName || `${s.firstName} ${s.lastName}` }));
   const supplierOptions = GenerateOptions(suppliers);
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
@@ -95,7 +92,6 @@ const SupplierBillForm = () => {
   const { mutate: editSupplierBill, isPending: isEditLoading } = Mutations.useEditSupplierBill();
   const formikRef = useRef<FormikProps<SupplierBillFormValues> | null>(null);
   const [tabValue, setTabValue] = useState(0);
-  const [allTerms, setAllTerms] = useState<TermsConditionBase[]>([]);
   const [selectedTermIds, setSelectedTermIds] = useState<string[]>([]);
   const [showAdditionalCharge, setShowAdditionalCharge] = useState(false);
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
@@ -108,12 +104,7 @@ const SupplierBillForm = () => {
   const additionalChargeOptions = GenerateOptions(additionalchargedata?.data);
   const [roundOffAmount, setRoundOffAmount] = useState<string | number>(0);
   const [returnRoundOffAmount, setReturnRoundOffAmount] = useState<string | number>(0);
-  const { isTermsSelectionModal } = useAppSelector((state) => state.modal);
-  useEffect(() => {
-    if (!isTermsSelectionModal.open && isTermsSelectionModal.data) {
-      setSelectedTermIds(isTermsSelectionModal.data);
-    }
-  }, [isTermsSelectionModal]);
+
   const calculateSummary = () => {
     const itemDiscount = rows.reduce((s, r) => s + (Number(r.disc1) || 0) + (Number(r.disc2) || 0), 0);
     const itemTaxable = rows.reduce((s, r) => s + (Number(r.taxableAmount) || 0), 0);
@@ -157,12 +148,10 @@ const SupplierBillForm = () => {
     return { itemDiscount: summaryItemDiscount, grossAmount: summaryGrossAmount, taxableAmount: taxableAfterDiscount, itemTax: Number(itemTax.toFixed(2)), roundOff, netAmount: Number(netAmount.toFixed(2)), taxSummary };
   };
   const summary = calculateSummary();
-  const displayTerms = allTerms.filter((term) => selectedTermIds.includes(term._id)).sort((a, b) => (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0));
   useEffect(() => {
     if (!termsConditionData?.data) return;
     const response = termsConditionData.data;
     const all: TermsConditionBase[] = Array.isArray(response) ? response : (response.termsCondition_data ?? []);
-    setAllTerms(all);
     if (isEditing && data?.termsAndConditionIds && data.companyId?._id === selectedCompanyId) {
       setSelectedTermIds(data.termsAndConditionIds.map((t: TermsConditionBase) => t._id));
     } else {
@@ -355,13 +344,7 @@ const SupplierBillForm = () => {
       return newRows;
     });
   };
-  const handleDeleteTerm = (index: number) => {
-    const termToRemove = displayTerms[index];
-    if (!termToRemove?._id) return;
-    const id = termToRemove._id;
-    setSelectedTermIds((prev) => prev.filter((termId) => termId !== id));
-    setAllTerms((prev) => prev.filter((term) => term._id !== id));
-  };
+
   const handleSubmit = async (values: SupplierBillFormValues, { resetForm }: FormikHelpers<SupplierBillFormValues>) => {
     const { taxSummary, ...restSummary } = summary;
     const payload: SupplierBillFormValues = { ...values, productDetails: mapProductRows(), additionalCharges: mapAdditionalCharges(), termsAndConditionIds: selectedTermIds, summary: restSummary };
@@ -378,6 +361,7 @@ const SupplierBillForm = () => {
       addSupplierBill(RemoveEmptyFields(payload) as SupplierBillFormValues, { onSuccess: handleSuccess });
     }
   };
+
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.SUPPLIER_BILL[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.SUPPLIER_BILL[pageMode]} />
@@ -399,7 +383,7 @@ const SupplierBillForm = () => {
                 </CommonCard>
               </Form>
               <CommonCard hideDivider>
-                <SupplierBillTabs tabValue={tabValue} setTabValue={setTabValue} rows={rows} handleAdd={handleAdd} handleCut={handleCut} handleRowChange={handleRowChange} returnRows={returnRows} handleAddReturn={handleAddReturn} handleCutReturn={handleCutReturn} handleReturnRowChange={handleReturnRowChange} termsList={displayTerms} handleDeleteTerm={handleDeleteTerm} productOptions={productOptions} isProductLoading={ProductsDataLoading} returnRoundOffAmount={returnRoundOffAmount} onReturnRoundOffAmountChange={setReturnRoundOffAmount} isProductDisabled={!selectedCompanyId} isTermsDisabled={!selectedCompanyId} />
+                <SupplierBillTabs tabValue={tabValue} setTabValue={setTabValue} rows={rows} handleAdd={handleAdd} handleCut={handleCut} handleRowChange={handleRowChange} returnRows={returnRows} handleAddReturn={handleAddReturn} handleCutReturn={handleCutReturn} handleReturnRowChange={handleReturnRowChange} productOptions={productOptions} isProductLoading={ProductsDataLoading} returnRoundOffAmount={returnRoundOffAmount} onReturnRoundOffAmountChange={setReturnRoundOffAmount} isProductDisabled={!selectedCompanyId} isTermsDisabled={!selectedCompanyId} selectedTermIds={selectedTermIds} onTermsChange={setSelectedTermIds} companyId={selectedCompanyId} />
               </CommonCard>
               <CommonCard grid={{ xs: 12 }} hideDivider>
                 <AdditionalChargesSection show={showAdditionalCharge} onToggle={setShowAdditionalCharge} rows={additionalChargeRows} onAdd={handleAddAdditionalCharge} onRemove={handleCutAdditionalCharge} onChange={handleAdditionalChargeRowChange} taxOptions={taxOptions} isTaxLoading={TaxDataLoading} flatDiscount={flatDiscount} onFlatDiscountChange={setFlatDiscount} summary={summary} isAdditionalChargeLoading={additionalchargeLoading} additionalChargeOptions={additionalChargeOptions} roundOffAmount={roundOffAmount} onRoundOffAmountChange={setRoundOffAmount} />
@@ -407,30 +391,8 @@ const SupplierBillForm = () => {
               <CommonBottomActionBar save isLoading={isAddLoading || isEditLoading} onSave={() => formikRef.current?.submitForm()} />
             </>
           )}
-        </Formik>
-      </Box>
-      <TermsAndConditionModal
-        onSave={(term: TermsConditionBase) => {
-          setAllTerms((prev) => {
-            const index = prev.findIndex((t) => t._id === term._id);
-            if (index > -1) {
-              const updated = [...prev];
-              updated[index] = term;
-              return updated;
-            }
-            return [...prev, term];
-          });
-          setSelectedTermIds((prev) => {
-            if (term.isDefault) {
-              return prev.includes(term._id) ? prev : [...prev, term._id];
-            } else {
-              return prev.filter((id) => id !== term._id);
-            }
-          });
-        }}
-        companyId={selectedCompanyId}
-      />
-      <TermsSelectionModal companyId={selectedCompanyId} />
+        </Formik >
+      </Box >
     </>
   );
 };

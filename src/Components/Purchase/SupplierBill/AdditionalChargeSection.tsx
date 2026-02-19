@@ -68,9 +68,9 @@ const AdditionalChargesSection = ({ show, onToggle, rows, onAdd, onRemove, onCha
           }
         >
           <Box className="custom-scrollbar" sx={{ flex: 1, overflowX: "auto" }}>
-            <div className="min-w-[800px]">
+            <Box sx={{ minWidth: 800 }}>
               <CommonTable data={rows} columns={AdditionalChargeColumns} rowKey={(_: any, i: number) => String(i)} showFooter />
-            </div>
+            </Box>
           </Box>
         </CommonCard>
       )}

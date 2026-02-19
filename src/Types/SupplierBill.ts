@@ -1,11 +1,11 @@
 import type { CommonDataType, MessageStatus, PageStatus, SelectOptionType } from "./Common";
 import type { ProductBase } from "./Product";
-import type { SupplierBase as ContactBase } from "./Contact";
+import type { ContactBase } from "./Contacts";
 import type { TermsConditionBase } from "./TermsCondition";
 
 /* ===================== SUPPLIER ===================== */
 
-export type BillSupplier = ContactBase;
+export type BillSupplier = ContactBase & { name?: string };
 
 /* ===================== PRODUCT (FORM) ===================== */
 
@@ -272,8 +272,8 @@ export interface SupplierBillTabsProps {
   handleRowChange: (index: number, field: keyof ProductRow, value: string | number | string[]) => void;
   productOptions: SelectOptionType[];
   isProductLoading: boolean;
-  termsList: TermsConditionBase[];
-  handleDeleteTerm: (index: number) => void;
+  selectedTermIds: string[];
+  onTermsChange: (ids: string[]) => void;
   returnRows: ProductRow[];
   handleAddReturn: () => void;
   handleCutReturn: (index: number) => void;
@@ -282,4 +282,5 @@ export interface SupplierBillTabsProps {
   onReturnRoundOffAmountChange: (value: string | number) => void;
   isProductDisabled?: boolean;
   isTermsDisabled?: boolean;
+  companyId?: string;
 }

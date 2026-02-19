@@ -584,4 +584,5 @@ export interface CommonTermsAndConditionProps {
   selectedTermIds: string[];
   onChange: (ids: string[]) => void;
   isView?: boolean;
+  companyId?: string;
 }

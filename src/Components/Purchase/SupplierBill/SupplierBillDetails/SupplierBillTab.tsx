@@ -1,18 +1,13 @@
 import { Box, Tab, Tabs } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
-import { CommonButton, CommonSelect, CommonTextField, CommonValidationTextField } from "../../../../Attribute";
-import { CommonTabPanel, CommonCard } from "../../../Common";
-import { GridDeleteIcon } from "@mui/x-data-grid";
+import { CommonButton, CommonSelect, CommonTextField } from "../../../../Attribute";
+import { CommonTabPanel, CommonCard, CommonTermsAndCondition } from "../../../Common";
 import { CommonTable } from "../../../Common";
-import type { CommonTableColumn, TermsConditionBase } from "../../../../Types";
+import type { CommonTableColumn } from "../../../../Types";
 import type { ProductRow, SupplierBillTabsProps } from "../../../../Types/SupplierBill";
-import { useDispatch } from "react-redux";
-import { setTermsAndConditionModal, setTermsSelectionModal } from "../../../../Store/Slices/ModalSlice";
 
-const SupplierBillTabs = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange, handleDeleteTerm, isProductDisabled, isTermsDisabled }: SupplierBillTabsProps) => {
-  const dispatch = useDispatch();
+const SupplierBillTabs = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange, isProductDisabled, isTermsDisabled, selectedTermIds, onTermsChange, companyId }: SupplierBillTabsProps) => {
   const ProductRowColumns: CommonTableColumn<ProductRow>[] = [
     {
       key: "actions",
@@ -64,27 +59,6 @@ const SupplierBillTabs = ({ tabValue, setTabValue, rows, handleAdd, handleCut, h
       bodyClass: "min-w-28",
       render: (row, index) => <CommonTextField type="number" value={row.totalAmount} onChange={(v) => handleRowChange(index, "totalAmount", v)} />,
       footer: (data) => data.reduce((a, b) => a + (+b.totalAmount || 0), 0).toFixed(2),
-    },
-  ];
-
-  const TermsColumns: CommonTableColumn<TermsConditionBase>[] = [
-    { key: "sr", header: "#", render: (_, i) => i + 1, bodyClass: "w-10" },
-    { key: "termsCondition", header: "Condition", headerClass: "text-left", bodyClass: "text-left w-80" },
-    {
-      key: "action",
-      header: "Action",
-      headerClass: "text-center w-20",
-      bodyClass: "w-20 text-center",
-      render: (row, index) => (
-        <Box display="flex" justifyContent="center" gap={1}>
-          <CommonButton size="small" variant="outlined" onClick={() => dispatch(setTermsAndConditionModal({ open: true, data: row }))}>
-            <EditIcon fontSize="small" />
-          </CommonButton>
-          <CommonButton size="small" color="error" variant="outlined" onClick={() => handleDeleteTerm(index)}>
-            <GridDeleteIcon fontSize="small" />
-          </CommonButton>
-        </Box>
-      ),
     },
   ];
 
@@ -157,32 +131,9 @@ const SupplierBillTabs = ({ tabValue, setTabValue, rows, handleAdd, handleCut, h
       {/* ================= TAB 2 : TERMS ================= */}
       <CommonTabPanel value={tabValue} index={1}>
         <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 3 }}>
-          <CommonCard
-            hideDivider
-            title="Terms & Conditions"
-            topContent={
-              <Box display="flex" gap={1}>
-                <CommonButton startIcon={<AddIcon />} onClick={() => dispatch(setTermsAndConditionModal({ open: true, data: null }))} disabled={isTermsDisabled}>
-                  New Term
-                </CommonButton>
-                <CommonButton startIcon={<EditIcon />} onClick={() => dispatch(setTermsSelectionModal({ open: true, data: termsList.map((t: TermsConditionBase) => t._id) }))} disabled={isTermsDisabled}>
-                  Edit Terms
-                </CommonButton>
-              </Box>
-            }
-          >
-            <Box p={2}>
-              <Box sx={{ borderRadius: 1, overflow: "hidden" }}>
-                <CommonTable data={termsList} columns={TermsColumns} rowKey={(row: TermsConditionBase) => row._id || ""} />
-              </Box>
-            </Box>
+          <CommonCard hideDivider>
+            <CommonTermsAndCondition selectedTermIds={selectedTermIds} onChange={onTermsChange} companyId={companyId} isView={isTermsDisabled} />
           </CommonCard>
-
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 2, mb: 4 }}>
-            <Box sx={{ width: "100%", maxWidth: "1100px" }}>
-              <CommonValidationTextField name="notes" label="Note" multiline rows={6} placeholder="Minimum 200 characters" />
-            </Box>
-          </Box>
         </Box>
       </CommonTabPanel>
 
