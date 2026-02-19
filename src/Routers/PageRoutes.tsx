@@ -45,6 +45,8 @@ import StockVerification from "../Pages/Inventory/Stock Varification";
 import StockVerificationForm from "../Pages/Inventory/Stock Varification/StockVarificationForm";
 import ContactForm from "../Pages/Contacts/ContactForm";
 import Contact from "../Pages/Contacts";
+import BillOfLiveProductForm from "../Pages/Inventory/Bill Of Live Product/BillOfLiveProductForm";
+import BillOfLiveProduct from "../Pages/Inventory/Bill Of Live Product";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -115,6 +117,9 @@ export const PageRoutes = [
 
   { path: ROUTES.STOCK_VERIFICATION.BASE, name: PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE, element: <StockVerification /> },
   { path: ROUTES.STOCK_VERIFICATION.ADD_EDIT, name: PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE, element: <StockVerificationForm /> },
+
+  { path: ROUTES.BILL_OF_LIVE_PRODUCT.BASE, name: PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE, element: <BillOfLiveProduct /> },
+  { path: ROUTES.BILL_OF_LIVE_PRODUCT.ADD_EDIT, name: PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE, element: <BillOfLiveProductForm /> },
 ];
 
 export const AuthRoutes = [

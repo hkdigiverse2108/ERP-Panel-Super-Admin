@@ -135,7 +135,12 @@ export const KEYS = {
     EDIT: "stock-verification-edit",
     DELETE: "stock-verification-delete",
   },
-
+  BILL_OF_LIVE_PRODUCT: {
+    BASE: "bill-of-live-product",
+    ADD: "bill-of-live-product-add",
+    EDIT: "bill-of-live-product-edit",
+    DELETE: "bill-of-live-product-delete",
+  },
   // ----------------------------- accounts -----------------------------
   ACCOUNT_GROUP: {
     BASE: "account-group",

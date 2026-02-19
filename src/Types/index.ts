@@ -30,3 +30,4 @@ export * from "./SupplierBill";
 export * from "./AdditionalCharges";
 export * from "./Recipe";
 export * from "./StockVarification";
+export * from "./BillOfLiveProduct";

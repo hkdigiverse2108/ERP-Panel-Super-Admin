@@ -140,6 +140,12 @@ export const URL_KEYS = {
     ADD: "/stock-verification/add",
     EDIT: "/stock-verification/edit",
   },
+  BILL_OF_LIVE_PRODUCT: {
+    BASE: "/bill-of-live-product",
+    ALL: "/bill-of-live-product/all",
+    ADD: "/bill-of-live-product/add",
+    EDIT: "/bill-of-live-product/edit",
+  },
 
   // ----------------------------- accounts -----------------------------
   ACCOUNT_GROUP: {

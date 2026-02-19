@@ -97,8 +97,12 @@ export const ROUTES = {
   STOCK: {
     BASE: "/stock",
   },
-   STOCK_VERIFICATION: {
+  STOCK_VERIFICATION: {
     BASE: "/stock-verification",
     ADD_EDIT: "/stock-verification/add-edit",
+  },
+  BILL_OF_LIVE_PRODUCT: {
+    BASE: "/bill-of-live-product",
+    ADD_EDIT: "/bill-of-live-product/add-edit",
   },
 } as const;
