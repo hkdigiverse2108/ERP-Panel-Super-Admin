@@ -32,7 +32,7 @@ export interface ProductFormValues {
   calculateExpiryOn?: string;
   expiryReferenceDate?: string;
   isExpiryProductSaleable?: boolean;
-  ingredients?: string;
+  ingredients?: string[];
   shortDescription?: string;
   description?: string;
   nutrition?: NutritionInfo[];

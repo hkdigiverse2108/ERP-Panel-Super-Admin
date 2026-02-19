@@ -586,3 +586,11 @@ export interface CommonTermsAndConditionProps {
   isView?: boolean;
   companyId?: string;
 }
+export interface CommonValidationCreatableSelectProps {
+  name: string;
+  label: string;
+  options: string[];
+  required?: boolean;
+  disabled?: boolean;
+  grid?: GridType;
+} 

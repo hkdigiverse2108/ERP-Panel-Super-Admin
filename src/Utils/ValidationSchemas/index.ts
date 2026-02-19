@@ -127,7 +127,7 @@ export const ProductFormSchema = Yup.object({
   expiryReferenceDate: RequiredWhenTrue("hasExpiry", "Expiry Reference Date", Yup.string()),
 
   isExpiryProductSaleable: Yup.boolean(),
-  ingredients: Validation("string", "Ingredients", { required: false }),
+  ingredients: Validation("array", "Ingredients", { required: false }),
   shortDescription: Validation("string", "Short Description", { required: false }),
   description: Validation("string", "Description", { required: false }),
   nutrition: Yup.array().of(

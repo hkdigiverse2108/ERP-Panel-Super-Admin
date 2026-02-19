@@ -9,3 +9,4 @@ export * from "./FormFields/CommonDateSelector";
 export * from "./FormFields/CommonQuillInput";
 export * from "./FormFields/CommonCheckbox";
 export * from "./Notification/index";
+export * from "./FormFields/CommonSelectTab";
