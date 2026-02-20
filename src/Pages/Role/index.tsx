@@ -6,7 +6,7 @@ import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, Comm
 import { PAGE_TITLE } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
 import { setRoleModal } from "../../Store/Slices/ModalSlice";
-import type { AppGridColDef, RoleBase } from "../../Types";
+import type { AppGridColDef, RolesBase } from "../../Types";
 import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
 import RoleForm from "./RoleForm";
 
@@ -30,13 +30,13 @@ const Role = () => {
 
   const handleAdd = () => dispatch(setRoleModal({ open: true, data: null }));
 
-  const handleEdit = (row: RoleBase) => dispatch(setRoleModal({ open: true, data: row }));
+  const handleEdit = (row: RolesBase) => dispatch(setRoleModal({ open: true, data: row }));
 
-  const columns: AppGridColDef<RoleBase>[] = [
+  const columns: AppGridColDef<RolesBase>[] = [
     { field: "name", headerName: "Name", flex: 1, minWidth: 300 },
     ...(permission?.edit || permission?.delete
       ? [
-          CommonActionColumn<RoleBase>({
+          CommonActionColumn<RolesBase>({
             ...(permission?.edit && {
               active: (row) => editRole({ roleId: row?._id, isActive: !row.isActive }),
               onEdit: (row) => handleEdit(row),

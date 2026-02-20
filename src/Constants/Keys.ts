@@ -27,6 +27,7 @@ export const KEYS = {
     ADD: "user-add",
     EDIT: "user-edit",
     DELETE: "user-delete",
+    DROPDOWN: "user-dropdown",
   },
 
   BRANCH: {

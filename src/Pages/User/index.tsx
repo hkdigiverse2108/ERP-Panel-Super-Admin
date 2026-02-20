@@ -19,7 +19,7 @@ const User = () => {
   const { mutate: deleteUserMutate } = Mutations.useDeleteUser();
   const { mutate: editUser, isPending: isEditLoading } = Mutations.useEditUser();
 
-  const allUser = useMemo(() => userData?.data?.user_data.map((user) => ({ ...user, id: user?._id })) || [], [userData]);
+  const allUser = useMemo(() => userData?.data?.user_data.map((user: UserBase) => ({ ...user, id: user?._id })) || [], [userData]);
   const totalRows = userData?.data?.totalData || 0;
 
   const handleDeleteBtn = () => {
@@ -40,15 +40,15 @@ const User = () => {
     { field: "commission", headerName: "Commission", type: "number", flex: 1, minWidth: 150 },
     ...(permission?.edit || permission?.delete
       ? [
-          CommonActionColumn<UserBase>({
-            ...(permission?.edit && {
-              permissionRoute: ROUTES.USER.PERMISSION_ADD_EDIT,
-              active: (row) => editUser({ userId: row?._id, companyId: row?.companyId?._id, isActive: !row.isActive }),
-              editRoute: ROUTES.USER.ADD_EDIT,
-            }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.username }) }),
+        CommonActionColumn<UserBase>({
+          ...(permission?.edit && {
+            permissionRoute: ROUTES.USER.PERMISSION_ADD_EDIT,
+            active: (row) => editUser({ userId: row?._id, companyId: row?.companyId?._id, isActive: !row.isActive }),
+            editRoute: ROUTES.USER.ADD_EDIT,
           }),
-        ]
+          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.username }) }),
+        }),
+      ]
       : []),
   ];
 

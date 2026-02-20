@@ -468,3 +468,34 @@ export const PointSetupSchema = Yup.object({
     extraRules: (s) => s.min(1, "Points must be at least 1").max(5, "Points must not be greater than 5"),
   }),
 });
+
+
+export const EmployeeFormSchema = Yup.object({
+  // ---------- BASIC DETAILS ----------
+  fullName: Validation("string", "FullName"),
+  username: Validation("string", "Username"),
+  designation: Validation("string", "Designation", { required: false }),
+  phoneNo: PhoneValidation(),
+  email: Validation("string", "Email", { required: true, extraRules: (s) => s.trim().email("Invalid email address") }),
+  branchId: Validation("string", "Branch Name", { required: false }),
+  panNumber: Validation("string", "PAN Number", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
+  password: Validation("string", "Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
+  // role: Validation("string", "Role"),
+  // ---------- ADDRESS ----------
+  address: Yup.object({
+    address: Validation("string", "Address"),
+    country: Validation("string", "Country"),
+    state: Validation("string", "State"),
+    city: Validation("string", "City"),
+    pinCode: Validation("string", "Pin Code", { extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid Pin Code") }),
+  }).nullable(),
+
+  // ---------- SALARY ----------
+  wages: Validation("number", "Wages", { required: false }).nullable(),
+  commission: Validation("number", "Commission", { required: false }).nullable(),
+  extraWages: Validation("number", "Extra Wages", { required: false }).nullable(),
+  target: Validation("number", "Target", { required: false }).nullable(),
+
+  // ---------- STATUS ----------
+  isActive: Yup.boolean(),
+});

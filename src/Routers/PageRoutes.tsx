@@ -51,6 +51,8 @@ import Coupon from "../Pages/CRM/Coupon";
 import CouponForm from "../Pages/CRM/Coupon/CouponForm";
 import Loyalty from "../Pages/CRM/Loyalty";
 import LoyaltyForm from "../Pages/CRM/Loyalty/LoyaltyForm";
+// import User from "../Pages/User";
+import Profile from "../Pages/Profile";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -130,6 +132,9 @@ export const PageRoutes = [
 
   { path: ROUTES.LOYALTY.BASE, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <Loyalty /> },
   { path: ROUTES.LOYALTY.ADD_EDIT, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <LoyaltyForm /> },
+
+  { path: ROUTES.PROFILE.BASE, name: PAGE_TITLE.SETTINGS.PROFILE.BASE, element: <Profile /> },
+  { path: ROUTES.PROFILE.EDIT, name: PAGE_TITLE.SETTINGS.PROFILE.BASE, element: <UserForm /> },
 ];
 
 export const AuthRoutes = [

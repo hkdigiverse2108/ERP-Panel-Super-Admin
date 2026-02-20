@@ -130,10 +130,15 @@ export const PAGE_TITLE = {
     ADD: "Add Supplier Bill",
     EDIT: "Edit Supplier Bill",
   },
-  SETTINGS: {
+   SETTINGS: {
     BASE: "Settings",
+    // GENERAL: "General Settings",
+    PROFILE: {
+      BASE: "Profile",
+      EDIT: "Edit Profile",
+    },
     ADDITIONAL_CHARGES: {
-      BASE: "Additional Charges",
+      BASE: "Additional Charge",
       ADD: "Add Additional Charge",
       EDIT: "Edit Additional Charge",
     },
@@ -164,4 +169,5 @@ export const PAGE_TITLE = {
       EDIT: "Edit Loyalty",
     },
   },
+ 
 } as const;

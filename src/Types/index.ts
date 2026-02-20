@@ -12,7 +12,7 @@ export * from "./Customer";
 export * from "./Brand";
 export * from "./Company";
 export * from "./Category";
-export * from "./Role";
+export * from "./Roles";
 export * from "./Uom";
 export * from "./Tax";
 export * from "./Stock";
@@ -33,4 +33,6 @@ export * from "./StockVarification";
 export * from "./Bank";
 export * from "./Coupon";
 export * from "./Loyalty";
+export * from "./Employee";
+export * from "./Roles"
 

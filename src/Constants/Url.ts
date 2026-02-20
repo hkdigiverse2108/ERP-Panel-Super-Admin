@@ -22,6 +22,7 @@ export const URL_KEYS = {
     ALL: "/user/all",
     ADD: "/user/add",
     EDIT: "/user/edit",
+    DROPDOWN: "/user/dropdown",
   },
 
   LOCATION: {
