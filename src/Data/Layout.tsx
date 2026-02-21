@@ -1,6 +1,6 @@
 import { PAGE_TITLE, ROUTES } from "../Constants";
 import type { NavItem } from "../Types";
-import { AdminPanelSettings, Apartment, GridViewRounded, MyLocation, People, ReceiptLong, Settings, AccountTree, ViewModule, Work, PersonRounded } from "@mui/icons-material";
+import { AdminPanelSettings, Apartment, GridViewRounded, MyLocation, People, ReceiptLong, Settings, AccountTree, ViewModule, Work, PersonRounded, AccountBalance, Redeem } from "@mui/icons-material";
 
 export const NavItems: NavItem[] = [
   { icon: <GridViewRounded />, name: PAGE_TITLE.DASHBOARD, path: ROUTES.DASHBOARD },
@@ -28,6 +28,21 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE, path: ROUTES.BILL_OF_LIVE_PRODUCT.BASE, pro: false },
     ],
   },
+    {
+    name: PAGE_TITLE.BANK_CASH.BASE,
+    icon: <AccountBalance />,
+    children: [
+      { name: PAGE_TITLE.BANK.BASE, path: ROUTES.BANK.BASE },
+     ]
+  },
+    {
+    name: PAGE_TITLE.CRM.BASE,
+    icon: <Redeem />,
+    children: [
+      { name: PAGE_TITLE.CRM.COUPON.BASE, path: ROUTES.COUPON.BASE },
+      { name: PAGE_TITLE.CRM.LOYALTY.BASE, path: ROUTES.LOYALTY.BASE },
+    ],
+  },
   {
     name: PAGE_TITLE.ACCOUNTING.BASE,
     icon: <ReceiptLong />,
@@ -38,6 +53,7 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.CREDIT_NOTE.BASE, path: ROUTES.CREDIT_NOTE.BASE },
     ],
   },
+
   {
     name: PAGE_TITLE.PURCHASE.BASE,
     icon: <Work />,
@@ -49,7 +65,10 @@ export const NavItems: NavItem[] = [
   {
     name: PAGE_TITLE.SETTINGS.BASE,
     icon: <Settings />,
-    children: [{ name: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE, path: ROUTES.ADDITIONAL_CHARGES.BASE }], // Settings
+    children: [
+      { name: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE, path: ROUTES.ADDITIONAL_CHARGES.BASE },
+      { name: PAGE_TITLE.SETTINGS.PROFILE.BASE, path: ROUTES.PROFILE.BASE }
+    ], 
   },
   
 ];

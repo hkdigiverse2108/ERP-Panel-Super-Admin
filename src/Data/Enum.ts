@@ -17,7 +17,7 @@ export const DISCOUNT_STATUS = ["active", "inactive"] as const;
 export const EMPLOYEE_STATUS = ["active", "inactive"] as const;
 export const INVOICE_PAYMENT_STATUS = ["paid", "unpaid", "partial"] as const;
 export const LOYALTY_STATUS = ["active", "inactive"] as const;
-export const LOYALTY_TYPE = ["points", "cashback"] as const;
+// export const LOYALTY_TYPE = ["points", "cashback"] as const;
 export const SUPPLIER_PAYMENT_STATUS = ["paid", "unpaid", "partial"] as const;
 export const VOUCHAR_TYPE = ["journal", "payment", "receipt", "expense", "contra"] as const;
 
@@ -285,4 +285,13 @@ export const CONTACT_CATEGORY_SUPPLIER = [
   { label: "Stockiest", value: "stockiest" },
   { label: "Trader", value: "trader" },
   { label: "Other", value: "other" },
+];
+export const LOYALTY_TYPE = [
+  { label: "Discount", value: "discount" },
+  { label: "Free Product", value: "free_product" },
+];
+
+export const LOYALTY_REDEMPTION_TYPE = [
+  { label: "Single", value: "single" },
+  { label: "Multiple", value: "multiple" },
 ];

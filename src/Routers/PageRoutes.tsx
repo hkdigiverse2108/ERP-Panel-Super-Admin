@@ -47,6 +47,14 @@ import ContactForm from "../Pages/Contacts/ContactForm";
 import Contact from "../Pages/Contacts";
 import BillOfLiveProductForm from "../Pages/Inventory/Bill Of Live Product/BillOfLiveProductForm";
 import BillOfLiveProduct from "../Pages/Inventory/Bill Of Live Product";
+import Bank from "../Pages/Bank/Bank";
+import BankForm from "../Pages/Bank/Bank/BankForm";
+import Coupon from "../Pages/CRM/Coupon";
+import CouponForm from "../Pages/CRM/Coupon/CouponForm";
+import Loyalty from "../Pages/CRM/Loyalty";
+import LoyaltyForm from "../Pages/CRM/Loyalty/LoyaltyForm";
+// import User from "../Pages/User";
+import Profile from "../Pages/Profile";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -120,6 +128,17 @@ export const PageRoutes = [
 
   { path: ROUTES.BILL_OF_LIVE_PRODUCT.BASE, name: PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE, element: <BillOfLiveProduct /> },
   { path: ROUTES.BILL_OF_LIVE_PRODUCT.ADD_EDIT, name: PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE, element: <BillOfLiveProductForm /> },
+  { path: ROUTES.BANK.BASE, name: PAGE_TITLE.BANK.BASE, element: <Bank /> },
+  { path: ROUTES.BANK.ADD_EDIT, name: PAGE_TITLE.BANK.BASE, element: <BankForm /> },
+
+  { path: ROUTES.COUPON.BASE, name: PAGE_TITLE.CRM.COUPON.BASE, element: <Coupon /> },
+  { path: ROUTES.COUPON.ADD_EDIT, name: PAGE_TITLE.CRM.COUPON.BASE, element: <CouponForm /> },
+
+  { path: ROUTES.LOYALTY.BASE, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <Loyalty /> },
+  { path: ROUTES.LOYALTY.ADD_EDIT, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <LoyaltyForm /> },
+
+  { path: ROUTES.PROFILE.BASE, name: PAGE_TITLE.SETTINGS.PROFILE.BASE, element: <Profile /> },
+  { path: ROUTES.PROFILE.EDIT, name: PAGE_TITLE.SETTINGS.PROFILE.BASE, element: <UserForm /> },
 ];
 
 export const AuthRoutes = [

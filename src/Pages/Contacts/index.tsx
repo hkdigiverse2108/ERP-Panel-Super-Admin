@@ -2,14 +2,14 @@ import { Box } from "@mui/material";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonPhoneColumns } from "../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonPhoneColumns } from "../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../Constants";
 import { BREADCRUMBS, CONTACT_TYPE } from "../../Data";
 import type { AppGridColDef, ContactBase } from "../../Types";
 import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
 import { CommonRadio } from "../../Attribute";
 import { CommonObjectPropertyColumn } from "../../Components/Common/CommonDataGrid/CommonColumns";
-import { FormatDate } from "../../Utils";
+import { CreateFilter, FormatDate, GenerateOptions } from "../../Utils";
 
 const Contact = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, updateAdvancedFilter, advancedFilter, params } = useDataGrid();
@@ -18,6 +18,7 @@ const Contact = () => {
   const permission = usePagePermission(PAGE_TITLE.CONTACT.BASE);
 
   const { data: contactData, isLoading: contactDataLoading, isFetching: contactDataFetching } = Queries.useGetContacts(params);
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deleteContactMutate, isPending: isDeleteLoading } = Mutations.useDeleteContacts();
   const { mutate: editContact, isPending: isEditLoading } = Mutations.useEditContacts();
 
@@ -34,11 +35,11 @@ const Contact = () => {
   const handleAdd = () => navigate(ROUTES.CONTACTS.ADD_EDIT);
 
   const handleContactTypeChange = (value: string) => {
-    updateAdvancedFilter("contact_type", [value]);
+    updateAdvancedFilter("contactTypeFilter", [value]);
   };
 
   useEffect(() => {
-    updateAdvancedFilter("contact_type", [CONTACT_TYPE[0]]);
+    updateAdvancedFilter("contactTypeFilter", [CONTACT_TYPE[0]]);
   }, []);
 
   const columns: AppGridColDef<ContactBase>[] = [
@@ -48,6 +49,7 @@ const Contact = () => {
     CommonPhoneColumns("whatsappNo", { headerName: "WhatsApp No", width: 240 }),
 
     { field: "gstIn", headerName: "GSTIN", width: 150 },
+    { field: "companyName", headerName: "Company Name", width: 220 },
     { field: "gstType", headerName: "GST Type", width: 150 },
     { field: "tanNo", headerName: "TAN No", width: 150 },
     { field: "transporterId", headerName: "Transporter ID", width: 240 },
@@ -57,7 +59,6 @@ const Contact = () => {
     { field: "telephoneNo", headerName: "Telephone No", width: 150 },
     { field: "customerType", headerName: "Customer Type", width: 150 },
     { field: "email", headerName: "Email", width: 220 },
-    { field: "companyName", headerName: "Company Name", width: 220 },
     { field: "dob", headerName: "Date of Birth", width: 160, valueGetter: (v) => FormatDate(v) },
     { field: "anniversaryDate", headerName: "Anniversary Date", width: 180, valueGetter: (v) => FormatDate(v) },
     CommonObjectPropertyColumn<ContactBase>("bankName", "bankDetails", "name", { headerName: "Bank name", width: 300 }),
@@ -132,16 +133,21 @@ const Contact = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    defaultHidden: ["email", "companyName", "dob", "anniversaryDate", "customerType", "telephoneNo", "panNo", "accountNumber", "branchName", "ifscCode", "bankName", "addressLine1", "addressLine2", "city", "state", "country", "pinCode", "gstIn", "gstType", "transporterId", "tanNo"],
+    defaultHidden: ["email", "dob", "anniversaryDate", "customerType", "telephoneNo", "panNo", "accountNumber", "branchName", "ifscCode", "bankName", "addressLine1", "addressLine2", "city", "state", "country", "pinCode", "gstIn", "gstType", "transporterId", "tanNo"],
   };
 
-  const topContent = <CommonRadio value={advancedFilter?.contact_type?.[0]} onChange={handleContactTypeChange} options={CONTACT_TYPE.map(c => ({ label: c, value: c }))} grid={{ xs: "auto" }} />;
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }),
+  ];
+
+  const topContent = <CommonRadio value={advancedFilter?.contactTypeFilter?.[0]} onChange={handleContactTypeChange} options={CONTACT_TYPE.map(c => ({ label: c, value: c }))} grid={{ xs: "auto" }} />;
 
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.CONTACT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.CONTACT.BASE} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <AdvancedSearch filter={filter} />
         <CommonCard topContent={topContent}>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

@@ -95,17 +95,24 @@ const ProductForm = () => {
   };
 
   const handleSubmit = async (values: ProductFormValues, { resetForm }: FormikHelpers<ProductFormValues>) => {
-    const { _submitAction, ...rest } = values;
+    const { _submitAction, nutrition, ...rest } = values;
+
+    const cleanedNutrition = nutrition?.filter((n) => n.name !== "" && n.value !== "");
+
+    const payload = {
+      ...rest,
+      ...(cleanedNutrition?.length ? { nutrition: cleanedNutrition } : null),
+    };
 
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
       else navigate(-1);
     };
     if (isEditing) {
-      const changedFields = GetChangedFields(rest, data);
+      const changedFields = GetChangedFields(payload, data);
       await editProduct({ ...changedFields, productId: data._id }, { onSuccess: handleSuccess });
     } else {
-      await addProduct(RemoveEmptyFields(rest), { onSuccess: handleSuccess });
+      await addProduct(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
     }
   };
 

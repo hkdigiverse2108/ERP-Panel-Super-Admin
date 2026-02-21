@@ -1,3 +1,5 @@
+
+
 export const PAGE_TITLE = {
   DASHBOARD: "Dashboard",
   USER: {
@@ -133,10 +135,15 @@ export const PAGE_TITLE = {
     ADD: "Add Supplier Bill",
     EDIT: "Edit Supplier Bill",
   },
-  SETTINGS: {
+   SETTINGS: {
     BASE: "Settings",
+    // GENERAL: "General Settings",
+    PROFILE: {
+      BASE: "Profile",
+      EDIT: "Edit Profile",
+    },
     ADDITIONAL_CHARGES: {
-      BASE: "Additional Charges",
+      BASE: "Additional Charge",
       ADD: "Add Additional Charge",
       EDIT: "Edit Additional Charge",
     },
@@ -146,4 +153,26 @@ export const PAGE_TITLE = {
     ADD: "Add Contact",
     EDIT: "Edit Contact",
   },
+   BANK_CASH: {
+    BASE: "Bank / Cash",
+  },
+  BANK: {
+    BASE: "Bank",
+    ADD: "Add Bank",
+    EDIT: "Edit Bank",
+  },
+   CRM: {
+    BASE: "CRM",
+    COUPON: {
+      BASE: "Coupon",
+      ADD: "Add Coupon",
+      EDIT: "Edit Coupon",
+    },
+    LOYALTY: {
+      BASE: "Loyalty",
+      ADD: "Add Loyalty",
+      EDIT: "Edit Loyalty",
+    },
+  },
+ 
 } as const;

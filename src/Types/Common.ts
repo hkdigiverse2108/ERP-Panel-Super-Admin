@@ -8,7 +8,7 @@ import type { AccountGroupBase } from "./AccountGroup";
 import type { BrandBase } from "./Brand";
 import type { CategoryBase } from "./Category";
 import type { LocationBase } from "./Location";
-import type { RoleBase } from "./Role";
+import type { RolesBase } from "./Roles";
 import type { TaxBase } from "./Tax";
 import type { UomBase } from "./Uom";
 import type { TermsConditionBase } from "./TermsCondition";
@@ -448,7 +448,7 @@ export interface ModalStateSlice {
   isCategoryModal: { open: boolean; data: CategoryBase | null };
   isLocationModal: { open: boolean; data: LocationBase | null };
   isAccountGroupModal: { open: boolean; data: AccountGroupBase | null };
-  isRoleModal: { open: boolean; data: RoleBase | null };
+  isRoleModal: { open: boolean; data: RolesBase | null };
   isAccountModal: { open: boolean; data: AccountBase | null };
   isTermsAndConditionModal: { open: boolean; data: TermsConditionBase | null };
   isTermsSelectionModal: { open: boolean; data: any | null };
@@ -586,3 +586,11 @@ export interface CommonTermsAndConditionProps {
   isView?: boolean;
   companyId?: string;
 }
+export interface CommonValidationCreatableSelectProps {
+  name: string;
+  label: string;
+  options: string[];
+  required?: boolean;
+  disabled?: boolean;
+  grid?: GridType;
+} 
