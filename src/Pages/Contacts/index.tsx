@@ -64,45 +64,12 @@ const Contact = () => {
     CommonObjectPropertyColumn<ContactBase>("accountNumber", "bankDetails", "accountNumber", { headerName: "Account Number", width: 300 }),
 
     // Address
-    {
-      field: "addressLine1",
-      headerName: "Address Line 1",
-      width: 180,
-      valueGetter: (_value, row) => row?.address?.[0]?.addressLine1 || "",
-    },
-
-    {
-      field: "addressLine2",
-      headerName: "Address Line 2",
-      width: 180,
-      valueGetter: (_value, row) => row?.address?.[0]?.addressLine2 || "",
-    },
-    {
-      field: "pinCode",
-      headerName: "Pin Code",
-      width: 120,
-      valueGetter: (_value, row) => row?.address?.[0]?.pinCode || "",
-    },
-
-    {
-      field: "city",
-      headerName: "City",
-      width: 120,
-      valueGetter: (_value, row) => row?.address?.[0]?.city?.name || "",
-    },
-    {
-      field: "state",
-      headerName: "State",
-      width: 120,
-      valueGetter: (_value, row) => row?.address?.[0]?.state?.name || "",
-    },
-
-    {
-      field: "country",
-      headerName: "Country",
-      width: 120,
-      valueGetter: (_value, row) => row?.address?.[0]?.country?.name || "",
-    },
+    { field: "addressLine1", headerName: "Address Line 1", width: 180, valueGetter: (_value, row) => row?.address?.[0]?.addressLine1 || "" },
+    { field: "addressLine2", headerName: "Address Line 2", width: 180, valueGetter: (_value, row) => row?.address?.[0]?.addressLine2 || "" },
+    { field: "pinCode", headerName: "Pin Code", width: 120, valueGetter: (_value, row) => row?.address?.[0]?.pinCode || "" },
+    { field: "city", headerName: "City", width: 120, valueGetter: (_value, row) => row?.address?.[0]?.city?.name || "" },
+    { field: "state", headerName: "State", width: 120, valueGetter: (_value, row) => row?.address?.[0]?.state?.name || "" },
+    { field: "country", headerName: "Country", width: 120, valueGetter: (_value, row) => row?.address?.[0]?.country?.name || "" },
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<ContactBase>({
