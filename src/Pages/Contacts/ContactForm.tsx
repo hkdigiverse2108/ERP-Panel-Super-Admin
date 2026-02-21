@@ -6,8 +6,7 @@ import { CommonValidationTextField as CommonTextField, CommonSwitch, CommonPhone
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
 import { BREADCRUMBS, CONTACT_CATEGORY_CUSTOMER, CONTACT_CATEGORY_SUPPLIER, CONTACT_TYPE, CUSTOMER_CATEGORY, GST_TYPE, PAYMENT_MODE, PAYMENT_TERMS } from "../../Data";
-import { useAppSelector } from "../../Store/hooks";
-import type { AddContactPayload, ContactAddressApi, ContactFormValues, Address } from "../../Types";
+import type { ContactAddressApi, ContactFormValues, Address } from "../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { getContactFormSchema } from "../../Utils/ValidationSchemas";
 import { useDependentReset, usePagePermission } from "../../Utils/Hooks";
@@ -30,9 +29,6 @@ const ContactForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
-  // Fix: state.company does not exist in the store. Retrieving companyId from auth.user instead.
-  const { user } = useAppSelector((state) => state.auth);
-  const companyId = user?.companyId?._id;
   const permission = usePagePermission(PAGE_TITLE.CONTACT.BASE);
 
   const { mutate: addContact, isPending: isAddLoading } = Mutations.useAddContacts();
@@ -83,6 +79,7 @@ const ContactForm = () => {
   });
 
   const initialValues: ContactFormValues = {
+    companyId: data?.companyId?._id || "",
     contactType: data?.contactType || "customer",
     firstName: data?.firstName || "",
     lastName: data?.lastName || "",
@@ -132,11 +129,6 @@ const ContactForm = () => {
   const handleSubmit = async (values: ContactFormValues, { resetForm }: FormikHelpers<ContactFormValues>) => {
     const { _submitAction, ...rest } = values;
 
-    const payload: AddContactPayload = {
-      ...rest,
-      companyId: companyId!,
-    };
-
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") {
         resetForm();
@@ -146,10 +138,10 @@ const ContactForm = () => {
     };
 
     if (isEditing) {
-      const changedFields = GetChangedFields(payload, data);
-      editContact({ ...changedFields, contactId: data._id }, { onSuccess: handleSuccess });
+      const changedFields = GetChangedFields(rest, data);
+      await editContact({ ...changedFields, contactId: data._id }, { onSuccess: handleSuccess });
     } else {
-      addContact(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
+      await addContact(RemoveEmptyFields(rest), { onSuccess: handleSuccess });
     }
   };
 
@@ -182,7 +174,7 @@ const ContactForm = () => {
                 {/* GENERAL DETAILS */}
                 <CommonCard topContent={topContent} title="General Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonValidationSelect name="companyName" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="firstName" label="First Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="lastName" label="Last Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
@@ -282,6 +274,7 @@ const ContactForm = () => {
                     setFieldValue("_submitAction", "saveAndNew");
                   }}
                 />
+
               </Grid>
             </Form>
           )}

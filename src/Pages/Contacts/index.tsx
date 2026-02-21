@@ -8,7 +8,7 @@ import { BREADCRUMBS, CONTACT_TYPE } from "../../Data";
 import type { AppGridColDef, ContactBase } from "../../Types";
 import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
 import { CommonRadio } from "../../Attribute";
-import { CommonObjectPropertyColumn } from "../../Components/Common/CommonDataGrid/CommonColumns";
+import { CommonObjectNameColumn, CommonObjectPropertyColumn } from "../../Components/Common/CommonDataGrid/CommonColumns";
 import { CreateFilter, FormatDate, GenerateOptions } from "../../Utils";
 
 const Contact = () => {
@@ -43,17 +43,14 @@ const Contact = () => {
   }, []);
 
   const columns: AppGridColDef<ContactBase>[] = [
+    CommonObjectNameColumn<ContactBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "firstName", headerName: "Name", width: 240 },
-
     CommonPhoneColumns("phoneNo", { headerName: "Phone No", width: 240 }),
     CommonPhoneColumns("whatsappNo", { headerName: "WhatsApp No", width: 240 }),
-
     { field: "gstIn", headerName: "GSTIN", width: 150 },
-    { field: "companyName", headerName: "Company Name", width: 220 },
     { field: "gstType", headerName: "GST Type", width: 150 },
     { field: "tanNo", headerName: "TAN No", width: 150 },
     { field: "transporterId", headerName: "Transporter ID", width: 240 },
-
     { field: "loyaltyPoints", headerName: "Loyalty Point", flex: 1, minWidth: 240 },
     { field: "panNo", headerName: "PAN No", width: 120 },
     { field: "telephoneNo", headerName: "Telephone No", width: 150 },
@@ -108,14 +105,14 @@ const Contact = () => {
     },
     ...(permission?.edit || permission?.delete
       ? [
-        CommonActionColumn<ContactBase>({
-          ...(permission?.edit && {
-            active: (row) => editContact({ contactId: row?._id, isActive: !row.isActive }),
-            editRoute: ROUTES.CONTACTS.ADD_EDIT,
+          CommonActionColumn<ContactBase>({
+            ...(permission?.edit && {
+              active: (row) => editContact({ contactId: row?._id, isActive: !row.isActive }),
+              editRoute: ROUTES.CONTACTS.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.firstName }) }),
           }),
-          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.firstName }) }),
-        }),
-      ]
+        ]
       : []),
   ];
 
@@ -136,11 +133,9 @@ const Contact = () => {
     defaultHidden: ["email", "dob", "anniversaryDate", "customerType", "telephoneNo", "panNo", "accountNumber", "branchName", "ifscCode", "bankName", "addressLine1", "addressLine2", "city", "state", "country", "pinCode", "gstIn", "gstType", "transporterId", "tanNo"],
   };
 
-  const filter = [
-    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }),
-  ];
+  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 
-  const topContent = <CommonRadio value={advancedFilter?.typeFilter?.[0] ?? CONTACT_TYPE[0]} onChange={handleContactTypeChange} options={CONTACT_TYPE.map(c => ({ label: c, value: c }))} grid={{ xs: "auto" }} />;
+  const topContent = <CommonRadio value={advancedFilter?.typeFilter?.[0] ?? CONTACT_TYPE[0]} onChange={handleContactTypeChange} options={CONTACT_TYPE.map((c) => ({ label: c, value: c }))} grid={{ xs: "auto" }} />;
 
   return (
     <>

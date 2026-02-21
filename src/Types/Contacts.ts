@@ -30,6 +30,7 @@ export interface ContactBankDetails {
 }
 
 export interface ContactFormValues {
+  companyId?: string;
   contactType?: string;
   firstName?: string;
   lastName?: string;

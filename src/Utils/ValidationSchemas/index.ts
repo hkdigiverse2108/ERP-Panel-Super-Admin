@@ -374,7 +374,7 @@ const ContactBaseSchema = {
   firstName: Validation("string", "First Name"),
   lastName: Validation("string", "Last Name"),
   email: Validation("string", "Email", { required: false, extraRules: (s) => s.email("Invalid email address") }),
-  companyName: Validation("string", "Company Name"),
+  companyId: Validation("string", "Company Name"),
   phoneNo: PhoneValidation(),
   whatsappNo: PhoneValidation("Whatsapp No", { requiredNumber: false, requiredCountryCode: false }),
   panNo: Validation("string", "PAN No", {
