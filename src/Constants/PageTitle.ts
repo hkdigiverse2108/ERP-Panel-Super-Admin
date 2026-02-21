@@ -1,5 +1,3 @@
-
-
 export const PAGE_TITLE = {
   DASHBOARD: "Dashboard",
   USER: {
@@ -135,7 +133,7 @@ export const PAGE_TITLE = {
     ADD: "Add Supplier Bill",
     EDIT: "Edit Supplier Bill",
   },
-   SETTINGS: {
+  SETTINGS: {
     BASE: "Settings",
     // GENERAL: "General Settings",
     PROFILE: {
@@ -153,7 +151,7 @@ export const PAGE_TITLE = {
     ADD: "Add Contact",
     EDIT: "Edit Contact",
   },
-   BANK_CASH: {
+  BANK_CASH: {
     BASE: "Bank / Cash",
   },
   BANK: {
@@ -161,7 +159,7 @@ export const PAGE_TITLE = {
     ADD: "Add Bank",
     EDIT: "Edit Bank",
   },
-   CRM: {
+  CRM: {
     BASE: "CRM",
     COUPON: {
       BASE: "Coupon",
@@ -174,5 +172,12 @@ export const PAGE_TITLE = {
       EDIT: "Edit Loyalty",
     },
   },
- 
+  POS: {
+    BASE: "Pos",
+    SALES_REGISTER: {
+        BASE: "Sales Register",
+        ADD: "Add Sales Register",
+        EDIT: "Edit Sales Register",
+      },
+    },
 } as const;

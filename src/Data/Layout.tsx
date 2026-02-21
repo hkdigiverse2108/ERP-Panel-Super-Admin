@@ -1,11 +1,11 @@
 import { PAGE_TITLE, ROUTES } from "../Constants";
 import type { NavItem } from "../Types";
-import { AdminPanelSettings, Apartment, GridViewRounded, MyLocation, People, ReceiptLong, Settings, AccountTree, ViewModule, Work, PersonRounded, AccountBalance, Redeem } from "@mui/icons-material";
+import { AdminPanelSettings, Apartment, GridViewRounded, MyLocation, People, ReceiptLong, Settings, AccountTree, ViewModule, Work, PersonRounded, AccountBalance, Redeem, PointOfSale } from "@mui/icons-material";
 
 export const NavItems: NavItem[] = [
   { icon: <GridViewRounded />, name: PAGE_TITLE.DASHBOARD, path: ROUTES.DASHBOARD },
   { icon: <People />, name: PAGE_TITLE.USER.BASE, path: ROUTES.USER.BASE },
-    { icon: <PersonRounded />, name: PAGE_TITLE.CONTACT.BASE, path: ROUTES.CONTACTS.BASE },
+  { icon: <PersonRounded />, name: PAGE_TITLE.CONTACT.BASE, path: ROUTES.CONTACTS.BASE },
 
   { icon: <Apartment />, name: PAGE_TITLE.COMPANY.BASE, path: ROUTES.COMPANY.BASE },
   { icon: <AccountTree />, name: PAGE_TITLE.BRANCH.BASE, path: ROUTES.BRANCH.BASE },
@@ -28,14 +28,17 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE, path: ROUTES.BILL_OF_LIVE_PRODUCT.BASE, pro: false },
     ],
   },
-    {
+  {
     name: PAGE_TITLE.BANK_CASH.BASE,
     icon: <AccountBalance />,
-    children: [
-      { name: PAGE_TITLE.BANK.BASE, path: ROUTES.BANK.BASE },
-     ]
+    children: [{ name: PAGE_TITLE.BANK.BASE, path: ROUTES.BANK.BASE }],
   },
-    {
+  {
+    name: PAGE_TITLE.POS.BASE,
+    icon: <PointOfSale />,
+    children: [{ name: PAGE_TITLE.POS.SALES_REGISTER.BASE, path: ROUTES.SALES_REGISTER.BASE, pro: false }],
+  },
+  {
     name: PAGE_TITLE.CRM.BASE,
     icon: <Redeem />,
     children: [
@@ -67,8 +70,7 @@ export const NavItems: NavItem[] = [
     icon: <Settings />,
     children: [
       { name: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE, path: ROUTES.ADDITIONAL_CHARGES.BASE },
-      { name: PAGE_TITLE.SETTINGS.PROFILE.BASE, path: ROUTES.PROFILE.BASE }
-    ], 
+      { name: PAGE_TITLE.SETTINGS.PROFILE.BASE, path: ROUTES.PROFILE.BASE },
+    ],
   },
-  
 ];

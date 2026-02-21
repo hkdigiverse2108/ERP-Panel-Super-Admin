@@ -126,4 +126,8 @@ export const ROUTES = {
     BASE: "/profile",
     EDIT: "/profile/edit",
   },
+ SALES_REGISTER : {
+    BASE: "/sales-register",
+    EDIT: "/sales-register/edit",
+  },
 } as const;

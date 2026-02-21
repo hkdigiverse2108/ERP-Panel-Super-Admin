@@ -55,6 +55,7 @@ import Loyalty from "../Pages/CRM/Loyalty";
 import LoyaltyForm from "../Pages/CRM/Loyalty/LoyaltyForm";
 // import User from "../Pages/User";
 import Profile from "../Pages/Profile";
+import SalesRegister from "../Pages/Pos/Sales Register";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -139,6 +140,8 @@ export const PageRoutes = [
 
   { path: ROUTES.PROFILE.BASE, name: PAGE_TITLE.SETTINGS.PROFILE.BASE, element: <Profile /> },
   { path: ROUTES.PROFILE.EDIT, name: PAGE_TITLE.SETTINGS.PROFILE.BASE, element: <UserForm /> },
+
+  { path: ROUTES.SALES_REGISTER.BASE, name: PAGE_TITLE.SETTINGS.PROFILE.BASE, element: <SalesRegister /> },
 ];
 
 export const AuthRoutes = [
