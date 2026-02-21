@@ -105,6 +105,7 @@ export const ROUTES = {
   BILL_OF_LIVE_PRODUCT: {
     BASE: "/bill-of-live-product",
     ADD_EDIT: "/bill-of-live-product/add-edit",
+  },
   BANK: {
     BASE: "/bank",
     ADD_EDIT: "/bank/add-edit",
