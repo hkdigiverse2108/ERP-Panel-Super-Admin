@@ -3,20 +3,22 @@ import type { GridColDef } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { DebitNoteBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import { FormatDate } from "../../../Utils";
+import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 
 const DebitNote = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.DEBIT_NOTE.BASE);
 
   const { data: debitNoteData, isLoading: debitNoteDataLoading, isFetching: debitNoteDataFetching } = Queries.useGetDebitNote(params);
   const { mutate: deleteDebitNoteMutate } = Mutations.useDeleteDebitNote();
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+
   const { mutate: editDebitNote, isPending: isEditLoading } = Mutations.useEditDebitNote();
 
   const allDebitNotes = useMemo(() => debitNoteData?.data?.debitNote_data.map((debitNote) => ({ ...debitNote, id: debitNote?._id })) || [], [debitNoteData]);
@@ -65,11 +67,13 @@ const DebitNote = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
   };
+  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.DEBIT_NOTE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.DEBIT_NOTE.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
+        <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

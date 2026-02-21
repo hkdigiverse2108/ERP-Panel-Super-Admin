@@ -1,13 +1,13 @@
 import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonActionColumn, CommonDeleteModal, AdvancedSearch, CommonStatsCard } from "../../../Components/Common";
+import { CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonActionColumn, CommonDeleteModal, AdvancedSearch, CommonStatsCard, CommonObjectNameColumn } from "../../../Components/Common";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { Queries, Mutations } from "../../../Api";
 import type { AppGridColDef } from "../../../Types";
 import type { SupplierBillBase } from "../../../Types/SupplierBill";
-import { CreateFilter, FormatDate } from "../../../Utils";
+import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 import { BREADCRUMBS, PAYMENT_STATUS_OPTIONS } from "../../../Data";
 import type { GridRenderCellParams } from "@mui/x-data-grid";
 
@@ -16,6 +16,7 @@ const SupplierBill = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.SUPPLIER_BILL.BASE);
   const { data, isLoading, isFetching } = Queries.useGetSupplierBillDetails(params);
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deleteSupplierBill } = Mutations.useDeleteSupplierBill();
   const { mutate: editSupplierBill } = Mutations.useEditSupplierBill();
   const handleDeleteBtn = () => {
@@ -36,7 +37,7 @@ const SupplierBill = () => {
       { label: "Unpaid", value: unpaid },
     ];
   }, [rows]);
-  const filter = [CreateFilter("Payment Status", "paymentStatus", advancedFilter, updateAdvancedFilter, PAYMENT_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];
+  const filter = [CreateFilter("Payment Status", "paymentStatus", advancedFilter, updateAdvancedFilter, PAYMENT_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 
   const columns: AppGridColDef<SupplierBillBase>[] = [
     {
@@ -49,7 +50,7 @@ const SupplierBill = () => {
         return <span className="text-red-600 font-semibold">Unpaid</span>;
       },
     },
-
+    CommonObjectNameColumn<SupplierBillBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "supplierBillNo", headerName: "Bill No", width: 160 },
 
     { field: "supplierId", headerName: "Supplier", width: 240, valueGetter: (_: unknown, row: SupplierBillBase) => (row?.supplierId ? row.supplierId.name : "") },
@@ -70,11 +71,11 @@ const SupplierBill = () => {
 
     ...(permission?.edit || permission?.delete
       ? [
-        CommonActionColumn<SupplierBillBase>({
-          ...(permission?.edit && { active: (row) => editSupplierBill({ supplierBillId: row?._id, isActive: !row.isActive }), editRoute: ROUTES.SUPPLIER_BILL.ADD_EDIT }),
-          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.supplierBillNo }) }),
-        }),
-      ]
+          CommonActionColumn<SupplierBillBase>({
+            ...(permission?.edit && { active: (row) => editSupplierBill({ supplierBillId: row?._id, isActive: !row.isActive }), editRoute: ROUTES.SUPPLIER_BILL.ADD_EDIT }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.supplierBillNo }) }),
+          }),
+        ]
       : []),
   ];
   const gridOptions = {

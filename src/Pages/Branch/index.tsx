@@ -2,20 +2,22 @@ import { Box } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { Mutations, Queries } from "../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
 import type { BranchBase } from "../../Types";
 import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
 import { useNavigate } from "react-router-dom";
+import { CreateFilter, GenerateOptions } from "../../Utils";
 
 const Branch = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.BRANCH.BASE);
 
   const { data: branchData, isLoading: branchDataLoading, isFetching: branchDataFetching } = Queries.useGetBranch(params);
   const { mutate: deleteBranchMutate } = Mutations.useDeleteBranch();
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: editBranch, isPending: isEditLoading } = Mutations.useEditBranch();
 
   const allBranches = useMemo(() => branchData?.data?.branch_data.map((branch) => ({ ...branch, id: branch?._id })) || [], [branchData]);
@@ -29,9 +31,10 @@ const Branch = () => {
   const handleAdd = () => navigate(ROUTES.BRANCH.ADD_EDIT);
 
   const columns: GridColDef<BranchBase>[] = [
-    { field: "name", headerName: "Branch Name",width: 200 },
+    CommonObjectNameColumn<BranchBase>("companyId", { headerName: "Company", width: 200 }),
+    { field: "name", headerName: "Branch Name", width: 200 },
     { field: "displayName", headerName: "Display Name", width: 200 },
-    { field: "userName", headerName: "User Name",width: 200 },
+    { field: "userName", headerName: "User Name", width: 200 },
     { field: "contactName", headerName: "Contact Name", width: 250 },
     { field: "email", headerName: "Email", flex: 1 },
     ...(permission?.edit || permission?.delete
@@ -62,11 +65,14 @@ const Branch = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
   };
+  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.BRANCH.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.BRANCH.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
+        <AdvancedSearch filter={filter} />
+
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
