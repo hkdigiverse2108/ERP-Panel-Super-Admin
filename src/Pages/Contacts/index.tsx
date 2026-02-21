@@ -35,11 +35,11 @@ const Contact = () => {
   const handleAdd = () => navigate(ROUTES.CONTACTS.ADD_EDIT);
 
   const handleContactTypeChange = (value: string) => {
-    updateAdvancedFilter("contactTypeFilter", [value]);
+    updateAdvancedFilter("typeFilter", [value]);
   };
 
   useEffect(() => {
-    updateAdvancedFilter("contactTypeFilter", [CONTACT_TYPE[0]]);
+    updateAdvancedFilter("typeFilter", [CONTACT_TYPE[0]]);
   }, []);
 
   const columns: AppGridColDef<ContactBase>[] = [
@@ -140,7 +140,7 @@ const Contact = () => {
     CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }),
   ];
 
-  const topContent = <CommonRadio value={advancedFilter?.contactTypeFilter?.[0]} onChange={handleContactTypeChange} options={CONTACT_TYPE.map(c => ({ label: c, value: c }))} grid={{ xs: "auto" }} />;
+  const topContent = <CommonRadio value={advancedFilter?.typeFilter?.[0] ?? CONTACT_TYPE[0]} onChange={handleContactTypeChange} options={CONTACT_TYPE.map(c => ({ label: c, value: c }))} grid={{ xs: "auto" }} />;
 
   return (
     <>
