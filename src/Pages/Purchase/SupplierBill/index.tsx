@@ -71,11 +71,11 @@ const SupplierBill = () => {
 
     ...(permission?.edit || permission?.delete
       ? [
-          CommonActionColumn<SupplierBillBase>({
-            ...(permission?.edit && { active: (row) => editSupplierBill({ supplierBillId: row?._id, isActive: !row.isActive }), editRoute: ROUTES.SUPPLIER_BILL.ADD_EDIT }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.supplierBillNo }) }),
-          }),
-        ]
+        CommonActionColumn<SupplierBillBase>({
+          ...(permission?.edit && { active: (row) => editSupplierBill({ supplierBillId: row?._id, isActive: !row.isActive }), editRoute: ROUTES.SUPPLIER_BILL.ADD_EDIT }),
+          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.supplierBillNo }) }),
+        }),
+      ]
       : []),
   ];
   const gridOptions = {

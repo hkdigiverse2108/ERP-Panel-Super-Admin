@@ -43,14 +43,14 @@ const Recipe = () => {
     { field: "type", headerName: "Recipe Type", minWidth: 150, flex: 1 },
     ...(permission?.edit || permission?.delete
       ? [
-          CommonActionColumn<RecipeBase>({
-            ...(permission?.edit && {
-              active: (row) => editRecipe({ recipeId: row._id, isActive: !row.isActive }),
-              editRoute: ROUTES.RECIPE.ADD_EDIT,
-            }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+        CommonActionColumn<RecipeBase>({
+          ...(permission?.edit && {
+            active: (row) => editRecipe({ recipeId: row._id, isActive: !row.isActive }),
+            editRoute: ROUTES.RECIPE.ADD_EDIT,
           }),
-        ]
+          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+        }),
+      ]
       : []),
   ];
 

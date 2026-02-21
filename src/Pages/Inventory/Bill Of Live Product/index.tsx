@@ -3,7 +3,6 @@ import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
-
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, BillOfLiveProductBase } from "../../../Types";
@@ -37,7 +36,7 @@ const BillOfLiveProduct = () => {
   };
 
   const columns: AppGridColDef<BillOfLiveProductBase>[] = [
-    CommonObjectNameColumn("companyId", { headerName: "Company Name", width: 280 }),
+    CommonObjectNameColumn<BillOfLiveProductBase>("companyId", { headerName: "Company Name", width: 280 }),
     { field: "number", headerName: "Bill Of Live Product No.", width: 280 },
     { field: "date", headerName: "Bill Of Live Product Date", valueGetter: (v) => FormatDate(v), flex: 1 },
 
@@ -69,11 +68,9 @@ const BillOfLiveProduct = () => {
 
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 
-
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.BILL_OF_LIVE_PRODUCT.BASE} />
-
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2, mb: 10 }}>
         <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>

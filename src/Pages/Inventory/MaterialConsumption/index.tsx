@@ -43,14 +43,14 @@ const MaterialConsumption = () => {
     { field: "remark", headerName: "Remark", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
-          CommonActionColumn<MaterialConsumptionBase>({
-            ...(permission?.edit && {
-              active: (row) => editMaterialConsumption({ materialConsumptionId: row?._id, isActive: !row.isActive }),
-              editRoute: ROUTES.MATERIAL_CONSUMPTION.ADD_EDIT,
-            }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.number }) }),
+        CommonActionColumn<MaterialConsumptionBase>({
+          ...(permission?.edit && {
+            active: (row) => editMaterialConsumption({ materialConsumptionId: row?._id, isActive: !row.isActive }),
+            editRoute: ROUTES.MATERIAL_CONSUMPTION.ADD_EDIT,
           }),
-        ]
+          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.number }) }),
+        }),
+      ]
       : []),
   ];
 

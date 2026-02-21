@@ -92,7 +92,6 @@ export type EditBillOfLiveProductPayload = AddBillOfLiveProductPayload & {
 export interface BillOfLiveProductBase extends CommonDataType {
   companyId?: CompanyBase;
   number?: string;
-
   date?: string;
   recipeId?: RecipeBase[];
   allowReverseCalculation?: boolean;
