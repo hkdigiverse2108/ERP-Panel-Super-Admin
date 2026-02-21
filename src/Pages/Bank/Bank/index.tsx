@@ -2,17 +2,19 @@ import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, BankBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
 
 const Bank = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.BANK.BASE);
 
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { data: bankData, isLoading, isFetching } = Queries.useGetBank(params);
   const { mutate: deleteBankMutate, isPending: isDeleteLoading } = Mutations.useDeleteBank();
   const { mutate: editBank, isPending: isEditLoading } = Mutations.useEditBank();
@@ -38,6 +40,7 @@ const Bank = () => {
   const handleAdd = () => navigate(ROUTES.BANK.ADD_EDIT);
 
   const columns: AppGridColDef<BankBase>[] = [
+    CommonObjectNameColumn<BankBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "name", headerName: "Bank Name", width: 200 },
     { field: "accountHolderName", headerName: "Account Holder Name", width: 200 },
     { field: "ifscCode", headerName: "IFSC Code", width: 160 },
@@ -55,14 +58,14 @@ const Bank = () => {
     { field: "addressLine1", headerName: "Address", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
-        CommonActionColumn<BankBase>({
-          ...(permission?.edit && {
-            active: (row) => editBank({ bankId: row?._id, isActive: !row.isActive }),
-            editRoute: ROUTES.BANK.ADD_EDIT,
+          CommonActionColumn<BankBase>({
+            ...(permission?.edit && {
+              active: (row) => editBank({ bankId: row?._id, isActive: !row.isActive }),
+              editRoute: ROUTES.BANK.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
           }),
-          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
-        }),
-      ]
+        ]
       : []),
   ];
 
@@ -82,11 +85,17 @@ const Bank = () => {
     onFilterModelChange: setFilterModel,
   };
 
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), // categoryFilter
+  ];
+
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.BANK.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.BANK.BASE} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <AdvancedSearch filter={filter} />
+
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

@@ -1,17 +1,17 @@
 import { Box, Grid } from "@mui/material";
+import type { GridRenderCellParams } from "@mui/x-data-grid";
+import { Form, Formik } from "formik";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
+import { CommonButton, CommonTextField, CommonValidationSelect } from "../../../Attribute";
 import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, CONSUMPTION_TYPE, PRODUCT_TYPE_OPTIONS } from "../../../Data";
 import type { AppGridColDef, ProductBase, ProductWithRemoveQty } from "../../../Types";
-import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { CreateFilter, GenerateOptions } from "../../../Utils";
-import { CommonButton, CommonTextField, CommonValidationSelect } from "../../../Attribute";
-import { Form, Formik } from "formik";
+import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { ProductItemRemoveFormSchema } from "../../../Utils/ValidationSchemas";
-import type { GridRenderCellParams } from "@mui/x-data-grid";
 
 const Product = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
@@ -24,7 +24,7 @@ const Product = () => {
 
   const { data: productData, isLoading: productDataLoading, isFetching: productDataFetching } = Queries.useGetProduct(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
-  const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true});
+  const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true });
   const brandId = advancedFilter?.brandFilter?.[0] || "";
   const { data: subBrandData, isLoading: subBrandDataLoading } = Queries.useGetBrandDropdown({ parentBrandFilter: brandId }, Boolean(brandId));
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
@@ -44,7 +44,7 @@ const Product = () => {
   useEffect(() => setGridRows(allProduct), [allProduct]);
 
   const handleAdd = () => navigate(ROUTES.PRODUCT.ADD_EDIT);
-  const handleAddItem = () => navigate(ROUTES.PRODUCT.ITEM_ADD_EDIT);
+  const handleAddItem = () => navigate(ROUTES.PRODUCT.ITEM_ADD_EDIT, { state: { companyId: advancedFilter?.companyFilter?.[0] } });
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
@@ -75,36 +75,36 @@ const Product = () => {
     { field: "openingQty", headerName: "Opening Qty", flex: 1, minWidth: 150 },
     ...(isRemoveItem
       ? [
-        {
-          field: "removeQty",
-          headerName: "Remove Qty",
-          flex: 1,
-          minWidth: 150,
-          renderCell: (params: GridRenderCellParams) => (
-            <Box sx={{ justifyContent: "center", alignItems: "center", display: "flex", height: "100%", width: "100%" }}>
-              <CommonTextField
-                type="number"
-                value={params.value ?? 0}
-                onChange={(event) => {
-                  const newValue = Number(event || 0);
-                  setGridRows((prev) => prev.map((r) => (r.id === params.id ? { ...r, removeQty: newValue } : r)));
-                }}
-              />
-            </Box>
-          ),
-        },
-      ]
+          {
+            field: "removeQty",
+            headerName: "Remove Qty",
+            flex: 1,
+            minWidth: 150,
+            renderCell: (params: GridRenderCellParams) => (
+              <Box sx={{ justifyContent: "center", alignItems: "center", display: "flex", height: "100%", width: "100%" }}>
+                <CommonTextField
+                  type="number"
+                  value={params.value ?? 0}
+                  onChange={(event) => {
+                    const newValue = Number(event || 0);
+                    setGridRows((prev) => prev.map((r) => (r.id === params.id ? { ...r, removeQty: newValue } : r)));
+                  }}
+                />
+              </Box>
+            ),
+          },
+        ]
       : []),
     ...(permission?.edit || permission?.delete
       ? [
-        CommonActionColumn<ProductBase>({
-          ...(permission?.edit && {
-            active: (row) => editProduct({ productId: row?._id, isActive: !row.isActive }),
-            editRoute: ROUTES.PRODUCT.ADD_EDIT,
+          CommonActionColumn<ProductBase>({
+            ...(permission?.edit && {
+              active: (row) => editProduct({ productId: row?._id, isActive: !row.isActive }),
+              editRoute: ROUTES.PRODUCT.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
           }),
-          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
-        }),
-      ]
+        ]
       : []),
   ];
 
@@ -155,7 +155,7 @@ const Product = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.PRODUCT.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <AdvancedSearch filter={filter} />
+        <AdvancedSearch filter={filter} defaultExpanded />
         <CommonCard title={PAGE_TITLE.INVENTORY.PRODUCT.ITEM.BASE} topContent={topContent}>
           <CommonDataGrid {...CommonDataGridOption} />
           {isRemoveItem && (

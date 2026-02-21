@@ -55,7 +55,7 @@ const ItemForm = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK.BASE);
 
-  const { data } = location.state || {};
+  const { data, companyId } = location.state || {};
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { data: ProductData, isLoading: ProductDataLoading } = Queries.useGetProduct();
   const { data: UOMData, isLoading: UOMDataLoading } = Queries.useGetUomDropdown();
@@ -67,7 +67,7 @@ const ItemForm = () => {
   const pageMode = isEditing ? "EDIT" : "ADD";
 
   const initialValues: StockFormValues = {
-    companyId: "",
+    companyId: companyId,
     productId: "",
     uomId: "",
     purchaseTaxId: "",
