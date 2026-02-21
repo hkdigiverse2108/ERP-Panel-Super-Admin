@@ -226,7 +226,7 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
 
           {/* TAB 0: PRODUCT DETAILS */}
           <CommonTabPanel value={tabValue} index={0}>
-            <Box sx={{ overflowX: "hidden" }}>
+            <Box className="custom-scrollbar" sx={{ overflowX: "auto" }}>
               <Box sx={{ minWidth: 1400 }}>
                 <FieldArray name="items">
                   {({ push, remove }) => {
@@ -337,8 +337,8 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
                   </Box>
                 </Box>
 
-                <Box sx={{ overflowX: "hidden" }}>
-                  <Box sx={{ Width: "max-content" }}>
+                <Box className="custom-scrollbar" sx={{ overflowX: "auto" }}>
+                  <Box sx={{ minWidth: "max-content" }}>
                     <table className="w-full text-sm border border-gray-200 dark:border-gray-700">
                       <thead className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-200">
                         <tr>
