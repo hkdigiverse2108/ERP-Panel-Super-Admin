@@ -5,6 +5,7 @@ export const ROUTES = {
   ACCESS_DENIED: "/access-denied",
   AUTH: {
     SIGNIN: "/auth/signin",
+    CHANGE_PASSWORD: "/auth/change-password",
   },
   USER: {
     BASE: "/user",

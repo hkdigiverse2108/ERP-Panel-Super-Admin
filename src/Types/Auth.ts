@@ -7,6 +7,13 @@ export interface LoginPayload {
   loginSource?: string;
 }
 
+export interface ChangePasswordPayload {
+  email?: string;
+  oldPassword?: string;
+  newPassword?: string;
+  loginSource?: string;
+}
+
 export interface User extends LoginPayload, CommonDataType {
   fullName: string;
   phoneNumber: string;
