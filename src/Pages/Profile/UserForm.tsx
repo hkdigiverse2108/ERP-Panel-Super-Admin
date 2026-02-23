@@ -18,6 +18,7 @@ const UserForm = () => {
   const dispatch = useAppDispatch();
   // const { company } = useAppSelector((state) => state.company);
   const { user: UserData } = useAppSelector((state) => state.auth);
+
   const { data: branchData, isLoading: branchDataLoading } = Queries.useGetBranchDropdown();
   const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditUser();
 
@@ -76,7 +77,7 @@ const UserForm = () => {
   };
 
   const AddressDependencyHandler = () => {
-    useDependentReset([
+    useDependentReset([ 
       { when: "address.country", reset: ["address.state", "address.city"] },
       { when: "address.state", reset: ["address.city"] },
     ]);

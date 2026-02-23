@@ -1,7 +1,7 @@
 import type { FormikProps } from "formik";
 import type { NavigateFunction } from "react-router-dom";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
-import type { SupplierBase } from "./Contact";
+import type { ContactBase } from "./Contacts";
 import type { ProductBase, ProductDropDownApiResponse } from "./Product";
 import type { TaxDropdownApiResponse } from "./Tax";
 import type { TermsConditionBase } from "./TermsCondition";
@@ -9,9 +9,9 @@ import type { TermsConditionBase } from "./TermsCondition";
 
 export interface PurchaseOrderBase extends Omit<PurchaseOrderFormValues, "supplierId">, CommonDataType {
   _id: string;
-  supplierId?: SupplierBase;
+  supplierId?: ContactBase;
 }
-export type Supplier = SupplierBase;
+export type Supplier = ContactBase;
 
 export interface PurchaseOrderItem {
   productId: string;

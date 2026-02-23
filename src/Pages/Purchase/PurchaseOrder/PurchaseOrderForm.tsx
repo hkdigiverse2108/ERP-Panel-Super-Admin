@@ -19,66 +19,64 @@ const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate
   const selectedSupplier = (supplierData?.data as unknown as Supplier[])?.find((s) => s._id === values.supplierId);
 
   return (
-    <>
-      <Form noValidate>
-        <Box sx={{ display: "grid", gap: 2 }}>
-          {/* BASIC DETAILS */}
-          <CommonCard title="Purchase Order Details" grid={{ xs: 12 }}>
-            <Box sx={{ p: 2, display: "grid", gridTemplateColumns: { xs: "1fr", md: "340px 1fr" }, gap: 2 }}>
-              {/* ================= LEFT SIDE ================= */}
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <CommonValidationSelect name="supplierId" label="Select Supplier" required isLoading={supplierDataLoading} options={GenerateOptions(supplierData?.data)} grid={{ xs: 12 }} disabled={!values.companyId} />
+    <Form noValidate>
+      <Box sx={{ display: "grid", gap: 2 }}>
+        {/* BASIC DETAILS */}
+        <CommonCard title="Purchase Order Details" grid={{ xs: 12 }}>
+          <Box sx={{ p: 2, display: "grid", gridTemplateColumns: { xs: "1fr", md: "340px 1fr" }, gap: 2 }}>
+            {/* ================= LEFT SIDE ================= */}
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <CommonValidationSelect name="supplierId" label="Select Supplier" required isLoading={supplierDataLoading} options={GenerateOptions(supplierData?.data)} grid={{ xs: 12 }} disabled={!values.companyId} />
 
-                {/* PLACE OF SUPPLY */}
-                <Box display="flex" gap={1} flexWrap="wrap">
-                  <Box fontWeight={600}>Place of Supply:</Box>
-                  <Box color="text.secondary">{selectedSupplier?.address?.[0]?.state?.name || "-"}</Box>
-                </Box>
-
-                {/* GSTIN */}
-                <Box display="flex" gap={1} flexWrap="wrap">
-                  <Box fontWeight={600}>GSTIN:</Box>
-                  <Box color="text.secondary">{selectedSupplier?.address?.[0]?.gstIn || "-"}</Box>
-                </Box>
-
-                {/* BILLING ADDRESS */}
-                <Box display="flex" gap={1}>
-                  <Box fontWeight={600}>Billing Address:</Box>
-                  {selectedSupplier?.address?.length ? (
-                    <Box color="text.secondary">
-                      <Box>{selectedSupplier.address[0]?.addressLine1}</Box>
-                      <Box>
-                        {selectedSupplier.address[0]?.city?.name}, {selectedSupplier.address[0]?.state?.name}
-                      </Box>
-                      <Box>{selectedSupplier.address[0]?.pinCode}</Box>
-                    </Box>
-                  ) : (
-                    <Box color="text.secondary">-</Box>
-                  )}
-                </Box>
+              {/* PLACE OF SUPPLY */}
+              <Box display="flex" gap={1} flexWrap="wrap">
+                <Box fontWeight={600}>Place of Supply:</Box>
+                <Box color="text.secondary">{selectedSupplier?.address?.[0]?.state?.name || "-"}</Box>
               </Box>
 
-              {/* ================= RIGHT SIDE ================= */}
-              <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: 2 }}>
-                <CommonValidationSelect name="companyId" label="Select Company" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12 }} />
-                <CommonValidationDatePicker name="orderDate" label="Purchase Order Date" required grid={{ xs: 12 }} />
-                <CommonValidationDatePicker name="shippingDate" label="Shipping Date" required grid={{ xs: 12 }} />
-                <CommonValidationTextField name="shippingNote" label="Shipping Note" grid={{ xs: 12 }} />
-                {isEditing && <CommonValidationTextField name="orderNo" label="Purchase Order No." grid={{ xs: 12 }} />}
-                <CommonValidationSelect name="taxType" label="Tax Type" required options={TAX_TYPE} grid={{ xs: 12 }} />
-                <CommonValidationSelect name="status" label="Order Status" required options={ORDER_STATUS} grid={{ xs: 12 }} />
+              {/* GSTIN */}
+              <Box display="flex" gap={1} flexWrap="wrap">
+                <Box fontWeight={600}>GSTIN:</Box>
+                <Box color="text.secondary">{selectedSupplier?.address?.[0]?.gstIn || "-"}</Box>
+              </Box>
+
+              {/* BILLING ADDRESS */}
+              <Box display="flex" gap={1}>
+                <Box fontWeight={600}>Billing Address:</Box>
+                {selectedSupplier?.address?.length ? (
+                  <Box color="text.secondary">
+                    <Box>{selectedSupplier.address[0]?.addressLine1}</Box>
+                    <Box>
+                      {selectedSupplier.address[0]?.city?.name}, {selectedSupplier.address[0]?.state?.name}
+                    </Box>
+                    <Box>{selectedSupplier.address[0]?.pinCode}</Box>
+                  </Box>
+                ) : (
+                  <Box color="text.secondary">-</Box>
+                )}
               </Box>
             </Box>
-          </CommonCard>
-        </Box>
-      </Form>
+
+            {/* ================= RIGHT SIDE ================= */}
+            <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: 2 }}>
+              <CommonValidationSelect name="companyId" label="Select Company" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12 }} />
+              <CommonValidationDatePicker name="orderDate" label="Purchase Order Date" required grid={{ xs: 12 }} />
+              <CommonValidationDatePicker name="shippingDate" label="Shipping Date" required grid={{ xs: 12 }} />
+              <CommonValidationTextField name="shippingNote" label="Shipping Note" grid={{ xs: 12 }} />
+              {isEditing && <CommonValidationTextField name="orderNo" label="Purchase Order No." grid={{ xs: 12 }} />}
+              <CommonValidationSelect name="taxType" label="Tax Type" required options={TAX_TYPE} grid={{ xs: 12 }} />
+              <CommonValidationSelect name="status" label="Order Status" required options={ORDER_STATUS} grid={{ xs: 12 }} />
+            </Box>
+          </Box>
+        </CommonCard>
+      </Box>
 
       <Box sx={{ display: "grid", gap: 2, mt: 2 }}>
         <ProductAndTerm isEditing={isEditing} />
       </Box>
 
       <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={addLoading || editLoading} onClear={() => (isEditing ? navigate(-1) : resetForm())} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
-    </>
+    </Form>
   );
 };
 
