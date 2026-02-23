@@ -6,6 +6,13 @@ export const KEYS = {
     RESEND_OTP: "resend-otp",
   },
 
+  ADMIN_SETTING: {
+    BASE: "admin-setting",
+    ADD: "admin-setting-add",
+    EDIT: "admin-setting-edit",
+    DELETE: "admin-setting-delete",
+  },
+
   UPLOAD: {
     ALL_IMAGE: "upload-image",
     ALL_PDF: "upload-pdf",

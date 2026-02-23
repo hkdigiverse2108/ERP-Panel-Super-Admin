@@ -7,6 +7,7 @@ import type { BankApiResponse, BankDropdownApiResponse } from "../Types/Bank";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 import type { RecipeApiResponse, RecipeDropdownApiResponse } from "../Types/Recipe";
+import type { AdminSettingApiResponse } from "../Types/AdminSetting";
 
 export const Queries = {
   // ************ Upload ***********
@@ -131,7 +132,11 @@ export const Queries = {
   useGetLoyalty: (params?: Params) => useQueries<LoyaltyApiResponse>([KEYS.LOYALTY.BASE, params], () => Get(URL_KEYS.LOYALTY.ALL, params)),
   useGetLoyaltyDropdown: (params?: Params, enabled?: boolean) => useQueries<LoyaltyDropdownApiResponse>([KEYS.LOYALTY.BASE, params], () => Get(URL_KEYS.LOYALTY.DROPDOWN, params), { enabled: enabled }),
   useGetLoyaltyPoints: (params?: Params, enabled?: boolean) => useQueries<LoyaltyPointsApiResponse>([KEYS.LOYALTY.BASE, params], () => Get(URL_KEYS.LOYALTY.POINTS, params), { enabled: enabled }),
-//************ Support Desk ********/
+
+  //************ Support Desk ********/
   useGetCallRequest: (params?: Params) => useQueries<CallRequestApiResponse>([KEYS.CALL_REQUEST.BASE, params], () => Get(URL_KEYS.CALL_REQUEST.ALL, params)),
+
+  //************ Admin Setting ********/
+  useGetAdminSetting: (params?: Params) => useQueries<AdminSettingApiResponse>([KEYS.ADMIN_SETTING.BASE, params], () => Get(URL_KEYS.ADMIN_SETTING.ALL, params)),
 
 };

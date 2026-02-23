@@ -17,6 +17,11 @@ export const PAGE_TITLE = {
     ADD: "Add Branch",
     EDIT: "Edit Branch",
   },
+  ADMIN_SETTING: {
+    BASE: "Admin Setting",
+    ADD: "Add Admin Setting",
+    EDIT: "Edit Admin Setting",
+  },
   INVENTORY: {
     BASE: "inventory",
     PRODUCT: {
@@ -185,14 +190,14 @@ export const PAGE_TITLE = {
     ADD: "Add Announcement",
     EDIT: "Edit Announcement",
   },
- CALL_REQUEST: {
+  CALL_REQUEST: {
     BASE: "Call Request",
     ADD: "Add Call Request",
     EDIT: "Edit Call Request",
-},
-CHANGE_PASSWORD: {
-  BASE: "Change Password",
-},
+  },
+  CHANGE_PASSWORD: {
+    BASE: "Change Password",
+  },
   SUPPORT_DESK: {
     BASE: "Support Desk",
     ADD: "Add Support Desk",
