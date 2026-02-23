@@ -9,12 +9,16 @@ const initialState = {
   token: StoredToken,
   user: StoredUser,
   isAuthenticated: !!StoredToken,
+  signinResponse: {email:""},
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    setSigninResponse: (state, action) => {
+      state.signinResponse = action.payload;
+    },
     setSignin: (state, action) => {
       state.token = action.payload.token;
       state.isAuthenticated = true;
@@ -36,5 +40,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setSignOut, setUser, setSignin } = authSlice.actions;
+export const { setSigninResponse, setSignOut, setUser, setSignin } = authSlice.actions;
 export default authSlice.reducer;

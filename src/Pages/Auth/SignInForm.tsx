@@ -1,14 +1,14 @@
 import { Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
+import { useNavigate } from "react-router-dom";
+import { Mutations } from "../../Api";
 import { CommonButton, CommonValidationTextField } from "../../Attribute";
 import { ImagePath, LoginSource, ROUTES, ThemeTitle } from "../../Constants";
 import ThemeToggler from "../../Layout/ThemeToggler";
-import { SigninSchema } from "../../Utils/ValidationSchemas";
-import { Mutations } from "../../Api";
-import type { LoginPayload } from "../../Types";
 import { useAppDispatch } from "../../Store/hooks";
-import { useNavigate } from "react-router-dom";
-import { setSignin } from "../../Store/Slices/AuthSlice";
+import { setSigninResponse } from "../../Store/Slices/AuthSlice";
+import type { LoginPayload } from "../../Types";
+import { SigninSchema } from "../../Utils/ValidationSchemas";
 
 const SignInForm = () => {
   const { mutate: Signin, isPending: isSigninPending } = Mutations.useSignin();
@@ -20,8 +20,9 @@ const SignInForm = () => {
       { ...values, email: values.email.toLowerCase(), loginSource: LoginSource },
       {
         onSuccess: (response) => {
-          dispatch(setSignin(response?.data));
-          navigate(ROUTES.DASHBOARD);
+          dispatch(setSigninResponse(response?.data));
+          // dispatch(setSignin(response?.data));
+          navigate(ROUTES.AUTH.VERIFY_OTP);
           resetForm();
         },
       },

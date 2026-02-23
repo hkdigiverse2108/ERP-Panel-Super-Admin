@@ -13,7 +13,7 @@ export const NavItems: NavItem[] = [
   { icon: <AdminPanelSettings />, name: PAGE_TITLE.ROLE.BASE, path: ROUTES.ROLE.BASE },
   { icon: <ViewModule />, name: PAGE_TITLE.MODULE.BASE, path: ROUTES.MODULE.BASE },
   { icon: <Announcement />, name: PAGE_TITLE.ANNOUNCEMENT.BASE, path: ROUTES.ANNOUNCEMENT.BASE },
-   { icon: <SupportAgent />, name: PAGE_TITLE.SUPPORT_DESK.BASE, path: ROUTES.SUPPORT_DESK.BASE },
+  { icon: <SupportAgent />, name: PAGE_TITLE.CALL_REQUEST.BASE, path: ROUTES.CALL_REQUEST.BASE },
   {
     name: PAGE_TITLE.INVENTORY.BASE,
     icon: <Settings />,

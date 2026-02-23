@@ -2,6 +2,8 @@ export const URL_KEYS = {
   AUTH: {
     SIGNIN: "/auth/login",
     CHANGE_PASSWORD: "/auth/reset-password",
+    VERIFY_OTP: "/auth/verify-otp",
+    RESEND_OTP: "/auth/resend-otp",
   },
   UPLOAD: {
     ADD: "/upload",
@@ -67,6 +69,8 @@ export const URL_KEYS = {
   CALL_REQUEST: {
     BASE: "/call-request",
     ADD: "/call-request/add",
+    EDIT: "/call-request/edit",
+    ALL: "/call-request/all",
   },
   ROLE: {
     BASE: "/role",

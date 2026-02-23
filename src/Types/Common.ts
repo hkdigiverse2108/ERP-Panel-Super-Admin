@@ -257,6 +257,7 @@ export interface CommonValidationTextFieldProps {
   onCurrencyLog?: (value: string) => void;
   sx?: object;
   size?: "small" | "medium";
+  maxDigits?: number;
 }
 export interface CommonTextFieldProps extends Omit<CommonValidationTextFieldProps, "name"> {
   value: string | number;

@@ -27,3 +27,12 @@ export interface LoginResponse extends MessageStatus {
     user: User;
   };
 }
+
+export interface VerifyOtpPayload {
+  email: string;
+  otp: string;
+}
+
+export interface ResendOtpPayload {
+  email: string;
+}
