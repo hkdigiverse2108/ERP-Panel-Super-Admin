@@ -154,10 +154,11 @@ export const PageRoutes = [
 
   { path: ROUTES.CALL_REQUEST.BASE, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDesk /> },
   { path: ROUTES.CALL_REQUEST.ADD_EDIT, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDeskForm /> },
+
   { path: ROUTES.AUTH.CHANGE_PASSWORD, name: PAGE_TITLE.CHANGE_PASSWORD.BASE, element: <ChangePassword /> },
 
-  { path: ROUTES.SUPPORT_DESK.BASE, name: PAGE_TITLE.SUPPORT_DESK.BASE, element: <SupportDesk /> },
-  { path: ROUTES.SUPPORT_DESK.ADD_EDIT, name: PAGE_TITLE.SUPPORT_DESK.BASE, element: <SupportDeskForm /> },
+  { path: ROUTES.CALL_REQUEST.BASE, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDesk /> },
+  { path: ROUTES.CALL_REQUEST.ADD_EDIT, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDeskForm /> },
 ];
 
 export const AuthRoutes = [
