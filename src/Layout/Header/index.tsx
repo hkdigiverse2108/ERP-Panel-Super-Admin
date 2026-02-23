@@ -46,8 +46,8 @@ const Header = () => {
           )}
 
           <Link to="/" className="lg:hidden">
-            <img className="dark:hidden" src={`${ImagePath}logo/logo.svg`} alt="Logo" />
-            <img className="hidden dark:block" src={`${ImagePath}logo/logo-dark.svg`} alt="Logo" />
+            <img className="dark:hidden" src={`${ImagePath}logo/logo.png`} alt="Logo" />
+            <img className="hidden dark:block" src={`${ImagePath}logo/logo-dark.png`} alt="Logo" />
           </Link>
           <div className="flex">
             {/* <QuickActionMenu /> */}

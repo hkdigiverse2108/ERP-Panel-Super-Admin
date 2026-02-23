@@ -58,6 +58,7 @@ import Profile from "../Pages/Profile";
 import SalesRegister from "../Pages/Pos/Sales Register";
 import AnnouncementForm from "../Pages/Announcment/AnnouncmentForm";
 import Announcement from "../Pages/Announcment";
+import VerifyOtp from "../Pages/Auth/VerifyOtp";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -153,4 +154,5 @@ export const PageRoutes = [
 export const AuthRoutes = [
   { path: ROUTES.HOME, element: <Navigate to={ROUTES.AUTH.SIGNIN} replace /> },
   { path: ROUTES.AUTH.SIGNIN, element: <SignInForm /> },
+  { path: ROUTES.AUTH.VERIFY_OTP, element: <VerifyOtp /> },
 ];
