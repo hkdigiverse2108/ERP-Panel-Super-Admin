@@ -185,4 +185,9 @@ export const PAGE_TITLE = {
     ADD: "Add Announcement",
     EDIT: "Edit Announcement",
   },
+  SUPPORT_DESK: {
+    BASE: "Support Desk",
+    ADD: "Add Support Desk",
+    EDIT: "Edit Support Desk",
+  },
 } as const;

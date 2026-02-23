@@ -135,4 +135,8 @@ export const ROUTES = {
     BASE: "/announcement",
     ADD_EDIT: "/announcement/add-edit",
   },
+    SUPPORT_DESK : {
+    BASE: "/support-desk",
+    ADD_EDIT: "/support-desk/add-edit",
+  },
 } as const;

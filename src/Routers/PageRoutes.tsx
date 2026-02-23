@@ -59,6 +59,8 @@ import SalesRegister from "../Pages/Pos/Sales Register";
 import AnnouncementForm from "../Pages/Announcment/AnnouncmentForm";
 import Announcement from "../Pages/Announcment";
 import VerifyOtp from "../Pages/Auth/VerifyOtp";
+import SupportDeskForm from "../Pages/SupportDesk/SupportDeskForm";
+import SupportDesk from "../Pages/SupportDesk";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -146,9 +148,11 @@ export const PageRoutes = [
 
   { path: ROUTES.SALES_REGISTER.BASE, name: PAGE_TITLE.POS.SALES_REGISTER.BASE, element: <SalesRegister /> },
 
-   { path: ROUTES.ANNOUNCEMENT.BASE, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <Announcement /> },
+  { path: ROUTES.ANNOUNCEMENT.BASE, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <Announcement /> },
   { path: ROUTES.ANNOUNCEMENT.ADD_EDIT, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <AnnouncementForm /> },
 
+  { path: ROUTES.SUPPORT_DESK.BASE, name: PAGE_TITLE.SUPPORT_DESK.BASE, element: <SupportDesk /> },
+  { path: ROUTES.SUPPORT_DESK.ADD_EDIT, name: PAGE_TITLE.SUPPORT_DESK.BASE, element: <SupportDeskForm /> },
 ];
 
 export const AuthRoutes = [

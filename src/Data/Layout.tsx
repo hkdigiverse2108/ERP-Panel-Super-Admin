@@ -1,6 +1,6 @@
 import { PAGE_TITLE, ROUTES } from "../Constants";
 import type { NavItem } from "../Types";
-import { AdminPanelSettings, Apartment, GridViewRounded, MyLocation, People, ReceiptLong, Settings, AccountTree, ViewModule, Work, PersonRounded, AccountBalance, Redeem, PointOfSale, Announcement } from "@mui/icons-material";
+import { AdminPanelSettings, Apartment, GridViewRounded, MyLocation, People, ReceiptLong, Settings, AccountTree, ViewModule, Work, PersonRounded, AccountBalance, Redeem, PointOfSale, Announcement, SupportAgent } from "@mui/icons-material";
 
 export const NavItems: NavItem[] = [
   { icon: <GridViewRounded />, name: PAGE_TITLE.DASHBOARD, path: ROUTES.DASHBOARD },
@@ -13,6 +13,7 @@ export const NavItems: NavItem[] = [
   { icon: <AdminPanelSettings />, name: PAGE_TITLE.ROLE.BASE, path: ROUTES.ROLE.BASE },
   { icon: <ViewModule />, name: PAGE_TITLE.MODULE.BASE, path: ROUTES.MODULE.BASE },
   { icon: <Announcement />, name: PAGE_TITLE.ANNOUNCEMENT.BASE, path: ROUTES.ANNOUNCEMENT.BASE },
+   { icon: <SupportAgent />, name: PAGE_TITLE.SUPPORT_DESK.BASE, path: ROUTES.SUPPORT_DESK.BASE },
   {
     name: PAGE_TITLE.INVENTORY.BASE,
     icon: <Settings />,
