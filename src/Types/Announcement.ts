@@ -1,23 +1,22 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { CompanyBase } from "./Company";
 
-export interface AnnouncementBase extends CommonDataType {
-  companyId: string;
-  type: string;
-  desc: string[];
-  link: string;
-  version: string;
+export interface AnnouncementFormValues {
+  companyId?: string;
+  desc?: string;
+  link?: string;
+  version?: string;
   isActive?: boolean;
+  _submitAction?: string;
 }
-export type AddAnnouncementPayload = {
-  companyId: string;
-  type: string;
-  desc: string[];
-  link: string;
-  version: string;
-  isActive?: boolean;
-};
 
-export type EditAnnouncementPayload = Partial<AddAnnouncementPayload> & { announcementId: string };
+export type AddAnnouncementPayload = AnnouncementFormValues;
+
+export type EditAnnouncementPayload = AnnouncementFormValues & { announcementId: string };
+
+export interface AnnouncementBase extends Omit<AnnouncementFormValues, "companyId">, CommonDataType {
+  companyId: CompanyBase;
+}
 
 export interface AnnouncementDataResponse extends PageStatus {
   announcement_data: AnnouncementBase[];
