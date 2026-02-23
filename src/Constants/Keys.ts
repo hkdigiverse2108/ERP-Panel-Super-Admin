@@ -47,6 +47,9 @@ export const KEYS = {
 
   ANNOUNCEMENT: {
     BASE: "announcement",
+    ADD: "announcement-add",
+    EDIT: "announcement-edit",
+    DELETE: "announcement-delete",
   },
 
   CALL_REQUEST: {
@@ -199,11 +202,11 @@ export const KEYS = {
   },
   CONTACT: {
     BASE: "contact",
-    ADD: "contact-add", // dropdown can also use this key as it is used for fetching contact list for dropdown                    
+    ADD: "contact-add", // dropdown can also use this key as it is used for fetching contact list for dropdown
     EDIT: "contact-edit",
     DELETE: "contact-delete",
   },
-    COUPON: {
+  COUPON: {
     BASE: "coupon",
     ADD: "coupon-add",
     APPLY: "coupon-apply",
@@ -224,5 +227,12 @@ export const KEYS = {
     ADD: "sales-register-add",
     EDIT: "sales-register-edit",
     DELETE: "sales-register-delete",
+  },
+
+  SUPPORT_DESK: {
+    BASE: "support-desk",
+    ADD: "support-desk-add",
+    EDIT: "support-desk-edit",
+    DELETE: "support-desk-delete",
   },
 };

@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import { CommonButton, CommonValidationTextField } from "../../Attribute";
-import { ImagePath, LoginSource, ROUTES } from "../../Constants";
+import { ImagePath, LoginSource, ROUTES, ThemeTitle } from "../../Constants";
 import ThemeToggler from "../../Layout/ThemeToggler";
 import { SigninSchema } from "../../Utils/ValidationSchemas";
 import { Mutations } from "../../Api";
@@ -15,14 +15,17 @@ const SignInForm = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = async (values: LoginPayload,{ resetForm }: FormikHelpers<LoginPayload>) => {
-    Signin({...values,email:values.email.toLowerCase(),loginSource:LoginSource}, {
-      onSuccess: (response) => {
-        dispatch(setSignin(response?.data));
-        navigate(ROUTES.DASHBOARD);
-        resetForm()
+  const handleSubmit = async (values: LoginPayload, { resetForm }: FormikHelpers<LoginPayload>) => {
+    Signin(
+      { ...values, email: values.email.toLowerCase(), loginSource: LoginSource },
+      {
+        onSuccess: (response) => {
+          dispatch(setSignin(response?.data));
+          navigate(ROUTES.DASHBOARD);
+          resetForm();
+        },
       },
-    });
+    );
   };
 
   return (
@@ -57,13 +60,9 @@ const SignInForm = () => {
           <img src={`${ImagePath}logo/grid-01.svg`} alt="pattern" className="absolute bottom-0 left-0  w-full max-w-[300px] rotate-180 xl:max-w-[500px]" />
         </div>
 
-        <div className="absolute overflow-hidden  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center text-center">
-          <img src={`${ImagePath}logo/logo-dark.svg`} alt="TailAdmin Logo" className="w-60 h-20" />
-          <p className="text-gray-300 text-sm flex">
-            Free and Open-Source Tailwind CSS Admin
-            <br />
-            Dashboard Template
-          </p>
+        <div className="absolute overflow-hidden top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center text-center">
+          <img src={`${ImagePath}logo/logo-dark.png`} alt="Ai Setu Logo" className="w-39 h-11" />
+          <p className="text-gray-300 text-sm flex pt-3">{ThemeTitle}</p>
         </div>
       </div>
 

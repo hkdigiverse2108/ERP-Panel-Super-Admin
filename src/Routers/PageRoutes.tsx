@@ -41,12 +41,12 @@ import AdditionalChargesForm from "../Components/Settings/AdditionalCharges/Addi
 import Recipe from "../Pages/Inventory/Recipe";
 import RecipeForm from "../Pages/Inventory/Recipe/RecipeForm";
 import Stock from "../Pages/Inventory/Stock";
-import StockVerification from "../Pages/Inventory/Stock Varification";
-import StockVerificationForm from "../Pages/Inventory/Stock Varification/StockVarificationForm";
+import StockVerification from "../Pages/Inventory/StockVarification";
+import StockVerificationForm from "../Pages/Inventory/StockVarification/StockVarificationForm";
 import ContactForm from "../Pages/Contacts/ContactForm";
 import Contact from "../Pages/Contacts";
-import BillOfLiveProductForm from "../Pages/Inventory/Bill Of Live Product/BillOfLiveProductForm";
-import BillOfLiveProduct from "../Pages/Inventory/Bill Of Live Product";
+import BillOfLiveProductForm from "../Pages/Inventory/BillOfLiveProduct/BillOfLiveProductForm";
+import BillOfLiveProduct from "../Pages/Inventory/BillOfLiveProduct";
 import Bank from "../Pages/Bank/Bank";
 import BankForm from "../Pages/Bank/Bank/BankForm";
 import Coupon from "../Pages/CRM/Coupon";
@@ -56,9 +56,12 @@ import LoyaltyForm from "../Pages/CRM/Loyalty/LoyaltyForm";
 // import User from "../Pages/User";
 import Profile from "../Pages/Profile";
 import SalesRegister from "../Pages/Pos/Sales Register";
-import { Announcement } from "@mui/icons-material";
 import AnnouncementForm from "../Pages/Announcment/AnnouncmentForm";
 import ChangePassword from "../Pages/Auth/ChangePassword";
+import Announcement from "../Pages/Announcment";
+import VerifyOtp from "../Pages/Auth/VerifyOtp";
+import SupportDeskForm from "../Pages/SupportDesk/SupportDeskForm";
+import SupportDesk from "../Pages/SupportDesk";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -151,9 +154,12 @@ export const PageRoutes = [
 
   { path: ROUTES.AUTH.CHANGE_PASSWORD, name: PAGE_TITLE.CHANGE_PASSWORD.BASE, element: <ChangePassword /> },
 
+  { path: ROUTES.SUPPORT_DESK.BASE, name: PAGE_TITLE.SUPPORT_DESK.BASE, element: <SupportDesk /> },
+  { path: ROUTES.SUPPORT_DESK.ADD_EDIT, name: PAGE_TITLE.SUPPORT_DESK.BASE, element: <SupportDeskForm /> },
 ];
 
 export const AuthRoutes = [
   { path: ROUTES.HOME, element: <Navigate to={ROUTES.AUTH.SIGNIN} replace /> },
   { path: ROUTES.AUTH.SIGNIN, element: <SignInForm /> },
+  { path: ROUTES.AUTH.VERIFY_OTP, element: <VerifyOtp /> },
 ];

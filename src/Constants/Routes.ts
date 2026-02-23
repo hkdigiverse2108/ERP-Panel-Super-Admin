@@ -6,6 +6,7 @@ export const ROUTES = {
   AUTH: {
     SIGNIN: "/auth/signin",
     CHANGE_PASSWORD: "/auth/change-password",
+    VERIFY_OTP: "/auth/verify-otp",
   },
   USER: {
     BASE: "/user",
@@ -134,5 +135,9 @@ export const ROUTES = {
   ANNOUNCEMENT : {
     BASE: "/announcement",
     ADD_EDIT: "/announcement/add-edit",
+  },
+    SUPPORT_DESK : {
+    BASE: "/support-desk",
+    ADD_EDIT: "/support-desk/add-edit",
   },
 } as const;

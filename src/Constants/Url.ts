@@ -60,6 +60,9 @@ export const URL_KEYS = {
   },
   ANNOUNCEMENT: {
     ALL: "/announcement/all",
+    ADD: "/announcement/add",
+    EDIT: "/announcement/edit",
+    BASE: "/announcement",
   },
   CALL_REQUEST: {
     BASE: "/call-request",
@@ -239,4 +242,10 @@ export const URL_KEYS = {
     ALL: "/sales-register/all",
   },
 
+  SUPPORT_DESK: {
+    BASE: "/support-desk",
+    ADD: "/support-desk/add",
+    EDIT: "/support-desk/edit",
+    ALL: "/support-desk/all",
+  },
 } as const;
