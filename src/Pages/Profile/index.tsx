@@ -1,60 +1,62 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Skeleton } from "@mui/material";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../../Constants";
 import { useAppSelector } from "../../Store/hooks";
 import { CommonCard } from "../../Components/Common";
-
+import { Queries } from "../../Api";
 const Profile = () => {
   const { user } = useAppSelector((state) => state.auth);
+  const userProfile = user;
 
-  const nameWords = user?.fullName?.trim().split(/\s+/);
-  const firstInitial = nameWords?.[0]?.split("")[0];
-  const lastInitial = nameWords?.length > 1 ? nameWords[nameWords?.length - 1]?.split("")[0] : "";
-  const profileInitials = (firstInitial + lastInitial).toLocaleUpperCase();
+  const nameWords = userProfile?.fullName?.trim().split(/\s+/);
+  const firstInitial = nameWords?.[0]?.split("")[0] || "";
+  const lastInitial = nameWords?.length > 1 ? nameWords[nameWords?.length - 1]?.split("")[0] || "" : "";
+  const profileInitials = (firstInitial + lastInitial).toLocaleUpperCase() || "U";
 
   const CompanyDetails = [
     {
       title: "Basic Details",
       items: [
-        { label: "Name", value: user?.username },
-        { label: "designation", value: user?.designation },
-        { label: "phone No", value: `+${user?.phoneNo?.countryCode} ${user?.phoneNo?.phoneNo}` },
-        { label: "pan Number", value: user?.panNumber },
-        { label: "role", value: user?.role?.name },
-        { label: "branchId", value: user?.branchId?.name },
+        { label: "Name", value: userProfile?.username || userProfile?.fullName },
+        { label: "designation", value: userProfile?.designation },
+        { label: "phone No", value: userProfile?.phoneNo?.countryCode ? `+${userProfile?.phoneNo?.countryCode} ${userProfile?.phoneNo?.phoneNo}` : userProfile?.phoneNumber },
+        { label: "pan Number", value: userProfile?.panNumber },
+        { label: "role", value: userProfile?.role?.name || userProfile?.role },
+        { label: "branchId", value: userProfile?.branchId?.name },
       ],
     },
     {
       title: "Address Details",
       items: [
-        { label: "Address", value: user?.address?.address },
-        { label: "City", value: user?.address?.city?.name },
-        { label: "State", value: user?.address?.state?.name },
-        { label: "Country", value: user?.address?.country?.name },
-        { label: "Pin Code", value: user?.address?.pinCode },
+        { label: "Address", value: userProfile?.address?.address },
+        { label: "City", value: userProfile?.address?.city?.name },
+        { label: "State", value: userProfile?.address?.state?.name },
+        { label: "Country", value: userProfile?.address?.country?.name },
+        { label: "Pin Code", value: userProfile?.address?.pinCode },
       ],
     },
     {
       title: "Bank Details",
       items: [
-        { label: "Bank Name", value: user?.bankDetails?.name },
-        { label: "Bank IFSC", value: user?.bankDetails?.IFSCCode },
-        { label: "Branch Name", value: user?.bankDetails?.branchName },
-        { label: "Account Holder Name", value: user?.bankDetails?.bankHolderName },
-        { label: "Bank Account No.", value: user?.bankDetails?.accountNumber },
-        { label: "Swift Code", value: user?.bankDetails?.swiftCode },
+        { label: "Bank Name", value: userProfile?.bankDetails?.name },
+        { label: "Bank IFSC", value: userProfile?.bankDetails?.IFSCCode },
+        { label: "Branch Name", value: userProfile?.bankDetails?.branchName },
+        { label: "Account Holder Name", value: userProfile?.bankDetails?.bankHolderName },
+        { label: "Bank Account No.", value: userProfile?.bankDetails?.accountNumber },
+        { label: "Swift Code", value: userProfile?.bankDetails?.swiftCode },
       ],
     },
     {
       title: "Salary Details",
       items: [
-        { label: "Wages", value: user?.wages },
-        { label: "Commission", value: user?.commission },
-        { label: "Extra Wages", value: user?.extraWages },
-        { label: "Target", value: user?.target },
+        { label: "Wages", value: userProfile?.wages },
+        { label: "Commission", value: userProfile?.commission },
+        { label: "Extra Wages", value: userProfile?.extraWages },
+        { label: "Target", value: userProfile?.target },
       ],
     },
   ];
+
   return (
     <Box sx={{ p: { xs: 2, md: 3 } }}>
       <Grid container spacing={2}>
@@ -65,13 +67,13 @@ const Profile = () => {
                 <span className="overflow-hidden rounded-full flex h-18 w-18 text-2xl justify-center items-center">{profileInitials}</span>
               </div>
               <div className="order-3 xl:order-2">
-                <h4 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">{user?.fullName}</h4>
+                <h4 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">{userProfile?.fullName}</h4>
                 <div className="flex flex-col items-center gap-1 text-center xl:flex-row xl:gap-3 xl:text-left">
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    +{user?.phoneNo?.countryCode} {user?.phoneNo?.phoneNo}
+                    {userProfile?.phoneNo?.countryCode ? `+${userProfile?.phoneNo?.countryCode} ${userProfile?.phoneNo?.phoneNo}` : userProfile?.phoneNumber}
                   </p>
                   <div className="hidden h-3.5 w-px bg-gray-300 dark:bg-gray-700 xl:block"></div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{user?.email}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{userProfile?.email}</p>
                 </div>
               </div>
             </div>

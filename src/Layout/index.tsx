@@ -27,8 +27,12 @@ const Layout = () => {
   }, [dispatch, location.pathname]);
 
   useEffect(() => {
-    if (userData) {
-      dispatch(setUser(userData?.data));
+    if (userData?.data) {
+      const fetchedData = userData.data as any;
+      const userProfile = Array.isArray(fetchedData) ? fetchedData[0] : fetchedData;
+      if (userProfile) {
+        dispatch(setUser(userProfile));
+      }
     }
   }, [dispatch, userData]);
 
