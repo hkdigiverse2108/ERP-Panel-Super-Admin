@@ -18,7 +18,7 @@ export interface CallRequestBase extends Omit<CallRequestFormValues, "companyId"
 }
 
 export interface CallRequestDataResponse extends PageStatus {
-  call_request_data: CallRequestBase[];
+  call_Request_data: CallRequestBase[];
 }
 
 export interface CallRequestApiResponse extends MessageStatus {

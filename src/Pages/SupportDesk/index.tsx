@@ -18,9 +18,9 @@ const SupportDesk = () => {
   const { mutate: deleteCallRequest, isPending: isDeleteLoading } = Mutations.useDeleteCallRequest();
   const { mutate: editCallRequest, isPending: isEditLoading } = Mutations.useEditCallRequest();
   const rows = useMemo(() => {
-    return data?.data?.call_request_data?.map((r) => ({ ...r, id: r?._id })) || [];
+    return data?.data?.call_Request_data?.map((r) => ({ ...r, id: r?._id })) || [];
   }, [data]);
-
+  console.log("data", data);
   const totalRows = data?.data?.totalData || 0;
 
   const handleAdd = () => navigate(ROUTES.CALL_REQUEST.ADD_EDIT);
@@ -33,10 +33,10 @@ const SupportDesk = () => {
   };
 
   const columns: AppGridColDef<CallRequestBase>[] = [
-    { field: "businessName", headerName: "Business Name", width: 100 },
-    { field: "contactName", headerName: "Contact Name", width: 330 },
-    { field: "contactNo", headerName: "Contact No", width: 150 },
-    { field: "note", headerName: "Note", flex: 1, minWidth: 200 },
+    { field: "businessName", headerName: "Business Name", width: 220 },
+    { field: "contactName", headerName: "Contact Name", width: 250 },
+    { field: "contactNo", headerName: "Contact No", width: 180 },
+    { field: "note", headerName: "Note", flex: 1, minWidth: 150 },
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<CallRequestBase>({
