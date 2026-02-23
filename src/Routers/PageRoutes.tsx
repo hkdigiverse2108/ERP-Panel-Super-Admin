@@ -41,12 +41,12 @@ import AdditionalChargesForm from "../Components/Settings/AdditionalCharges/Addi
 import Recipe from "../Pages/Inventory/Recipe";
 import RecipeForm from "../Pages/Inventory/Recipe/RecipeForm";
 import Stock from "../Pages/Inventory/Stock";
-import StockVerification from "../Pages/Inventory/Stock Varification";
-import StockVerificationForm from "../Pages/Inventory/Stock Varification/StockVarificationForm";
+import StockVerification from "../Pages/Inventory/StockVarification";
+import StockVerificationForm from "../Pages/Inventory/StockVarification/StockVarificationForm";
 import ContactForm from "../Pages/Contacts/ContactForm";
 import Contact from "../Pages/Contacts";
-import BillOfLiveProductForm from "../Pages/Inventory/Bill Of Live Product/BillOfLiveProductForm";
-import BillOfLiveProduct from "../Pages/Inventory/Bill Of Live Product";
+import BillOfLiveProductForm from "../Pages/Inventory/BillOfLiveProduct/BillOfLiveProductForm";
+import BillOfLiveProduct from "../Pages/Inventory/BillOfLiveProduct";
 import Bank from "../Pages/Bank/Bank";
 import BankForm from "../Pages/Bank/Bank/BankForm";
 import Coupon from "../Pages/CRM/Coupon";
