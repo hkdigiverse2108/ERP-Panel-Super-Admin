@@ -56,8 +56,8 @@ import LoyaltyForm from "../Pages/CRM/Loyalty/LoyaltyForm";
 // import User from "../Pages/User";
 import Profile from "../Pages/Profile";
 import SalesRegister from "../Pages/Pos/Sales Register";
-import { Announcement } from "@mui/icons-material";
 import AnnouncementForm from "../Pages/Announcment/AnnouncmentForm";
+import Announcement from "../Pages/Announcment";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
