@@ -5,15 +5,16 @@ import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
 import { PAGE_TITLE, ROUTES } from "../../Constants";
 import { Mutations, Queries } from "../../Api";
 import type { AppGridColDef, CallRequestBase } from "../../Types";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../Components/Common";
 import { BREADCRUMBS } from "../../Data";
+import { CreateFilter, GenerateOptions } from "../../Utils";
 
 const SupportDesk = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
 
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.CALL_REQUEST.BASE);
-
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { data, isLoading, isFetching } = Queries.useGetCallRequest(params);
   const { mutate: deleteCallRequest, isPending: isDeleteLoading } = Mutations.useDeleteCallRequest();
   const { mutate: editCallRequest, isPending: isEditLoading } = Mutations.useEditCallRequest();
@@ -33,9 +34,18 @@ const SupportDesk = () => {
   };
 
   const columns: AppGridColDef<CallRequestBase>[] = [
+    CommonObjectNameColumn<CallRequestBase>("companyId", { headerName: "Company", width: 180 }),
     { field: "businessName", headerName: "Business Name", width: 220 },
-    { field: "contactName", headerName: "Contact Name", width: 250 },
-    { field: "contactNo", headerName: "Contact No", width: 180 },
+    { field: "contactName", headerName: "Contact Name", width: 200 },
+    {
+      field: "contactNo",
+      headerName: "Contact No",
+      width: 180,
+      renderCell: (params) => {
+        const no = params.row.contactNo;
+        return no ? `${no.countryCode} ${no.phoneNo}` : "-";
+      },
+    },
     { field: "note", headerName: "Note", flex: 1, minWidth: 150 },
     ...(permission?.edit || permission?.delete
       ? [
@@ -44,7 +54,7 @@ const SupportDesk = () => {
               active: (row) =>
                 editCallRequest({
                   callRequestId: row._id,
-                  is_active: !row.is_active,
+                  isActive: !row.isActive,
                 }),
               editRoute: ROUTES.CALL_REQUEST.ADD_EDIT,
             }),
@@ -69,12 +79,14 @@ const SupportDesk = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
   };
+  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.CALL_REQUEST.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.CALL_REQUEST.BASE} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+          <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...gridOptions} />
         </CommonCard>

@@ -36,4 +36,5 @@ export * from "./Coupon";
 export * from "./Loyalty";
 export * from "./Employee";
 export * from "./Roles"
+export * from "./Recipe";
 

@@ -6,8 +6,9 @@ export interface CallRequestFormValues {
   contactName?: string;
   contactNo?: PhoneNumberType;
   note?: string;
-  is_active?: boolean;
+  isActive?: boolean;
   companyId?: string;
+  _submitAction?: string;
 }
 export type AddCallRequestPayload = CallRequestFormValues;
 
