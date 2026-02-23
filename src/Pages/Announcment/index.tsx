@@ -33,9 +33,9 @@ const Announcement = () => {
   };
 
   const columns: AppGridColDef<AnnouncementBase>[] = [
-    { field: "desc", headerName: "Description", width: 280, renderCell: (params) => (Array.isArray(params.row.desc) ? params.row.desc.join(", ") : params.row.desc) },
-    { field: "link", headerName: "Link", width: 280 },
-    { field: "version", headerName: "Version", width: 120, flex: 1 },
+    { field: "desc", headerName: "Description", width: 300, renderCell: (params) => (Array.isArray(params.row.desc) ? params.row.desc.join(", ") : params.row.desc) },
+    { field: "link", headerName: "Link", width: 330 },
+    { field: "version", headerName: "Version", flex: 1 },
     ...(permission?.edit || permission?.delete
       ? [
         CommonActionColumn<AnnouncementBase>({
