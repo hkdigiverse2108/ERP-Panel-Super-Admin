@@ -237,4 +237,5 @@ export const URL_KEYS = {
     EDIT: "/sales-register/edit",
     ALL: "/sales-register/all",
   },
+
 } as const;

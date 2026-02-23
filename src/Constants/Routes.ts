@@ -130,4 +130,8 @@ export const ROUTES = {
     BASE: "/sales-register",
     EDIT: "/sales-register/edit",
   },
+  ANNOUNCEMENT : {
+    BASE: "/announcement",
+    ADD_EDIT: "/announcement/add-edit",
+  },
 } as const;

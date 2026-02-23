@@ -56,6 +56,8 @@ import LoyaltyForm from "../Pages/CRM/Loyalty/LoyaltyForm";
 // import User from "../Pages/User";
 import Profile from "../Pages/Profile";
 import SalesRegister from "../Pages/Pos/Sales Register";
+import { Announcement } from "@mui/icons-material";
+import AnnouncementForm from "../Pages/Announcment/AnnouncmentForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -142,6 +144,10 @@ export const PageRoutes = [
   { path: ROUTES.PROFILE.EDIT, name: PAGE_TITLE.SETTINGS.PROFILE.EDIT, element: <UserForm /> },
 
   { path: ROUTES.SALES_REGISTER.BASE, name: PAGE_TITLE.POS.SALES_REGISTER.BASE, element: <SalesRegister /> },
+
+   { path: ROUTES.ANNOUNCEMENT.BASE, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <Announcement /> },
+  { path: ROUTES.ANNOUNCEMENT.ADD_EDIT, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <AnnouncementForm /> },
+
 ];
 
 export const AuthRoutes = [

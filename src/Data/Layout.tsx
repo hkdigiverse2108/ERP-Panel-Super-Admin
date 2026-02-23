@@ -73,4 +73,9 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.SETTINGS.PROFILE.BASE, path: ROUTES.PROFILE.BASE },
     ],
   },
+  {
+    name: PAGE_TITLE.ANNOUNCEMENT.BASE,
+    icon: <AccountBalance />,
+    children: [{ name: PAGE_TITLE.ANNOUNCEMENT.BASE, path: ROUTES.ANNOUNCEMENT.BASE }],
+  },
 ];
