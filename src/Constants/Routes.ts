@@ -11,7 +11,6 @@ export const ROUTES = {
     BASE: "/user",
     ADD_EDIT: "/user/add-edit",
     PERMISSION_ADD_EDIT: "/user/permission/add-edit",
-  
   },
   COMPANY: {
     BASE: "/company",
@@ -111,7 +110,7 @@ export const ROUTES = {
     BASE: "/bank",
     ADD_EDIT: "/bank/add-edit",
   },
-   COUPON: {
+  COUPON: {
     BASE: "/coupon",
     ADD_EDIT: "/coupon/add-edit",
   },
@@ -127,16 +126,16 @@ export const ROUTES = {
     BASE: "/profile",
     EDIT: "/profile/edit",
   },
- SALES_REGISTER : {
+  SALES_REGISTER: {
     BASE: "/sales-register",
     EDIT: "/sales-register/edit",
   },
-  ANNOUNCEMENT : {
+  ANNOUNCEMENT: {
     BASE: "/announcement",
     ADD_EDIT: "/announcement/add-edit",
   },
-    SUPPORT_DESK : {
-    BASE: "/support-desk",
-    ADD_EDIT: "/support-desk/add-edit",
+  CALL_REQUEST: {
+    BASE: "/call-request",
+    ADD_EDIT: "/call-request/add-edit",
   },
 } as const;

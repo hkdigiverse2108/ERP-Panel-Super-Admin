@@ -151,8 +151,8 @@ export const PageRoutes = [
   { path: ROUTES.ANNOUNCEMENT.BASE, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <Announcement /> },
   { path: ROUTES.ANNOUNCEMENT.ADD_EDIT, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <AnnouncementForm /> },
 
-  { path: ROUTES.SUPPORT_DESK.BASE, name: PAGE_TITLE.SUPPORT_DESK.BASE, element: <SupportDesk /> },
-  { path: ROUTES.SUPPORT_DESK.ADD_EDIT, name: PAGE_TITLE.SUPPORT_DESK.BASE, element: <SupportDeskForm /> },
+  { path: ROUTES.CALL_REQUEST.BASE, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDesk /> },
+  { path: ROUTES.CALL_REQUEST.ADD_EDIT, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDeskForm /> },
 ];
 
 export const AuthRoutes = [

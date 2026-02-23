@@ -54,6 +54,8 @@ export const KEYS = {
   CALL_REQUEST: {
     BASE: "call-request",
     ADD: "call-request-add",
+    EDIT: "call-request-edit",
+    DELETE: "call-request-delete",
   },
 
   LOCATION: {
@@ -226,12 +228,5 @@ export const KEYS = {
     ADD: "sales-register-add",
     EDIT: "sales-register-edit",
     DELETE: "sales-register-delete",
-  },
-
-  SUPPORT_DESK: {
-    BASE: "support-desk",
-    ADD: "support-desk-add",
-    EDIT: "support-desk-edit",
-    DELETE: "support-desk-delete",
   },
 };
