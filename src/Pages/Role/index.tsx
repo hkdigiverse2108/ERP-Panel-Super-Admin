@@ -2,19 +2,20 @@ import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { Mutations, Queries } from "../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
 import { setRoleModal } from "../../Store/Slices/ModalSlice";
 import type { AppGridColDef, RolesBase } from "../../Types";
 import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
 import RoleForm from "./RoleForm";
+import { CreateFilter, GenerateOptions } from "../../Utils";
 
 const Role = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const dispatch = useDispatch();
   const permission = usePagePermission(PAGE_TITLE.ROLE.BASE);
-
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { data: RoleData, isLoading: RoleDataLoading, isFetching: RoleDataFetching } = Queries.useGetRole(params);
 
   const { mutate: deleteRoleMutate } = Mutations.useDeleteRole();
@@ -33,6 +34,8 @@ const Role = () => {
   const handleEdit = (row: RolesBase) => dispatch(setRoleModal({ open: true, data: row }));
 
   const columns: AppGridColDef<RolesBase>[] = [
+    CommonObjectNameColumn<RolesBase>("companyId", { headerName: "Company", width: 200 }),
+
     { field: "name", headerName: "Name", flex: 1, minWidth: 300 },
     ...(permission?.edit || permission?.delete
       ? [
@@ -63,11 +66,13 @@ const Role = () => {
     onFilterModelChange: setFilterModel,
     isExport: false,
   };
+  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.ROLE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.ROLE.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
