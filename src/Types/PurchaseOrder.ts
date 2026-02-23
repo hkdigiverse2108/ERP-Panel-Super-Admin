@@ -80,7 +80,7 @@ export interface EditPurchaseOrderPayload extends PurchaseOrderFormValues {
 }
 export interface PurchaseOrderDataResponse extends PageStatus {
   purchaseOrder_data: PurchaseOrderBase[];
-} 
+}
 
 export interface PurchaseOrderApiResponse extends MessageStatus {
   data: PurchaseOrderDataResponse;

@@ -156,8 +156,8 @@ const Sidebar = () => {
         <Link to="/" className="flex items-center">
           {isExpanded || isHovered || isMobileOpen ? (
             <>
-              <img className="dark:hidden" src={`${ImagePath}logo/logo.svg`} alt="Logo" width={150} height={40} />
-              <img className="hidden dark:block" src={`${ImagePath}logo/logo-dark.svg`} alt="Logo" width={150} height={40} />
+              <img className="dark:hidden" src={`${ImagePath}logo/logo.png`} alt="Logo" />
+              <img className="hidden dark:block" src={`${ImagePath}logo/logo-dark.png`} alt="Logo" />
             </>
           ) : (
             <img src={`${ImagePath}logo/logo-icon.svg`} alt="Logo" width={32} height={32} />
