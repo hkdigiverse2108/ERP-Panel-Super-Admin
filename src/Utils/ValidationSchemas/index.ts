@@ -499,3 +499,14 @@ export const EmployeeFormSchema = Yup.object({
   // ---------- STATUS ----------
   isActive: Yup.boolean(),
 });
+
+export const ChangePasswordSchema = Yup.object({
+  email: Validation("string", "Email", { required: true, extraRules: (s) => s.trim().email("Invalid email address") }),
+  oldPassword: Validation("string", "Old Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
+  newPassword: Validation("string", "New Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
+  loginSource: Validation("string", "Login Source", { required: false }),
+});
+
+export const VerifyOtpSchema = Yup.object({
+  otp: Validation("string", "OTP", { extraRules: (s) => s.matches(/^[0-9]{6}$/, "OTP must be 6 digits") }),
+});

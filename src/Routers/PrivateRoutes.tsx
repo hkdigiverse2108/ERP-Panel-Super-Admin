@@ -29,6 +29,11 @@ const PrivateRoutes = () => {
   const routeTab = normalizeTabName(currentRoute.name);
   const isAddEdit = isAddEditRoute(location.pathname);
 
+  // Bypass permission check for specific routes that authenticated users should always access
+  if (location.pathname === ROUTES.AUTH.CHANGE_PASSWORD) {
+    return <Outlet />;
+  }
+
   // 🔥 Permission check with parent support
   const hasPermission = permission?.some((parent) => {
     const parentTab = normalizeTabName(parent?.tabName || "");

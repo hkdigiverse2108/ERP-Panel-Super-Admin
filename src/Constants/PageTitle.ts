@@ -186,6 +186,11 @@ export const PAGE_TITLE = {
     EDIT: "Edit Announcement",
   },
  CALL_REQUEST: {
+  CHANGE_PASSWORD: {
+    BASE: "Change Password",
+  },
+},
+  SUPPORT_DESK: {
     BASE: "Support Desk",
     ADD: "Add Support Desk",
     EDIT: "Edit Support Desk",
