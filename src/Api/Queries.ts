@@ -48,7 +48,7 @@ export const Queries = {
   useGetCategoryDropdown: (params?: Params, enabled?: boolean) => useQueries<CategoryDropdownApiResponse>([KEYS.CATEGORY.BASE, params], () => Get(URL_KEYS.CATEGORY.DROPDOWN, params), { enabled: enabled }),
 
   // ************ Announcement ***********
-  useGetAnnouncement: () => useQueries<AnnouncementApiResponse>([KEYS.ANNOUNCEMENT.BASE], () => Get(URL_KEYS.ANNOUNCEMENT.ALL)),
+  useGetAnnouncement: (params?: Params) => useQueries<AnnouncementApiResponse>([KEYS.ANNOUNCEMENT.BASE, params], () => Get(URL_KEYS.ANNOUNCEMENT.ALL, params)),
 
   // **************product****************/
   useGetProduct: (params?: Params) => useQueries<ProductApiResponse>([KEYS.PRODUCT.BASE, params], () => Get(URL_KEYS.PRODUCT.ALL, params)),

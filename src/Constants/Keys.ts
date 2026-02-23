@@ -46,6 +46,9 @@ export const KEYS = {
 
   ANNOUNCEMENT: {
     BASE: "announcement",
+    ADD: "announcement-add",
+    EDIT: "announcement-edit",
+    DELETE: "announcement-delete",
   },
 
   CALL_REQUEST: {
