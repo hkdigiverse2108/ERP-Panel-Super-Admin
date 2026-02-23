@@ -506,3 +506,7 @@ export const ChangePasswordSchema = Yup.object({
   newPassword: Validation("string", "New Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
   loginSource: Validation("string", "Login Source", { required: false }),
 });
+
+export const VerifyOtpSchema = Yup.object({
+  otp: Validation("string", "OTP", { extraRules: (s) => s.matches(/^[0-9]{6}$/, "OTP must be 6 digits") }),
+});

@@ -3,10 +3,10 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { FormControl, FormLabel, Grid, IconButton, InputAdornment, TextField, CircularProgress, Box } from "@mui/material";
 import { useField, type FieldHookConfig } from "formik";
-import { useCallback, useMemo, useState, type FC, type ReactNode } from "react";
+import { useCallback, useMemo, useState, type ChangeEvent, type FC, type ReactNode } from "react";
 import type { CommonTextFieldProps, CommonValidationTextFieldProps } from "../../Types";
 
-export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ currencyDisabled, label, name, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, isCurrency, onCurrencyLog, ...props }) => {
+export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ maxDigits, currencyDisabled, label, name, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, isCurrency, onCurrencyLog, ...props }) => {
   const fieldConfig: FieldHookConfig<string> = { name };
   const [field, meta, helpers] = useField(fieldConfig);
   const [isFocused, setFocused] = useState(false);
@@ -27,7 +27,7 @@ export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ 
       items.push(
         <InputAdornment position="end" key="loading">
           <CircularProgress size={18} />
-        </InputAdornment>
+        </InputAdornment>,
       );
     }
 
@@ -37,7 +37,7 @@ export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ 
           <IconButton size="small" onClick={handleClear}>
             <Clear fontSize="small" />
           </IconButton>
-        </InputAdornment>
+        </InputAdornment>,
       );
     }
 
@@ -47,7 +47,7 @@ export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ 
           <IconButton size="small" onClick={() => setShow((prev) => !prev)}>
             {show ? <VisibilityOff /> : <Visibility />}
           </IconButton>
-        </InputAdornment>
+        </InputAdornment>,
       );
     }
 
@@ -55,7 +55,7 @@ export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ 
       items.push(
         <InputAdornment position="end" key="end-icon">
           {endIcon}
-        </InputAdornment>
+        </InputAdornment>,
       );
     }
 
@@ -88,6 +88,11 @@ export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ 
         setFocused(false);
         field.onBlur(e);
         props.onBlur?.(e);
+      }}
+      onChange={(e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.value;
+        if (maxDigits && value.length > maxDigits) return;
+        helpers.setValue(value);
       }}
       onKeyDown={(e) => {
         if (inputType === "number") {
@@ -148,7 +153,7 @@ export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ 
   );
 };
 
-export const CommonTextField: FC<CommonTextFieldProps> = ({currencyDisabled, label, value, onChange, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, isCurrency, onCurrencyLog, ...props }) => {
+export const CommonTextField: FC<CommonTextFieldProps> = ({ currencyDisabled, label, value, onChange, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, isCurrency, onCurrencyLog, ...props }) => {
   const [focused, setFocused] = useState(false);
   const isPassword = type === "password";
   const [show, setShow] = useState(false);
@@ -164,7 +169,7 @@ export const CommonTextField: FC<CommonTextFieldProps> = ({currencyDisabled, lab
       items.push(
         <InputAdornment position="end" key="loading">
           <CircularProgress size={18} />
-        </InputAdornment>
+        </InputAdornment>,
       );
     }
 
@@ -174,7 +179,7 @@ export const CommonTextField: FC<CommonTextFieldProps> = ({currencyDisabled, lab
           <IconButton size="small" onClick={() => onChange?.("")}>
             <Clear fontSize="small" />
           </IconButton>
-        </InputAdornment>
+        </InputAdornment>,
       );
     }
 
@@ -184,7 +189,7 @@ export const CommonTextField: FC<CommonTextFieldProps> = ({currencyDisabled, lab
           <IconButton size="small" onClick={() => setShow((p) => !p)}>
             {show ? <VisibilityOff /> : <Visibility />}
           </IconButton>
-        </InputAdornment>
+        </InputAdornment>,
       );
     }
 
@@ -192,7 +197,7 @@ export const CommonTextField: FC<CommonTextFieldProps> = ({currencyDisabled, lab
       items.push(
         <InputAdornment position="end" key="end-icon">
           {endIcon}
-        </InputAdornment>
+        </InputAdornment>,
       );
     }
 
