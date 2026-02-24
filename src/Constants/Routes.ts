@@ -65,6 +65,10 @@ export const ROUTES = {
     BASE: "/credit-note",
     ADD_EDIT: "/credit-note/add-edit",
   },
+  POS_CREDIT_NOTE: {
+    BASE: "/pos-credit-note",
+    ADD_EDIT: "/pos-credit-note/add-edit",
+  },
   ROLE: {
     BASE: "/role",
   },

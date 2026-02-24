@@ -183,6 +183,12 @@ export const KEYS = {
     EDIT: "credit-note-edit",
     DELETE: "credit-note-delete",
   },
+  POS_CREDIT_NOTE: {
+    BASE: "pos-credit-note",
+    ADD: "pos-credit-note-add",
+    EDIT: "pos-credit-note-edit",
+    DELETE: "pos-credit-note-delete",
+  },
 
   // ----------------------------- purchase -----------------------------
   PURCHASE_ORDER: {

@@ -117,7 +117,7 @@ const AdminSetting = () => {
                 <CommonCard title="Contact Info" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="email" label="Support Email" grid={{ xs: 12, md: 4 }} />
+                     <CommonValidationTextField name="email" label="Support Email" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="address" label="Address" multiline grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>

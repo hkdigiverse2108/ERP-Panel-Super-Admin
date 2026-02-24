@@ -56,6 +56,7 @@ import LoyaltyForm from "../Pages/CRM/Loyalty/LoyaltyForm";
 // import User from "../Pages/User";
 import Profile from "../Pages/Profile";
 import SalesRegister from "../Pages/Pos/Sales Register";
+import PosCreditNote from "../Pages/Pos/CreditNote";
 import AnnouncementForm from "../Pages/Announcment/AnnouncmentForm";
 import ChangePassword from "../Pages/Auth/ChangePassword";
 import Announcement from "../Pages/Announcment";
@@ -149,6 +150,8 @@ export const PageRoutes = [
   { path: ROUTES.PROFILE.EDIT, name: PAGE_TITLE.SETTINGS.PROFILE.EDIT, element: <UserForm /> },
 
   { path: ROUTES.SALES_REGISTER.BASE, name: PAGE_TITLE.POS.SALES_REGISTER.BASE, element: <SalesRegister /> },
+
+  { path: ROUTES.POS_CREDIT_NOTE.BASE, name: PAGE_TITLE.POS.CREDIT_NOTE.BASE, element: <PosCreditNote /> },
 
   { path: ROUTES.ANNOUNCEMENT.BASE, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <Announcement /> },
   { path: ROUTES.ANNOUNCEMENT.ADD_EDIT, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <AnnouncementForm /> },

@@ -190,6 +190,12 @@ export const URL_KEYS = {
     ADD: "/credit-note/add",
     EDIT: "/credit-note/edit",
   },
+  POS_CREDIT_NOTE: {
+    BASE: "/pos-credit-note",
+    ALL: "/pos-credit-note/all",
+    ADD: "/pos-credit-note/add",
+    EDIT: "/pos-credit-note/edit",
+  },
 
   // ----------------------------- purchase -----------------------------
   PURCHASE_ORDER: {

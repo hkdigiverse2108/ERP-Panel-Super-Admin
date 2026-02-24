@@ -189,6 +189,9 @@ export const PAGE_TITLE = {
       ADD: "Add Sales Register",
       EDIT: "Edit Sales Register",
     },
+    CREDIT_NOTE: {
+      BASE: "POS Credit Note",
+    },
   },
   ANNOUNCEMENT: {
     BASE: "Announcement",

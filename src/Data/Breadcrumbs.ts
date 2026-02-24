@@ -64,6 +64,9 @@ export const BREADCRUMBS = {
     ADD: [{ label: PAGE_TITLE.CREDIT_NOTE.BASE, href: ROUTES.CREDIT_NOTE.BASE }, { label: PAGE_TITLE.CREDIT_NOTE.ADD }],
     EDIT: [{ label: PAGE_TITLE.CREDIT_NOTE.BASE, href: ROUTES.CREDIT_NOTE.BASE }, { label: PAGE_TITLE.CREDIT_NOTE.EDIT }],
   },
+  POS_CREDIT_NOTE: {
+    BASE: [{ label: PAGE_TITLE.POS.CREDIT_NOTE.BASE }],
+  },
   ROLE: {
     BASE: [{ label: PAGE_TITLE.ROLE.BASE }],
   },

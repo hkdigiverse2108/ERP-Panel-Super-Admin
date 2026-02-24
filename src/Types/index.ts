@@ -38,3 +38,4 @@ export * from "./Employee";
 export * from "./Roles"
 export * from "./Recipe";
 
+export * from './PosCreditNote';
