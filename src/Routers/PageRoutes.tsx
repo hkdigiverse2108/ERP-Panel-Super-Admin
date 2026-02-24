@@ -146,7 +146,6 @@ export const PageRoutes = [
   { path: ROUTES.LOYALTY.ADD_EDIT, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <LoyaltyForm /> },
 
   { path: ROUTES.PROFILE.BASE, name: PAGE_TITLE.SETTINGS.PROFILE.BASE, element: <Profile /> },
-  { path: ROUTES.PROFILE.EDIT, name: PAGE_TITLE.SETTINGS.PROFILE.EDIT, element: <UserForm /> },
 
   { path: ROUTES.SALES_REGISTER.BASE, name: PAGE_TITLE.POS.SALES_REGISTER.BASE, element: <SalesRegister /> },
 

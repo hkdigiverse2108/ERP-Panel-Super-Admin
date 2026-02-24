@@ -1,103 +1,75 @@
 import { Box, Grid } from "@mui/material";
-import { Link } from "react-router-dom";
-import { ROUTES } from "../../../Constants";
-import { useAppSelector } from "../../../Store/hooks";
-import { CommonCard } from "../../../Components/Common";
+import { Form, Formik, type FormikHelpers } from "formik";
+import { useNavigate } from "react-router-dom";
+import { Mutations } from "../../../Api";
+import { CommonPhoneNumber, CommonValidationTextField } from "../../../Attribute";
+import { PAGE_TITLE } from "../../../Constants";
+import { BREADCRUMBS } from "../../../Data";
+import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
+import { setUser } from "../../../Store/Slices/AuthSlice";
+import type { EmployeeFormValues } from "../../../Types";
+import { GetChangedFields } from "../../../Utils";
+import { EmployeeFormSchema } from "../../../Utils/ValidationSchemas";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
+
+
 const Profile = () => {
-  const { user } = useAppSelector((state) => state.auth);
-  const userProfile = user;
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { user: UserData } = useAppSelector((state) => state.auth);
+  const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditUser();
 
-  const nameWords = userProfile?.fullName?.trim().split(/\s+/);
-  const firstInitial = nameWords?.[0]?.split("")[0] || "";
-  const lastInitial = nameWords?.length > 1 ? nameWords[nameWords?.length - 1]?.split("")[0] || "" : "";
-  const profileInitials = (firstInitial + lastInitial).toLocaleUpperCase() || "U";
+  const initialValues: EmployeeFormValues = {
+    fullName: UserData?.fullName || "",
+    username: UserData?.username || "",
+    phoneNo: {
+      countryCode: UserData?.countryCode?.phoneNo?._id  || "",
+      phoneNo: UserData?.phoneNo?.phoneNo || "",
+    },
+    email: UserData?.email || "",
+  };
 
-  const CompanyDetails = [
-    {
-      title: "Basic Details",
-      items: [
-        { label: "Name", value: userProfile?.username || userProfile?.fullName },
-        { label: "designation", value: userProfile?.designation },
-        { label: "phone No", value: userProfile?.phoneNo?.countryCode ? `+${userProfile?.phoneNo?.countryCode} ${userProfile?.phoneNo?.phoneNo}` : userProfile?.phoneNumber },
-        { label: "pan Number", value: userProfile?.panNumber },
-        { label: "role", value: userProfile?.role?.name || userProfile?.role },
-        { label: "branchId", value: userProfile?.branchId?.name },
-      ],
-    },
-    {
-      title: "Address Details",
-      items: [
-        { label: "Address", value: userProfile?.address?.address },
-        { label: "City", value: userProfile?.address?.city?.name },
-        { label: "State", value: userProfile?.address?.state?.name },
-        { label: "Country", value: userProfile?.address?.country?.name },
-        { label: "Pin Code", value: userProfile?.address?.pinCode },
-      ],
-    },
-    {
-      title: "Bank Details",
-      items: [
-        { label: "Bank Name", value: userProfile?.bankDetails?.name },
-        { label: "Bank IFSC", value: userProfile?.bankDetails?.IFSCCode },
-        { label: "Branch Name", value: userProfile?.bankDetails?.branchName },
-        { label: "Account Holder Name", value: userProfile?.bankDetails?.bankHolderName },
-        { label: "Bank Account No.", value: userProfile?.bankDetails?.accountNumber },
-        { label: "Swift Code", value: userProfile?.bankDetails?.swiftCode },
-      ],
-    },
-    {
-      title: "Salary Details",
-      items: [
-        { label: "Wages", value: userProfile?.wages },
-        { label: "Commission", value: userProfile?.commission },
-        { label: "Extra Wages", value: userProfile?.extraWages },
-        { label: "Target", value: userProfile?.target },
-      ],
-    },
-  ];
+  const handleSubmit = async (values: EmployeeFormValues, { resetForm }: FormikHelpers<EmployeeFormValues>) => {
+    const { ...rest } = values;
+    const payload = { ...rest, companyId: UserData?.companyId?._id };
+
+    const changedFields = GetChangedFields(payload, UserData);
+    await editEmployee(
+      { ...changedFields, userId: UserData?._id },
+      {
+        onSuccess: (response) => {
+          dispatch(setUser(response?.data));
+          resetForm();
+          navigate(-1);
+        },
+      },
+    );
+  };
 
   return (
-    <Box sx={{ p: { xs: 2, md: 3 } }}>
-      <Grid container spacing={2}>
-        <Grid size={12} className="p-5 border border-gray-200 rounded-lg dark:border-gray-800">
-          <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
-            <div className="flex flex-col items-center w-full gap-6 xl:flex-row">
-              <div className="flex items-center bg-brand-500 text-white rounded-full border border-gray-200 dropdown-toggle dark:border-gray-800">
-                <span className="overflow-hidden rounded-full flex h-18 w-18 text-2xl justify-center items-center">{profileInitials}</span>
-              </div>
-              <div className="order-3 xl:order-2">
-                <h4 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">{userProfile?.fullName}</h4>
-                <div className="flex flex-col items-center gap-1 text-center xl:flex-row xl:gap-3 xl:text-left">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{userProfile?.phoneNo?.countryCode ? `+${userProfile?.phoneNo?.countryCode} ${userProfile?.phoneNo?.phoneNo}` : userProfile?.phoneNumber}</p>
-                  <div className="hidden h-3.5 w-px bg-gray-300 dark:bg-gray-700 xl:block"></div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{userProfile?.email}</p>
-                </div>
-              </div>
-            </div>
-            <Link to={ROUTES.USER.ADD_EDIT}>
-              <button className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/3 dark:hover:text-gray-200 lg:inline-flex lg:w-auto">
-                <svg className="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M15.0911 2.78206C14.2125 1.90338 12.7878 1.90338 11.9092 2.78206L4.57524 10.116C4.26682 10.4244 4.0547 10.8158 3.96468 11.2426L3.31231 14.3352C3.25997 14.5833 3.33653 14.841 3.51583 15.0203C3.69512 15.1996 3.95286 15.2761 4.20096 15.2238L7.29355 14.5714C7.72031 14.4814 8.11172 14.2693 8.42013 13.9609L15.7541 6.62695C16.6327 5.74827 16.6327 4.32365 15.7541 3.44497L15.0911 2.78206ZM12.9698 3.84272C13.2627 3.54982 13.7376 3.54982 14.0305 3.84272L14.6934 4.50563C14.9863 4.79852 14.9863 5.2734 14.6934 5.56629L14.044 6.21573L12.3204 4.49215L12.9698 3.84272ZM11.2597 5.55281L5.6359 11.1766C5.53309 11.2794 5.46238 11.4099 5.43238 11.5522L5.01758 13.5185L6.98394 13.1037C7.1262 13.0737 7.25666 13.003 7.35947 12.9002L12.9833 7.27639L11.2597 5.55281Z" fill="" />
-                </svg>
-                Edit
-              </button>
-            </Link>
-          </div>
-        </Grid>
-        {CompanyDetails.map((section) => (
-          <CommonCard key={section.title} title={section.title} grid={{ xs: 12 }}>
-            <Grid sx={{ p: 2 }} container spacing={2}>
-              {section.items.map((item, idx) => (
-                <Grid key={idx} size={{ xs: 12, xsm: 6, xl: 3 }}>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1 capitalize">{item.label}</p>
-                  <p className="text-sm font-medium text-gray-800 dark:text-white/90">{item.value || "-"}</p>
-                </Grid>
-              ))}
-            </Grid>
-          </CommonCard>
-        ))}
-      </Grid>
-    </Box>
+    <>
+      <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.PROFILE.BASE} maxItems={3} breadcrumbs={BREADCRUMBS.SETTINGS.PROFILE} />
+      <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
+        <Formik<EmployeeFormValues> enableReinitialize initialValues={initialValues} validationSchema={EmployeeFormSchema} onSubmit={handleSubmit}>
+          {({ dirty }) => (
+            <Form noValidate>
+              <Grid container spacing={2}>
+                {/* BASIC DETAILS */}
+                <CommonCard title="Profile Details" grid={{ xs: 12 }}>
+                  <Grid container spacing={2} sx={{ p: 2 }}>
+                    <CommonValidationTextField name="fullName" label="Full Name" required grid={{ xs: 12, md: 6 }} />
+                    <CommonValidationTextField name="username" label="User Name" required grid={{ xs: 12, md: 6 }} />
+                    <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo." grid={{ xs: 12, md: 6 }} required />
+                    <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 6 }} />
+                  </Grid>
+                </CommonCard>
+                <CommonBottomActionBar save disabled={!dirty} isLoading={isEditLoading} />
+              </Grid>
+            </Form>
+          )}    
+        </Formik>
+      </Box>
+    </>
   );
 };
 
