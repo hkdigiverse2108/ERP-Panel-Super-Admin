@@ -427,7 +427,6 @@ export const BankFormSchema = Yup.object().shape({
     city: Validation("string", "City"),
     pinCode: Validation("string", "Pin Code", { extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid Pin Code") }),
   }).nullable(),
-  
 });
 export const CouponFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
@@ -469,7 +468,6 @@ export const PointSetupSchema = Yup.object({
   }),
 });
 
-
 export const EmployeeFormSchema = Yup.object({
   // ---------- BASIC DETAILS ----------
   fullName: Validation("string", "FullName"),
@@ -509,4 +507,11 @@ export const ChangePasswordSchema = Yup.object({
 
 export const VerifyOtpSchema = Yup.object({
   otp: Validation("string", "OTP", { extraRules: (s) => s.matches(/^[0-9]{6}$/, "OTP must be 6 digits") }),
+});
+
+export const ProfileSchema = Yup.object({
+  fullName: Validation("string", "Full Name"),
+  username: Validation("string", "User Name"),
+  phoneNo: PhoneValidation(),
+  email: Validation("string", "Email", { extraRules: (s) => s.trim().email("Invalid email address") }),
 });

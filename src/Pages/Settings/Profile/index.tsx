@@ -1,20 +1,17 @@
 import { Box, Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
-import { useNavigate } from "react-router-dom";
 import { Mutations } from "../../../Api";
 import { CommonPhoneNumber, CommonValidationTextField } from "../../../Attribute";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
 import { setUser } from "../../../Store/Slices/AuthSlice";
 import type { EmployeeFormValues } from "../../../Types";
 import { GetChangedFields } from "../../../Utils";
-import { EmployeeFormSchema } from "../../../Utils/ValidationSchemas";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
-
+import { ProfileSchema } from "../../../Utils/ValidationSchemas";
 
 const Profile = () => {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { user: UserData } = useAppSelector((state) => state.auth);
   const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditUser();
@@ -23,7 +20,7 @@ const Profile = () => {
     fullName: UserData?.fullName || "",
     username: UserData?.username || "",
     phoneNo: {
-      countryCode: UserData?.countryCode?.phoneNo?._id  || "",
+      countryCode: UserData?.phoneNo?.countryCode || "",
       phoneNo: UserData?.phoneNo?.phoneNo || "",
     },
     email: UserData?.email || "",
@@ -40,7 +37,6 @@ const Profile = () => {
         onSuccess: (response) => {
           dispatch(setUser(response?.data));
           resetForm();
-          navigate(-1);
         },
       },
     );
@@ -50,7 +46,7 @@ const Profile = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.PROFILE.BASE} maxItems={3} breadcrumbs={BREADCRUMBS.SETTINGS.PROFILE} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
-        <Formik<EmployeeFormValues> enableReinitialize initialValues={initialValues} validationSchema={EmployeeFormSchema} onSubmit={handleSubmit}>
+        <Formik<EmployeeFormValues> enableReinitialize initialValues={initialValues} validationSchema={ProfileSchema} onSubmit={handleSubmit}>
           {({ dirty }) => (
             <Form noValidate>
               <Grid container spacing={2}>
@@ -59,14 +55,14 @@ const Profile = () => {
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonValidationTextField name="fullName" label="Full Name" required grid={{ xs: 12, md: 6 }} />
                     <CommonValidationTextField name="username" label="User Name" required grid={{ xs: 12, md: 6 }} />
-                    <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo." grid={{ xs: 12, md: 6 }} required />
+                    <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 6 }} required />
                     <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 6 }} />
                   </Grid>
                 </CommonCard>
                 <CommonBottomActionBar save disabled={!dirty} isLoading={isEditLoading} />
               </Grid>
             </Form>
-          )}    
+          )}
         </Formik>
       </Box>
     </>
