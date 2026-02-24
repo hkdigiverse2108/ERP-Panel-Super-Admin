@@ -252,11 +252,4 @@ export const URL_KEYS = {
     EDIT: "/sales-register/edit",
     ALL: "/sales-register/all",
   },
-
-  SUPPORT_DESK: {
-    BASE: "/support-desk",
-    ADD: "/support-desk/add",
-    EDIT: "/support-desk/edit",
-    ALL: "/support-desk/all",
-  },
 } as const;
