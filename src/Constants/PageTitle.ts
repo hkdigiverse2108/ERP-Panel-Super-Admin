@@ -150,6 +150,11 @@ export const PAGE_TITLE = {
       ADD: "Add Additional Charge",
       EDIT: "Edit Additional Charge",
     },
+    ADMIN_SETTINGS: {
+      BASE: "Admin Settings",
+      ADD: "Add Admin Settings",
+      EDIT: "Edit Admin Settings",
+    },
   },
   CONTACT: {
     BASE: "Contact",

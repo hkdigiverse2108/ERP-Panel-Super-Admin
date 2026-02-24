@@ -3,6 +3,7 @@ import type { AddAccountGroupPayload, AddAdditionalChargesPayload, AddAnnounceme
 import type { AddAccountPayload, EditAccountPayload } from "../Types/Account";
 import type { AddPurchaseOrderPayload, EditPurchaseOrderPayload } from "../Types/PurchaseOrder";
 import type { AddTermsConditionPayload, EditTermsConditionPayload } from "../Types/TermsCondition";
+import type { EditAdminSettingPayload } from "../Types/AdminSetting";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
 
@@ -12,6 +13,9 @@ export const Mutations = {
   useChangePassword: () => useMutations<ChangePasswordPayload, void>([KEYS.AUTH.CHANGE_PASSWORD], (input) => Post(URL_KEYS.AUTH.CHANGE_PASSWORD, input)),
   useVerifyOtp: () => useMutations<VerifyOtpPayload, void>([KEYS.AUTH.VERIFY_OTP], (input) => Post(URL_KEYS.AUTH.VERIFY_OTP, input)),
   useResendOtp: () => useMutations<ResendOtpPayload, void>([KEYS.AUTH.RESEND_OTP], (input) => Post(URL_KEYS.AUTH.RESEND_OTP, input)),
+
+  // ************ Admin Settings ***********
+  useEditAdminSetting: () => useMutations<EditAdminSettingPayload, void>([KEYS.ADMIN_SETTING.UPDATE, KEYS.ADMIN_SETTING.BASE], (input) => Put(URL_KEYS.ADMIN_SETTING.UPDATE, input)),
 
   // ************ Upload ***********
   useUpload: () => useMutations<FormData, UploadResponse>([KEYS.UPLOAD.ADD, KEYS.UPLOAD.ALL_IMAGE, KEYS.UPLOAD.ALL_PDF], (input) => Post(URL_KEYS.UPLOAD.ADD, input)),
