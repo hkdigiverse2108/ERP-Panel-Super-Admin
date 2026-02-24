@@ -36,8 +36,8 @@ import MaterialConsumption from "../Pages/Inventory/MaterialConsumption";
 import MaterialConsumptionForm from "../Pages/Inventory/MaterialConsumption/MaterialConsumptionForm";
 import SupplierBill from "../Pages/Purchase/SupplierBill";
 import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
-import AdditionalCharges from "../Components/Settings/AdditionalCharges";
-import AdditionalChargesForm from "../Components/Settings/AdditionalCharges/AdditionalChargesForm";
+import AdditionalCharges from "../Pages/Settings/AdditionalCharges";
+import AdditionalChargesForm from "../Pages/Settings/AdditionalCharges/AdditionalChargesForm";
 import Recipe from "../Pages/Inventory/Recipe";
 import RecipeForm from "../Pages/Inventory/Recipe/RecipeForm";
 import Stock from "../Pages/Inventory/Stock";
@@ -54,7 +54,7 @@ import CouponForm from "../Pages/CRM/Coupon/CouponForm";
 import Loyalty from "../Pages/CRM/Loyalty";
 import LoyaltyForm from "../Pages/CRM/Loyalty/LoyaltyForm";
 // import User from "../Pages/User";
-import Profile from "../Pages/Profile";
+import Profile from "../Pages/Settings/Profile";
 import SalesRegister from "../Pages/Pos/Sales Register";
 import AnnouncementForm from "../Pages/Announcment/AnnouncmentForm";
 import ChangePassword from "../Pages/Auth/ChangePassword";
@@ -62,7 +62,7 @@ import Announcement from "../Pages/Announcment";
 import VerifyOtp from "../Pages/Auth/VerifyOtp";
 import SupportDeskForm from "../Pages/SupportDesk/SupportDeskForm";
 import SupportDesk from "../Pages/SupportDesk";
-import AdminSetting from "../Pages/Settings/AdminSetting";
+import AdminSetting from "../Pages/Settings/AdminSetting/AdminSetting";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },

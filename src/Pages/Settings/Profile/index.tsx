@@ -1,8 +1,8 @@
 import { Box, Grid } from "@mui/material";
 import { Link } from "react-router-dom";
-import { ROUTES } from "../../Constants";
-import { useAppSelector } from "../../Store/hooks";
-import { CommonCard } from "../../Components/Common";
+import { ROUTES } from "../../../Constants";
+import { useAppSelector } from "../../../Store/hooks";
+import { CommonCard } from "../../../Components/Common";
 const Profile = () => {
   const { user } = useAppSelector((state) => state.auth);
   const userProfile = user;

@@ -2,13 +2,13 @@ import { Add } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, Grid } from "@mui/material";
 import { FieldArray, Form, Formik, type FormikHelpers } from "formik";
-import { Mutations, Queries } from "../../Api";
-import { CommonButton, CommonValidationTextField } from "../../Attribute";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../Components/Common";
-import { PAGE_TITLE } from "../../Constants";
-import { BREADCRUMBS } from "../../Data";
-import type { AdminSettingFormValues, AdminSettingLink } from "../../Types/AdminSetting";
-import { EmployeeFormSchema } from "../../Utils/ValidationSchemas";
+import { Mutations, Queries } from "../../../Api";
+import { CommonButton, CommonValidationTextField } from "../../../Attribute";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
+import { PAGE_TITLE } from "../../../Constants";
+import { BREADCRUMBS } from "../../../Data";
+import type { AdminSettingFormValues, AdminSettingLink } from "../../../Types/AdminSetting";
+import { EmployeeFormSchema } from "../../../Utils/ValidationSchemas";
 
 const AdminSetting = () => {
   // const navigate = useNavigate();

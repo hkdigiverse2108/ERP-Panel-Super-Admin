@@ -5,7 +5,7 @@ import { CommonButton, CommonValidationTextField, CommonValidationSwitch, Common
 import { PAGE_TITLE } from "../../../Constants";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { AdditionalChargesFormSchema } from "../../../Utils/ValidationSchemas";
-import { CommonCard, CommonModal, DependentSelect } from "../../Common";
+import { CommonCard, CommonModal, DependentSelect } from "../../../Components/Common";
 import { useAppSelector } from "../../../Store/hooks";
 import { useDispatch } from "react-redux";
 import { setAdditionalChargeModal } from "../../../Store/Slices/ModalSlice";
