@@ -11,6 +11,13 @@ export const URL_KEYS = {
     ALL_IMAGE: "/upload/images",
     ALL_PDF: "/upload/pdf",
   },
+  ADMIN_SETTING: {
+    BASE: "/settings",
+    ALL: "/settings/get",
+    ADD: "/settings/add",
+    EDIT: "/settings/edit",
+    DELETE: "/settings/delete",
+  },
 
   COMPANY: {
     BASE: "/company",

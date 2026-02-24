@@ -22,6 +22,10 @@ export const ROUTES = {
     ADD_EDIT: "/product/add-edit",
     ITEM_ADD_EDIT: "/product/item/add-edit",
   },
+  ADMIN_SETTING: {
+    BASE: "/admin-setting",
+    ADD_EDIT: "/admin-setting/add-edit",
+  },
   BRAND: {
     BASE: "/brand",
   },
