@@ -13,10 +13,8 @@ export const URL_KEYS = {
   },
   ADMIN_SETTING: {
     BASE: "/settings",
-    ALL: "/settings/get",
-    ADD: "/settings/add",
-    EDIT: "/settings/edit",
-    DELETE: "/settings/delete",
+    ALL: "/settings/all",
+    UPDATE: "/settings/update",
   },
 
   COMPANY: {

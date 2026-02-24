@@ -23,7 +23,7 @@ const Layout = () => {
 
   useEffect(() => {
     if (location.pathname.startsWith("/pos")) dispatch(setSidebarOpen(false));
-    else dispatch(setSidebarOpen(true));
+    // else dispatch(setSidebarOpen(true));
   }, [dispatch, location.pathname]);
 
   useEffect(() => {

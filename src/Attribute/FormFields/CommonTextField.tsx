@@ -6,7 +6,7 @@ import { useField, type FieldHookConfig } from "formik";
 import { useCallback, useMemo, useState, type ChangeEvent, type FC, type ReactNode } from "react";
 import type { CommonTextFieldProps, CommonValidationTextFieldProps } from "../../Types";
 
-export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ maxDigits, currencyDisabled, label, name, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, isCurrency, onCurrencyLog, ...props }) => {
+export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ maxDigits, currencyDisabled, label, name, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, isCurrency, onCurrencyLog, InputLabelProps, ...props }) => {
   const fieldConfig: FieldHookConfig<string> = { name };
   const [field, meta, helpers] = useField(fieldConfig);
   const [isFocused, setFocused] = useState(false);
@@ -77,9 +77,11 @@ export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ 
       type={inputType}
       disabled={disabled}
       placeholder={placeholder}
+      
       autoComplete={autoComplete}
       required={required}
       size="small"
+      InputLabelProps={InputLabelProps}
       onFocus={(e) => {
         setFocused(true);
         props.onFocus?.(e);

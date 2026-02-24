@@ -258,6 +258,7 @@ export interface CommonValidationTextFieldProps {
   sx?: object;
   size?: "small" | "medium";
   maxDigits?: number;
+  InputLabelProps?: TextFieldProps["InputLabelProps"];
 }
 export interface CommonTextFieldProps extends Omit<CommonValidationTextFieldProps, "name"> {
   value: string | number;
