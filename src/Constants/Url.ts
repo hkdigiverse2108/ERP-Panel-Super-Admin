@@ -252,4 +252,9 @@ export const URL_KEYS = {
     EDIT: "/sales-register/edit",
     ALL: "/sales-register/all",
   },
+
+  POS_CASH_REGISTER:{
+    BASE: "/pos-cash-register",
+    ALL: "/pos-cash-register/all",
+  }
 } as const;

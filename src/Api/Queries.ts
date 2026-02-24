@@ -8,6 +8,7 @@ import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 import type { RecipeApiResponse, RecipeDropdownApiResponse } from "../Types/Recipe";
 import type { AdminSettingApiResponse } from "../Types/AdminSetting";
+import type { PosCashRegisterApiResponse } from "../Types/PosCashRegister";
 
 export const Queries = {
   // ************ Upload ***********
@@ -138,5 +139,8 @@ export const Queries = {
 
   //************ Admin Setting ********/
   useGetAdminSetting: (params?: Params) => useQueries<AdminSettingApiResponse>([KEYS.ADMIN_SETTING.BASE, params], () => Get(URL_KEYS.ADMIN_SETTING.ALL, params)),
+
+  // ************ Announcement ***********
+ useGetPosCashRegister: (params?: Params) => useQueries<PosCashRegisterApiResponse>([KEYS.POS_CASH_REGISTER.BASE, params], () => Get(URL_KEYS.POS_CASH_REGISTER.ALL, params)),
 
 };

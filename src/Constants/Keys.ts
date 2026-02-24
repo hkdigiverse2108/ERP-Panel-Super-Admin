@@ -239,4 +239,8 @@ export const KEYS = {
     EDIT: "sales-register-edit",
     DELETE: "sales-register-delete",
   },
+
+  POS_CASH_REGISTER:{
+  BASE: "pos-cash-register",
+  }
 };
