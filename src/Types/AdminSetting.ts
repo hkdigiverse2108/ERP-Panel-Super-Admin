@@ -1,4 +1,4 @@
-import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { CommonDataType, MessageStatus } from "./Common";
 
 export interface AdminSettingLink {
   title?: string;
@@ -18,12 +18,8 @@ export type EditAdminSettingPayload = AdminSettingFormValues & {
 
 export interface AdminSettingBase extends AdminSettingFormValues, CommonDataType {}
 
-export interface AdminSettingDataResponse extends PageStatus {
-  aetting_data: AdminSettingBase[];
-}
-
 export interface AdminSettingApiResponse extends MessageStatus {
-  data: AdminSettingDataResponse;
+  data: AdminSettingBase;
 }
 
 export interface AdminSettingDropdownApiResponse extends MessageStatus {

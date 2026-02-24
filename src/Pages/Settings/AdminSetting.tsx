@@ -1,21 +1,18 @@
+import { Add } from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
 import { Box, Grid } from "@mui/material";
 import { FieldArray, Form, Formik, type FormikHelpers } from "formik";
-import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
 import { CommonButton, CommonValidationTextField } from "../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
-import { useAppDispatch, useAppSelector } from "../../Store/hooks";
-import type { EmployeeFormValues } from "../../Types";
-import { EmployeeFormSchema } from "../../Utils/ValidationSchemas";
-import CloseIcon from "@mui/icons-material/Close";
-import { Add } from "@mui/icons-material";
 import type { AdminSettingFormValues, AdminSettingLink } from "../../Types/AdminSetting";
+import { EmployeeFormSchema } from "../../Utils/ValidationSchemas";
 
 const AdminSetting = () => {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+  // const navigate = useNavigate();
+  // const dispatch = useAppDispatch();
 
   const { data: adminSettingData, isLoading: adminSettingDataLoading } = Queries.useGetAdminSetting();
   const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditUser();
@@ -23,7 +20,7 @@ const AdminSetting = () => {
   //   const adminSettingData = adminSettingData?.data?.settingsSchema;
 
   const initialValues: AdminSettingFormValues = {
-    // links: [...(adminSettingData?.links?.map((link: AdminSettingLink) => ({ title: link.title, link: link.link, icon: link.icon })) || [{ title: "", link: "", icon: "" }])],
+    links: [...(adminSettingData?.data?.links?.map((link: AdminSettingLink) => ({ title: link.title, link: link.link, icon: link.icon })) || [{ title: "", link: "", icon: "" }])],
   };
 
   const handleSubmit = async (values: AdminSettingFormValues, { resetForm }: FormikHelpers<AdminSettingFormValues>) => {
@@ -57,12 +54,12 @@ const AdminSetting = () => {
                       {({ push, remove }) => {
                         return (
                           <>
-                            {values?.links.map((link, index) => (
+                            {values?.links?.map((link, index) => (
                               <Grid container spacing={2} key={index} sx={{ mb: 2 }}>
                                 <CommonValidationTextField name={`links.${index}.title`} label="title" required grid={{ xs: 12, md: 3 }} />
                                 <CommonValidationTextField name={`links.${index}.link`} label="link" required grid={{ xs: 12, md: 3 }} />
                                 <CommonValidationTextField name={`links.${index}.icon`} label="icon" grid={{ xs: 12, md: 3 }} />
-                                {values?.links.length > 1 && (
+                                {(values?.links?.length || 0) > 1 && (
                                   <Grid size={"auto"}>
                                     <CommonButton variant="outlined" size="small" color="error" sx={{ minWidth: 20 }} onClick={() => remove(index)}>
                                       <CloseIcon />

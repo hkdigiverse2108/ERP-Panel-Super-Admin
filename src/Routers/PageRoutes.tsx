@@ -62,6 +62,7 @@ import Announcement from "../Pages/Announcment";
 import VerifyOtp from "../Pages/Auth/VerifyOtp";
 import SupportDeskForm from "../Pages/SupportDesk/SupportDeskForm";
 import SupportDesk from "../Pages/SupportDesk";
+import AdminSetting from "../Pages/Settings/AdminSetting";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -159,6 +160,8 @@ export const PageRoutes = [
 
   { path: ROUTES.CALL_REQUEST.BASE, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDesk /> },
   { path: ROUTES.CALL_REQUEST.ADD_EDIT, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDeskForm /> },
+
+  { path: ROUTES.ADMIN_SETTING.BASE, name: PAGE_TITLE.ADMIN_SETTING.BASE, element: <AdminSetting /> },
 ];
 
 export const AuthRoutes = [
