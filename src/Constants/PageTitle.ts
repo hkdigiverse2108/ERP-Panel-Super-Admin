@@ -17,11 +17,6 @@ export const PAGE_TITLE = {
     ADD: "Add Branch",
     EDIT: "Edit Branch",
   },
-  ADMIN_SETTING: {
-    BASE: "Admin Setting",
-    ADD: "Add Admin Setting",
-    EDIT: "Edit Admin Setting",
-  },
   INVENTORY: {
     BASE: "inventory",
     PRODUCT: {
