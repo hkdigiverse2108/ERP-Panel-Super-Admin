@@ -17,6 +17,7 @@ const SalesRegister = () => {
   const [dateRange, setDateRange] = useState({ start: dayjs(), end: dayjs() });
 
   const { data: branchData, isLoading: branchLoading } = Queries.useGetBranchDropdown();
+  const { data: userDropdown, isLoading: userDropdownLoading } = Queries.useGetUserDropdown();
 
   const queryParams = useMemo(() => ({ ...params, startDate: dateRange.start.format("YYYY-MM-DD"), endDate: dateRange.end.format("YYYY-MM-DD") }), [params, dateRange]);
 
@@ -32,7 +33,7 @@ const SalesRegister = () => {
   const columns: AppGridColDef<PosCashRegisterBase>[] = [
     {
       field: "createdBy",
-      headerName: "Cashier",
+      headerName: "Salesman",
       width: 180,
       renderCell: (params) => {
         const creator = params.row.createdBy;
@@ -44,7 +45,7 @@ const SalesRegister = () => {
     },
     { field: "createdAt", headerName: "From Date", width: 150, renderCell: (params) => FormatDate(params.value) },
     { field: "updatedAt", headerName: "To Date", width: 150, renderCell: (params) => FormatDate(params.value) },
-    { field: "status", headerName: "Status", width: 120 },
+    { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
     { field: "openingCash", headerName: "Cash In Hand", width: 130 },
     { field: "cashPayment", headerName: "Cash", width: 110 },
     { field: "cardPayment", headerName: "Card", width: 110 },
@@ -84,7 +85,7 @@ const SalesRegister = () => {
     fileName: "Sales_Register",
   };
 
-  const filter = [CreateFilter("Select Location", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(branchData?.data), branchLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [CreateFilter("Select Location", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(branchData?.data), branchLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Salesman", "salesmanFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(userDropdown?.data), userDropdownLoading, { xs: 12, sm: 6, md: 3 })];
 
   return (
     <>

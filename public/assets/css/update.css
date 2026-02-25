@@ -66,7 +66,7 @@
   @apply dark:text-gray-300!;
 }
 
-.MuiDataGrid-cell.MuiDataGrid-cell--textLeft{
+.MuiDataGrid-cell.MuiDataGrid-cell--textLeft {
   @apply items-center! flex!;
 }
 
@@ -141,18 +141,26 @@ input[type="number"] {
   @apply bg-gray-200! text-gray-400! dark:bg-gray-700! dark:text-gray-400!;
 }
 
-.status-pending{
+.status-pending {
   @apply text-white capitalize text-center w-full bg-amber-500 dark:bg-amber-600 h-6 leading-6 rounded-sm;
 }
 
-.status-approved{
+.status-approved {
   @apply text-white capitalize text-center w-full bg-green-500 dark:bg-green-600 h-6 leading-6 rounded-sm;
 }
 
-.status-rejected{
+.status-rejected {
   @apply text-white capitalize text-center w-full bg-red-500 dark:bg-red-600 h-6 leading-6 rounded-sm;
 }
 
-.iconButtonStyle{
+.status-open {
+  @apply text-white capitalize text-center w-full bg-green-500 dark:bg-green-600 h-6 leading-6 rounded-sm;
+}
+
+.status-closed {
+  @apply text-white capitalize text-center w-full bg-red-500 dark:bg-red-600 h-6 leading-6 rounded-sm;
+}
+
+.iconButtonStyle {
   @apply w-11 h-8.5 rounded-md! border! border-gray-200! dark:border-gray-600!;
 }
