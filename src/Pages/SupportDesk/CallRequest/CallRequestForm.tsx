@@ -1,15 +1,15 @@
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Mutations, Queries } from "../../Api";
-import { CommonPhoneNumber, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../Attribute";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../Components/Common";
-import { PAGE_TITLE } from "../../Constants";
-import { BREADCRUMBS } from "../../Data";
-import type { AddCallRequestPayload, CallRequestFormValues, EditCallRequestPayload } from "../../Types";
-import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
+import { Mutations, Queries } from "../../../Api";
+import { CommonPhoneNumber, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
+import { PAGE_TITLE } from "../../../Constants";
+import { BREADCRUMBS } from "../../../Data";
+import type { AddCallRequestPayload, CallRequestFormValues, EditCallRequestPayload } from "../../../Types";
+import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 
-const SupportDeskForm = () => {
+const CallRequestForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
@@ -60,14 +60,14 @@ const SupportDeskForm = () => {
             <Form noValidate>
               <Box sx={{ display: "grid", gap: 2 }}>
                 {/* CALL REQUEST DETAILS */}
-                <CommonCard title="Support Desk Details">
-                  <Box sx={{ p: 2, display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: 2 }}>
+                <CommonCard hideDivider>
+                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="businessName" label="Business Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="contactName" label="Contact Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonPhoneNumber label="Contact No." countryCodeName="contactNo.countryCode" numberName="contactNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationTextField name="note" label="Note" multiline grid={{ xs: 12, md: 4 }} />
-                  </Box>
+                    <CommonValidationTextField name="note" label="Note" multiline grid={{ xs: 12, md: 8 }} />
+                  </Grid>
                 </CommonCard>
                 {!isEditing && <CommonValidationSwitch name="is_active" label="Is Active" grid={{ xs: 12 }} />}
 
@@ -89,4 +89,4 @@ const SupportDeskForm = () => {
   );
 };
 
-export default SupportDeskForm;
+export default CallRequestForm;
