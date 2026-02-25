@@ -346,8 +346,8 @@ export interface MessageStatus {
 export interface CommonDataType {
   _id: string;
   isDeleted: boolean;
-  createdBy: null;
-  updatedBy: null;
+  createdBy?: string | Record<string, unknown> | null;
+  updatedBy?: string | Record<string, unknown> | null;
   createdAt: string;
   updatedAt: string;
 }

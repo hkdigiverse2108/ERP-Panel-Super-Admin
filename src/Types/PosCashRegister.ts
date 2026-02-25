@@ -57,10 +57,11 @@ export type EditPosCashRegisterPayload = PosCashRegisterFormValues & {
 export interface PosCashRegisterBase extends PosCashRegisterFormValues, CommonDataType {
   companyId?: CompanyBase;
   branchId?: BranchBase;
+  createdBy?: string | { fullName?: string; username?: string };
 }
 
 export interface PosCashRegisterDataResponse extends PageStatus {
-  pos_cash_register_data: PosCashRegisterBase[];
+  posCashRegister_data?: PosCashRegisterBase[];
 }
 
 export interface PosCashRegisterApiResponse extends MessageStatus {
