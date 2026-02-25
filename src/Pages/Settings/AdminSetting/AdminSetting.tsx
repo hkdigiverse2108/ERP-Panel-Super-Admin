@@ -103,7 +103,7 @@ const AdminSetting = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.PROFILE.EDIT} maxItems={3} breadcrumbs={BREADCRUMBS.SETTINGS.ADMIN_SETTINGS} />
+      <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.PROFILE.EDIT} maxItems={3} breadcrumbs={BREADCRUMBS.SETTINGS.ADMIN_SETTING} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<AdminSettingFormValues> enableReinitialize initialValues={initialValues} validationSchema={AdminSettingFormSchema} onSubmit={handleSubmit}>
           {({ dirty, values }) => (

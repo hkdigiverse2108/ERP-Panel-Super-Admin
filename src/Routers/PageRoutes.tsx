@@ -160,7 +160,7 @@ export const PageRoutes = [
   { path: ROUTES.CALL_REQUEST.BASE, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDesk /> },
   { path: ROUTES.CALL_REQUEST.ADD_EDIT, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDeskForm /> },
 
-  { path: ROUTES.ADMIN_SETTING.BASE, name: PAGE_TITLE.ADMIN_SETTING.BASE, element: <AdminSetting /> },
+  { path: ROUTES.ADMIN_SETTING.BASE, name: PAGE_TITLE.SETTINGS.ADMIN_SETTING.BASE, element: <AdminSetting /> },
 ];
 
 export const AuthRoutes = [
