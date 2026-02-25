@@ -154,11 +154,15 @@ input[type="number"] {
 }
 
 .status-open {
-  @apply text-white capitalize text-center w-full bg-green-500 dark:bg-green-600 h-6 leading-6 rounded-sm;
+  @apply text-white capitalize text-center w-full bg-cyan-400  dark:bg-cyan-500  h-6 leading-6 rounded-sm;
 }
 
 .status-closed {
   @apply text-white capitalize text-center w-full bg-red-500 dark:bg-red-600 h-6 leading-6 rounded-sm;
+}
+
+.status-available {
+  @apply text-white capitalize text-center w-full bg-green-500 dark:bg-green-600 h-6 leading-6 rounded-sm;
 }
 
 .iconButtonStyle {
