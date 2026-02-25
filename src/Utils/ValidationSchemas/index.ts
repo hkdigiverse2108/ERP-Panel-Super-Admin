@@ -515,3 +515,27 @@ export const ProfileSchema = Yup.object({
   phoneNo: PhoneValidation(),
   email: Validation("string", "Email", { extraRules: (s) => s.trim().email("Invalid email address") }),
 });
+
+export const AdminSettingFormSchema = Yup.object({
+  logo: Validation("string", "Logo", { required: false }),
+  favicon: Validation("string", "Favicon", { required: false }),
+  themeImage: Validation("string", "Theme Image", { required: false }),
+  phoneNo: PhoneValidation("Phone No", { requiredCountryCode: false, requiredNumber: false }),
+  email: Validation("string", "Email", { required: false, extraRules: (s) => s.trim().email("Invalid email address") }),
+  address: Validation("string", "Address", { required: false }),
+  workingHours: Yup.object({
+    startTime: Validation("string", "Start Time", { required: false }),
+    endTime: Validation("string", "End Time", { required: false }),
+    timezone: Validation("string", "Timezone", { required: false }),
+  }).nullable(),
+  links: Yup.array()
+    .of(
+      Yup.object({
+        title: Validation("string", "Title", { required: false }),
+        link: Validation("string", "Link", { required: false }),
+        icon: Validation("string", "Icon", { required: false }),
+        isActive: Yup.boolean().nullable(),
+      }),
+    )
+    .nullable(),
+});

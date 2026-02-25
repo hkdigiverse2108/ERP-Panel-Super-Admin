@@ -9,8 +9,7 @@ export const KEYS = {
   ADMIN_SETTING: {
     BASE: "admin-setting",
     ADD: "admin-setting-add",
-    EDIT: "admin-setting-edit",
-    DELETE: "admin-setting-delete",
+    UPDATE: "admin-setting-update",
   },
 
   UPLOAD: {
