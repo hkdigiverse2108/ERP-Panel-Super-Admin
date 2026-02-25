@@ -24,11 +24,18 @@ const SalesRegister = () => {
   const { data, isLoading, isFetching } = Queries.useGetPosCashRegister(queryParams);
 
   const rows = useMemo(() => {
-    const apiData = data?.data?.posCashRegister_data || data?.data?.posCashRegister_data;
+    const apiData = data?.data?.posCashRegister_data;
     return apiData?.map((r: PosCashRegisterBase) => ({ ...r, id: r._id })) || [];
   }, [data]);
 
   const totalRows = data?.data?.totalData || 0;
+
+  const salesmanOptions = useMemo(() => {
+    return userDropdown?.data?.map((user) => ({
+      ...user,
+      name: user.fullName || user.username || "Unnamed",
+    })) || [];
+  }, [userDropdown]);
 
   const columns: AppGridColDef<PosCashRegisterBase>[] = [
     {
@@ -85,7 +92,10 @@ const SalesRegister = () => {
     fileName: "Sales_Register",
   };
 
-  const filter = [CreateFilter("Select Location", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(branchData?.data), branchLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Salesman", "salesmanFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(userDropdown?.data), userDropdownLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Location", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(branchData?.data), branchLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Salesman", "salesmanFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(salesmanOptions), userDropdownLoading, { xs: 12, sm: 6, md: 3 }),
+  ];
 
   return (
     <>
