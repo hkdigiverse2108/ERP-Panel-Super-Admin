@@ -12,7 +12,7 @@ import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
 
 const SalesRegister = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid({ active: false });
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel,  params, advancedFilter, updateAdvancedFilter } = useDataGrid({ active: false });
 
   const [dateRange, setDateRange] = useState({ start: dayjs(), end: dayjs() });
 
@@ -52,11 +52,7 @@ const SalesRegister = () => {
     { field: "salesReturn", headerName: "Sales Return Amount", width: 160 },
     { field: "bankTransferAmount", headerName: "Cash Transfered To HO", width: 180 },
     { field: "physicalDrawerCash", headerName: "Closing Amount", width: 150 },
-    {
-      field: "shortExceed",
-      headerName: "Short/Exceed",
-      width: 140,
-    },
+    { field: "shortExceed", headerName: "Short/Exceed", width: 140 },
   ];
 
   const gridOptions = {
@@ -64,8 +60,6 @@ const SalesRegister = () => {
     rows,
     rowCount: totalRows,
     loading: isLoading || isFetching,
-    isActive,
-    setActive,
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,
