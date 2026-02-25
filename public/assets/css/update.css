@@ -66,6 +66,10 @@
   @apply dark:text-gray-300!;
 }
 
+.MuiDataGrid-cell.MuiDataGrid-cell--textLeft{
+  @apply items-center! flex!;
+}
+
 /* ************ Table End *********** */
 
 /* ************ Input Start *********** */
