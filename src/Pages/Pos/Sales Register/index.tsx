@@ -16,7 +16,6 @@ const SalesRegister = () => {
 
   const [dateRange, setDateRange] = useState({ start: dayjs(), end: dayjs() });
 
-  const { data: branchData, isLoading: branchLoading } = Queries.useGetBranchDropdown();
   const { data: userDropdown, isLoading: userDropdownLoading } = Queries.useGetUserDropdown();
 
   const queryParams = useMemo(() => ({ ...params, startDate: dateRange.start.format("YYYY-MM-DD"), endDate: dateRange.end.format("YYYY-MM-DD") }), [params, dateRange]);
@@ -39,18 +38,7 @@ const SalesRegister = () => {
   }, [userDropdown]);
 
   const columns: AppGridColDef<PosCashRegisterBase>[] = [
-    {
-      field: "createdBy",
-      headerName: "Salesman",
-      width: 180,
-      renderCell: (params) => {
-        const creator = params.row.createdBy;
-        if (typeof creator === "object" && creator !== null) {
-          return creator.fullName || creator.username || "-";
-        }
-        return creator || "-";
-      },
-    },
+    { field: "-", headerName: "Salesman", width: 180 },
     { field: "createdAt", headerName: "From Date", width: 150, renderCell: (params) => FormatDate(params.value) },
     { field: "updatedAt", headerName: "To Date", width: 150, renderCell: (params) => FormatDate(params.value) },
     { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
@@ -91,7 +79,7 @@ const SalesRegister = () => {
     },
   };
 
-  const filter = [CreateFilter("Select Location", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(branchData?.data), branchLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Salesman", "salesmanFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(salesmanOptions), userDropdownLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [CreateFilter("Select Salesman", "salesmanFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(salesmanOptions), userDropdownLoading, { xs: 12, sm: 6, md: 3 })];
 
   return (
     <>
