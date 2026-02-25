@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { Queries } from "../../../Api";
 import { CommonDateRangeSelector } from "../../../Attribute";
-import { AdvancedSearch, CommonBreadcrumbs, CommonCard, CommonDataGrid } from "../../../Components/Common";
+import { AdvancedSearch, CalculateGridSummary, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef } from "../../../Types";
@@ -25,16 +25,17 @@ const SalesRegister = () => {
 
   const rows = useMemo(() => {
     const apiData = data?.data?.posCashRegister_data;
-    return apiData?.map((r: PosCashRegisterBase) => ({ ...r, id: r._id })) || [];
+    return apiData?.map((r: PosCashRegisterBase) => ({ ...r, id: r._id, shortExceed: (r.physicalDrawerCash || 0) - (r.totalCashLeftInDrawer || 0) })) || [];
   }, [data]);
 
   const totalRows = data?.data?.totalData || 0;
 
+  const summary = useMemo(() => {
+    return CalculateGridSummary(rows, ["openingCash", "cashPayment", "cardPayment", "upiPayment", "payLater", "totalSales", "creditAdvanceRedeemed", "salesReturn", "physicalDrawerCash", "shortExceed"]);
+  }, [rows]);
+
   const salesmanOptions = useMemo(() => {
-    return userDropdown?.data?.map((user) => ({
-      ...user,
-      name: user.fullName || user.username || "Unnamed",
-    })) || [];
+    return userDropdown?.data?.map((user) => ({ ...user, name: user.fullName || user.username || "Unnamed" })) || [];
   }, [userDropdown]);
 
   const columns: AppGridColDef<PosCashRegisterBase>[] = [
@@ -67,11 +68,6 @@ const SalesRegister = () => {
       field: "shortExceed",
       headerName: "Short/Exceed",
       width: 140,
-      renderCell: (params) => {
-        const physical = params.row.physicalDrawerCash || 0;
-        const expected = params.row.totalCashLeftInDrawer || 0;
-        return physical - expected;
-      },
     },
   ];
 
@@ -90,12 +86,12 @@ const SalesRegister = () => {
     onFilterModelChange: setFilterModel,
     isExport: true,
     fileName: "Sales_Register",
+    slots: {
+      bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
+    },
   };
 
-  const filter = [
-    CreateFilter("Select Location", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(branchData?.data), branchLoading, { xs: 12, sm: 6, md: 3 }),
-    CreateFilter("Select Salesman", "salesmanFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(salesmanOptions), userDropdownLoading, { xs: 12, sm: 6, md: 3 }),
-  ];
+  const filter = [CreateFilter("Select Location", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(branchData?.data), branchLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Salesman", "salesmanFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(salesmanOptions), userDropdownLoading, { xs: 12, sm: 6, md: 3 })];
 
   return (
     <>
