@@ -271,4 +271,20 @@ export const URL_KEYS = {
     ADD: "/return-pos-order/add",
     EDIT: "/return-pos-order/edit",
   },
+  POS_ORDER: {
+    BASE: "/pos-order",
+    ALL: "/pos-order/all",
+    ADD: "/pos-order/add",
+    EDIT: "/pos-order/edit",
+    DELETE: "/pos-order/delete",
+    DROPDOWN: "/pos-order/dropdown",
+  },
+  POS: {
+    BASE: "/pos-order",
+    HOLD_ORDER: "/pos-order/hold",
+    CUSTOMER_DETAIL: "/pos-order/customer",
+    ADD: "/pos-order/add",
+    EDIT: "/pos-order/edit",
+    DELETE: "/pos-order/delete",
+  },
 } as const;

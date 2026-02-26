@@ -45,6 +45,7 @@ export const NavItems: NavItem[] = [
     children: [
       { name: PAGE_TITLE.POS.SALES_REGISTER, path: ROUTES.SALES_REGISTER.BASE, pro: false },
       { name: PAGE_TITLE.POS.CREDIT_NOTE, path: ROUTES.POS_CREDIT_NOTE.BASE, pro: false },
+      { name: PAGE_TITLE.POS.ORDER_LIST, path: ROUTES.POS_ORDER_LIST.BASE, pro: false },
     ],
   },
   {

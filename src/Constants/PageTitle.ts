@@ -181,6 +181,7 @@ export const PAGE_TITLE = {
     BASE: "Pos",
     SALES_REGISTER: "Sales Register",
     CREDIT_NOTE: "pos Credit Note",
+    ORDER_LIST: "Order List",
   },
   ANNOUNCEMENT: {
     BASE: "Announcement",
