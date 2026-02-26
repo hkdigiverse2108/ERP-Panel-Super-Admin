@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { Queries } from "../../../Api";
 import { CommonDateRangeSelector } from "../../../Attribute";
-import { AdvancedSearch, CalculateGridSummary, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter } from "../../../Components/Common";
+import { AdvancedSearch, CalculateGridSummary, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef } from "../../../Types";
@@ -17,6 +17,8 @@ const SalesRegister = () => {
   const [dateRange, setDateRange] = useState({ start: dayjs(), end: dayjs() });
 
   const { data: userDropdown, isLoading: userDropdownLoading } = Queries.useGetUserDropdown();
+
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
 
   const queryParams = useMemo(() => ({ ...params, startDate: dateRange.start.format("YYYY-MM-DD"), endDate: dateRange.end.format("YYYY-MM-DD") }), [params, dateRange]);
 
@@ -38,6 +40,7 @@ const SalesRegister = () => {
   }, [userDropdown]);
 
   const columns: AppGridColDef<PosCashRegisterBase>[] = [
+    CommonObjectNameColumn<PosCashRegisterBase>("companyId", { headerName: "Company", width: 200 }),
     {
       field: "salesManId",
       headerName: "Salesman",
@@ -81,7 +84,7 @@ const SalesRegister = () => {
     },
   };
 
-  const filter = [CreateFilter("Select Salesman", "salesmanFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(salesmanOptions), userDropdownLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Salesman", "salesmanFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(salesmanOptions), userDropdownLoading, { xs: 12, sm: 6, md: 3 })];
 
   return (
     <>
