@@ -12,7 +12,7 @@ import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
 
 const SalesRegister = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel,  params, advancedFilter, updateAdvancedFilter } = useDataGrid({ active: false });
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params, advancedFilter, updateAdvancedFilter } = useDataGrid({ active: false });
 
   const [dateRange, setDateRange] = useState({ start: dayjs(), end: dayjs() });
 
@@ -38,7 +38,15 @@ const SalesRegister = () => {
   }, [userDropdown]);
 
   const columns: AppGridColDef<PosCashRegisterBase>[] = [
-    { field: "-", headerName: "Salesman", width: 180 },
+    {
+      field: "salesManId",
+      headerName: "Salesman",
+      width: 180,
+      renderCell: (params) => {
+        const s = params.row.salesManId;
+        return typeof s === "string" || !s ? "-" : s.name || "-";
+      },
+    },
     { field: "createdAt", headerName: "From Date", width: 150, renderCell: (params) => FormatDate(params.value) },
     { field: "updatedAt", headerName: "To Date", width: 150, renderCell: (params) => FormatDate(params.value) },
     { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },

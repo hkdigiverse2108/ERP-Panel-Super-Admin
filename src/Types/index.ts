@@ -40,5 +40,6 @@ export * from "./Recipe";
 export * from "./PosOrder";
 export * from "./ReturnPosOrder";
 export * from "./Pos";
+export * from "./PosCreditNote";
 
 

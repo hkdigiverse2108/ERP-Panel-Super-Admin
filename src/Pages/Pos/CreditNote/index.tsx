@@ -5,12 +5,12 @@ import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, Comm
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import { useAppDispatch } from "../../../Store/hooks";
-import type { AppGridColDef } from "../../../Types";
+import type { AppGridColDef, PosCreditNoteBase } from "../../../Types";
 import { FormatDate } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
-import type { PosCreditNoteBase } from "../../../Types/PosCreditNote";
 import { setOrderRefundModal } from "../../../Store/Slices/ModalSlice";
 import OrderRefund from "./OrderRefund";
+
 
 const CreditNoteList = () => {
   const dispatch = useAppDispatch();

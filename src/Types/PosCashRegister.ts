@@ -58,6 +58,7 @@ export interface PosCashRegisterBase extends PosCashRegisterFormValues, CommonDa
   companyId?: CompanyBase;
   branchId?: BranchBase;
   createdBy?: string | { fullName?: string; username?: string };
+  salesManId?: string | { _id: string; name?: string } | null;
 }
 
 export interface PosCashRegisterDataResponse extends PageStatus {
