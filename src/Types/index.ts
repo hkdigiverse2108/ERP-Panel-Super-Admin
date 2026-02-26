@@ -29,7 +29,7 @@ export * from "./MaterialConsumption";
 export * from "./SupplierBill";
 export * from "./AdditionalCharges";
 export * from "./Recipe";
-export * from "./StockVarification";
+export * from "./StockVerification";
 export * from "./BillOfLiveProduct";
 export * from "./Bank";
 export * from "./Coupon";
