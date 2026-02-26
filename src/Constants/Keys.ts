@@ -248,6 +248,7 @@ export const KEYS = {
     ADD: "pos-credit-note-add",
     EDIT: "pos-credit-note-edit",
     DELETE: "pos-credit-note-delete",
+    REFUND: "pos-credit-note-refund",
   },
   RETURN_POS_ORDER: {
     BASE: "return-pos-order",

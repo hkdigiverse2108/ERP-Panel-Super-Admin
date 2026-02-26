@@ -11,6 +11,14 @@ export interface PosCreditNoteFormValues {
   totalAmount: number;
 }
 
+export interface PosCreditNoteRefundFormValues {
+  posCreditNoteId?: string;
+  refundViaCash?: number;
+  refundViaBank?: number;
+  bankAccountId?: string;
+  refundDescription?: string;
+}
+
 export type AddPosCreditNotePayload = PosCreditNoteFormValues;
 
 export type EditPosCreditNotePayload = PosCreditNoteFormValues & { creditNoteId?: string };
