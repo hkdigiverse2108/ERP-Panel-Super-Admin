@@ -2,18 +2,19 @@ import { Box } from "@mui/material";
 import dayjs from "dayjs";
 import { useMemo } from "react";
 import { Queries, Mutations } from "../../../Api";
-import { CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonActionColumn, CommonDeleteModal, AdvancedSearch } from "../../../Components/Common";
+import { CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonActionColumn, CommonDeleteModal, AdvancedSearch, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, ORDER_STATUS } from "../../../Data";
 import type { PosOrderBase, AppGridColDef } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import { CreateFilter } from "../../../Utils";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
 
 const OrderList = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter } = useDataGrid({});
-  const permission = usePagePermission(PAGE_TITLE.POS.BASE); // Or order list permission specifically if available
+  const permission = usePagePermission(PAGE_TITLE.POS.BASE);
 
   const { data: orderData, isLoading: orderDataLoading, isFetching: orderDataFetching } = Queries.useGetPosOrder(params);
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deleteOrder, isPending: isDeleteLoading } = Mutations.useDeletePosOrder();
   const { mutate: editOrder, isPending: isEditLoading } = Mutations.useEditPosOrder();
 
@@ -27,29 +28,18 @@ const OrderList = () => {
     });
   };
 
-  const filter = [CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ORDER_STATUS, false, { xs: 12, sm: 6, md: 3 })];
+  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ORDER_STATUS, false, { xs: 12, sm: 6, md: 3 })];
 
   const columns: AppGridColDef<PosOrderBase>[] = [
+    CommonObjectNameColumn<PosOrderBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "orderNo", headerName: "Invoice No", flex: 1, minWidth: 150 },
-    {
-      field: "createdAt",
-      headerName: "Date",
-      flex: 1,
-      minWidth: 120,
-      renderCell: (params) => (params.row.createdAt ? dayjs(params.row.createdAt).format("DD/MM/YYYY") : "-"),
-    },
-    {
-      field: "dueDate",
-      headerName: "Due Date",
-      flex: 1,
-      minWidth: 120,
-      renderCell: (params) => (params.row.payLater?.dueDate ? dayjs(params.row.payLater.dueDate).format("DD/MM/YYYY") : "-"),
-    },
+    { field: "createdAt", headerName: "Date", flex: 1, minWidth: 120, renderCell: (params) => (params.row.createdAt ? dayjs(params.row.createdAt).format("DD/MM/YYYY") : "-") },
+    { field: "dueDate", headerName: "Due Date", flex: 1, minWidth: 120, renderCell: (params) => (params.row.payLater?.dueDate ? dayjs(params.row.payLater.dueDate).format("DD/MM/YYYY") : "-") },
     {
       field: "customerName",
       headerName: "Customer Name",
       flex: 1,
-      minWidth: 150,  
+      minWidth: 150,
       renderCell: (params) => {
         const customer = params.row.customerId;
         return customer ? `${customer.firstName || ""} ${customer.lastName || ""}`.trim() : "Walk-in";
@@ -59,13 +49,7 @@ const OrderList = () => {
     { field: "dueAmount", headerName: "Due Amount", flex: 1, minWidth: 100 },
     { field: "paymentMethod", headerName: "Payment Mode", flex: 1, minWidth: 120 },
     { field: "paymentStatus", headerName: "Payment Status", flex: 1, minWidth: 130 },
-    {
-      field: "creditAppliedAmt",
-      headerName: "Credit Applied Amt",
-      flex: 1,
-      minWidth: 150,
-      renderCell: (params) => (params.row.totalAmount && params.row.dueAmount ? params.row.totalAmount - params.row.dueAmount : 0),
-    },
+    { field: "creditAppliedAmt", headerName: "Credit Applied Amt", flex: 1, minWidth: 150, renderCell: (params) => (params.row.totalAmount && params.row.dueAmount ? params.row.totalAmount - params.row.dueAmount : 0) },
     { field: "orderType", headerName: "Order Type", flex: 1, minWidth: 100 },
     { field: "remark", headerName: "Feedback", flex: 1, minWidth: 120 },
     {
