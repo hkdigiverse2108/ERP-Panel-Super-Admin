@@ -35,11 +35,9 @@ export * from "./Bank";
 export * from "./Coupon";
 export * from "./Loyalty";
 export * from "./Employee";
-export * from "./Roles"
+export * from "./Roles";
 export * from "./Recipe";
 export * from "./PosOrder";
 export * from "./ReturnPosOrder";
-export * from "./Pos";
+export * from "./POS";
 export * from "./PosCreditNote";
-
-
