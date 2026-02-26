@@ -39,6 +39,6 @@ export * from "./Roles"
 export * from "./Recipe";
 export * from "./PosOrder";
 export * from "./ReturnPosOrder";
-export * from "./POS";
+export * from "./Pos";
 
 
