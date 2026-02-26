@@ -55,7 +55,7 @@ import Loyalty from "../Pages/CRM/Loyalty";
 import LoyaltyForm from "../Pages/CRM/Loyalty/LoyaltyForm";
 // import User from "../Pages/User";
 import Profile from "../Pages/Settings/Profile";
-import SalesRegister from "../Pages/Pos/Sales Register";
+import SalesRegister from "../Pages/Pos/SalesRegister";
 import AnnouncementForm from "../Pages/Announcment/AnnouncmentForm";
 import ChangePassword from "../Pages/Auth/ChangePassword";
 import Announcement from "../Pages/Announcment";
