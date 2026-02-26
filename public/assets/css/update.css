@@ -165,6 +165,12 @@ input[type="number"] {
   @apply text-white capitalize text-center w-full bg-green-500 dark:bg-green-600 h-6 leading-6 rounded-sm;
 }
 
+
+.status-used {
+  @apply text-white capitalize text-center w-full bg-red-500 dark:bg-red-600 h-6 leading-6 rounded-sm;
+}
+
+
 .iconButtonStyle {
   @apply w-11 h-8.5 rounded-md! border! border-gray-200! dark:border-gray-600!;
 }
