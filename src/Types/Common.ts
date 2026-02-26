@@ -209,6 +209,8 @@ export interface CommonActionColumnProps<T> {
   active?: (row: T) => void;
   onRefund?: (row: T) => void;
   onPrint?: (row: T) => void;
+  showRefund?: (row: T) => boolean;
+  showDelete?: (row: T) => boolean;
 }
 export interface CommonTableColumn<T> {
   key: string;

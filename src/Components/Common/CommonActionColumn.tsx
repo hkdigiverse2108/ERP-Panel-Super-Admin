@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import type { CommonActionColumnProps } from "../../Types";
 import KeyIcon from '@mui/icons-material/Key';
 
-const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ active, editRoute, onDelete, onEdit, permissionRoute, onRefund, onPrint }: CommonActionColumnProps<T>): GridColDef<T> => ({
+const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ active, editRoute, onDelete, showDelete, onEdit, permissionRoute, onRefund, showRefund, onPrint }: CommonActionColumnProps<T>): GridColDef<T> => ({
   field: "actions",
   headerName: "Actions",
   headerAlign: "center",
@@ -55,7 +55,7 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ ac
             </IconButton>
           </Grid>
         )}
-        {onRefund && (
+        {onRefund && (!showRefund || showRefund(params.row)) && (
           <Grid size="auto">
             <IconButton className="iconButtonStyle" size="small" color="primary" onClick={() => onRefund(params.row)}>
               <CurrencyRupeeIcon fontSize="small" />
@@ -69,7 +69,7 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ ac
             </IconButton>
           </Grid>
         )}
-        {onDelete && (
+        {onDelete && (!showDelete || showDelete(params.row)) && (
           <Grid size="auto">
             <IconButton className="iconButtonStyle" color="error" size="small" onClick={() => onDelete(params.row)}>
               <DeleteForeverIcon fontSize="small" />
