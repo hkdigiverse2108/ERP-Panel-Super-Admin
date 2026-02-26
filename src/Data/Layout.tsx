@@ -42,7 +42,10 @@ export const NavItems: NavItem[] = [
   {
     name: PAGE_TITLE.POS.BASE,
     icon: <PointOfSale />,
-    children: [{ name: PAGE_TITLE.POS.SALES_REGISTER.BASE, path: ROUTES.SALES_REGISTER.BASE, pro: false }],
+    children: [
+      { name: PAGE_TITLE.POS.SALES_REGISTER, path: ROUTES.SALES_REGISTER.BASE, pro: false },
+      { name: PAGE_TITLE.POS.CREDIT_NOTE, path: ROUTES.POS_CREDIT_NOTE.BASE, pro: false },
+    ],
   },
   {
     name: PAGE_TITLE.CRM.BASE,

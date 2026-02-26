@@ -143,4 +143,8 @@ export const ROUTES = {
     BASE: "/call-request",
     ADD_EDIT: "/call-request/add-edit",
   },
+  POS_CREDIT_NOTE: {
+    BASE: "/pos-credit-note",
+    ADD_EDIT: "/pos-credit-note/add-edit",
+  },
 } as const;

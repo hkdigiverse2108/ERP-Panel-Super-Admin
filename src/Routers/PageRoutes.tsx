@@ -63,6 +63,7 @@ import VerifyOtp from "../Pages/Auth/VerifyOtp";
 import SupportDeskForm from "../Pages/SupportDesk/CallRequest/CallRequestForm";
 import AdminSetting from "../Pages/Settings/AdminSetting/AdminSetting";
 import SupportDesk from "../Pages/SupportDesk/CallRequest";
+import CreditNoteList from "../Pages/Pos/CreditNote";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -147,7 +148,8 @@ export const PageRoutes = [
 
   { path: ROUTES.PROFILE.BASE, name: PAGE_TITLE.SETTINGS.PROFILE.BASE, element: <Profile /> },
 
-  { path: ROUTES.SALES_REGISTER.BASE, name: PAGE_TITLE.POS.SALES_REGISTER.BASE, element: <SalesRegister /> },
+  { path: ROUTES.SALES_REGISTER.BASE, name: PAGE_TITLE.POS.SALES_REGISTER, element: <SalesRegister /> },
+   { path: ROUTES.POS_CREDIT_NOTE.BASE, name: PAGE_TITLE.POS.CREDIT_NOTE, element: <CreditNoteList /> },
 
   { path: ROUTES.ANNOUNCEMENT.BASE, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <Announcement /> },
   { path: ROUTES.ANNOUNCEMENT.ADD_EDIT, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <AnnouncementForm /> },
