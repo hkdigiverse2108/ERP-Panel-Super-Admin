@@ -179,11 +179,8 @@ export const PAGE_TITLE = {
   },
   POS: {
     BASE: "Pos",
-    SALES_REGISTER: {
-      BASE: "Sales Register",
-      ADD: "Add Sales Register",
-      EDIT: "Edit Sales Register",
-    },
+    SALES_REGISTER: "Sales Register",
+    CREDIT_NOTE: "pos Credit Note",
   },
   ANNOUNCEMENT: {
     BASE: "Announcement",
@@ -200,5 +197,5 @@ export const PAGE_TITLE = {
   },
   CHANGE_PASSWORD: {
     BASE: "Change Password",
-  }
+  },
 } as const;

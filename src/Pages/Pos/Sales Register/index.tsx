@@ -77,7 +77,7 @@ const SalesRegister = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.POS.SALES_REGISTER.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.SALES_REGISTER.BASE} />
+      <CommonBreadcrumbs title={PAGE_TITLE.POS.SALES_REGISTER} maxItems={1} breadcrumbs={BREADCRUMBS.SALES_REGISTER.BASE} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <AdvancedSearch filter={filter}>

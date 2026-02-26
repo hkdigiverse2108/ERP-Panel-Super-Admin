@@ -14,6 +14,7 @@ import type { UomBase } from "./Uom";
 import type { TermsConditionBase } from "./TermsCondition";
 import type { AccountBase } from "./Account";
 import type { AdditionalChargesBase } from "./AdditionalCharges";
+import type { PosCreditNoteBase } from "./PosCreditNote";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -206,6 +207,8 @@ export interface CommonActionColumnProps<T> {
   onEdit?: (row: T) => void;
   onDelete?: (row: T) => void;
   active?: (row: T) => void;
+  onRefund?: (row: T) => void;
+  onPrint?: (row: T) => void;
 }
 export interface CommonTableColumn<T> {
   key: string;
@@ -224,7 +227,6 @@ export interface CommonTableProps<T> {
   getRowClass?: (row: T, index: number) => string;
   showFooter?: boolean;
 }
-
 
 // ************ Table End ***********
 
@@ -454,7 +456,8 @@ export interface ModalStateSlice {
   isAccountModal: { open: boolean; data: AccountBase | null };
   isTermsAndConditionModal: { open: boolean; data: TermsConditionBase | null };
   isTermsSelectionModal: { open: boolean; data: any | null };
-   isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
+  isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
+  isOrderRefundModal: { open: boolean; data: PosCreditNoteBase | null };
 }
 
 // ************ Modal End ***********
@@ -595,4 +598,4 @@ export interface CommonValidationCreatableSelectProps {
   required?: boolean;
   disabled?: boolean;
   grid?: GridType;
-} 
+}
