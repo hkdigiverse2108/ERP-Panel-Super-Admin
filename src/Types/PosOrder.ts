@@ -4,7 +4,7 @@ import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { CompanyBase } from "./Company";
 import type { ContactBase } from "./Contacts";
 import type { EmployeeBase } from "./Employee";
-import type { MultiplePaymentType, PayLaterType, PosProductDataModal, PosProductOrderItem } from "./POS";
+import type { MultiplePaymentType, PayLaterType, PosProductDataModal, PosProductOrderItem } from "./Pos";
 import type { TaxBase } from "./Tax";
 
 export interface PosOrderFormValues {
