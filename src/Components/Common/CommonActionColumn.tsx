@@ -2,13 +2,15 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+import PrintIcon from "@mui/icons-material/Print";
 import { Grid, IconButton } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import type { CommonActionColumnProps } from "../../Types";
 import KeyIcon from '@mui/icons-material/Key';
 
-const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ active, editRoute, onDelete, onEdit, permissionRoute }: CommonActionColumnProps<T>): GridColDef<T> => ({
+const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ active, editRoute, onDelete, onEdit, permissionRoute, onRefund, onPrint }: CommonActionColumnProps<T>): GridColDef<T> => ({
   field: "actions",
   headerName: "Actions",
   headerAlign: "center",
@@ -50,6 +52,20 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ ac
           <Grid size="auto">
             <IconButton className="iconButtonStyle" size="small" onClick={() => onEdit(params.row)}>
               <DriveFileRenameOutlineIcon fontSize="small" />
+            </IconButton>
+          </Grid>
+        )}
+        {onRefund && (
+          <Grid size="auto">
+            <IconButton className="iconButtonStyle" size="small" color="primary" onClick={() => onRefund(params.row)}>
+              <CurrencyRupeeIcon fontSize="small" />
+            </IconButton>
+          </Grid>
+        )}
+        {onPrint && (
+          <Grid size="auto">
+            <IconButton className="iconButtonStyle" size="small" color="info" onClick={() => onPrint(params.row)}>
+              <PrintIcon fontSize="small" />
             </IconButton>
           </Grid>
         )}
