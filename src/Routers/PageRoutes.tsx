@@ -65,8 +65,8 @@ import AdminSetting from "../Pages/Settings/AdminSetting/AdminSetting";
 import SupportDesk from "../Pages/SupportDesk/CallRequest";
 import CreditNoteList from "../Pages/Pos/CreditNote";
 import OrderList from "../Pages/Pos/OrderList";
-import PaymentForm from "../Pages/Bank/BankPayment/PaymentForm";
-import Payment from "../Pages/Bank/BankPayment";
+import PaymentForm from "../Pages/Bank/Payment/PaymentForm";
+import Payment from "../Pages/Bank/Payment";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
