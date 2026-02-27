@@ -188,11 +188,16 @@ export const CompanyFormSchemas = Yup.object({
   phoneNo: PhoneValidation(),
   ownerNo: PhoneValidation(),
 
-  address: Validation("string", "address"),
-  city: Validation("string", "city"),
-  state: Validation("string", "State"),
-  country: Validation("string", "country"),
-  pinCode: Validation("string", "pinCode", { extraRules: (s) => s.trim().matches(/^[0-9]{6}$/, "Pin code must be 6 digits") }),
+  address: Yup.object({
+    address: Validation("string", "Address", { required: false }),
+    country: Validation("string", "Country", { required: false }),
+    state: Validation("string", "State", { required: false }),
+    city: Validation("string", "City", { required: false }),
+    pinCode: Validation("string", "Pin Code", {
+      required: false,
+      extraRules: (s) => s.matches(/^[0-9]{6}$/, "Pin code must be 6 digits"),
+    }),
+  }).nullable(),
 
   bankId: Validation("string", "select Bank", { required: false }),
   upiId: Validation("string", "upiId", { required: false }),
