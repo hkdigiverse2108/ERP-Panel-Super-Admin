@@ -27,7 +27,7 @@ const PriceCalculator = ({ taxData }: { taxData?: TaxBase[] }) => {
 
   useEffect(() => {
     const tax = normalizeTax(purchaseTax?.percentage);
-    const basePrice = purchasePrice ?? 0;
+    const basePrice = Number(purchasePrice ?? 0);
 
     const calculatedLandingCost = isPurchaseTaxIncluding ? basePrice : basePrice + (basePrice * tax) / 100;
 
@@ -36,9 +36,9 @@ const PriceCalculator = ({ taxData }: { taxData?: TaxBase[] }) => {
   }, [purchasePrice, purchaseTaxId, isPurchaseTaxIncluding, setFieldValue, purchaseTax?.percentage]);
 
   useEffect(() => {
-    const finalLandingCost = landingCost ?? 0;
-    const finalMrp = mrp ?? finalLandingCost;
-    const discount = sellingDiscount ?? 0;
+    const finalLandingCost = Number(landingCost ?? 0);
+    const finalMrp = Number(mrp ?? finalLandingCost);
+    const discount = Number(sellingDiscount ?? 0);
 
     const sellingPrice = finalMrp - discount;
     const sellingMargin = sellingPrice - finalLandingCost;
