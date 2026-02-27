@@ -11,17 +11,13 @@ import type { BankTransactionBase, BankTransactionFormValues, EditBankTransactio
 import { GenerateOptions, RemoveEmptyFields } from "../../../Utils";
 import { BankTransactionFormSchema } from "../../../Utils/ValidationSchemas";
 
-const TRANSACTION_TYPE_OPTIONS = [
-  { label: "Deposit", value: "deposit" },
-  { label: "Withdrawal", value: "withdrawal" },
-  { label: "Transfer", value: "transfer" },
-];
-
 const BankTransactionForm = () => {
   const { mutate: addBankTransaction, isPending: isAddLoading } = Mutations.useAddBankTransaction();
   const { mutate: editBankTransaction, isPending: isEditLoading } = Mutations.useEditBankTransaction();
 
-  const { data: AccountData, isLoading: AccountDataLoading } = Queries.useGetAccountDropdown();
+  const { data: BankData, isLoading: BankDataLoading } = Queries.useGetBankDropdown();
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+
   const { isBankTransactionModal } = useAppSelector((state) => state.modal);
 
   const dispatch = useDispatch();
@@ -32,6 +28,7 @@ const BankTransactionForm = () => {
   const pageMode = isEditing ? "EDIT" : "ADD";
 
   const initialValues: BankTransactionFormValues = {
+    companyId: typeof isEdit?.companyId === "object" ? isEdit?.companyId?._id : isEdit?.companyId || "",
     voucherNo: isEdit?.voucherNo || "",
     transactionDate: isEdit?.transactionDate || new Date().toISOString(),
     transactionType: isEdit?.transactionType || "deposit",
@@ -60,16 +57,15 @@ const BankTransactionForm = () => {
 
   return (
     <CommonModal title={PAGE_TITLE.BANK_TRANSACTION[pageMode]} isOpen={openModal} onClose={closeModal} className="max-w-125">
-      <Formik<BankTransactionFormValues> enableReinitialize initialValues={initialValues} validationSchema={BankTransactionFormSchema} onSubmit={handleSubmit}>
-        {({ values, dirty }) => (
+      <Formik<BankTransactionFormValues> enableReinitialize={isEditing} initialValues={initialValues} validationSchema={BankTransactionFormSchema} onSubmit={handleSubmit}>
+        {({ dirty }) => (
           <Form noValidate>
             <Grid container spacing={2} sx={{ p: 1 }}>
-              <CommonValidationDatePicker name="transactionDate" label="Transaction Date" required grid={{ xs: 12, md: 6 }} />
-              <CommonValidationTextField name="voucherNo" label="Voucher No" grid={{ xs: 12, md: 6 }} />
-              <CommonValidationSelect name="transactionType" label="Transaction Type" required options={TRANSACTION_TYPE_OPTIONS} grid={{ xs: 12 }} />
-              <CommonValidationSelect name="fromAccount" label="From Account" required isLoading={AccountDataLoading} options={GenerateOptions(AccountData?.data)} grid={{ xs: 12, md: 6 }} />
-              {values.transactionType === "transfer" && <CommonValidationSelect name="toAccount" label="To Account" required isLoading={AccountDataLoading} options={GenerateOptions(AccountData?.data)} grid={{ xs: 12, md: 6 }} />}
+              <CommonValidationSelect name="companyId" label="Company" required isLoading={CompanyDataLoading} options={GenerateOptions(CompanyData?.data)} grid={{ xs: 12 }} />
+              <CommonValidationSelect name="toAccount" label="To Account" required isLoading={BankDataLoading} options={GenerateOptions(BankData?.data)} grid={{ xs: 12 }} />
+              <CommonValidationSelect name="fromAccount" label="From Account" required isLoading={BankDataLoading} options={GenerateOptions(BankData?.data)} grid={{ xs: 12 }} />
               <CommonValidationTextField name="amount" label="Amount" type="number" required grid={{ xs: 12 }} />
+              <CommonValidationDatePicker name="transactionDate" label="Transaction Date" required grid={{ xs: 12 }} />
               <CommonValidationTextField name="description" label="Description" grid={{ xs: 12 }} />
 
               {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}

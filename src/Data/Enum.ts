@@ -295,3 +295,9 @@ export const LOYALTY_REDEMPTION_TYPE = [
   { label: "Single", value: "single" },
   { label: "Multiple", value: "multiple" },
 ];
+
+export const TRANSACTION_TYPE = [
+  { label: "Deposit", value: "deposit" },
+  { label: "Withdrawal", value: "withdrawal" },
+  { label: "Transfer", value: "transfer" },
+];

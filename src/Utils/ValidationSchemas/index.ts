@@ -430,15 +430,11 @@ export const BankFormSchema = Yup.object().shape({
 });
 
 export const BankTransactionFormSchema = Yup.object({
-  voucherNo: Validation("string", "Voucher No", { required: false }),
+  companyId: Validation("string", "Company"),
   transactionDate: Validation("string", "Transaction Date"),
   transactionType: Validation("string", "Transaction Type"),
   fromAccount: Validation("string", "From Account"),
-  toAccount: Yup.string().nullable().when("transactionType", {
-    is: "transfer",
-    then: (schema) => schema.required("To Account is required"),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+  toAccount: Validation("string", "To Account"),
   amount: Validation("number", "Amount"),
   description: Validation("string", "Description", { required: false }),
 });

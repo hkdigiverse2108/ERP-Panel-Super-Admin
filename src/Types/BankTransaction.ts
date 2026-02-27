@@ -1,18 +1,17 @@
 import type { AccountBase } from "./Account";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { CompanyBase } from "./Company";
 
 /* ===================== FORM VALUES ===================== */
 
 export interface BankTransactionFormValues {
+  companyId?: string;
   voucherNo?: string;
-
-  transactionDate: string;
-  transactionType: "deposit" | "withdrawal" | "transfer";
-
-  fromAccount: string;
+  transactionDate?: string;
+  transactionType?: "deposit" | "withdrawal" | "transfer";
+  fromAccount?: string;
   toAccount?: string | null | "";
-
-  amount: number;
+  amount?: number;
   description?: string | null | "";
   isActive?: boolean;
 }
@@ -21,17 +20,14 @@ export interface BankTransactionFormValues {
 
 export type AddBankTransactionPayload = BankTransactionFormValues;
 
-export type EditBankTransactionPayload = BankTransactionFormValues & {
-  bankTransactionId: string;
-};
+export type EditBankTransactionPayload = AddBankTransactionPayload & { bankTransactionId: string };
 
 /* ===================== BASE MODEL ===================== */
 
-export interface BankTransactionBase extends Omit<BankTransactionFormValues, "fromAccount" | "toAccount">, CommonDataType {
-  fromAccount?: AccountBase;
-  toAccount?: AccountBase;
-  
-  
+export interface BankTransactionBase extends Omit<BankTransactionFormValues, "fromAccount" | "toAccount" | "companyId">, CommonDataType {
+  companyId: CompanyBase | string;
+  fromAccount: AccountBase;
+  toAccount: AccountBase;
 }
 
 /* ===================== API RESPONSES ===================== */

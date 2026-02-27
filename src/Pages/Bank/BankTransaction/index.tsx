@@ -9,6 +9,7 @@ import { setBankTransactionModal } from "../../../Store/Slices/ModalSlice";
 import type { AppGridColDef, BankTransactionBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import BankTransactionForm from "./BankTransactionForm";
+import { FormatDate } from "../../../Utils";
 
 const BankTransaction = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -33,7 +34,7 @@ const BankTransaction = () => {
 
   const columns: AppGridColDef<BankTransactionBase>[] = [
     { field: "voucherNo", headerName: "Voucher No", width: 150 },
-    { field: "transactionDate", headerName: "Transaction Date", width: 150 },
+    { field: "transactionDate", headerName: "Transaction Date", width: 150, valueGetter: (v) => FormatDate(v) },
     { field: "transactionType", headerName: "Transaction Type", width: 150, renderCell: ({ value }) => <span style={{ textTransform: "capitalize" }}>{value as string}</span> },
     {
       field: "fromAccount",
@@ -57,6 +58,7 @@ const BankTransaction = () => {
       ? [
           CommonActionColumn<BankTransactionBase>({
             ...(permission?.edit && {
+              active: (row) => editBankTransaction({ bankTransactionId: row?._id, isActive: !row.isActive }),
               onEdit: (row) => handleEdit(row),
             }),
             ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherNo || row?.transactionType }) }),
