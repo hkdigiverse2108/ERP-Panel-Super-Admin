@@ -151,27 +151,22 @@ export const PageRoutes = [
 
   { path: ROUTES.PROFILE.BASE, name: PAGE_TITLE.SETTINGS.PROFILE.BASE, element: <Profile /> },
 
-  
-  
   { path: ROUTES.ANNOUNCEMENT.BASE, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <Announcement /> },
   { path: ROUTES.ANNOUNCEMENT.ADD_EDIT, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <AnnouncementForm /> },
-  
+
   { path: ROUTES.CALL_REQUEST.BASE, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDesk /> },
   { path: ROUTES.CALL_REQUEST.ADD_EDIT, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDeskForm /> },
-  
+
   { path: ROUTES.AUTH.CHANGE_PASSWORD, name: PAGE_TITLE.CHANGE_PASSWORD.BASE, element: <ChangePassword /> },
 
   { path: ROUTES.CALL_REQUEST.BASE, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDesk /> },
   { path: ROUTES.CALL_REQUEST.ADD_EDIT, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDeskForm /> },
 
-  { path: ROUTES.ADMIN_SETTING.BASE, name: PAGE_TITLE.ADMIN_SETTING.BASE, element: <AdminSetting /> },
+  { path: ROUTES.BANK_TRANSACTION.BASE, name: PAGE_TITLE.BANK_TRANSACTION.BASE, element: <BankTranscation /> },
+  { path: ROUTES.BANK_TRANSACTION.ADD_EDIT, name: PAGE_TITLE.BANK_TRANSACTION.BASE, element: <BankTranscationForm /> },
 
-    { path: ROUTES.BANK_TRANSACTION.BASE, name: PAGE_TITLE.BANK_TRANSACTION.BASE, element: <BankTranscation /> },
-    { path: ROUTES.BANK_TRANSACTION.ADD_EDIT, name: PAGE_TITLE.BANK_TRANSACTION.BASE, element: <BankTranscationForm /> },
-
-  
   { path: ROUTES.ADMIN_SETTING.BASE, name: PAGE_TITLE.SETTINGS.ADMIN_SETTING.BASE, element: <AdminSetting /> },
-  
+
   { path: ROUTES.SALES_REGISTER.BASE, name: PAGE_TITLE.POS.SALES_REGISTER, element: <SalesRegister /> },
   { path: ROUTES.POS_CREDIT_NOTE.BASE, name: PAGE_TITLE.POS.CREDIT_NOTE, element: <CreditNoteList /> },
   { path: ROUTES.POS_ORDER_LIST.BASE, name: PAGE_TITLE.POS.ORDER_LIST, element: <OrderList /> },
