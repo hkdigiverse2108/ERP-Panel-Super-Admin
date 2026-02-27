@@ -52,7 +52,7 @@ const RoleForm = () => {
         {({ dirty }) => (
           <Form noValidate>
             <Grid container spacing={2} sx={{ p: 1 }}>
-              <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 4 }} />
+              <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12 }} />
 
               <CommonValidationTextField name="name" label="Role Name" grid={{ xs: 12 }} required />
 
