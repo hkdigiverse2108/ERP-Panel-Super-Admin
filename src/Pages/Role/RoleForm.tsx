@@ -1,19 +1,20 @@
 import { Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import { useDispatch } from "react-redux";
-import { Mutations } from "../../Api";
-import { CommonButton, CommonValidationSwitch, CommonValidationTextField } from "../../Attribute";
+import { Mutations, Queries } from "../../Api";
+import { CommonButton, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../Attribute";
 import { CommonModal } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
 import { useAppSelector } from "../../Store/hooks";
 import { setRoleModal } from "../../Store/Slices/ModalSlice";
 import type { RolesFormValues } from "../../Types";
-import { GetChangedFields, RemoveEmptyFields } from "../../Utils";
+import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { RoleFormSchema } from "../../Utils/ValidationSchemas";
 
 const RoleForm = () => {
   const { mutate: addRole, isPending: isAddLoading } = Mutations.useAddRole();
   const { mutate: editRole, isPending: isEditLoading } = Mutations.useEditRole();
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
 
   const { isRoleModal } = useAppSelector((state) => state.modal);
 
@@ -51,6 +52,8 @@ const RoleForm = () => {
         {({ dirty }) => (
           <Form noValidate>
             <Grid container spacing={2} sx={{ p: 1 }}>
+              <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 4 }} />
+
               <CommonValidationTextField name="name" label="Role Name" grid={{ xs: 12 }} required />
 
               {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
