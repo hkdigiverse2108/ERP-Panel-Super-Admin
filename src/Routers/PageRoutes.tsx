@@ -63,6 +63,8 @@ import VerifyOtp from "../Pages/Auth/VerifyOtp";
 import SupportDeskForm from "../Pages/SupportDesk/SupportDeskForm";
 import SupportDesk from "../Pages/SupportDesk";
 import AdminSetting from "../Pages/Settings/AdminSetting/AdminSetting";
+import BankTranscation from "../Pages/Bank/BankTransaction";
+import BankTranscationForm from "../Pages/Bank/BankTransaction/BankTransactionForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -161,6 +163,10 @@ export const PageRoutes = [
   { path: ROUTES.CALL_REQUEST.ADD_EDIT, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDeskForm /> },
 
   { path: ROUTES.ADMIN_SETTING.BASE, name: PAGE_TITLE.ADMIN_SETTING.BASE, element: <AdminSetting /> },
+
+    { path: ROUTES.BANK_TRANSACTION.BASE, name: PAGE_TITLE.BANK_TRANSACTION.BASE, element: <BankTranscation /> },
+    { path: ROUTES.BANK_TRANSACTION.ADD_EDIT, name: PAGE_TITLE.BANK_TRANSACTION.BASE, element: <BankTranscationForm /> },
+
 ];
 
 export const AuthRoutes = [

@@ -96,6 +96,13 @@ export const KEYS = {
     DELETE: "bank-delete",
   },
 
+  BANK_TRANSACTION: {
+    BASE: "bank-transaction",
+    ADD: "bank-transaction-add",
+    EDIT: "bank-transaction-edit",
+    DELETE: "bank-transaction-delete",
+  },
+
   // ----------------------------- inventory -----------------------------
 
   PRODUCT: {

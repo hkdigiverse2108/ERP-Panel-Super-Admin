@@ -6,6 +6,7 @@ import type { AddTermsConditionPayload, EditTermsConditionPayload } from "../Typ
 import type { EditAdminSettingPayload } from "../Types/AdminSetting";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
+import type { AddBankTransactionPayload, EditBankTransactionPayload } from "../Types/BankTransaction";
 
 export const Mutations = {
   // ************ Auth ***********
@@ -174,4 +175,9 @@ export const Mutations = {
   useEditCallRequest: () => useMutations<EditCallRequestPayload, void>([KEYS.CALL_REQUEST.EDIT, KEYS.CALL_REQUEST.BASE], (input) => Put(URL_KEYS.CALL_REQUEST.EDIT, input)),
   useDeleteCallRequest: () => useMutations<string, void>([KEYS.CALL_REQUEST.DELETE, KEYS.CALL_REQUEST.BASE], (id) => Delete(`${URL_KEYS.CALL_REQUEST.BASE}/${id}`)),
 
+
+  //************* bank transaction **************/
+  useAddBankTransaction: () => useMutations<AddBankTransactionPayload, void>([KEYS.BANK_TRANSACTION.ADD], (input) => Post(URL_KEYS.BANK_TRANSACTION.ADD, input)),
+  useEditBankTransaction: () => useMutations<EditBankTransactionPayload, void>([KEYS.BANK_TRANSACTION.EDIT, KEYS.BANK_TRANSACTION.BASE], (input) => Put(URL_KEYS.BANK_TRANSACTION.EDIT, input)),
+  useDeleteBankTransaction: () => useMutations<string, void>([KEYS.BANK_TRANSACTION.DELETE], (id) => Delete(`${URL_KEYS.BANK_TRANSACTION.BASE}/${id}`)),
 };

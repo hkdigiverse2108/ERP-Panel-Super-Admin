@@ -8,6 +8,7 @@ import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 import type { RecipeApiResponse, RecipeDropdownApiResponse } from "../Types/Recipe";
 import type { AdminSettingApiResponse } from "../Types/AdminSetting";
+import type { BankTransactionApiResponse, BankTransactionDropdownApiResponse } from "../Types/BankTransaction";
 
 export const Queries = {
   // ************ Upload ***********
@@ -139,4 +140,7 @@ export const Queries = {
   //************ Admin Setting ********/
   useGetAdminSetting: (params?: Params) => useQueries<AdminSettingApiResponse>([KEYS.ADMIN_SETTING.BASE, params], () => Get(URL_KEYS.ADMIN_SETTING.ALL, params)),
 
+  //***************bank transaction**************** */
+  useGetBankTransaction: (params?: Params) => useQueries<BankTransactionApiResponse>([KEYS.BANK_TRANSACTION.BASE, params], () => Get(URL_KEYS.BANK_TRANSACTION.ALL, params)),
+  useGetBankTransactionDropdown: (params?: Params, enabled?: boolean) => useQueries<BankTransactionDropdownApiResponse>([KEYS.BANK_TRANSACTION.BASE, params], () => Get(URL_KEYS.BANK_TRANSACTION.DROPDOWN, params), { enabled: enabled }),
 };

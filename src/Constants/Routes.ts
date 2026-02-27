@@ -143,4 +143,8 @@ export const ROUTES = {
     BASE: "/call-request",
     ADD_EDIT: "/call-request/add-edit",
   },
+  BANK_TRANSACTION: {
+    BASE: "/bank-transaction",
+    ADD_EDIT: "/bank-transaction/add-edit",
+  },
 } as const;

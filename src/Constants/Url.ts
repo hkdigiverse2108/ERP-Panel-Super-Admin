@@ -93,6 +93,14 @@ export const URL_KEYS = {
     EDIT: "/bank/edit",
   },
 
+  BANK_TRANSACTION: {
+    BASE: "/bank-transaction",
+    ADD: "/bank-transaction/add",
+    EDIT: "/bank-transaction/edit",
+    ALL: "/bank-transaction/all",
+    DROPDOWN: "/bank-transaction/dropdown",
+  },
+
   // ----------------------------- inventory -----------------------------
   PRODUCT: {
     BASE: "/product",
