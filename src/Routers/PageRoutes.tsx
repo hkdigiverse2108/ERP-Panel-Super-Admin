@@ -32,6 +32,8 @@ import DebitNote from "../Pages/Accounting/DebitNote";
 import DebitNoteForm from "../Pages/Accounting/DebitNote/DebitNoteForm";
 import CreditNote from "../Pages/Accounting/CreditNote";
 import CreditNoteForm from "../Pages/Accounting/CreditNote/CreditNoteForm";
+import JournalVoucher from "../Pages/Accounting/JournalVoucher";
+import JournalVoucherForm from "../Pages/Accounting/JournalVoucher/JournalVoucherForm";
 import MaterialConsumption from "../Pages/Inventory/MaterialConsumption";
 import MaterialConsumptionForm from "../Pages/Inventory/MaterialConsumption/MaterialConsumptionForm";
 import SupplierBill from "../Pages/Purchase/SupplierBill";
@@ -108,6 +110,9 @@ export const PageRoutes = [
 
   { path: ROUTES.CREDIT_NOTE.BASE, name: PAGE_TITLE.CREDIT_NOTE.BASE, element: <CreditNote /> },
   { path: ROUTES.CREDIT_NOTE.ADD_EDIT, name: PAGE_TITLE.CREDIT_NOTE.BASE, element: <CreditNoteForm /> },
+
+  { path: ROUTES.JOURNAL_VOUCHER.BASE, name: PAGE_TITLE.JOURNAL_VOUCHER.BASE, element: <JournalVoucher /> },
+  { path: ROUTES.JOURNAL_VOUCHER.ADD_EDIT, name: PAGE_TITLE.JOURNAL_VOUCHER.BASE, element: <JournalVoucherForm /> },
 
   { path: ROUTES.ROLE.BASE, name: PAGE_TITLE.ROLE.BASE, element: <Role /> },
 

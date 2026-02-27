@@ -189,6 +189,12 @@ export const KEYS = {
     EDIT: "pos-credit-note-edit",
     DELETE: "pos-credit-note-delete",
   },
+  JOURNAL_VOUCHER: {
+    BASE: "journal-voucher",
+    ADD: "journal-voucher-add",
+    EDIT: "journal-voucher-edit",
+    DELETE: "journal-voucher-delete",
+  },
 
   // ----------------------------- purchase -----------------------------
   PURCHASE_ORDER: {

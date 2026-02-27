@@ -8,7 +8,7 @@ import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 import type { RecipeApiResponse, RecipeDropdownApiResponse } from "../Types/Recipe";
 import type { AdminSettingApiResponse } from "../Types/AdminSetting";
-import type { PosCreditNoteApiResponse } from "../Types";
+import type { PosCreditNoteApiResponse, JournalVoucherApiResponse } from "../Types";
 
 export const Queries = {
   // ************ Upload ***********
@@ -103,6 +103,7 @@ export const Queries = {
   //*************** Credit Note **************** */
   useGetCreditNote: (params?: Params) => useQueries<CreditNoteApiResponse>([KEYS.CREDIT_NOTE.BASE, params], () => Get(URL_KEYS.CREDIT_NOTE.ALL, params)),
   useGetPosCreditNote: (params?: Params) => useQueries<PosCreditNoteApiResponse>([KEYS.POS_CREDIT_NOTE.BASE, params], () => Get(URL_KEYS.POS_CREDIT_NOTE.ALL, params)),
+  useGetJournalVoucher: (params?: Params) => useQueries<JournalVoucherApiResponse>([KEYS.JOURNAL_VOUCHER.BASE, params], () => Get(URL_KEYS.JOURNAL_VOUCHER.ALL, params)),
 
   //*************** Material Consumption **************** */
   useGetMaterialConsumption: (params?: Params) => useQueries<MaterialConsumptionApiResponse>([KEYS.MATERIAL_CONSUMPTION.BASE, params], () => Get(URL_KEYS.MATERIAL_CONSUMPTION.ALL, params)),

@@ -15,7 +15,7 @@ const CreditNote = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.CREDIT_NOTE.BASE);
   const { data: creditNoteData, isLoading: creditNoteDataLoading, isFetching: creditNoteDataFetching } = Queries.useGetCreditNote(params);
-    const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
 
   const { mutate: deleteCreditNoteMutate } = Mutations.useDeleteCreditNote();
   const { mutate: editCreditNote, isPending: isEditLoading } = Mutations.useEditCreditNote();
@@ -40,14 +40,14 @@ const CreditNote = () => {
     { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
-          CommonActionColumn<CreditNoteBase>({
-            ...(permission?.edit && {
-              active: (row) => editCreditNote({ creditNoteId: row?._id, isActive: !row.isActive }),
-              editRoute: ROUTES.CREDIT_NOTE.ADD_EDIT,
-            }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherNumber }) }),
+        CommonActionColumn<CreditNoteBase>({
+          ...(permission?.edit && {
+            active: (row) => editCreditNote({ creditNoteId: row?._id, isActive: !row.isActive }),
+            editRoute: ROUTES.CREDIT_NOTE.ADD_EDIT,
           }),
-        ]
+          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherNumber }) }),
+        }),
+      ]
       : []),
   ];
 
@@ -72,7 +72,7 @@ const CreditNote = () => {
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.CREDIT_NOTE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.CREDIT_NOTE.BASE} />
-      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />

@@ -4,6 +4,7 @@ import type { AddAccountPayload, EditAccountPayload } from "../Types/Account";
 import type { AddPurchaseOrderPayload, EditPurchaseOrderPayload } from "../Types/PurchaseOrder";
 import type { AddTermsConditionPayload, EditTermsConditionPayload } from "../Types/TermsCondition";
 import type { EditAdminSettingPayload } from "../Types/AdminSetting";
+import type { AddJournalVoucherPayload, EditJournalVoucherPayload } from "../Types";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
 
@@ -114,6 +115,11 @@ export const Mutations = {
   useEditCreditNote: () => useMutations<EditCreditNotePayload, void>([KEYS.CREDIT_NOTE.EDIT, KEYS.CREDIT_NOTE.BASE], (input) => Put(URL_KEYS.CREDIT_NOTE.EDIT, input)),
   useDeleteCreditNote: () => useMutations<string, void>([KEYS.CREDIT_NOTE.DELETE, KEYS.CREDIT_NOTE.BASE], (id) => Delete(`${URL_KEYS.CREDIT_NOTE.BASE}/${id}`)),
 
+  //*************** Journal Voucher **************** */
+  useAddJournalVoucher: () => useMutations<AddJournalVoucherPayload, void>([KEYS.JOURNAL_VOUCHER.ADD, KEYS.JOURNAL_VOUCHER.BASE], (input) => Post(URL_KEYS.JOURNAL_VOUCHER.ADD, input)),
+  useEditJournalVoucher: () => useMutations<EditJournalVoucherPayload, void>([KEYS.JOURNAL_VOUCHER.EDIT, KEYS.JOURNAL_VOUCHER.BASE], (input) => Put(URL_KEYS.JOURNAL_VOUCHER.EDIT, input)),
+  useDeleteJournalVoucher: () => useMutations<string, void>([KEYS.JOURNAL_VOUCHER.DELETE, KEYS.JOURNAL_VOUCHER.BASE], (id) => Delete(`${URL_KEYS.JOURNAL_VOUCHER.BASE}/${id}`)),
+
   //*************** Pos Credit Note **************** */
   useEditPosCreditNote: () => useMutations<any, void>([KEYS.POS_CREDIT_NOTE.EDIT, KEYS.POS_CREDIT_NOTE.BASE], (input) => Put(URL_KEYS.POS_CREDIT_NOTE.EDIT, input)),
   useDeletePosCreditNote: () => useMutations<string, void>([KEYS.POS_CREDIT_NOTE.DELETE, KEYS.POS_CREDIT_NOTE.BASE], (id) => Delete(`${URL_KEYS.POS_CREDIT_NOTE.BASE}/${id}`)),
@@ -179,3 +185,4 @@ export const Mutations = {
   useDeleteCallRequest: () => useMutations<string, void>([KEYS.CALL_REQUEST.DELETE, KEYS.CALL_REQUEST.BASE], (id) => Delete(`${URL_KEYS.CALL_REQUEST.BASE}/${id}`)),
 
 };
+ 

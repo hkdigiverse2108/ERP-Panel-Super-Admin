@@ -39,3 +39,4 @@ export * from "./Roles"
 export * from "./Recipe";
 
 export * from './PosCreditNote';
+export * from './JournalVoucher';

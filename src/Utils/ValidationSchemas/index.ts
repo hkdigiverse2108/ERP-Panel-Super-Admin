@@ -532,3 +532,21 @@ export const AdminSettingFormSchema = Yup.object({
     })
   ).nullable(),
 });
+
+export const JournalVoucherFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
+  date: Validation("string", "Date"),
+  status: Validation("string", "Status"),
+  description: Validation("string", "Description", { required: false }),
+  entries: Yup.array()
+    .of(
+      Yup.object({
+        accountId: Validation("string", "Account"),
+        debit: Validation("number", "Debit", { required: false }),
+        credit: Validation("number", "Credit", { required: false }),
+        description: Validation("string", "Description", { required: false }),
+      })
+    )
+    .min(2, "At least two entries are required"),
+  isActive: Yup.boolean(),
+});

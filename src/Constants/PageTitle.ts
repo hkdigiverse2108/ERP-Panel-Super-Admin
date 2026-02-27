@@ -114,6 +114,11 @@ export const PAGE_TITLE = {
     ADD: "Add Credit Note",
     EDIT: "Edit Credit Note",
   },
+  JOURNAL_VOUCHER: {
+    BASE: "Journal Voucher",
+    ADD: "Add Journal Voucher",
+    EDIT: "Edit Journal Voucher",
+  },
   ROLE: {
     BASE: "Role",
     ADD: "Add Role",

@@ -196,6 +196,12 @@ export const URL_KEYS = {
     ADD: "/pos-credit-note/add",
     EDIT: "/pos-credit-note/edit",
   },
+  JOURNAL_VOUCHER: {
+    BASE: "/journal-voucher",
+    ALL: "/journal-voucher/all",
+    ADD: "/journal-voucher/add",
+    EDIT: "/journal-voucher/edit",
+  },
 
   // ----------------------------- purchase -----------------------------
   PURCHASE_ORDER: {
