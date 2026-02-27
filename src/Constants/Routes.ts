@@ -115,9 +115,9 @@ export const ROUTES = {
     BASE: "/bank",
     ADD_EDIT: "/bank/add-edit",
   },
-  BANK_PAYMENT: {
-    BASE: "/bank-payment",
-    ADD_EDIT: "/bank-payment/add-edit",
+ PAYMENT: {
+    BASE: "/payment",
+    ADD_EDIT: "/payment/add-edit",
   },
   COUPON: {
     BASE: "/coupon",

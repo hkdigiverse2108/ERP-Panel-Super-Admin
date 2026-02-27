@@ -167,8 +167,8 @@ export const PageRoutes = [
 
   { path: ROUTES.POS_ORDER_LIST.BASE, name: PAGE_TITLE.POS.ORDER_LIST, element: <OrderList /> },
 
-  { path: ROUTES.BANK_PAYMENT.BASE, name: PAGE_TITLE.BANK_PAYMENT.BASE, element: <Payment /> },
-  { path: ROUTES.BANK_PAYMENT.ADD_EDIT, name: PAGE_TITLE.BANK_PAYMENT.BASE, element: <PaymentForm /> },
+  { path: ROUTES.PAYMENT.BASE, name: PAGE_TITLE.PAYMENT.BASE, element: <Payment /> },
+  { path: ROUTES.PAYMENT.ADD_EDIT, name: PAGE_TITLE.PAYMENT.BASE, element: <PaymentForm /> },
 ];
 
 export const AuthRoutes = [
