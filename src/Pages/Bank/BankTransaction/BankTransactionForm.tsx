@@ -7,7 +7,7 @@ import { CommonModal } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { useAppSelector } from "../../../Store/hooks";
 import { setBankTransactionModal } from "../../../Store/Slices/ModalSlice";
-import type { BankTransactionFormValues } from "../../../Types";
+import type { BankTransactionBase, BankTransactionFormValues, EditBankTransactionPayload } from "../../../Types";
 import { GenerateOptions, RemoveEmptyFields } from "../../../Utils";
 import { BankTransactionFormSchema } from "../../../Utils/ValidationSchemas";
 
@@ -26,7 +26,7 @@ const BankTransactionForm = () => {
 
   const dispatch = useDispatch();
 
-  const isEdit: any = isBankTransactionModal.data;
+  const isEdit = isBankTransactionModal.data as BankTransactionBase | null;
   const openModal = isBankTransactionModal.open;
   const isEditing = Boolean(isEdit?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
@@ -50,8 +50,9 @@ const BankTransactionForm = () => {
       closeModal();
     };
 
-    if (isEditing) {
-      editBankTransaction({ ...values, bankTransactionId: isEdit?._id } as any, { onSuccess: onSuccessHandler });
+    if (isEditing && isEdit) {
+      const payload: EditBankTransactionPayload = { ...values, bankTransactionId: isEdit._id };
+      editBankTransaction(payload, { onSuccess: onSuccessHandler });
     } else {
       addBankTransaction(RemoveEmptyFields(values) as BankTransactionFormValues, { onSuccess: onSuccessHandler });
     }
@@ -67,9 +68,7 @@ const BankTransactionForm = () => {
               <CommonValidationTextField name="voucherNo" label="Voucher No" grid={{ xs: 12, md: 6 }} />
               <CommonValidationSelect name="transactionType" label="Transaction Type" required options={TRANSACTION_TYPE_OPTIONS} grid={{ xs: 12 }} />
               <CommonValidationSelect name="fromAccount" label="From Account" required isLoading={AccountDataLoading} options={GenerateOptions(AccountData?.data)} grid={{ xs: 12, md: 6 }} />
-              {values.transactionType === "transfer" && (
-                <CommonValidationSelect name="toAccount" label="To Account" required isLoading={AccountDataLoading} options={GenerateOptions(AccountData?.data)} grid={{ xs: 12, md: 6 }} />
-              )}
+              {values.transactionType === "transfer" && <CommonValidationSelect name="toAccount" label="To Account" required isLoading={AccountDataLoading} options={GenerateOptions(AccountData?.data)} grid={{ xs: 12, md: 6 }} />}
               <CommonValidationTextField name="amount" label="Amount" type="number" required grid={{ xs: 12 }} />
               <CommonValidationTextField name="description" label="Description" grid={{ xs: 12 }} />
 
@@ -86,4 +85,3 @@ const BankTransactionForm = () => {
   );
 };
 export default BankTransactionForm;
-

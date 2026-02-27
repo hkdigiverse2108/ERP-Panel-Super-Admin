@@ -10,7 +10,6 @@ import type { AppGridColDef, BankTransactionBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import BankTransactionForm from "./BankTransactionForm";
 
-
 const BankTransaction = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const dispatch = useDispatch();
@@ -20,7 +19,7 @@ const BankTransaction = () => {
   const { mutate: deleteBankTransactionMutate } = Mutations.useDeleteBankTransaction();
   const { mutate: editBankTransaction, isPending: isEditLoading } = Mutations.useEditBankTransaction();
 
-  const allBankTransactions = useMemo(() => bankTransaction_data?.data?.bankTransaction_data?.map((transaction: any) => ({ ...transaction, id: transaction?._id })) || [], [bankTransaction_data]);
+  const allBankTransactions = useMemo(() => bankTransaction_data?.data?.bankTransaction_data?.map((transaction: BankTransactionBase) => ({ ...transaction, id: transaction?._id })) || [], [bankTransaction_data]);
   const totalRows = bankTransaction_data?.data?.totalData || 0;
 
   const handleDeleteBtn = () => {
@@ -56,13 +55,13 @@ const BankTransaction = () => {
     { field: "description", headerName: "Description", width: 250 },
     ...(permission?.edit || permission?.delete
       ? [
-        CommonActionColumn<BankTransactionBase>({
-          ...(permission?.edit && {
-            onEdit: (row) => handleEdit(row),
+          CommonActionColumn<BankTransactionBase>({
+            ...(permission?.edit && {
+              onEdit: (row) => handleEdit(row),
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherNo || row?.transactionType }) }),
           }),
-          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherNo || row?.transactionType }) }),
-        }),
-      ]
+        ]
       : []),
   ];
 
