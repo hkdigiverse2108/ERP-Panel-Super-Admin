@@ -41,20 +41,20 @@ const StockVerification = () => {
     { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
     ...(permission?.edit || permission?.delete
       ? [
-        {
-          ...CommonActionColumn<StockVerificationBase>({
-            ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
-          }),
-          renderCell: (params: GridRenderCellParams<StockVerificationBase>) =>
-            params.row.status === "pending"
-              ? CommonActionColumn<StockVerificationBase>({
-                ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
-                ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
-              }).renderCell?.(params)
-              : "-",
-        },
-      ]
+          {
+            ...CommonActionColumn<StockVerificationBase>({
+              ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
+              ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
+            }),
+            renderCell: (params: GridRenderCellParams<StockVerificationBase>) =>
+              params.row.status === "pending"
+                ? CommonActionColumn<StockVerificationBase>({
+                    ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
+                    ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
+                  }).renderCell?.(params)
+                : "-",
+          },
+        ]
       : []),
   ];
 

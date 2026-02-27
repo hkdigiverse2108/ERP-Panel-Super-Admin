@@ -17,6 +17,7 @@ const initialState: ModalStateSlice = {
   isTermsSelectionModal: { open: false, data: null },
   isAdditionalChargeModal: { open: false, data: null },
   isBankTransactionModal: { open: false, data: null },
+  isOrderRefundModal : { open: false, data: null },
 };
 
 const ModalSlice = createSlice({
@@ -69,9 +70,12 @@ const ModalSlice = createSlice({
     setAdditionalChargeModal: (state, action) => {
       state.isAdditionalChargeModal = action.payload;
     },
+     setOrderRefundModal: (state, action) => {
+      state.isOrderRefundModal = action.payload;
+    },
   },
 });
 
-export const { setRoleModal, setUploadModal,setAdditionalChargeModal, setSelectedFiles, setModalVideoPlay, setBrandModal, setCategoryModal, setUomModal, setTaxModal, setLocationModal, setAccountGroupModal, setAccountModal, setTermsAndConditionModal,setTermsSelectionModal, setBankTransactionModal } = ModalSlice.actions;
+export const { setRoleModal, setUploadModal,setAdditionalChargeModal, setSelectedFiles, setModalVideoPlay, setBrandModal, setCategoryModal, setUomModal, setTaxModal, setLocationModal, setAccountGroupModal, setAccountModal, setTermsAndConditionModal,setTermsSelectionModal, setBankTransactionModal ,setOrderRefundModal} = ModalSlice.actions;
 
 export default ModalSlice.reducer;

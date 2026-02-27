@@ -17,11 +17,6 @@ export const PAGE_TITLE = {
     ADD: "Add Branch",
     EDIT: "Edit Branch",
   },
-  ADMIN_SETTING: {
-    BASE: "Admin Setting",
-    ADD: "Add Admin Setting",
-    EDIT: "Edit Admin Setting",
-  },
   INVENTORY: {
     BASE: "inventory",
     PRODUCT: {
@@ -150,7 +145,7 @@ export const PAGE_TITLE = {
       ADD: "Add Additional Charge",
       EDIT: "Edit Additional Charge",
     },
-    ADMIN_SETTINGS: {
+    ADMIN_SETTING: {
       BASE: "Admin Settings",
       ADD: "Add Admin Settings",
       EDIT: "Edit Admin Settings",
@@ -189,11 +184,9 @@ export const PAGE_TITLE = {
   },
   POS: {
     BASE: "Pos",
-    SALES_REGISTER: {
-      BASE: "Sales Register",
-      ADD: "Add Sales Register",
-      EDIT: "Edit Sales Register",
-    },
+    SALES_REGISTER: "Sales Register",
+    CREDIT_NOTE: "pos Credit Note",
+    ORDER_LIST: "Order List",
   },
   ANNOUNCEMENT: {
     BASE: "Announcement",

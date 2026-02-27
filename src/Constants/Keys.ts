@@ -245,4 +245,38 @@ export const KEYS = {
     EDIT: "sales-register-edit",
     DELETE: "sales-register-delete",
   },
+
+  POS_CASH_REGISTER: {
+    BASE: "pos-cash-register",
+    DETAILS: "pos-cash-register-details",
+  },
+
+  POS_CREDIT_NOTE: {
+    BASE: "pos-credit-note",
+    ADD: "pos-credit-note-add",
+    EDIT: "pos-credit-note-edit",
+    DELETE: "pos-credit-note-delete",
+    REFUND: "pos-credit-note-refund",
+  },
+  RETURN_POS_ORDER: {
+    BASE: "return-pos-order",
+    ADD: "return-pos-order-add",
+    EDIT: "return-pos-order-edit",
+    DELETE: "return-pos-order-delete",
+  },
+  POS_ORDER: {
+    BASE: "pos-order",
+    ADD: "pos-order-add",
+    EDIT: "pos-order-edit",
+    DELETE: "pos-order-delete",
+    DROPDOWN: "pos-order-dropdown",
+  },
+  POS: {
+    BASE: "pos",
+    HOLD_ORDER: "pos-order-hold",
+    CUSTOMER_DETAIL: "pos-order-customer-detail",
+    ADD: "pos-add",
+    EDIT: "pos-edit",
+    DELETE: "pos-delete",
+  },
 };

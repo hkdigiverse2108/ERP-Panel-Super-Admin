@@ -41,8 +41,8 @@ import AdditionalChargesForm from "../Pages/Settings/AdditionalCharges/Additiona
 import Recipe from "../Pages/Inventory/Recipe";
 import RecipeForm from "../Pages/Inventory/Recipe/RecipeForm";
 import Stock from "../Pages/Inventory/Stock";
-import StockVerification from "../Pages/Inventory/StockVarification";
-import StockVerificationForm from "../Pages/Inventory/StockVarification/StockVarificationForm";
+import StockVerification from "../Pages/Inventory/StockVerification";
+import StockVerificationForm from "../Pages/Inventory/StockVerification/StockVerificationForm";
 import ContactForm from "../Pages/Contacts/ContactForm";
 import Contact from "../Pages/Contacts";
 import BillOfLiveProductForm from "../Pages/Inventory/BillOfLiveProduct/BillOfLiveProductForm";
@@ -55,16 +55,18 @@ import Loyalty from "../Pages/CRM/Loyalty";
 import LoyaltyForm from "../Pages/CRM/Loyalty/LoyaltyForm";
 // import User from "../Pages/User";
 import Profile from "../Pages/Settings/Profile";
-import SalesRegister from "../Pages/Pos/Sales Register";
+import SalesRegister from "../Pages/Pos/SalesRegister";
 import AnnouncementForm from "../Pages/Announcment/AnnouncmentForm";
 import ChangePassword from "../Pages/Auth/ChangePassword";
 import Announcement from "../Pages/Announcment";
 import VerifyOtp from "../Pages/Auth/VerifyOtp";
-import SupportDeskForm from "../Pages/SupportDesk/SupportDeskForm";
-import SupportDesk from "../Pages/SupportDesk";
+import SupportDeskForm from "../Pages/SupportDesk/CallRequest/CallRequestForm";
 import AdminSetting from "../Pages/Settings/AdminSetting/AdminSetting";
 import BankTranscation from "../Pages/Bank/BankTransaction";
 import BankTranscationForm from "../Pages/Bank/BankTransaction/BankTransactionForm";
+import SupportDesk from "../Pages/SupportDesk/CallRequest";
+import CreditNoteList from "../Pages/Pos/CreditNote";
+import OrderList from "../Pages/Pos/OrderList";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -149,14 +151,14 @@ export const PageRoutes = [
 
   { path: ROUTES.PROFILE.BASE, name: PAGE_TITLE.SETTINGS.PROFILE.BASE, element: <Profile /> },
 
-  { path: ROUTES.SALES_REGISTER.BASE, name: PAGE_TITLE.POS.SALES_REGISTER.BASE, element: <SalesRegister /> },
-
+  
+  
   { path: ROUTES.ANNOUNCEMENT.BASE, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <Announcement /> },
   { path: ROUTES.ANNOUNCEMENT.ADD_EDIT, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <AnnouncementForm /> },
-
+  
   { path: ROUTES.CALL_REQUEST.BASE, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDesk /> },
   { path: ROUTES.CALL_REQUEST.ADD_EDIT, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDeskForm /> },
-
+  
   { path: ROUTES.AUTH.CHANGE_PASSWORD, name: PAGE_TITLE.CHANGE_PASSWORD.BASE, element: <ChangePassword /> },
 
   { path: ROUTES.CALL_REQUEST.BASE, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDesk /> },
@@ -167,6 +169,12 @@ export const PageRoutes = [
     { path: ROUTES.BANK_TRANSACTION.BASE, name: PAGE_TITLE.BANK_TRANSACTION.BASE, element: <BankTranscation /> },
     { path: ROUTES.BANK_TRANSACTION.ADD_EDIT, name: PAGE_TITLE.BANK_TRANSACTION.BASE, element: <BankTranscationForm /> },
 
+  
+  { path: ROUTES.ADMIN_SETTING.BASE, name: PAGE_TITLE.SETTINGS.ADMIN_SETTING.BASE, element: <AdminSetting /> },
+  
+  { path: ROUTES.SALES_REGISTER.BASE, name: PAGE_TITLE.POS.SALES_REGISTER, element: <SalesRegister /> },
+  { path: ROUTES.POS_CREDIT_NOTE.BASE, name: PAGE_TITLE.POS.CREDIT_NOTE, element: <CreditNoteList /> },
+  { path: ROUTES.POS_ORDER_LIST.BASE, name: PAGE_TITLE.POS.ORDER_LIST, element: <OrderList /> },
 ];
 
 export const AuthRoutes = [
