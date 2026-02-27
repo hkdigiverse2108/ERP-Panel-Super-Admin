@@ -115,6 +115,10 @@ export const ROUTES = {
     BASE: "/bank",
     ADD_EDIT: "/bank/add-edit",
   },
+  BANK_PAYMENT: {
+    BASE: "/bank-payment",
+    ADD_EDIT: "/bank-payment/add-edit",
+  },
   COUPON: {
     BASE: "/coupon",
     ADD_EDIT: "/coupon/add-edit",
@@ -150,5 +154,5 @@ export const ROUTES = {
   POS_ORDER_LIST:{
     BASE: "/pos-order-list",
     ADD_EDIT: "/pos-order-list/add-edit",
-  }
+  },
 } as const;

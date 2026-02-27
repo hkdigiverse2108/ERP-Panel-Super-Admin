@@ -92,7 +92,13 @@ export const URL_KEYS = {
     ADD: "/bank/add",
     EDIT: "/bank/edit",
   },
-
+  BANK_PAYMENT: {
+    BASE: "/bank-payment",
+    DROPDOWN: "/bank-payment/dropdown",
+    ALL: "/bank-payment/all",
+    ADD: "/bank-payment/add",
+    EDIT: "/bank-payment/edit",
+  },
   // ----------------------------- inventory -----------------------------
   PRODUCT: {
     BASE: "/product",

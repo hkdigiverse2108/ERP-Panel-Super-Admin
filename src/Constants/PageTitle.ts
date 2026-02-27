@@ -199,4 +199,9 @@ export const PAGE_TITLE = {
   CHANGE_PASSWORD: {
     BASE: "Change Password",
   },
+  BANK_PAYMENT: {
+    BASE: "Bank Payment",
+    ADD: "Add Bank Payment",
+    EDIT: "Edit Bank Payment",
+  },
 } as const;
