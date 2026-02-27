@@ -428,6 +428,21 @@ export const BankFormSchema = Yup.object().shape({
     pinCode: Validation("string", "Pin Code", { extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid Pin Code") }),
   }).nullable(),
 });
+
+export const BankTransactionFormSchema = Yup.object({
+  voucherNo: Validation("string", "Voucher No", { required: false }),
+  transactionDate: Validation("string", "Transaction Date"),
+  transactionType: Validation("string", "Transaction Type"),
+  fromAccount: Validation("string", "From Account"),
+  toAccount: Yup.string().nullable().when("transactionType", {
+    is: "transfer",
+    then: (schema) => schema.required("To Account is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  amount: Validation("number", "Amount"),
+  description: Validation("string", "Description", { required: false }),
+});
+
 export const CouponFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
   name: Validation("string", "Name"),

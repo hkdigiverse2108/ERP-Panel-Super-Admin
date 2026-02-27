@@ -14,6 +14,7 @@ import type { UomBase } from "./Uom";
 import type { TermsConditionBase } from "./TermsCondition";
 import type { AccountBase } from "./Account";
 import type { AdditionalChargesBase } from "./AdditionalCharges";
+import type { BankTransactionBase } from "./BankTransaction";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -455,6 +456,7 @@ export interface ModalStateSlice {
   isTermsAndConditionModal: { open: boolean; data: TermsConditionBase | null };
   isTermsSelectionModal: { open: boolean; data: any | null };
    isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
+  isBankTransactionModal: { open: boolean; data: BankTransactionBase | null };
 }
 
 // ************ Modal End ***********

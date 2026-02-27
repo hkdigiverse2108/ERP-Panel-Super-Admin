@@ -14,6 +14,7 @@ export interface BankTransactionFormValues {
 
   amount: number;
   description?: string | null | "";
+  isActive?: boolean;
 }
 
 /* ===================== PAYLOADS ===================== */
@@ -29,12 +30,14 @@ export type EditBankTransactionPayload = BankTransactionFormValues & {
 export interface BankTransactionBase extends Omit<BankTransactionFormValues, "fromAccount" | "toAccount">, CommonDataType {
   fromAccount?: AccountBase;
   toAccount?: AccountBase;
+  
+  
 }
 
 /* ===================== API RESPONSES ===================== */
 
 export interface BankTransactionDataResponse extends PageStatus {
-  bank_transaction_data: BankTransactionBase[];
+  bankTransaction_data: BankTransactionBase[];
 }
 
 export interface BankTransactionApiResponse extends MessageStatus {

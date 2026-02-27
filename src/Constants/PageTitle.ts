@@ -169,6 +169,11 @@ export const PAGE_TITLE = {
     ADD: "Add Bank",
     EDIT: "Edit Bank",
   },
+  BANK_TRANSACTION: {
+    BASE: "Bank Transaction",
+    ADD: "Add Bank Transaction",
+    EDIT: "Edit Bank Transaction",
+  },
   CRM: {
     BASE: "CRM",
     COUPON: {
@@ -206,9 +211,4 @@ export const PAGE_TITLE = {
   CHANGE_PASSWORD: {
     BASE: "Change Password",
   },
-  BANK_TRANSACTION:{
-    BASE: "Bank Transaction",
-    ADD: "Add Bank Transaction",
-    EDIT: "Edit Bank Transaction",
-  }
 } as const;
