@@ -1,15 +1,15 @@
 import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
-import { PAGE_TITLE, ROUTES } from "../../Constants";
-import { Mutations, Queries } from "../../Api";
-import type { AppGridColDef, CallRequestBase } from "../../Types";
-import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../Components/Common";
-import { BREADCRUMBS } from "../../Data";
-import { CreateFilter, GenerateOptions } from "../../Utils";
+import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import { PAGE_TITLE, ROUTES } from "../../../Constants";
+import { Mutations, Queries } from "../../../Api";
+import type { AppGridColDef, CallRequestBase } from "../../../Types";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn, CommonPhoneColumns } from "../../../Components/Common";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { BREADCRUMBS } from "../../../Data";
 
-const SupportDesk = () => {
+const CallRequest = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
 
   const navigate = useNavigate();
@@ -37,25 +37,13 @@ const SupportDesk = () => {
     CommonObjectNameColumn<CallRequestBase>("companyId", { headerName: "Company", width: 180 }),
     { field: "businessName", headerName: "Business Name", width: 220 },
     { field: "contactName", headerName: "Contact Name", width: 200 },
-    {
-      field: "contactNo",
-      headerName: "Contact No",
-      width: 180,
-      renderCell: (params) => {
-        const no = params.row.contactNo;
-        return no ? `${no.countryCode} ${no.phoneNo}` : "-";
-      },
-    },
+    CommonPhoneColumns<CallRequestBase>("contactNo", { headerName: "Contact No", width: 180 }),
     { field: "note", headerName: "Note", flex: 1, minWidth: 150 },
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<CallRequestBase>({
             ...(permission?.edit && {
-              active: (row) =>
-                editCallRequest({
-                  callRequestId: row._id,
-                  isActive: !row.isActive,
-                }),
+              active: (row) => editCallRequest({ callRequestId: row._id, isActive: !row.isActive }),
               editRoute: ROUTES.CALL_REQUEST.ADD_EDIT,
             }),
             ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.businessName }) }),
@@ -84,9 +72,8 @@ const SupportDesk = () => {
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.CALL_REQUEST.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.CALL_REQUEST.BASE} />
-
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-          <AdvancedSearch filter={filter} />
+        <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...gridOptions} />
         </CommonCard>
@@ -97,4 +84,4 @@ const SupportDesk = () => {
   );
 };
 
-export default SupportDesk;
+export default CallRequest;

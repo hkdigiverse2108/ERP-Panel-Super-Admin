@@ -188,11 +188,16 @@ export const CompanyFormSchemas = Yup.object({
   phoneNo: PhoneValidation(),
   ownerNo: PhoneValidation(),
 
-  address: Validation("string", "address"),
-  city: Validation("string", "city"),
-  state: Validation("string", "State"),
-  country: Validation("string", "country"),
-  pinCode: Validation("string", "pinCode", { extraRules: (s) => s.trim().matches(/^[0-9]{6}$/, "Pin code must be 6 digits") }),
+  address: Yup.object({
+    address: Validation("string", "Address", { required: false }),
+    country: Validation("string", "Country", { required: false }),
+    state: Validation("string", "State", { required: false }),
+    city: Validation("string", "City", { required: false }),
+    pinCode: Validation("string", "Pin Code", {
+      required: false,
+      extraRules: (s) => s.matches(/^[0-9]{6}$/, "Pin code must be 6 digits"),
+    }),
+  }).nullable(),
 
   bankId: Validation("string", "select Bank", { required: false }),
   upiId: Validation("string", "upiId", { required: false }),
@@ -427,7 +432,6 @@ export const BankFormSchema = Yup.object().shape({
     city: Validation("string", "City"),
     pinCode: Validation("string", "Pin Code", { extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid Pin Code") }),
   }).nullable(),
-  
 });
 export const CouponFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
@@ -468,7 +472,6 @@ export const PointSetupSchema = Yup.object({
     extraRules: (s) => s.min(1, "Points must be at least 1").max(5, "Points must not be greater than 5"),
   }),
 });
-
 
 export const EmployeeFormSchema = Yup.object({
   // ---------- BASIC DETAILS ----------
@@ -511,6 +514,13 @@ export const VerifyOtpSchema = Yup.object({
   otp: Validation("string", "OTP", { extraRules: (s) => s.matches(/^[0-9]{6}$/, "OTP must be 6 digits") }),
 });
 
+export const ProfileSchema = Yup.object({
+  fullName: Validation("string", "Full Name"),
+  username: Validation("string", "User Name"),
+  phoneNo: PhoneValidation(),
+  email: Validation("string", "Email", { extraRules: (s) => s.trim().email("Invalid email address") }),
+});
+
 export const AdminSettingFormSchema = Yup.object({
   logo: Validation("string", "Logo", { required: false }),
   favicon: Validation("string", "Favicon", { required: false }),
@@ -523,14 +533,27 @@ export const AdminSettingFormSchema = Yup.object({
     endTime: Validation("string", "End Time", { required: false }),
     timezone: Validation("string", "Timezone", { required: false }),
   }).nullable(),
-  links: Yup.array().of(
-    Yup.object({
-      title: Validation("string", "Title", { required: false }),
-      link: Validation("string", "Link", { required: false }),
-      icon: Validation("string", "Icon", { required: false }),
-      isActive: Yup.boolean().nullable(),
-    })
-  ).nullable(),
+  links: Yup.array()
+    .of(
+      Yup.object({
+        title: Validation("string", "Title", { required: false }),
+        link: Validation("string", "Link", { required: false }),
+        icon: Validation("string", "Icon", { required: false }),
+        isActive: Yup.boolean().nullable(),
+      }),
+    )
+    .nullable(),
+});
+
+export const ReturnPosOrderFormSchema = Yup.object({
+  refundViaCash: Validation("number", "Refund Via Cash"),
+  bankAccountId: Validation("string", "Bank Account", { required: false }),
+  refundViaBank: Validation("number", "Refund Via Bank").when("bankAccountId", {
+    is: (val: string | undefined) => !!val && val.trim() !== "",
+    then: (schema) => schema.required("Refund Via Bank is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  refundDescription: Validation("string", "Refund Description", { required: false }),
 });
 
 export const JournalVoucherFormSchema = Yup.object({

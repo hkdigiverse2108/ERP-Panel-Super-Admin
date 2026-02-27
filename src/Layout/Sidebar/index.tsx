@@ -16,7 +16,7 @@ const filterNavItems = (navItems: NavItem[], permissions: ChildDetailsApiRespons
 
   return navItems
     .map((item) => {
-      const parentPerm = permissionMap.get(item.name.toLowerCase());
+      const parentPerm = permissionMap.get(item.name?.toLowerCase());
 
       // ❌ Parent no view permission → parent + children both hide
       if (!parentPerm?.view) return null;
@@ -25,7 +25,7 @@ const filterNavItems = (navItems: NavItem[], permissions: ChildDetailsApiRespons
       if (item.children?.length) {
         const allowedChildren = item.children
           .map((child) => {
-            const childPerm = parentPerm.children?.find((c) => c?.tabName?.toLowerCase() === child.name.toLowerCase());
+            const childPerm = parentPerm.children?.find((c) => c?.tabName?.toLowerCase() === child.name?.toLowerCase());
 
             if (!childPerm?.view) return null;
 

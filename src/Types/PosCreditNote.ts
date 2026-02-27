@@ -1,18 +1,32 @@
-import type { ContactBase } from "./Contacts";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
-import type { UserBase } from "./User";
+import type { CompanyBase } from "./Company";
+import type { ContactBase } from "./Contacts";
 
-export interface PosCreditNoteBase extends Omit<CommonDataType, "createdBy"> {
-  creditNoteNo?: string;
-  customerId?: ContactBase | null;
-  returnPosOrderId?: any; // Could be typed if we need it
-  totalAmount?: number;
-  creditsUsed?: number;
-  creditsRemaining?: number;
-  notes?: string;
-  status?: string;
-  isActive?: boolean;
-  createdBy?: UserBase | null;
+export interface PosCreditNoteFormValues {
+  creditsRemaining: number;
+  creditsUsed: number;
+  isActive: true;
+  returnPosOrderId: { _id: string; returnOrderNo: string };
+  status: string;
+  totalAmount: number;
+}
+
+export interface PosCreditNoteRefundFormValues {
+  posCreditNoteId?: string;
+  refundViaCash?: number;
+  refundViaBank?: number;
+  bankAccountId?: string;
+  refundDescription?: string;
+}
+
+export type AddPosCreditNotePayload = PosCreditNoteFormValues;
+
+export type EditPosCreditNotePayload = PosCreditNoteFormValues & { creditNoteId?: string };
+
+export interface PosCreditNoteBase extends PosCreditNoteFormValues, CommonDataType {
+  creditNoteNo: string;
+  companyId: CompanyBase;
+  customerId: ContactBase;
 }
 
 export interface PosCreditNoteDataResponse extends PageStatus {
@@ -21,4 +35,8 @@ export interface PosCreditNoteDataResponse extends PageStatus {
 
 export interface PosCreditNoteApiResponse extends MessageStatus {
   data: PosCreditNoteDataResponse;
+}
+
+export interface PosCreditNoteDropdownApiResponse extends MessageStatus {
+  data: PosCreditNoteBase[];
 }

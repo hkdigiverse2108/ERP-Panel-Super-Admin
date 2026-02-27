@@ -1,84 +1,60 @@
 import { Box } from "@mui/material";
-import dayjs from "dayjs";
 import { useMemo } from "react";
-import { Queries, Mutations } from "../../../Api";
-import { CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonActionColumn, CommonDeleteModal } from "../../../Components/Common";
+import { Mutations, Queries } from "../../../Api";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { PosCreditNoteBase, AppGridColDef } from "../../../Types";
-import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import { useAppDispatch } from "../../../Store/hooks";
+import type { AppGridColDef, PosCreditNoteBase } from "../../../Types";
+import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { useDataGrid } from "../../../Utils/Hooks";
+import { setOrderRefundModal } from "../../../Store/Slices/ModalSlice";
+import OrderRefund from "./OrderRefund";
 
-const PosCreditNote = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params, rowToDelete, setRowToDelete, isActive, setActive } = useDataGrid({});
-  const permission = usePagePermission(PAGE_TITLE.POS.BASE);
+const CreditNoteList = () => {
+  const dispatch = useAppDispatch();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, params, advancedFilter, updateAdvancedFilter } = useDataGrid({ active: false });
+  const { mutate: deletePosCreditNoteMutate, isPending: isDeleteLoading } = Mutations.useDeletePosCreditNote();
 
-  const { data: posCreditNoteData, isLoading: posCreditNoteDataLoading, isFetching: posCreditNoteDataFetching } = Queries.useGetPosCreditNote(params);
-  const { mutate: deletePosCreditNote, isPending: isDeleteLoading } = Mutations.useDeletePosCreditNote();
-  const { mutate: editPosCreditNote, isPending: isEditLoading } = Mutations.useEditPosCreditNote();
-
-  const allCreditNotes = useMemo(() => posCreditNoteData?.data?.posCreditNote_data?.map((note) => ({ ...note, id: note?._id })) || [], [posCreditNoteData]);
-  const totalRows = posCreditNoteData?.data?.totalData || 0;
+  const { data: branchData, isLoading: branchDataLoading, isFetching: branchDataFetching } = Queries.useGetPosCreditNote(params, true);
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const allBranches = useMemo(() => branchData?.data?.posCreditNote_data.map((branch) => ({ ...branch, id: branch?._id })) || [], [branchData]);
+  const totalRows = branchData?.data?.totalData || 0;
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
-    deletePosCreditNote(rowToDelete._id as string, {
+    deletePosCreditNoteMutate(rowToDelete?._id as string, {
       onSuccess: () => setRowToDelete(null),
     });
   };
 
+  const handleRefundBtn = (row: PosCreditNoteBase) => {
+    dispatch(setOrderRefundModal({ open: true, data: row }));
+  };
+
   const columns: AppGridColDef<PosCreditNoteBase>[] = [
-    { field: "creditNoteNo", headerName: "Credit Note No", flex: 1, minWidth: 150 },
-    {
-      field: "createdAt",
-      headerName: "Date",
-      flex: 1,
-      minWidth: 120,
-      renderCell: (params) => (params.row.createdAt ? dayjs(params.row.createdAt).format("DD/MM/YYYY") : "-"),
-    },
-    {
-      field: "customerName",
-      headerName: "Customer Name",
-      flex: 1,
-      minWidth: 150,
-      renderCell: (params) => {
-        const customer = params.row.customerId;
-        return customer ? `${customer.firstName || ""} ${customer.lastName || ""}`.trim() : "-";
-      },
-    },
+    CommonObjectNameColumn<PosCreditNoteBase>("companyId", { headerName: "Company", width: 200 }),
+    { field: "creditNoteNo", headerName: "Credit Note No.", flex: 1, minWidth: 150 },
+    { field: "customerId", headerName: "Customer Name", flex: 1, minWidth: 150, renderCell: (params) => (params.row.customerId ? `${params.row.customerId.firstName || ""} ${params.row.customerId.lastName || ""}`.trim() : "-") },
+    { field: "createdAt", headerName: "Date", flex: 1, minWidth: 120, renderCell: (params) => FormatDate(params.row.createdAt) },
     { field: "totalAmount", headerName: "Total Amount", flex: 1, minWidth: 120 },
     { field: "creditsUsed", headerName: "Credits Used", flex: 1, minWidth: 120 },
-    { field: "creditsRemaining", headerName: "Credits Remaining", flex: 1, minWidth: 120 },
-    { field: "status", headerName: "Status", flex: 1, minWidth: 100 },
-    { field: "notes", headerName: "Notes", flex: 1, minWidth: 120 },
-    {
-      field: "createdBy",
-      headerName: "Created By",
-      flex: 1,
-      minWidth: 150,
-      renderCell: (params) => {
-        const user = params.row.createdBy;
-        return user ? `${user.fullName || ""}`.trim() : "-";
-      },
-    },
-    ...(permission?.edit || permission?.delete
-      ? [
-          CommonActionColumn<PosCreditNoteBase>({
-            ...(permission?.edit && {
-              active: (row) => editPosCreditNote({ posCreditNoteId: row?._id as string, isActive: !row.isActive }),
-            }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id as string, title: row?.creditNoteNo || "Credit Note" }) }),
-          }),
-        ]
-      : []),
+    { field: "creditsRemaining", headerName: "Credits Remaining", flex: 1, minWidth: 150 },
+    { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status || ""}`}>{params.row.status}</span> },
+
+    CommonActionColumn<PosCreditNoteBase>({
+      onRefund: (row) => handleRefundBtn(row),
+      showRefund: (row) => ["available", "open"].includes(row.status || ""),
+      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.creditNoteNo }),
+      showDelete: (row) => ["available", "open"].includes(row.status || ""),
+    }),
   ];
 
   const CommonDataGridOption = {
     columns,
-    rows: allCreditNotes,
+    rows: allBranches,
     rowCount: totalRows,
-    loading: posCreditNoteDataLoading || posCreditNoteDataFetching || isEditLoading,
-    isActive,
-    setActive,
+    loading: branchDataLoading || branchDataFetching,
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,
@@ -86,18 +62,21 @@ const PosCreditNote = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
   };
+  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.POS.CREDIT_NOTE.BASE} breadcrumbs={BREADCRUMBS.POS_CREDIT_NOTE.BASE} />
+      <CommonBreadcrumbs title={PAGE_TITLE.POS.CREDIT_NOTE} breadcrumbs={BREADCRUMBS.POS_CREDIT_NOTE.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
         <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
       </Box>
+      <OrderRefund />
     </>
   );
 };
 
-export default PosCreditNote;
+export default CreditNoteList;

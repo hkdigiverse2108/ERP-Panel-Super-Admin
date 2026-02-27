@@ -38,13 +38,13 @@ import MaterialConsumption from "../Pages/Inventory/MaterialConsumption";
 import MaterialConsumptionForm from "../Pages/Inventory/MaterialConsumption/MaterialConsumptionForm";
 import SupplierBill from "../Pages/Purchase/SupplierBill";
 import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
-import AdditionalCharges from "../Components/Settings/AdditionalCharges";
-import AdditionalChargesForm from "../Components/Settings/AdditionalCharges/AdditionalChargesForm";
+import AdditionalCharges from "../Pages/Settings/AdditionalCharges";
+import AdditionalChargesForm from "../Pages/Settings/AdditionalCharges/AdditionalChargesForm";
 import Recipe from "../Pages/Inventory/Recipe";
 import RecipeForm from "../Pages/Inventory/Recipe/RecipeForm";
 import Stock from "../Pages/Inventory/Stock";
-import StockVerification from "../Pages/Inventory/StockVarification";
-import StockVerificationForm from "../Pages/Inventory/StockVarification/StockVarificationForm";
+import StockVerification from "../Pages/Inventory/StockVerification";
+import StockVerificationForm from "../Pages/Inventory/StockVerification/StockVerificationForm";
 import ContactForm from "../Pages/Contacts/ContactForm";
 import Contact from "../Pages/Contacts";
 import BillOfLiveProductForm from "../Pages/Inventory/BillOfLiveProduct/BillOfLiveProductForm";
@@ -56,16 +56,18 @@ import CouponForm from "../Pages/CRM/Coupon/CouponForm";
 import Loyalty from "../Pages/CRM/Loyalty";
 import LoyaltyForm from "../Pages/CRM/Loyalty/LoyaltyForm";
 // import User from "../Pages/User";
-import Profile from "../Pages/Profile";
-import SalesRegister from "../Pages/Pos/Sales Register";
-import PosCreditNote from "../Pages/Pos/CreditNote";
+import Profile from "../Pages/Settings/Profile";
+import SalesRegister from "../Pages/Pos/SalesRegister";
 import AnnouncementForm from "../Pages/Announcment/AnnouncmentForm";
 import ChangePassword from "../Pages/Auth/ChangePassword";
 import Announcement from "../Pages/Announcment";
 import VerifyOtp from "../Pages/Auth/VerifyOtp";
-import SupportDeskForm from "../Pages/SupportDesk/SupportDeskForm";
-import SupportDesk from "../Pages/SupportDesk";
-import AdminSetting from "../Pages/Settings/AdminSetting";
+import SupportDeskForm from "../Pages/SupportDesk/CallRequest/CallRequestForm";
+import AdminSetting from "../Pages/Settings/AdminSetting/AdminSetting";
+import SupportDesk from "../Pages/SupportDesk/CallRequest";
+import CreditNoteList from "../Pages/Pos/CreditNote";
+import OrderList from "../Pages/Pos/OrderList";
+import PosCreditNote from "../Pages/Pos/CreditNote";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -152,24 +154,22 @@ export const PageRoutes = [
   { path: ROUTES.LOYALTY.ADD_EDIT, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <LoyaltyForm /> },
 
   { path: ROUTES.PROFILE.BASE, name: PAGE_TITLE.SETTINGS.PROFILE.BASE, element: <Profile /> },
-  { path: ROUTES.PROFILE.EDIT, name: PAGE_TITLE.SETTINGS.PROFILE.EDIT, element: <UserForm /> },
 
-  { path: ROUTES.SALES_REGISTER.BASE, name: PAGE_TITLE.POS.SALES_REGISTER.BASE, element: <SalesRegister /> },
-
-  { path: ROUTES.POS_CREDIT_NOTE.BASE, name: PAGE_TITLE.POS.CREDIT_NOTE.BASE, element: <PosCreditNote /> },
-
+  { path: ROUTES.POS_CREDIT_NOTE.BASE, name: PAGE_TITLE.POS.CREDIT_NOTE, element: <PosCreditNote /> },
+  
   { path: ROUTES.ANNOUNCEMENT.BASE, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <Announcement /> },
   { path: ROUTES.ANNOUNCEMENT.ADD_EDIT, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <AnnouncementForm /> },
-
+  
   { path: ROUTES.CALL_REQUEST.BASE, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDesk /> },
   { path: ROUTES.CALL_REQUEST.ADD_EDIT, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDeskForm /> },
-
+  
   { path: ROUTES.AUTH.CHANGE_PASSWORD, name: PAGE_TITLE.CHANGE_PASSWORD.BASE, element: <ChangePassword /> },
-
-  { path: ROUTES.CALL_REQUEST.BASE, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDesk /> },
-  { path: ROUTES.CALL_REQUEST.ADD_EDIT, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDeskForm /> },
-
-  { path: ROUTES.ADMIN_SETTING.BASE, name: PAGE_TITLE.ADMIN_SETTING.BASE, element: <AdminSetting /> },
+  
+  { path: ROUTES.ADMIN_SETTING.BASE, name: PAGE_TITLE.SETTINGS.ADMIN_SETTING.BASE, element: <AdminSetting /> },
+  
+  { path: ROUTES.SALES_REGISTER.BASE, name: PAGE_TITLE.POS.SALES_REGISTER, element: <SalesRegister /> },
+  { path: ROUTES.POS_CREDIT_NOTE.BASE, name: PAGE_TITLE.POS.CREDIT_NOTE, element: <CreditNoteList /> },
+  { path: ROUTES.POS_ORDER_LIST.BASE, name: PAGE_TITLE.POS.ORDER_LIST, element: <OrderList /> },
 ];
 
 export const AuthRoutes = [

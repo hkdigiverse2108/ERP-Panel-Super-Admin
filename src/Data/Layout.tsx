@@ -13,7 +13,6 @@ export const NavItems: NavItem[] = [
   { icon: <AdminPanelSettings />, name: PAGE_TITLE.ROLE.BASE, path: ROUTES.ROLE.BASE },
   { icon: <ViewModule />, name: PAGE_TITLE.MODULE.BASE, path: ROUTES.MODULE.BASE },
   { icon: <Announcement />, name: PAGE_TITLE.ANNOUNCEMENT.BASE, path: ROUTES.ANNOUNCEMENT.BASE },
-  { icon: <SupportAgent />, name: PAGE_TITLE.CALL_REQUEST.BASE, path: ROUTES.CALL_REQUEST.BASE },
   {
     name: PAGE_TITLE.INVENTORY.BASE,
     icon: <Settings />,
@@ -36,12 +35,18 @@ export const NavItems: NavItem[] = [
     children: [{ name: PAGE_TITLE.BANK.BASE, path: ROUTES.BANK.BASE }],
   },
   {
+    name: PAGE_TITLE.SUPPORT.BASE,
+    icon: <SupportAgent />,
+    children: [{ name: PAGE_TITLE.CALL_REQUEST.BASE, path: ROUTES.CALL_REQUEST.BASE }],
+  },
+  {
     name: PAGE_TITLE.POS.BASE,
     icon: <PointOfSale />,
-    children: [{ name: PAGE_TITLE.POS.SALES_REGISTER.BASE, path: ROUTES.SALES_REGISTER.BASE, pro: false },
-    { name: PAGE_TITLE.POS.CREDIT_NOTE.BASE, path: ROUTES.CREDIT_NOTE.BASE, pro: false }
+    children: [
+      { name: PAGE_TITLE.POS.SALES_REGISTER, path: ROUTES.SALES_REGISTER.BASE, pro: false },
+      { name: PAGE_TITLE.POS.CREDIT_NOTE, path: ROUTES.POS_CREDIT_NOTE.BASE, pro: false },
+      { name: PAGE_TITLE.POS.ORDER_LIST, path: ROUTES.POS_ORDER_LIST.BASE, pro: false },
     ],
-
   },
   {
     name: PAGE_TITLE.CRM.BASE,
@@ -77,7 +82,7 @@ export const NavItems: NavItem[] = [
     children: [
       { name: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE, path: ROUTES.ADDITIONAL_CHARGES.BASE },
       { name: PAGE_TITLE.SETTINGS.PROFILE.BASE, path: ROUTES.PROFILE.BASE },
-      { name: PAGE_TITLE.ADMIN_SETTING.BASE, path: ROUTES.ADMIN_SETTING.BASE },
+      { name: PAGE_TITLE.SETTINGS.ADMIN_SETTING.BASE, path: ROUTES.ADMIN_SETTING.BASE },
     ],
   },
 ];

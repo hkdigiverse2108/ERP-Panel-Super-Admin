@@ -3,19 +3,19 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Box, Grid } from "@mui/material";
 import { FieldArray, Form, Formik, useFormikContext, type FormikValues } from "formik";
 import { useEffect, useState } from "react";
-import { Mutations, Queries } from "../../Api";
-import { CommonButton, CommonValidationTextField, CommonPhoneNumber, CommonValidationSwitch } from "../../Attribute";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../Components/Common";
-import { CommonFormImageBox } from "../../Components/Common/CommonUploadImage/CommonImageBox";
-import { PAGE_TITLE } from "../../Constants";
-import { BREADCRUMBS } from "../../Data";
-import { useAppDispatch, useAppSelector } from "../../Store/hooks";
-import { setSelectedFiles, setUploadModal } from "../../Store/Slices/ModalSlice";
-import type { AdminSettingFormValues, AdminSettingLink } from "../../Types/AdminSetting";
-import type { Params } from "../../Types";
-import { AdminSettingFormSchema } from "../../Utils/ValidationSchemas";
-import { GetChangedFields } from "../../Utils/FormHelpers";
-import type { AdminSettingBase } from "../../Types/AdminSetting";
+import { Mutations, Queries } from "../../../Api";
+import { CommonButton, CommonPhoneNumber, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
+import { CommonFormImageBox } from "../../../Components/Common/CommonUploadImage/CommonImageBox";
+import { PAGE_TITLE } from "../../../Constants";
+import { BREADCRUMBS } from "../../../Data";
+import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
+import { setSelectedFiles, setUploadModal } from "../../../Store/Slices/ModalSlice";
+import type { AdminSettingFormValues, AdminSettingLink } from "../../../Types/AdminSetting";
+import type { Params } from "../../../Types";
+import type { AdminSettingBase } from "../../../Types/AdminSetting";
+import { GetChangedFields } from "../../../Utils/FormHelpers";
+import { AdminSettingFormSchema } from "../../../Utils/ValidationSchemas";
 
 type AdminSettingImageKey = "logo" | "favicon" | "themeImage";
 
@@ -34,7 +34,7 @@ const AdminSetting = () => {
 
   const [activeKey, setActiveKey] = useState<AdminSettingImageKey | null>(null);
 
-  const adminData: AdminSettingBase | undefined = Array.isArray(adminSettingData?.data) ? adminSettingData?.data[0] : adminSettingData?.data as AdminSettingBase | undefined;
+  const adminData: AdminSettingBase | undefined = Array.isArray(adminSettingData?.data) ? adminSettingData?.data[0] : (adminSettingData?.data as AdminSettingBase | undefined);
 
   const initialValues: AdminSettingFormValues = {
     logo: adminData?.logo || null,
@@ -85,7 +85,7 @@ const AdminSetting = () => {
   const handleSubmit = async (values: AdminSettingFormValues) => {
     try {
       // Use GetChangedFields to omit unchanged empty fields or data that shouldn't be overridden
-      const adminData: AdminSettingBase | undefined = Array.isArray(adminSettingData?.data) ? adminSettingData?.data[0] : adminSettingData?.data as AdminSettingBase | undefined;
+      const adminData: AdminSettingBase | undefined = Array.isArray(adminSettingData?.data) ? adminSettingData?.data[0] : (adminSettingData?.data as AdminSettingBase | undefined);
       const payload: any = GetChangedFields(values, adminData || {});
 
       // Clean up empty strings for images if backend strictly expects URL or null
@@ -94,7 +94,7 @@ const AdminSetting = () => {
       if (payload.themeImage === "") payload.themeImage = null;
 
       if (Object.keys(payload).length > 0) {
-        await editAdminSetting({ ...payload});
+        await editAdminSetting({ ...payload });
       }
     } catch (error) {
       console.error("Failed to update admin settings:", error);
@@ -103,7 +103,7 @@ const AdminSetting = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.PROFILE.EDIT} maxItems={3} breadcrumbs={BREADCRUMBS.SETTINGS.ADMIN_SETTINGS} />
+      <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.PROFILE.EDIT} maxItems={3} breadcrumbs={BREADCRUMBS.SETTINGS.ADMIN_SETTING} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<AdminSettingFormValues> enableReinitialize initialValues={initialValues} validationSchema={AdminSettingFormSchema} onSubmit={handleSubmit}>
           {({ dirty, values }) => (
@@ -111,7 +111,6 @@ const AdminSetting = () => {
               <FormikImageSync activeKey={activeKey} clearActiveKey={() => setActiveKey(null)} />
               <Grid container spacing={2}>
                 {/* BRAND IMAGES */}
-
 
                 {/* CONTACT INFO */}
                 <CommonCard title="Contact Info" grid={{ xs: 12 }}>
@@ -183,4 +182,3 @@ const AdminSetting = () => {
 };
 
 export default AdminSetting;
-
