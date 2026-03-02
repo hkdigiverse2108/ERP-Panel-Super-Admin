@@ -44,7 +44,7 @@ export const SigninSchema = Yup.object({
 
 export const UserFormSchema = Yup.object({
   // ---------- BASIC DETAILS ----------
-  companyId: Validation("string", "Company Name"),
+  companyId: Validation("string", "Company Name", { required: false }),
   fullName: Validation("string", "FullName"),
   username: Validation("string", "Username"),
   designation: Validation("string", "Designation", { required: false }),
