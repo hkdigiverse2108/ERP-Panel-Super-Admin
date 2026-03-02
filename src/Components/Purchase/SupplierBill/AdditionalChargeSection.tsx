@@ -94,7 +94,7 @@ const AdditionalChargesSection = ({ show, onToggle, rows, onAdd, onRemove, onCha
             </Box>
             <Box className="flex justify-between p-3 border-b border-slate-200 dark:border-slate-800 text-sm">
               <span className="text-slate-500">Item Discount</span>
-              <span className="font-medium">{(summary.itemDiscount || 0).toFixed(2)}</span>
+              <span className="font-medium">{((summary.discountAmount || 0) + (summary.flatDiscount || 0)).toFixed(2)}</span>
             </Box>
             <Box className="flex justify-between p-3 border-b border-slate-200 dark:border-slate-800 text-sm">
               <span className="text-slate-500">Gross Amount</span>
@@ -111,7 +111,7 @@ const AdditionalChargesSection = ({ show, onToggle, rows, onAdd, onRemove, onCha
                   {showTaxBreakdown ? "▲" : "▼"}
                 </Box>
               </span>
-              <span className="text-blue-600 dark:text-blue-400 font-bold">{(summary.itemTax || 0).toFixed(2)}</span>
+              <span className="text-blue-600 dark:text-blue-400 font-bold">{(summary.taxAmount || 0).toFixed(2)}</span>
             </Box>
             <Box className="flex justify-between items-center p-3 border-b border-slate-200 dark:border-slate-800">
               <span className="text-slate-500 text-sm">Roundoff</span>

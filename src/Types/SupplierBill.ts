@@ -77,12 +77,9 @@ export interface AdditionalChargeDetails {
 export interface SupplierBillSummary {
   flatDiscount?: number;
   grossAmount?: number;
-  itemDiscount?: number;
+  discountAmount?: number;
   taxableAmount?: number;
-  itemTax?: number;
-  additionalChargeAmount?: number;
-  additionalChargeTax?: number;
-  billDiscount?: number;
+  taxAmount?: number;
   roundOff?: number;
   netAmount?: number;
   taxSummary?: {
@@ -251,7 +248,7 @@ export interface SupplierBillBase extends CommonDataType {
 export type AddSupplierBillPayload = SupplierBillFormValues;
 
 export type EditSupplierBillPayload = Partial<SupplierBillFormValues> & {
-  supplierBillId: string;
+  supplierBillId?: string;
 };
 
 /* ===================== API RESPONSES ===================== */

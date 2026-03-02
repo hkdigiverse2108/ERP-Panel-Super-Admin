@@ -143,9 +143,9 @@ const SupplierBillForm = () => {
       }
     });
     const taxSummary = Object.entries(taxBreakdown).map(([name, data]) => ({ name, rate: data.rate, amount: Number(data.amount.toFixed(2)) }));
-    const summaryDiscountAmount = discountAmount + flatDisc;
+    // const summaryDiscountAmount = discountAmount + flatDisc;
     const summaryGrossAmount = grossAmount - flatDisc;
-    return { discountAmount: summaryDiscountAmount, grossAmount: summaryGrossAmount, taxableAmount: taxableAfterDiscount, taxAmount: Number(itemTax.toFixed(2)),   roundOff, netAmount: Number(netAmount.toFixed(2)), taxSummary };
+    return { flatDiscount: flatDisc, discountAmount: Number(discountAmount.toFixed(2)), grossAmount: summaryGrossAmount, taxableAmount: taxableAfterDiscount, taxAmount: Number(taxAmount.toFixed(2)), roundOff, netAmount: Number(netAmount.toFixed(2)), taxSummary };
   };
   const summary = calculateSummary();
   useEffect(() => {
@@ -357,7 +357,7 @@ const SupplierBillForm = () => {
 
     if (isEditing) {
       const changedFields = GetChangedFields(payload, data);
-      editSupplierBill({ ...changedFields, supplierBillId: data._id }, { onSuccess: handleSuccess });
+      editSupplierBill(changedFields, { onSuccess: handleSuccess });
     } else {
       addSupplierBill(RemoveEmptyFields(payload) as SupplierBillFormValues, { onSuccess: handleSuccess });
     }
