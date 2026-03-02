@@ -53,7 +53,7 @@ const SupplierBill = () => {
     CommonObjectNameColumn<SupplierBillBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "supplierBillNo", headerName: "Bill No", width: 160 },
 
-    { field: "supplierId", headerName: "Supplier", width: 240, valueGetter: (_, row: SupplierBillBase) => (row?.supplierId ? (row.supplierId.name || `${row.supplierId.firstName || ""} ${row.supplierId.lastName || ""}`.trim() || row.supplierId.companyName || "") : "") },
+    { field: "supplierId", headerName: "Supplier", width: 240, valueGetter: (_, row: SupplierBillBase) => (row?.supplierId ? row.supplierId.name || `${row.supplierId.firstName || ""} ${row.supplierId.lastName || ""}`.trim() || row.supplierId.companyName || "" : "") },
 
     { field: "supplierBillDate", headerName: "Bill Date", width: 140, valueGetter: (v) => FormatDate(v) },
 
@@ -71,11 +71,11 @@ const SupplierBill = () => {
 
     ...(permission?.edit || permission?.delete
       ? [
-        CommonActionColumn<SupplierBillBase>({
-          ...(permission?.edit && { active: (row) => editSupplierBill({ supplierBillId: row?._id, isActive: !row.isActive }), editRoute: ROUTES.SUPPLIER_BILL.ADD_EDIT }),
-          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.supplierBillNo }) }),
-        }),
-      ]
+          CommonActionColumn<SupplierBillBase>({
+            ...(permission?.edit && { active: (row) => editSupplierBill({ supplierBillId: row?._id, isActive: !row.isActive }), editRoute: ROUTES.SUPPLIER_BILL.ADD_EDIT }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.supplierBillNo }) }),
+          }),
+        ]
       : []),
   ];
   const gridOptions = {

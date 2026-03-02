@@ -83,7 +83,7 @@ const SupplierBillForm = () => {
       setSelectedTermIds([]);
     }
   };
-  const emptyRow: ProductRow = { productId: "", itemCode: "", qty: "", freeQty: "", uomId: "", unit: "", unitCost: "", mrp: "", sellingPrice: "", disc1: "", disc2: "", taxableAmount: "",taxId:"",itemTax: "", landingCost: "", margin: "", totalAmount: "", mfgDate: "", expiryDate: "", taxRate: "", taxName: "" };
+  const emptyRow: ProductRow = { productId: "", itemCode: "", qty: "", freeQty: "", uomId: "", unit: "", unitCost: "", mrp: "", sellingPrice: "", disc1: "", disc2: "", taxableAmount: "", taxId: "", itemTax: "", landingCost: "", margin: "", totalAmount: "", mfgDate: "", expiryDate: "", taxRate: "", taxName: "" };
   const additionalChargeEmptyRow: AdditionalChargeRow = { chargeId: "", taxableAmount: "", tax: "", taxAmount: "", totalAmount: "" };
   const [rows, setRows] = useState<ProductRow[]>([emptyRow]);
   const [returnRows, setReturnRows] = useState<ProductRow[]>([emptyRow]);
@@ -197,7 +197,7 @@ const SupplierBillForm = () => {
 
   const mapProductRows = (): SupplierBillProductDetails => {
     const item = rows.map((r) => ({ productId: r.productId, qty: +r.qty || 0, freeQty: +r.freeQty || 0, mrp: +r.mrp || 0, uomId: r.uomId, unit: r.unit, sellingPrice: +r.sellingPrice || 0, landingCost: +r.landingCost || 0, margin: +r.margin || 0, discount1: +r.disc1 || 0, discount2: +r.disc2 || 0, total: +r.totalAmount || 0 }));
-    return { item, totalQty: item.reduce((s, r) => s + r.qty!, 0),  totalTax: rows.reduce((s, r) => s + (+r.itemTax || 0), 0), total: item.reduce((s, r) => s + r.total!, 0) };
+    return { item, totalQty: item.reduce((s, r) => s + r.qty!, 0), totalTax: rows.reduce((s, r) => s + (+r.itemTax || 0), 0), total: item.reduce((s, r) => s + r.total!, 0) };
   };
   const mapAdditionalCharges = (): AdditionalChargeDetails => {
     const validRows = additionalChargeRows.filter((row) => row.chargeId);
