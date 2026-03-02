@@ -38,9 +38,12 @@ const Payment = () => {
   const columns: AppGridColDef<PosPaymentBase>[] = [
     CommonObjectNameColumn<PosPaymentBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "paymentNo", headerName: "Payment No", width: 200 },
-    CommonObjectNameColumn<PosPaymentBase>("partyId", { headerName: "Party Name", width: 270 }),
-    { field: "createdAt", headerName: "Payment Date", width: 220, valueGetter: (v) => FormatDate(v) },
-    { field: "paymentType", headerName: "Payment Type", minWidth: 150, flex: 1 },
+    { field: "partyId", headerName: "Party Name", width: 230, valueGetter: (_v, row: PosPaymentBase) => row?.partyId ? `${row?.partyId?.firstName} ${row?.partyId?.lastName}` : "-" },
+    { field: "paymentMode", headerName: "Payment Mode", width: 140 },
+    { field: "paymentType", headerName: "Payment Type", width: 140 },
+    { field: "createdAt", headerName: "Payment Date", width: 190, valueGetter: (v) => FormatDate(v) },
+    { field: "amount", headerName: "Amount",  minWidth: 150, flex: 1, valueGetter: (_v, row: PosPaymentBase) => row?.amount ?? row?.totalAmount ?? 0 },
+
     ...(permission?.edit || permission?.delete
       ? [
         CommonActionColumn<PosPaymentBase>({
