@@ -42,7 +42,7 @@ const Announcement = () => {
           ...(permission?.edit && {
             active: (row) =>
               editAnnouncement({
-                announcementId: row._id,
+               announcementId: row._id,
                 isActive: !row.isActive,
               }),
             editRoute: ROUTES.ANNOUNCEMENT.ADD_EDIT,

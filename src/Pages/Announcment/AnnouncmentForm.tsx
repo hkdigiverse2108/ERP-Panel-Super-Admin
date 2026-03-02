@@ -1,8 +1,8 @@
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations } from "../../Api";
-import { CommonValidationSwitch, CommonValidationTextField } from "../../Attribute";
+import { CommonValidationQuillInput, CommonValidationSwitch, CommonValidationTextField } from "../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../Components/Common";
 import { BREADCRUMBS } from "../../Data";
 import { PAGE_TITLE } from "../../Constants";
@@ -36,10 +36,7 @@ const AnnouncementForm = () => {
       else navigate(-1);
     };
 
-    const payload = {
-      ...rest,
-      desc: typeof rest.desc === "string" ? rest.desc.split(",").map((s) => s.trim()).filter(Boolean) : rest.desc,
-    };
+    const payload = { ...rest };
 
     if (isEditing) {
       const changedFields = GetChangedFields(payload, data);
@@ -60,25 +57,16 @@ const AnnouncementForm = () => {
               <Box sx={{ display: "grid", gap: 2 }}>
                 {/* ANNOUNCEMENT DETAILS */}
                 <CommonCard title="Announcement Details">
-                  <Box sx={{ p: 2, display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: 2 }}>
-                    <CommonValidationTextField name="link" label="Link" grid={{ xs: 12 }} />
-                    <CommonValidationTextField name="version" label="Version" grid={{ xs: 12 }} />
-                    <CommonValidationTextField name="desc" label="Description" multiline grid={{ xs: 12, md: 4 }} />
-
-                  </Box>
+                  <Grid container spacing={2} sx={{ p: 2 }}>
+                    <CommonValidationTextField name="link" label="Link" grid={{ xs: 12, md: 6 }} />
+                    <CommonValidationTextField name="version" label="Version" grid={{ xs: 12, md: 6 }} />
+                    <CommonValidationQuillInput name="desc" label="Description" grid={{ xs: 12 }} />
+                  </Grid>
                 </CommonCard>
 
                 {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
 
-                <CommonBottomActionBar
-                  save={isEditing}
-                  clear={!isEditing}
-                  disabled={!dirty}
-                  isLoading={isAddLoading || isEditLoading}
-                  onClear={() => resetForm({ values: initialValues })}
-                  onSave={() => setFieldValue("_submitAction", "save")}
-                  onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")}
-                />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isAddLoading || isEditLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Box>
             </Form>
           )}
