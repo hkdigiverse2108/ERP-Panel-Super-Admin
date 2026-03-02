@@ -33,9 +33,9 @@ const Announcement = () => {
   };
 
   const columns: AppGridColDef<AnnouncementBase>[] = [
-      { field: "version", headerName: "Version", width: 100 },
+      { field: "version", headerName: "Version", width: 150 },
       { field: "link", headerName: "Link", width: 330 },
-      { field: "desc", headerName: "Description",flex:1, minWidth: 300 },
+      { field: "desc", headerName: "Description",flex:1, minWidth: 300 ,renderCell: (params) => <span dangerouslySetInnerHTML={{ __html: params.row.desc || "" }}/> },
     ...(permission?.edit || permission?.delete
       ? [
         CommonActionColumn<AnnouncementBase>({
