@@ -13,6 +13,7 @@ export interface PosPaymentFormValues {
   bankId?: string;
   posOrderId?: string;
   paymentMode?: string;
+  paymentDate?: string | Date | null;
   totalAmount?: number;
   paidAmount?: number;
   pendingAmount?: number;
@@ -23,6 +24,7 @@ export interface PosPaymentFormValues {
   companyId?: string;
   accountId?: string;
   remark?: string;
+  _submitAction?: "SAVE" | "SAVE_AND_NEW";
 }
 
 export type AddPosPaymentPayload = PosPaymentFormValues & {

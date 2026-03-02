@@ -7,6 +7,7 @@ export const RECIPE_TYPE = ["assemble", "unassemble"] as const;
 export const PRODUCT_STATUS = ["active", "inactive"] as const;
 // export const ACCOUNT_TYPE = ["bank", "cash", "other"] as const;
 export const CONTACT_TYPE = ["customer", "supplier", "transporter"] as const;
+export const POS_PAYMENT_MODE = ["cash", "bank"] as const;
 export const CUSTOMER_TYPE = ["retailer", "wholesaler", "merchant", "other"] as const;
 export const SUPPLIER_TYPE = ["manufacturer", "stockiest", "trader", "other"] as const;
 export const CONTACT_STATUS = ["active", "inactive"] as const;
