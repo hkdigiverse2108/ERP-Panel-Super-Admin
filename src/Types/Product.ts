@@ -69,6 +69,11 @@ export interface ProductBase extends Omit<ProductFormValues, "categoryId" | "sub
   purchaseTaxId?: TaxBase;
   salesTaxId?: TaxBase;
   itemCode?: string;
+  uomId?: {
+    _id: string;
+    name?: string;
+    code?: string;
+  };
   unit?: string;
   qty?: number;
 }

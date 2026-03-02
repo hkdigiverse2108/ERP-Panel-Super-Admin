@@ -127,6 +127,7 @@ export interface ProductRow {
   itemCode: string;
   qty: string | number;
   freeQty: string | number;
+  uomId: string;
   unit: string;
   unitCost: string | number;
   mrp: string | number;
@@ -150,7 +151,6 @@ export interface AdditionalChargeRow {
   tax: string;
   taxAmount: string;
   totalAmount: string;
-  
 }
 
 export interface AdditionalChargesSectionProps {
