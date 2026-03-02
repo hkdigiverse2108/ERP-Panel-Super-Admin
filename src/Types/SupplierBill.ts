@@ -143,6 +143,7 @@ export interface ProductRow {
   expiryDate: string;
   taxRate?: number | string;
   taxName?: string;
+  taxId: string;
 }
 
 export interface AdditionalChargeRow {
