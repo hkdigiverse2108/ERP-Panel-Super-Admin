@@ -272,4 +272,11 @@ export const KEYS = {
     EDIT: "pos-edit",
     DELETE: "pos-delete",
   },
+
+  POS_PAYMENT:{
+    BASE: "pos-payment",
+    ADD: "pos-payment-add",
+    EDIT: "pos-payment-edit",
+    DELETE: "pos-payment-delete",
+  }
 };

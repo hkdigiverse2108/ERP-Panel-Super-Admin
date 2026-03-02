@@ -151,4 +151,10 @@ export const BREADCRUMBS = {
   POS_ORDER_LIST: {
     BASE: [{ label: PAGE_TITLE.POS.ORDER_LIST }],
   },
+
+  PAYMENT:{
+    BASE: [{ label: PAGE_TITLE.PAYMENT.BASE }],
+    ADD: [{ label: PAGE_TITLE.PAYMENT.BASE, href: ROUTES.PAYMENT.BASE }, { label: PAGE_TITLE.PAYMENT.ADD }],
+    EDIT: [{ label: PAGE_TITLE.PAYMENT.BASE, href: ROUTES.PAYMENT.BASE }, { label: PAGE_TITLE.PAYMENT.EDIT }],
+  }
 };

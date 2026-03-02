@@ -293,4 +293,12 @@ export const URL_KEYS = {
     EDIT: "/pos-order/edit",
     DELETE: "/pos-order/delete",
   },
+
+  POS_PAYMENT: {
+    BASE: "/pos-payment",
+    ADD: "/pos-payment/add",
+    EDIT: "/pos-payment/edit",
+    DELETE: "/pos-payment/delete",
+    ALL: "/pos-payment/all",
+  },
 } as const;

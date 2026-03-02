@@ -1,104 +1,91 @@
-import { CommonBreadcrumbs } from "../../../Components/Common";
-
-import { PAGE_TITLE } from "../../../Constants";
+import { Box } from "@mui/material";
+import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { Mutations, Queries } from "../../../Api";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
+import { PAGE_TITLE, ROUTES } from "../../../Constants";
+import { BREADCRUMBS } from "../../../Data";
+import type { AppGridColDef, PosPaymentBase } from "../../../Types";
+import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 
 
 const Payment = () => {
-  // const { paginationModel, setPaginationModel } = useDataGrid({
-  //   page: 0,
-  //   pageSize: 10,
-  // });
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
 
-  // const [rowToDelete, setRowToDelete] = useState<any>(null);
-  
+  const navigate = useNavigate();
+  const permission = usePagePermission(PAGE_TITLE.PAYMENT.BASE);
 
-  // const rows = useMemo(
-  //   () =>
-  //     Array.from({ length: 10 }).map((_, i) => ({
-  //       id: i + 1,
-  //       paymentNo: `PAY-00${i + 1}`,
-  //       partyName: "ABC Traders",
-  //       paymentMode: "Cash",
-  //       type: "Received",
-  //       date: "2025-01-10",
-  //       amount: 12000,
-  //       status: "Completed",
-  //       createdBy: "Admin",
-  //     })),
-  //   []
-  // );
+  const { data, isLoading, isFetching } = Queries.useGetPosPayment(params);
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const { mutate: deletePayment, isPending: isDeleteLoading } = Mutations.useDeletePosPayment();
+  const { mutate: editPayment, isPending: isEditLoading } = Mutations.useEditPosPayment();
+  const rows = useMemo(() => {
+    return data?.data?.posPayment_data.map((r) => ({ ...r, id: r?._id })) || [];
+  }, [data]);
 
-  // const columns = [
-  //   {
-  //     field: "srNo",
-  //     headerName: "Sr No",
-  //     width: 80,
-  //     renderCell: (params: any) => paginationModel.page * paginationModel.pageSize + params.api.getRowIndexRelativeToVisibleRows(params.id) + 1,
-  //   },
-  //   { field: "paymentNo", headerName: "Payment No", flex: 1 },
-  //   { field: "partyName", headerName: "Party Name", flex: 1 },
-  //   { field: "paymentMode", headerName: "Payment Mode", flex: 1 },
-  //   { field: "type", headerName: "Type", flex: 1 },
-  //   { field: "date", headerName: "Date", flex: 1 },
-  //   {
-  //     field: "amount",
-  //     headerName: "Amount",
-  //     flex: 1,
-  //     renderCell: (params: any) => `₹ ${params.value}`,
-  //   },
-  //   { field: "status", headerName: "Status", flex: 1 },
-  //   { field: "createdBy", headerName: "Created By", flex: 1 },
-  //   {
-  //     field: "actions",
-  //     headerName: "Actions",
-  //     width: 120,
-  //     sortable: false,
-  //     renderCell: (params: any) => (
-  //       <Grid container spacing={1}>
-  //         <Grid size="auto">
-  //           <IconButton color="primary" size="small">
-  //             <EditIcon />
-  //           </IconButton>
-  //         </Grid>
-  //         <Grid size="auto">
-  //           <IconButton color="error" size="small" onClick={() => setRowToDelete(params.row)}>
-  //             <DeleteIcon />
-  //           </IconButton>
-  //         </Grid>
-  //       </Grid>
-  //     ),
-  //   },
-  // ];
-  // const topContent = (
-  //   <Grid container spacing={2} alignItems="center">
-  //     <Grid size="auto">
-  //       <Link to={ ROUTES.PAYMENT.ADD_EDIT }>
-  //         <Button variant="contained" color="primary" size="large" sx={{ px: 4, fontSize: "0.9rem" }}>
-  //           ADD
-  //         </Button>
-  //       </Link>
-  //     </Grid>
-  //   </Grid>
-  // );
-  // function handleDeleteBtn(): void {
-  //   throw new Error("Function not implemented.");
-  // }
+  const totalRows = data?.data?.totalData || 0;
+
+  const handleAdd = () => navigate(ROUTES.PAYMENT.ADD_EDIT);
+
+  const handleDelete = () => {
+    if (!rowToDelete) return;
+    deletePayment(rowToDelete?._id as string, {
+      onSuccess: () => setRowToDelete(null),
+    });
+  };
+
+  const columns: AppGridColDef<PosPaymentBase>[] = [
+    CommonObjectNameColumn<PosPaymentBase>("companyId", { headerName: "Company", width: 200 }),
+    { field: "paymentNo", headerName: "Payment No", width: 200 },
+    CommonObjectNameColumn<PosPaymentBase>("partyId", { headerName: "Party Name", width: 270 }),
+    { field: "createdAt", headerName: "Payment Date", width: 220, valueGetter: (v) => FormatDate(v) },
+    { field: "paymentType", headerName: "Payment Type", minWidth: 150, flex: 1 },
+    ...(permission?.edit || permission?.delete
+      ? [
+        CommonActionColumn<PosPaymentBase>({
+          ...(permission?.edit && {
+            active: (row) => editPayment({ paymentId: row._id, isActive: !row.isActive }),
+            editRoute: ROUTES.PAYMENT.ADD_EDIT,
+          }),
+          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.paymentNo }) }),
+        }),
+      ]
+      : []),
+  ];
+
+  const gridOptions = {
+    columns,
+    rows,
+    rowCount: totalRows,
+    loading: isLoading || isFetching || isEditLoading,
+    isActive,
+    setActive,
+    ...(permission?.add && { handleAdd }),
+    paginationModel,
+    onPaginationModelChange: setPaginationModel,
+    sortModel,
+    onSortModelChange: setSortModel,
+    filterModel,
+    onFilterModelChange: setFilterModel,
+  };
+
+  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.PAYMENT.BASE || "Payments"} maxItems={1} />
+      <CommonBreadcrumbs title={PAGE_TITLE.PAYMENT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.PAYMENT.BASE} />
 
-      <div className="m-4 md:m-6">
-        {/* <CommonCard title="Payments" topContent={topContent}> */}
-          {/* <CommonDataGrid columns={columns} rows={rows} rowCount={rows.length} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel}  /> */}
-        {/* </CommonCard> */}
-      </div>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <AdvancedSearch filter={filter} />
+        <CommonCard hideDivider>
+          <CommonDataGrid {...gridOptions} />
+        </CommonCard>
 
-      {/* ================= Delete Confirmation ================= */}
-        {/* <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} /> */}
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={handleDelete} />
+      </Box>
     </>
   );
 };
 
 export default Payment;
-
