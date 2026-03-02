@@ -53,19 +53,19 @@ const SupplierBill = () => {
     CommonObjectNameColumn<SupplierBillBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "supplierBillNo", headerName: "Bill No", width: 160 },
 
-    { field: "supplierId", headerName: "Supplier", width: 240, valueGetter: (_: unknown, row: SupplierBillBase) => (row?.supplierId ? row.supplierId.name : "") },
+    { field: "supplierId", headerName: "Supplier", width: 240, valueGetter: (_, row: SupplierBillBase) => (row?.supplierId ? (row.supplierId.name || `${row.supplierId.firstName || ""} ${row.supplierId.lastName || ""}`.trim() || row.supplierId.companyName || "") : "") },
 
-    { field: "supplierBillDate", headerName: "Bill Date", width: 140, valueGetter: (v: unknown) => FormatDate(v) },
+    { field: "supplierBillDate", headerName: "Bill Date", width: 140, valueGetter: (v) => FormatDate(v) },
 
-    { field: "billAmount", headerName: "Bill Amount", width: 150, valueGetter: (_: unknown, row: SupplierBillBase) => row?.summary?.netAmount ?? Number(row?.invoiceAmount ?? 0) },
+    { field: "billAmount", headerName: "Bill Amount", width: 150, valueGetter: (_, row: SupplierBillBase) => row?.summary?.netAmount ?? Number(row?.invoiceAmount ?? 0) },
 
-    { field: "paidAmount", headerName: "Paid Amount", width: 140, valueGetter: (v: unknown) => Number(v ?? 0) },
+    { field: "paidAmount", headerName: "Paid Amount", width: 140, valueGetter: (v) => Number(v ?? 0) },
 
-    { field: "balanceAmount", headerName: "Due Amount", width: 140, valueGetter: (v: unknown) => Number(v ?? 0) },
+    { field: "balanceAmount", headerName: "Due Amount", width: 140, valueGetter: (v) => Number(v ?? 0) },
 
-    { field: "taxAmount", headerName: "Tax Amount", width: 140, valueGetter: (_: unknown, row: SupplierBillBase) => Number(row?.summary?.itemTax ?? 0) + Number(row?.summary?.additionalChargeTax ?? 0) },
+    { field: "taxAmount", headerName: "Tax Amount", width: 140, valueGetter: (_, row: SupplierBillBase) => Number(row?.summary?.taxAmount ?? 0) },
 
-    { field: "dueDate", headerName: "Due Date", width: 140, valueGetter: (v: unknown) => FormatDate(v) },
+    { field: "dueDate", headerName: "Due Date", width: 140, valueGetter: (v) => FormatDate(v) },
 
     { field: "notes", headerName: "Notes", width: 280 },
 

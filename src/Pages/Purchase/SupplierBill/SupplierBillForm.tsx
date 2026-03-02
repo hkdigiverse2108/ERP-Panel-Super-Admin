@@ -164,8 +164,15 @@ const SupplierBillForm = () => {
       if (data.productDetails?.item) {
         setRows(
           data.productDetails.item.map((item: SupplierBillProductItem) => {
-            const product = item.productId as ProductBase | undefined;
-            return { productId: product?._id || (item.productId as string), qty: item.qty || "", freeQty: item.freeQty || "", mrp: item.mrp || "", sellingPrice: item.sellingPrice || "", disc1: item.discount1 || "", disc2: item.discount2 || "", taxAmount: item.taxAmount || "", totalAmount: item.total || "", itemCode: product?.itemCode || "", unit: product?.unit || "", taxableAmount: ((item.total || 0) - (item.taxAmount || 0)).toFixed(2), landingCost: item.landingCost || "", margin: item.margin || "", mfgDate: item.mfgDate ? DateConfig.utc(item.mfgDate).toISOString() : "", expiryDate: item.expiryDate ? DateConfig.utc(item.expiryDate).toISOString() : "", taxRate: product?.purchaseTaxId?.percentage || 0, taxName: product?.purchaseTaxId?.name || "" };
+            let product = item.productId as ProductBase | undefined;
+            // If product data is not fully loaded, lookup from ProductsData
+            if (!product?.uomId && ProductsData?.data) {
+              const foundProduct = (ProductsData.data || []).find((p) => String(p._id) === String(item.productId));
+              if (foundProduct) {
+                product = foundProduct;
+              }
+            }
+            return { productId: product?._id || (item.productId as string), qty: item.qty || "", freeQty: item.freeQty || "", mrp: item.mrp || "", sellingPrice: item.sellingPrice || "", disc1: item.discount1 || "", disc2: item.discount2 || "", taxAmount: item.taxAmount || "", totalAmount: item.total || "", itemCode: product?.itemCode || "", uomId: product?.uomId?._id || "", unit: product?.uomId?.name || product?.unit || "", unitCost: item.sellingPrice || 0, taxableAmount: ((item.total || 0) - (item.taxAmount || 0)).toFixed(2), landingCost: item.landingCost || "", margin: item.margin || "", mfgDate: item.mfgDate ? DateConfig.utc(item.mfgDate).toISOString() : "", expiryDate: item.expiryDate ? DateConfig.utc(item.expiryDate).toISOString() : "", taxRate: product?.purchaseTaxId?.percentage || 0, taxName: product?.purchaseTaxId?.name || "", taxId: product?.purchaseTaxId?._id || "" };
           }),
         );
       }
@@ -186,7 +193,7 @@ const SupplierBillForm = () => {
       }
     }
     // termsAndConditionIds handling moved to terms effect
-  }, [data, isEditing]);
+  }, [data, isEditing, ProductsData]);
 
   const mapProductRows = (): SupplierBillProductDetails => {
     const item = rows.map((r) => ({ productId: r.productId, qty: +r.qty || 0, freeQty: +r.freeQty || 0, mrp: +r.mrp || 0, uomId: r.uomId, unit: r.unit, sellingPrice: +r.sellingPrice || 0, landingCost: +r.landingCost || 0, margin: +r.margin || 0, discount1: +r.disc1 || 0, discount2: +r.disc2 || 0, total: +r.totalAmount || 0 }));
@@ -267,7 +274,7 @@ const SupplierBillForm = () => {
         }
         const product = (ProductsData?.data || []).find((p) => String(p._id) === String(finalValue));
         if (product) {
-          updatedRow = { ...updatedRow, itemCode: product.itemCode || "", qty: 1, uomId: product.uomId?._id || "", unit: product.uomId?.name || "", unitCost: product.purchasePrice || 0, mrp: product.mrp || 0, sellingPrice: product.purchasePrice || product.sellingPrice || 0, landingCost: product.landingCost || 0, taxRate: product.purchaseTaxId?.percentage || 0, taxName: product.purchaseTaxId?.name || "" };
+          updatedRow = { ...updatedRow, itemCode: product.itemCode || "", qty: 1, uomId: product.uomId?._id || "", unit: product.uomId?.name || "", unitCost: product.purchasePrice || 0, mrp: product.mrp || 0, sellingPrice: product.purchasePrice || product.sellingPrice || 0, landingCost: product.landingCost || 0, taxRate: product.purchaseTaxId?.percentage || 0, taxName: product.purchaseTaxId?.name || "", taxId: product.purchaseTaxId?._id || "" };
         }
       }
       newRows[index] = calculateRow(updatedRow, taxType);
@@ -357,7 +364,7 @@ const SupplierBillForm = () => {
 
     if (isEditing) {
       const changedFields = GetChangedFields(payload, data);
-      editSupplierBill(changedFields, { onSuccess: handleSuccess });
+      editSupplierBill({ ...changedFields, supplierBillId: data._id }, { onSuccess: handleSuccess });
     } else {
       addSupplierBill(RemoveEmptyFields(payload) as SupplierBillFormValues, { onSuccess: handleSuccess });
     }
