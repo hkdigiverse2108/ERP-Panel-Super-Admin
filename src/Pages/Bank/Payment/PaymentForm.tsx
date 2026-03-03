@@ -30,8 +30,8 @@ const PaymentForm = () => {
   const initialValues: PosPaymentFormValues = {
     companyId: data?.companyId?._id || "",
     paymentNo: data?.paymentNo || "",
-    voucherType: data?.voucherType || "receipt",
-    paymentType: data?.paymentType || "on_account",
+    voucherType: data?.voucherType || "expense",
+    paymentType: data?.paymentType || "advance",
     partyId: data?.partyId?._id || "",
     bankId: data?.bankId?._id || "",
     posOrderId: data?.posOrderId?._id || "",
@@ -42,11 +42,16 @@ const PaymentForm = () => {
     isActive: data?.isActive ?? true,
     accountId: data?.accountId?._id || "",
     remark: data?.remark || "",
-    voucherDetails: data?.voucherDetails || [{ id: Date.now().toString(), billId: "", netAmount: 0, paidAmount: 0, pendingAmount: 0, kasarAmount: 0, amount: 0, paymentAmount: 0 }],
+    voucherDetails: data?.voucherDetails || [{ billId: "", netAmount: 0, paidAmount: 0, pendingAmount: 0, kasarAmount: 0, amount: 0, paymentAmount: 0 }],
   };
 
   const handleSubmit = async (values: PosPaymentFormValues, { resetForm }: FormikHelpers<PosPaymentFormValues>) => {
-    const { _submitAction, ...rest } = values;
+    const { _submitAction, voucherDetails, ...rest } = values;
+
+    const payload = {
+      ...rest,
+      ...(values.paymentType === "against_bill" && { voucherRow: voucherDetails }),
+    };
 
     const handleSuccess = () => {
       if (_submitAction === "SAVE_AND_NEW") {
@@ -57,10 +62,10 @@ const PaymentForm = () => {
     };
 
     if (isEditing) {
-      const changedFields = GetChangedFields(rest, data);
+      const changedFields = GetChangedFields(payload, data);
       await editPayment({ ...changedFields, paymentId: data._id }, { onSuccess: handleSuccess });
     } else {
-      await addPayment(RemoveEmptyFields(rest), { onSuccess: handleSuccess });
+      await addPayment(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
     }
   };
 
@@ -89,21 +94,21 @@ const PaymentForm = () => {
           {({ resetForm, setFieldValue, dirty, values }) => {
             const voucherDetails = values.voucherDetails || [];
 
-            const updateRow = (id: string, detail: Partial<VoucherRow>) => {
+            const updateRow = <K extends keyof VoucherRow>(index: number, key: K, value: VoucherRow[K]) => {
               setFieldValue(
                 "voucherDetails",
-                voucherDetails.map((row) => (row.id === id ? { ...row, ...detail } : row)),
+                voucherDetails.map((row, i) => (i === index ? { ...row, [key]: value } : row)),
               );
             };
 
             const addRow = () => {
-              setFieldValue("voucherDetails", [...voucherDetails, { id: Date.now().toString(), billId: "", netAmount: 0, paidAmount: 0, pendingAmount: 0, kasarAmount: 0, amount: 0, paymentAmount: 0 }]);
+              setFieldValue("voucherDetails", [...voucherDetails, { billId: "", netAmount: 0, paidAmount: 0, pendingAmount: 0, kasarAmount: 0, amount: 0, paymentAmount: 0 }]);
             };
 
-            const removeRow = (id: string) => {
+            const removeRow = (index: number) => {
               setFieldValue(
                 "voucherDetails",
-                voucherDetails.filter((r) => r.id !== id),
+                voucherDetails.filter((_, i) => i !== index),
               );
             };
 
@@ -113,29 +118,36 @@ const PaymentForm = () => {
                 header: "#",
                 render: (_, idx) => idx + 1,
                 bodyClass: "w-10",
+                footer: "",
+              },
+              {
+                key: "billId",
+                header: "Bill No.",
+                bodyClass: "min-w-40",
+                render: (r, idx) => <CommonSelect options={[]} placeholder="Select Bill" value={r.billId ? [r.billId] : []} onChange={(v) => updateRow(idx, "billId", v[0] || "")} />,
                 footer: () => (
-                  <Box sx={{ display: "flex", alignItems: "center", color: "primary.main", fontWeight: 600 }} onClick={addRow}>
+                  <Box sx={{ display: "flex", alignItems: "center", color: "primary.main", fontWeight: 600, cursor: "pointer" }} onClick={addRow}>
                     <AddCircleIcon sx={{ fontSize: 18, mr: 0.5 }} /> Add More
                   </Box>
                 ),
+                footerClass: "text-left",
               },
-
-              { key: "billId", header: "Bill No.*", bodyClass: "min-w-40", render: (r) => <CommonSelect options={[]} placeholder="Select Bill" value={r.billId ? [r.billId] : []} onChange={(v) => updateRow(r.id, { billId: v[0] || "" })} /> },
-              { key: "netAmount", header: "Net Amount", bodyClass: "min-w-30", render: (r) => r.netAmount || "" },
-              { key: "paidAmount", header: "Paid Amount", bodyClass: "min-w-30", render: (r) => r.paidAmount || "", footer: () => "Total", footerClass: "text-right font-bold" },
-              { key: "pendingAmount", header: "Pending Amount", bodyClass: "min-w-30", render: (r) => r.pendingAmount || "" },
-              { key: "kasarAmount", header: "Kasar Amount*", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.kasarAmount} onChange={(v) => updateRow(r.id, { kasarAmount: Number(v) })} /> },
-              { key: "amount", header: "Amount*", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.amount} onChange={(v) => updateRow(r.id, { amount: Number(v) })} /> },
-              { key: "paymentAmount", header: "Payment Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField disabled type="number" value={r.amount} onChange={() => {}} />, footer: (data) => data.reduce((sum, row) => sum + Number((row as VoucherRow).amount || 0), 0).toFixed(2), footerClass: "font-bold text-center" },
+              { key: "netAmount", header: "Net Amount", bodyClass: "min-w-30", render: (r) => r.netAmount || "", footer: "" },
+              { key: "paidAmount", header: "Paid Amount", bodyClass: "min-w-30", render: (r) => r.paidAmount || "", footer: "Total", footerClass: "text-right font-bold" },
+              { key: "pendingAmount", header: "Pending Amount", bodyClass: "min-w-30", render: (r) => r.pendingAmount || "", footer: "" },
+              { key: "kasarAmount", header: "Kasar Amount", bodyClass: "min-w-30", render: (r, idx) => <CommonTextField type="number" value={r.kasarAmount} onChange={(v) => updateRow(idx, "kasarAmount", Number(v))} />, footer: "" },
+              { key: "amount", header: "Amount*", bodyClass: "min-w-30", render: (r, idx) => <CommonTextField type="number" value={r.amount} onChange={(v) => updateRow(idx, "amount", Number(v))} />, footer: "" },
+              { key: "paymentAmount", header: "Payment Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField disabled type="number" value={r.amount} onChange={() => { }} />, footer: (data) => data.reduce((sum, row) => sum + Number((row as VoucherRow).amount || 0), 0).toFixed(2), footerClass: "font-bold text-center" },
               {
                 key: "actions",
                 header: "",
                 bodyClass: "w-10",
-                render: (r) => (
-                  <CommonButton size="small" color="error" variant="outlined" onClick={() => removeRow(r.id)}>
+                render: (_, idx) => (
+                  <CommonButton size="small" color="error" variant="outlined" onClick={() => removeRow(idx)}>
                     <ClearIcon />
                   </CommonButton>
                 ),
+                footer: "",
               },
             ];
 
@@ -169,18 +181,18 @@ const PaymentForm = () => {
                           grid={{ xs: 12, md: 4 }}
                           stats={[
                             { value: "On Account", label: "", desc: "Upfront Payment", selected: values.paymentType === "on_account", onClick: () => setFieldValue("paymentType", "on_account") },
-                            { value: "Advance Payment", label: "", desc: "Will be offset by upcoming bills", selected: values.paymentType === "advance_payment", onClick: () => setFieldValue("paymentType", "advance_payment") },
-                            { value: "Against Voucher", label: "", desc: "Make Payment Against Voucher", selected: values.paymentType === "against_voucher", onClick: () => setFieldValue("paymentType", "against_voucher") },
+                            { value: "Advance Payment", label: "", desc: "Will be offset by upcoming bills", selected: values.paymentType === "advance", onClick: () => setFieldValue("paymentType", "advance") },
+                            { value: "Against Voucher", label: "", desc: "Make Payment Against Voucher", selected: values.paymentType === "against_bill", onClick: () => setFieldValue("paymentType", "against_bill") },
                           ]}
                         />
                       </Grid>
                       <CommonValidationTextField name="amount" label="Amount" type="number" required isCurrency currencyDisabled grid={{ xs: 12, md: 4 }} />
                       <CommonValidationTextField name="remark" label="Description" multiline grid={{ xs: 12, md: 8 }} />
-                      {values.paymentType === "against_voucher" && (
+                      {values.paymentType === "against_bill" && (
                         <Grid size={{ xs: 12 }}>
                           <CommonCard hideDivider>
                             <Box sx={{ overflowX: "auto" }} className="custom-scrollbar">
-                              <CommonTable data={voucherDetails} columns={voucherColumns} rowKey={(r) => r.id} showFooter />
+                              <CommonTable data={voucherDetails} columns={voucherColumns} rowKey={(_, index) => index.toString()} showFooter />
                             </Box>
                           </CommonCard>
                         </Grid>
