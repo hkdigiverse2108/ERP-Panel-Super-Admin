@@ -65,7 +65,7 @@ const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate
               <CommonValidationTextField name="shippingNote" label="Shipping Note" grid={{ xs: 12 }} />
               {isEditing && <CommonValidationTextField name="orderNo" label="Purchase Order No." grid={{ xs: 12 }} />}
               <CommonValidationSelect name="taxType" label="Tax Type" required options={TAX_TYPE} grid={{ xs: 12 }} />
-              <CommonValidationSelect name="status" label="Order Status" required options={ORDER_STATUS} grid={{ xs: 12 }} />
+              <CommonValidationSelect name="status" label="Order Status" required options={ORDER_STATUS} grid={{ xs: 12 }}  />
             </Box>
           </Box>
         </CommonCard>
