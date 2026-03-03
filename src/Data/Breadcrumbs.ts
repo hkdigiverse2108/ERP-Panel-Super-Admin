@@ -35,6 +35,9 @@ export const BREADCRUMBS = {
   BRAND: {
     BASE: [{ label: PAGE_TITLE.INVENTORY.BRAND.BASE }],
   },
+  PRODUCT_TYPE: {
+    BASE: [{ label: PAGE_TITLE.INVENTORY.PRODUCT_TYPE.BASE }],
+  },
   UOM: {
     BASE: [{ label: PAGE_TITLE.INVENTORY.UOM.BASE }],
   },

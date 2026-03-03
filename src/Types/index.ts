@@ -42,3 +42,6 @@ export * from './JournalVoucher';
 export * from "./PosOrder";
 export * from "./ReturnPosOrder";
 export * from "./Pos";
+export * from "./ProductType";
+export * from "./AdminSetting";
+export * from "./PosCashRegister";

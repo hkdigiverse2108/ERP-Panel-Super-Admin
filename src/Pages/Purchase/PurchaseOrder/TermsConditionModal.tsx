@@ -1,9 +1,9 @@
-import { Grid, Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { Formik } from "formik";
 import type { FC } from "react";
 import { CommonButton, CommonSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonCard, CommonModal } from "../../../Components/Common";
-import type { TermsAndConditionModalProps, TermsConditionBase, TermsConditionFormValues } from "../../../Types/TermsCondition";
+import type { TermsAndConditionModalProps, TermsConditionBase, TermsConditionFormValues } from "../../../Types";
 import { TermsConditionFormSchema } from "../../../Utils/ValidationSchemas";
 
 const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ openModal, setOpenModal, onSave, initialValues, isLoading }) => {

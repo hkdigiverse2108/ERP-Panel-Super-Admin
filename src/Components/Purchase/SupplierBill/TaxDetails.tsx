@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Queries } from "../../../Api";
-import type { ProductRow, AdditionalChargeRow, TaxDetailsProps } from "../../../Types/SupplierBill";
+import type { ProductRow, AdditionalChargeRow, TaxDetailsProps } from "../../../Types";
 export const TaxDetails = ({ rows, additionalChargeRows, flatDiscount, roundOffAmount }: TaxDetailsProps) => {
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
 

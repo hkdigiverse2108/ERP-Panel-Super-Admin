@@ -109,6 +109,7 @@ export const BrandFormSchema = Yup.object({
 });
 
 export const ProductFormSchema = Yup.object({
+  productTypeId: Validation("string", "Type"),
   sku: Validation("string", "sku", { required: false }),
   productType: Validation("string", "Product Type"),
   name: Validation("string", "Product Name"),
@@ -187,6 +188,8 @@ export const CompanyFormSchemas = Yup.object({
   customerCareNumber: Validation("string", "customer Care Number"),
   phoneNo: PhoneValidation(),
   ownerNo: PhoneValidation(),
+  planStartDate: Validation("string", "Plan Start Date"),
+  planEndDate: Validation("string", "Plan End Date"),
 
   address: Yup.object({
     address: Validation("string", "Address", { required: false }),
@@ -571,5 +574,10 @@ export const JournalVoucherFormSchema = Yup.object({
       })
     )
     .min(2, "At least two entries are required"),
+  isActive: Yup.boolean(),
+});
+
+export const ProductTypeFormSchema = Yup.object({
+  name: Validation("string", "Product Type Name"),
   isActive: Yup.boolean(),
 });
