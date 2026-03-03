@@ -12,7 +12,7 @@ import { CommonBreadcrumbs, CommonCard, CommonBottomActionBar, DependentSelect, 
 import type { CommonTableColumn } from "../../../Types";
 import ClearIcon from "@mui/icons-material/Clear";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { BREADCRUMBS, POS_PAYMENT_MODE } from "../../../Data";
+import { BREADCRUMBS, PAYMENT_MODE_OPTIONS, POS_PAYMENT_MODE } from "../../../Data";
 
 const PaymentForm = () => {
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
@@ -90,7 +90,10 @@ const PaymentForm = () => {
             const voucherDetails = values.voucherDetails || [];
 
             const updateRow = (id: string, detail: Partial<VoucherRow>) => {
-              setFieldValue("voucherDetails", voucherDetails.map((row) => (row.id === id ? { ...row, ...detail } : row)));
+              setFieldValue(
+                "voucherDetails",
+                voucherDetails.map((row) => (row.id === id ? { ...row, ...detail } : row)),
+              );
             };
 
             const addRow = () => {
@@ -98,7 +101,10 @@ const PaymentForm = () => {
             };
 
             const removeRow = (id: string) => {
-              setFieldValue("voucherDetails", voucherDetails.filter((r) => r.id !== id));
+              setFieldValue(
+                "voucherDetails",
+                voucherDetails.filter((r) => r.id !== id),
+              );
             };
 
             const voucherColumns: CommonTableColumn<VoucherRow>[] = [
@@ -108,18 +114,19 @@ const PaymentForm = () => {
                 render: (_, idx) => idx + 1,
                 bodyClass: "w-10",
                 footer: () => (
-                  <Box sx={{ display: "flex", alignItems: "center", cursor: "pointer", color: "primary.main", fontWeight: 600 }} onClick={addRow}>
+                  <Box sx={{ display: "flex", alignItems: "center", color: "primary.main", fontWeight: 600 }} onClick={addRow}>
                     <AddCircleIcon sx={{ fontSize: 18, mr: 0.5 }} /> Add More
                   </Box>
                 ),
               },
+
               { key: "billId", header: "Bill No.*", bodyClass: "min-w-40", render: (r) => <CommonSelect options={[]} placeholder="Select Bill" value={r.billId ? [r.billId] : []} onChange={(v) => updateRow(r.id, { billId: v[0] || "" })} /> },
               { key: "netAmount", header: "Net Amount", bodyClass: "min-w-30", render: (r) => r.netAmount || "" },
               { key: "paidAmount", header: "Paid Amount", bodyClass: "min-w-30", render: (r) => r.paidAmount || "", footer: () => "Total", footerClass: "text-right font-bold" },
               { key: "pendingAmount", header: "Pending Amount", bodyClass: "min-w-30", render: (r) => r.pendingAmount || "" },
               { key: "kasarAmount", header: "Kasar Amount*", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.kasarAmount} onChange={(v) => updateRow(r.id, { kasarAmount: Number(v) })} /> },
               { key: "amount", header: "Amount*", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.amount} onChange={(v) => updateRow(r.id, { amount: Number(v) })} /> },
-              { key: "paymentAmount", header: "Payment Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField disabled type="number" value={r.amount} onChange={() => { }} />, footer: (data) => data.reduce((sum, row) => sum + Number((row as VoucherRow).amount || 0), 0).toFixed(2), footerClass: "font-bold text-center" },
+              { key: "paymentAmount", header: "Payment Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField disabled type="number" value={r.amount} onChange={() => {}} />, footer: (data) => data.reduce((sum, row) => sum + Number((row as VoucherRow).amount || 0), 0).toFixed(2), footerClass: "font-bold text-center" },
               {
                 key: "actions",
                 header: "",
@@ -141,7 +148,19 @@ const PaymentForm = () => {
                   <CommonCard topContent={topContent} title="Payment Details" grid={{ xs: 12 }}>
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
-                      <DependentSelect params={{ companyId: values?.companyId }} name="accountId" label="Cash / Account" grid={{ xs: 12, md: 4 }} query={Queries.useGetAccountDropdown} disabled={!values?.companyId} required />
+                      {values?.paymentMode === "cash" && (
+                        <>
+                          <DependentSelect params={{ companyId: values?.companyId }} name="accountId" label="Cash / Account" grid={{ xs: 12, md: 4 }} query={Queries.useGetAccountDropdown} disabled={!values?.companyId} required />
+                        </>
+                      )}
+                      {values?.paymentMode === "bank" && (
+                        <>
+                          <DependentSelect params={{ companyId: values?.companyId }} name="BankId" label="Bank" grid={{ xs: 12, md: 4 }} query={Queries.useGetBankDropdown} disabled={!values?.companyId} required />
+                          <CommonValidationRadio name="paymentMode" grid={{ xs: 12, md: 4 }} options={PAYMENT_MODE_OPTIONS} />
+                          <CommonValidationDatePicker name="transactionDate" label="Transaction Date" required grid={{ xs: 12, md: 4 }} />
+                          <CommonValidationTextField name="transactionNo" label="Transaction No" type="number" required grid={{ xs: 12, md: 4 }} />
+                        </>
+                      )}
                       <DependentSelect params={{ companyId: values?.companyId }} name="partyId" label="Party" grid={{ xs: 12, md: 4 }} query={Queries.useGetContactDropdown} disabled={!values?.companyId} required />
                       <CommonValidationDatePicker name="paymentDate" label="Payment Date" required grid={{ xs: 12, md: 4 }} />
                       <Grid size={{ xs: 12 }}>

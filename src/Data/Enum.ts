@@ -295,3 +295,8 @@ export const LOYALTY_REDEMPTION_TYPE = [
   { label: "Single", value: "single" },
   { label: "Multiple", value: "multiple" },
 ];
+
+export const PAYMENT_MODE_OPTIONS = [
+  { label: "Online", value: "online" },
+  { label: "Cheque", value: "cheque" },
+];
