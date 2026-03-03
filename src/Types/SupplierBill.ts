@@ -243,7 +243,14 @@ export interface SupplierBillBase extends CommonDataType {
 
   isActive?: boolean;
 }
-
+export type AdditionalChargeApiItem =
+  Omit<AdditionalChargeItem, "chargeId"> & {
+    chargeId?: {
+      _id: string;
+      name?: string;
+      type?: string;
+    };
+  };
 /* ===================== PAYLOADS ===================== */
 
 export type AddSupplierBillPayload = SupplierBillFormValues;

@@ -9,7 +9,7 @@ import SupplierBillDetails from "../../../Components/Purchase/SupplierBill/Suppl
 import SupplierBillTabs from "../../../Components/Purchase/SupplierBill/SupplierBillDetails/SupplierBillTab";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { AdditionalChargeDetails, AdditionalChargeItem, AdditionalChargeRow, ProductBase, ProductRow, BillSupplier as Supplier, SupplierBillFormValues, SupplierBillProductDetails, SupplierBillProductItem, TermsConditionBase } from "../../../Types";
+import type { AdditionalChargeDetails, AdditionalChargeRow, ProductBase, ProductRow, BillSupplier as Supplier, SupplierBillFormValues, SupplierBillProductDetails, SupplierBillProductItem, TermsConditionBase } from "../../../Types";
 import { DateConfig, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 
@@ -176,7 +176,18 @@ const SupplierBillForm = () => {
         );
       }
       if (data.additionalCharges?.item && data.additionalCharges.item.length > 0) {
-        setAdditionalChargeRows(data.additionalCharges.item.map((item: AdditionalChargeItem) => ({ chargeId: String(item.chargeId || ""), amount: item.amount?.toString() || "", taxId: item.taxId?.toString() || "", taxAmount: item.taxAmount?.toFixed(2) || "", totalAmount: item.totalAmount?.toString() || "" })));
+        if (data.additionalCharges?.item && data.additionalCharges.item.length > 0) {
+          setAdditionalChargeRows(
+            data.additionalCharges.item.map((item: any) => ({
+              chargeId: item.chargeId?._id || "", 
+              amount: item.amount?.toString() || "",
+              taxId: item.taxId?._id || item.taxId || "",
+              taxAmount: item.totalAmount && item.amount ? (item.totalAmount - item.amount).toFixed(2) : "",
+              totalAmount: item.totalAmount?.toString() || "",
+            })),
+          );
+          setShowAdditionalCharge(true);
+        }
         setShowAdditionalCharge(true);
       } else {
         setAdditionalChargeRows([additionalChargeEmptyRow]);
