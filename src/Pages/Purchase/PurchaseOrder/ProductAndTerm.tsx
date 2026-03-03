@@ -214,7 +214,7 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
     if (hasChanges) {
       setFieldValue("items", newItems);
     }
-  }, [values.items, values.taxType, values.flatDiscount, values.tax, values.roundOff, setFieldValue]);
+  }, [values.items, values.taxType, values.summary?.flatDiscount, values.summary?.roundOff, setFieldValue]);
 
   return (
     <>
