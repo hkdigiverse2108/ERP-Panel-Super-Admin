@@ -101,31 +101,14 @@ const PurchaseOrderForm = () => {
     orderNo: data?.orderNo || "",
     shippingDate: data?.shippingDate || data?.date || data?.orderDate || "",
     shippingNote: data?.shippingNote || "",
-    items: data?.items?.length
-      ? data.items
-      : [
-        {
-          productId: "",
-          qty: 1,
-          freeQty: 0,
-          mrp: 0,
-          sellingPrice: 0,
-          discount1: 0,
-          discount2: 0,
-          taxableAmount: 0,
-          unitCost: 0,
-          tax: "0",
-          landingCost: "0",
-          margin: "0",
-          total: 0,
-        },
-      ],
+    items: data?.items?.length ? data.items : [{ productId: "", qty: 1, freeQty: 0, mrp: 0, sellingPrice: 0, discount1: 0, discount2: 0, taxableAmount: 0, unitCost: 0, uomId: "", unit: "", taxName: "", taxAmount: 0, tax: "0", landingCost: "0", margin: "0", total: 0 }],
 
     flatDiscount: data?.flatDiscount || 0,
     grossAmount: data?.grossAmount || 0,
     discountAmount: data?.discountAmount || 0,
     taxableAmount: data?.taxableAmount || 0,
     tax: data?.tax || 0,
+    taxAmount: data?.taxAmount || data?.tax || 0,
     roundOff: data?.roundOff || 0,
     netAmount: data?.netAmount || 0,
 
@@ -140,6 +123,7 @@ const PurchaseOrderForm = () => {
 
     const payload = {
       ...rest,
+      // Remove per-item taxAmount from items to match backend schema (backend expects summary.taxAmount only)
       items: rest.items?.map(({ taxAmount, taxName, freeQty, mrp, sellingPrice, discount1, discount2, taxableAmount, unitCost, ...item }) => ({
         ...item,
         tax: String(item.tax || 0),

@@ -62,6 +62,7 @@ export interface PurchaseOrderFormValues {
   discountAmount?: number;
   taxableAmount?: number;
   tax?: number;
+  taxAmount?: number;
   roundOff?: number;
   netAmount?: number;
 

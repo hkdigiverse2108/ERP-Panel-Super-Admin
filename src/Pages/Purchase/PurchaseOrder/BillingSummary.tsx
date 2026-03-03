@@ -37,6 +37,7 @@ const BillingSummary = ({ productData }: BillingSummaryProps) => {
     if (values.grossAmount !== grossAmount) setFieldValue("grossAmount", grossAmount);
     if (values.taxableAmount !== taxableAmount) setFieldValue("taxableAmount", taxableAmount);
     if (values.discountAmount !== discountInput) setFieldValue("discountAmount", discountInput);
+    if (Number(values.taxAmount) !== Number(totalCalculatedTax)) setFieldValue("taxAmount", totalCalculatedTax);
 
     const roundOff = Number(values.roundOff) || 0;
 
@@ -71,7 +72,7 @@ const BillingSummary = ({ productData }: BillingSummaryProps) => {
     grossAmount: Number(values.grossAmount) || 0,
     discountAmount: Number(values.discountAmount) || 0,
     taxableAmount: Number(values.taxableAmount) || 0,
-    taxAmount: calculatedTaxAmount,
+    taxAmount: Number(values.taxAmount) || Number(calculatedTaxAmount) || 0,
     netAmount: Number(values.netAmount) || 0,
   };
 
