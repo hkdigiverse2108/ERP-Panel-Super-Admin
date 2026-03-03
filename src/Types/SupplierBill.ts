@@ -62,9 +62,10 @@ export interface SupplierBillReturnProductDetails {
 
 export interface AdditionalChargeItem {
   chargeId?: string;
-  value?: number;
-  taxRate?: number;
-  total?: number;
+  amount?: number;
+  taxAmount?: number;
+  taxId?: string;
+  totalAmount?: number;
 }
 
 export interface AdditionalChargeDetails {
@@ -145,8 +146,8 @@ export interface ProductRow {
 
 export interface AdditionalChargeRow {
   chargeId: string;
-  taxableAmount: string;
-  tax: string;
+  amount: string;
+  taxId: string;
   taxAmount: string;
   totalAmount: string;
 }
