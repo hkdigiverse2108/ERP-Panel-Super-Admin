@@ -68,6 +68,7 @@ import SupportDesk from "../Pages/SupportDesk/CallRequest";
 import CreditNoteList from "../Pages/Pos/CreditNote";
 import OrderList from "../Pages/Pos/OrderList";
 import PosCreditNote from "../Pages/Pos/CreditNote";
+import ProductType from "../Pages/Inventory/ProductType";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -99,6 +100,8 @@ export const PageRoutes = [
   { path: ROUTES.UOM.BASE, name: PAGE_TITLE.INVENTORY.UOM.BASE, element: <Uom /> },
 
   { path: ROUTES.TAX.BASE, name: PAGE_TITLE.INVENTORY.TAX.BASE, element: <Tax /> },
+
+  { path: ROUTES.PRODUCT_TYPE.BASE, name: PAGE_TITLE.INVENTORY.PRODUCT_TYPE.BASE, element: <ProductType /> },
 
   { path: ROUTES.CATEGORY.BASE, name: PAGE_TITLE.INVENTORY.CATEGORY.BASE, element: <Category /> },
 

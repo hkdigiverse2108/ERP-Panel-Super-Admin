@@ -1,13 +1,7 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AddAccountGroupPayload, AddAdditionalChargesPayload, AddAnnouncementPayload, AddBankPayload, AddBillOfLiveProductPayload, AddBranchPayload, AddBrandPayload, AddCallRequestPayload, AddCategoryPayload, AddCompanyPayload, AddContactPayload, AddCouponPayload, AddCreditNotePayload, AddDebitNotePayload, AddLocationPayload, AddLoyaltyPayload, AddMaterialConsumptionPayload, AddModulePayload, AddModulePermissionPayload, AddPosProductOrderPayload, AddProductPayload, AddRecipePayload, AddReturnPosOrderPayload, AddRolesPayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddStockVerificationPayload, AddSupplierBillPayload, AddTaxPayload, AddUomPayload, AddUserPayload, ApplyCouponPayload, ChangePasswordPayload, EditAccountGroupPayload, EditAdditionalChargesPayload, EditAnnouncementPayload, EditBankPayload, EditBillOfLiveProductPayload, EditBranchPayload, EditBrandPayload, EditCallRequestPayload, EditCategoryPayload, EditCompanyPayload, EditContactPayload, EditCouponPayload, EditCreditNotePayload, EditDebitNotePayload, EditLocationPayload, EditLoyaltyPayload, EditLoyaltyPointPayload, EditMaterialConsumptionPayload, EditModulePayload, EditPermissionPayload, EditPosProductOrderPayload, EditProductPayload, EditRecipePayload, EditReturnPosOrderPayload, EditRolesPayload, EditStockVerificationPayload, EditSupplierBillPayload, EditTaxPayload, EditUomPayload, EditUserPayload, LoginPayload, LoginResponse, ResendOtpPayload, UploadResponse, UserApiResponse, VerifyOtpPayload } from "../Types";
-import type { AddAccountPayload, EditAccountPayload } from "../Types/Account";
-import type { AddPurchaseOrderPayload, EditPurchaseOrderPayload } from "../Types/PurchaseOrder";
-import type { AddTermsConditionPayload, EditTermsConditionPayload } from "../Types/TermsCondition";
-import type { EditAdminSettingPayload } from "../Types/AdminSetting";
-import type { AddJournalVoucherPayload, EditJournalVoucherPayload } from "../Types";
+import type { AddAccountGroupPayload, AddAccountPayload, AddAdditionalChargesPayload, AddAnnouncementPayload, AddBankPayload, AddBillOfLiveProductPayload, AddBranchPayload, AddBrandPayload, AddCallRequestPayload, AddCategoryPayload, AddCompanyPayload, AddContactPayload, AddCouponPayload, AddCreditNotePayload, AddDebitNotePayload, AddJournalVoucherPayload, AddLocationPayload, AddLoyaltyPayload, AddMaterialConsumptionPayload, AddModulePayload, AddModulePermissionPayload, AddPosCreditNotePayload, AddPosProductOrderPayload, AddProductPayload, AddProductTypePayload, AddPurchaseOrderPayload, AddRecipePayload, AddReturnPosOrderPayload, AddRolesPayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddStockVerificationPayload, AddSupplierBillPayload, AddTaxPayload, AddTermsConditionPayload, AddUomPayload, AddUserPayload, ApplyCouponPayload, ChangePasswordPayload, EditAccountGroupPayload, EditAccountPayload, EditAdditionalChargesPayload, EditAdminSettingPayload, EditAnnouncementPayload, EditBankPayload, EditBillOfLiveProductPayload, EditBranchPayload, EditBrandPayload, EditCallRequestPayload, EditCategoryPayload, EditCompanyPayload, EditContactPayload, EditCouponPayload, EditCreditNotePayload, EditDebitNotePayload, EditJournalVoucherPayload, EditLocationPayload, EditLoyaltyPayload, EditLoyaltyPointPayload, EditMaterialConsumptionPayload, EditModulePayload, EditPermissionPayload, EditPosCreditNotePayload, EditPosProductOrderPayload, EditProductPayload, EditProductTypePayload, EditPurchaseOrderPayload, EditRecipePayload, EditReturnPosOrderPayload, EditRolesPayload, EditStockVerificationPayload, EditSupplierBillPayload, EditTaxPayload, EditTermsConditionPayload, EditUomPayload, EditUserPayload, LoginPayload, LoginResponse, PosCreditNoteRefundFormValues, ResendOtpPayload, UploadResponse, UserApiResponse, VerifyOtpPayload } from "../Types";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
-import type { AddPosCreditNotePayload, EditPosCreditNotePayload, PosCreditNoteRefundFormValues } from "../Types/PosCreditNote";
 
 export const Mutations = {
   // ************ Auth ***********
@@ -37,6 +31,11 @@ export const Mutations = {
   useAddBranch: () => useMutations<AddBranchPayload, void>([KEYS.BRANCH.ADD, KEYS.BRANCH.BASE], (input) => Post(URL_KEYS.BRANCH.ADD, input)),
   useEditBranch: () => useMutations<EditBranchPayload, void>([KEYS.BRANCH.EDIT, KEYS.BRANCH.BASE], (input) => Put(URL_KEYS.BRANCH.EDIT, input)),
   useDeleteBranch: () => useMutations<string, void>([KEYS.BRANCH.DELETE, KEYS.BRANCH.BASE], (id) => Delete(`${URL_KEYS.BRANCH.BASE}/${id}`)),
+
+  // ************ Product Type ***********
+  useAddProductType: () => useMutations<AddProductTypePayload, void>([KEYS.PRODUCT_TYPE.ADD, KEYS.PRODUCT_TYPE.BASE], (input) => Post(URL_KEYS.PRODUCT_TYPE.ADD, input)),
+  useEditProductType: () => useMutations<EditProductTypePayload, void>([KEYS.PRODUCT_TYPE.EDIT, KEYS.PRODUCT_TYPE.BASE], (input) => Put(URL_KEYS.PRODUCT_TYPE.EDIT, input)),
+  useDeleteProductType: () => useMutations<string, void>([KEYS.PRODUCT_TYPE.DELETE, KEYS.PRODUCT_TYPE.BASE], (id) => Delete(`${URL_KEYS.PRODUCT_TYPE.BASE}/${id}`)),
 
   // ************ Brand ***********
   useAddBrand: () => useMutations<AddBrandPayload, void>([KEYS.BRAND.ADD, KEYS.BRAND.BASE], (input) => Post(URL_KEYS.BRAND.ADD, input)),
@@ -176,19 +175,18 @@ export const Mutations = {
   useEditAnnouncement: () => useMutations<EditAnnouncementPayload, void>([KEYS.ANNOUNCEMENT.EDIT, KEYS.ANNOUNCEMENT.BASE], (input) => Put(URL_KEYS.ANNOUNCEMENT.EDIT, input)),
   useDeleteAnnouncement: () => useMutations<string, void>([KEYS.ANNOUNCEMENT.DELETE, KEYS.ANNOUNCEMENT.BASE], (id) => Delete(`${URL_KEYS.ANNOUNCEMENT.BASE}/${id}`)),
 
-   //************** Support Desk **************** */
+  //************** Support Desk **************** */
   useAddCallRequest: () => useMutations<AddCallRequestPayload, void>([KEYS.CALL_REQUEST.ADD, KEYS.CALL_REQUEST.BASE], (input) => Post(URL_KEYS.CALL_REQUEST.ADD, input)),
   useEditCallRequest: () => useMutations<EditCallRequestPayload, void>([KEYS.CALL_REQUEST.EDIT, KEYS.CALL_REQUEST.BASE], (input) => Put(URL_KEYS.CALL_REQUEST.EDIT, input)),
   useDeleteCallRequest: () => useMutations<string, void>([KEYS.CALL_REQUEST.DELETE, KEYS.CALL_REQUEST.BASE], (id) => Delete(`${URL_KEYS.CALL_REQUEST.BASE}/${id}`)),
 
-
-   //*************** POS Credit Note *********
+  //*************** POS Credit Note *********
   useAddPosCreditNote: () => useMutations<AddPosCreditNotePayload, void>([KEYS.POS_CREDIT_NOTE.ADD, KEYS.POS_CREDIT_NOTE.BASE], (input) => Post(URL_KEYS.POS_CREDIT_NOTE.ADD, input)),
   useEditPosCreditNote: () => useMutations<EditPosCreditNotePayload, void>([KEYS.POS_CREDIT_NOTE.EDIT, KEYS.POS_CREDIT_NOTE.BASE], (input) => Put(URL_KEYS.POS_CREDIT_NOTE.EDIT, input)),
   useDeletePosCreditNote: () => useMutations<string, void>([KEYS.POS_CREDIT_NOTE.DELETE, KEYS.POS_CREDIT_NOTE.BASE], (id) => Delete(`${URL_KEYS.POS_CREDIT_NOTE.BASE}/${id}`)),
   useRefundCreditNote: () => useMutations<PosCreditNoteRefundFormValues, void>([KEYS.POS_CREDIT_NOTE.REFUND, KEYS.POS_CREDIT_NOTE.BASE], (input) => Post(URL_KEYS.POS_CREDIT_NOTE.REFUND, input)),
 
-   //*************** POS Return Order *********
+  //*************** POS Return Order *********
   useAddReturnPosOrder: () => useMutations<AddReturnPosOrderPayload, void>([KEYS.RETURN_POS_ORDER.ADD, KEYS.RETURN_POS_ORDER.BASE], (input) => Post(URL_KEYS.RETURN_POS_ORDER.ADD, input)),
   useEditReturnPosOrder: () => useMutations<EditReturnPosOrderPayload, void>([KEYS.RETURN_POS_ORDER.EDIT, KEYS.RETURN_POS_ORDER.BASE], (input) => Put(URL_KEYS.RETURN_POS_ORDER.EDIT, input)),
   useDeleteReturnPosOrder: () => useMutations<string, void>([KEYS.RETURN_POS_ORDER.DELETE, KEYS.RETURN_POS_ORDER.BASE], (id) => Delete(`${URL_KEYS.RETURN_POS_ORDER.BASE}/${id}`)),
@@ -198,4 +196,3 @@ export const Mutations = {
   useEditPosOrder: () => useMutations<EditPosProductOrderPayload, void>([KEYS.POS.EDIT, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER], (input) => Put(URL_KEYS.POS.EDIT, input)),
   useDeletePosOrder: () => useMutations<string, void>([KEYS.POS.DELETE, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER], (id) => Delete(`${URL_KEYS.POS.BASE}/${id}`)),
 };
- 

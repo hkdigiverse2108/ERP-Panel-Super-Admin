@@ -1,11 +1,9 @@
-import { Box, Tab, Tabs } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { Box, Tab, Tabs } from "@mui/material";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
 import { CommonButton, CommonSelect, CommonTextField } from "../../../../Attribute";
-import { CommonTabPanel, CommonCard, CommonTermsAndCondition } from "../../../Common";
-import { CommonTable } from "../../../Common";
-import type { CommonTableColumn } from "../../../../Types";
-import type { ProductRow, SupplierBillTabsProps } from "../../../../Types/SupplierBill";
+import type { CommonTableColumn, ProductRow, SupplierBillTabsProps } from "../../../../Types";
+import { CommonCard, CommonTable, CommonTabPanel, CommonTermsAndCondition } from "../../../Common";
 
 const SupplierBillTabs = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange, isProductDisabled, isTermsDisabled, selectedTermIds, onTermsChange, companyId }: SupplierBillTabsProps) => {
   const ProductRowColumns: CommonTableColumn<ProductRow>[] = [

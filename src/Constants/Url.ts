@@ -162,6 +162,14 @@ export const URL_KEYS = {
     EDIT: "/bill-of-live-product/edit",
   },
 
+  PRODUCT_TYPE: {
+    BASE: "/product-type",
+    ALL: "/product-type/all",
+    DROPDOWN: "/product-type/dropdown",
+    ADD: "/product-type/add",
+    EDIT: "/product-type/edit",
+  },
+
   // ----------------------------- accounts -----------------------------
   ACCOUNT_GROUP: {
     BASE: "/account-group",

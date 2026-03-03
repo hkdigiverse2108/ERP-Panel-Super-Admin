@@ -26,6 +26,7 @@ const ProductForm = () => {
   const { data } = location.state || {};
   const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true });
   const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true });
+  const { data: ProductTypeData, isLoading: ProductTypeDataLoading } = Queries.useGetProductTypeDropdown();
 
   const { mutate: addProduct, isPending: isAddLoading } = Mutations.useAddProduct();
   const { mutate: editProduct, isPending: isEditLoading } = Mutations.useEditProduct();
@@ -60,6 +61,7 @@ const ProductForm = () => {
       masterQty: data?.masterQty || null,
       images: data?.images || [],
       isActive: data?.isActive || true,
+      productTypeId: data?.productTypeId?._id || "",
     }),
     [data],
   );
@@ -154,7 +156,8 @@ const ProductForm = () => {
                           <CommonValidationSwitch name="isExpiryProductSaleable" label="Expiry Product Saleable" grid={{ xs: 12, sm: 6, xl: 3 }} />
                         </>
                       )}
-                      <CommonValidationTextField name="sku" label="sku" grid={{ xs: 12, sm: 6 }} />
+                      <CommonValidationTextField name="sku" label="sku" grid={{ xs: 12, sm: 3 }} />
+                      <CommonValidationSelect name="productTypeId" label="Type" options={GenerateOptions(ProductTypeData?.data)} isLoading={ProductTypeDataLoading} grid={{ xs: 12, sm: 3 }} required />
                       <CommonValidationTextField name="shortDescription" label="short Description" multiline grid={{ xs: 12, sm: 6 }} />
                       <CommonValidationQuillInput name="description" label="Description" grid={{ xs: 12 }} />
                       <CommonFormImageBox name="images" label="Product Images" type="image" grid={{ xs: 12 }} required multiple onUpload={handleUpload} />

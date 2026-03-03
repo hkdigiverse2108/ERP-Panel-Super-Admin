@@ -11,9 +11,7 @@ import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
 import { setSelectedFiles, setUploadModal } from "../../../Store/Slices/ModalSlice";
-import type { AdminSettingFormValues, AdminSettingLink } from "../../../Types/AdminSetting";
-import type { Params } from "../../../Types";
-import type { AdminSettingBase } from "../../../Types/AdminSetting";
+import type { AdminSettingBase, AdminSettingFormValues, AdminSettingLink, Params } from "../../../Types";
 import { GetChangedFields } from "../../../Utils/FormHelpers";
 import { AdminSettingFormSchema } from "../../../Utils/ValidationSchemas";
 

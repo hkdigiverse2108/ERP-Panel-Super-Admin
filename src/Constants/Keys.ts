@@ -158,6 +158,12 @@ export const KEYS = {
     EDIT: "bill-of-live-product-edit",
     DELETE: "bill-of-live-product-delete",
   },
+  PRODUCT_TYPE:{
+    BASE: "product-type",
+    ADD: "product-type-add",
+    EDIT: "product-type-edit",
+    DELETE: "product-type-delete",
+  },
   // ----------------------------- accounts -----------------------------
   ACCOUNT_GROUP: {
     BASE: "account-group",

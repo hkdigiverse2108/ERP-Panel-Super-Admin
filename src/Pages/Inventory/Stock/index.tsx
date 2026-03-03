@@ -4,10 +4,9 @@ import { Queries } from "../../../Api";
 import { AdvancedSearch, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { AppGridColDef } from "../../../Types";
-import type { StockBase } from "../../../Types/Stock";
-import { useDataGrid } from "../../../Utils/Hooks";
+import type { AppGridColDef, StockBase } from "../../../Types";
 import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { useDataGrid } from "../../../Utils/Hooks";
 
 const Stock = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();

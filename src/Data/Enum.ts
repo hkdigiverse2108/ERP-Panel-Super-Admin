@@ -78,6 +78,7 @@ export const USER_TYPE = [
   { label: "User", value: "user" },
   { label: "Employee", value: "employee" },
   { label: "Admin", value: "admin" },
+  { label: "Super Admin", value: "super-admin" },
 ];
 
 export const BAUD_RATE = [
