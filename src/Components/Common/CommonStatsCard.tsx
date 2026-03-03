@@ -1,25 +1,7 @@
 import { Grid, Paper, Typography, Box, useTheme } from "@mui/material";
-import type { FC } from "react";
-import type { SxProps, Theme } from "@mui/material/styles";
-import type { GridType } from "../../Types";
+import type { CommonStatsCardProps } from "../../Types";
 
-export interface CommonStatsItem {
-  label: string;
-  value: number | string;
-  color?: string;
-  desc?: string;
-  selected?: boolean;
-  onClick?: () => void;
-}
-
-interface CommonStatsCardProps {
-  stats: CommonStatsItem[];
-  grid?: GridType;
-  paperSx?: SxProps<Theme>;
-  variant?: "default" | "radio";
-}
-
-const CommonStatsCard: FC<CommonStatsCardProps> = ({ stats, grid = { xs: 10, sm: 4, md: 4 }, paperSx, variant = "default" }) => {
+const CommonStatsCard = ({ stats, grid = { xs: 10, sm: 4, md: 4 }, paperSx, variant = "default" }: CommonStatsCardProps) => {
   const theme = useTheme();
 
   return (
@@ -30,9 +12,7 @@ const CommonStatsCard: FC<CommonStatsCardProps> = ({ stats, grid = { xs: 10, sm:
             {variant === "radio" ? (
               <Box onClick={item.onClick} sx={{ border: "1px solid", borderColor: item.selected ? "primary.main" : "divider", borderRadius: 1, p: 2, cursor: "pointer", display: "flex", alignItems: "flex-start", gap: 1.5, bgcolor: item.selected ? "primary.50" : "background.paper", width: "100%", transition: "all 0.2s", ...paperSx }}>
                 {/* Check if Radio exists, if not we will just render a circle for now, but assume MUI Radio is available. Let's import it at top. */}
-                <Box sx={{ width: 20, height: 20, borderRadius: "50%", border: "2px solid", borderColor: item.selected ? "primary.main" : "text.secondary", display: "flex", alignItems: "center", justifyContent: "center", mt: 0.2 }}>
-                  {item.selected && <Box sx={{ width: 10, height: 10, borderRadius: "50%", bgcolor: "primary.main" }} />}
-                </Box>
+                <Box sx={{ width: 20, height: 20, borderRadius: "50%", border: "2px solid", borderColor: item.selected ? "primary.main" : "text.secondary", display: "flex", alignItems: "center", justifyContent: "center", mt: 0.2 }}>{item.selected && <Box sx={{ width: 10, height: 10, borderRadius: "50%", bgcolor: "primary.main" }} />}</Box>
                 <Box sx={{ flex: 1, textAlign: "left" }}>
                   <Typography sx={{ fontWeight: 500, mb: 0.5, color: item.selected ? "primary.main" : "text.primary" }}>{item.value}</Typography>
                   <Typography sx={{ fontSize: "0.80rem", color: "text.secondary" }}>{item.desc || item.label}</Typography>

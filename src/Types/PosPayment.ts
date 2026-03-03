@@ -24,6 +24,7 @@ export interface PosPaymentFormValues {
   companyId?: string;
   accountId?: string;
   remark?: string;
+  voucherDetails?: VoucherRow[];
   _submitAction?: "SAVE" | "SAVE_AND_NEW";
 }
 
@@ -52,4 +53,14 @@ export interface PosPaymentDataResponse extends PageStatus {
 
 export interface PosPaymentApiResponse extends MessageStatus {
   data: PosPaymentDataResponse;
+}
+export interface VoucherRow {
+  id: string;
+  billId: string;
+  netAmount: number;
+  paidAmount: number;
+  pendingAmount: number;
+  kasarAmount: number;
+  amount: number;
+  paymentAmount: number;
 }
