@@ -180,7 +180,6 @@ const PaymentForm = () => {
                           variant="radio"
                           grid={{ xs: 12, md: 4 }}
                           stats={[
-                            { value: "On Account", label: "", desc: "Upfront Payment", selected: values.paymentType === "on_account", onClick: () => setFieldValue("paymentType", "on_account") },
                             { value: "Advance Payment", label: "", desc: "Will be offset by upcoming bills", selected: values.paymentType === "advance", onClick: () => setFieldValue("paymentType", "advance") },
                             { value: "Against Voucher", label: "", desc: "Make Payment Against Voucher", selected: values.paymentType === "against_bill", onClick: () => setFieldValue("paymentType", "against_bill") },
                           ]}
