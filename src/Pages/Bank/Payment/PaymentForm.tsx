@@ -96,8 +96,9 @@ const PaymentForm = () => {
           {({ resetForm, setFieldValue, dirty, values }) => {
             const voucherDetails = values.voucherDetails || [];
 
-            const { data: posOrderData, isLoading: posOrderLoading } = Queries.useGetPosOrderDropdown({ partyId: values?.partyId }, !!values?.partyId);
+            const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: values.partyId, duePaymentFilter: true }, Boolean(values.partyId));
 
+            console.log("POS ORDER DROPDOWN:", posOrderDropdown);
             const updateRow = <K extends keyof VoucherRow>(index: number, key: K, value: VoucherRow[K]) => {
               setFieldValue(
                 "voucherDetails",
@@ -113,39 +114,9 @@ const PaymentForm = () => {
             };
 
             const voucherColumns: CommonTableColumn<VoucherRow>[] = [
-              {
-                key: "sr",
-                header: "#",
-                render: (_, idx) => idx + 1,
-                bodyClass: "w-10",
-              },
-              {
-                key: "posOrderId",
-                header: "Sales",
-                bodyClass: "min-w-40",
-                render: (r, idx) => (
-                  <CommonSelect
-                    options={posOrderLoading ? [] : GenerateOptions(posOrderData?.data)}
-                    placeholder="Select Sales"
-                    value={r.posOrderId ? [r.posOrderId] : []}
-                    onChange={(v) => updateRow(idx, "posOrderId", v[0] || "")}
-                    disabled={!values?.partyId}
-                  />
-                ),
-              },
-              {
-                key: "paymentMode",
-                header: "Payment Mode",
-                bodyClass: "min-w-40",
-                render: (r, idx) => (
-                  <CommonSelect
-                    options={PAYMENT_MODE}
-                    placeholder="Payment Mode"
-                    value={r.paymentMode ? [r.paymentMode] : []}
-                    onChange={(v) => updateRow(idx, "paymentMode", v[0] || "")}
-                  />
-                ),
-              },
+              { key: "sr", header: "#", render: (_, idx) => idx + 1, bodyClass: "w-10" },
+              { key: "posOrderId", header: "Sales", bodyClass: "min-w-40", render: (r, idx) => <CommonSelect options={GenerateOptions(posOrderDropdown?.data?.map((item) => ({ ...item, name: item.orderNo })))} isLoading={posOrderDropdownLoading} placeholder="Select Sales" value={r.posOrderId ? [r.posOrderId] : []} onChange={(v) => updateRow(idx, "posOrderId", v[0] || "")} disabled={!values?.partyId} /> },
+              { key: "paymentMode", header: "Payment Mode", bodyClass: "min-w-40", render: (r, idx) => <CommonSelect options={PAYMENT_MODE} placeholder="Payment Mode" value={r.paymentMode ? [r.paymentMode] : []} onChange={(v) => updateRow(idx, "paymentMode", v[0] || "")} /> },
               { key: "netAmount", header: "Total Payment", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.netAmount} disabled /> },
               { key: "paidAmount", header: "Paid Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.paidAmount} disabled /> },
               { key: "pendingAmount", header: "Pending Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.pendingAmount} disabled /> },
