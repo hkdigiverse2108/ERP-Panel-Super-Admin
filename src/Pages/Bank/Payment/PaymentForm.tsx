@@ -11,8 +11,7 @@ import { CommonValidationRadio, CommonValidationSelect, CommonValidationTextFiel
 import { CommonBreadcrumbs, CommonCard, CommonBottomActionBar, DependentSelect, CommonStatsCard, CommonTable } from "../../../Components/Common";
 import type { CommonTableColumn } from "../../../Types";
 import ClearIcon from "@mui/icons-material/Clear";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { BREADCRUMBS, PAYMENT_MODE_OPTIONS, POS_PAYMENT_MODE } from "../../../Data";
+import { BREADCRUMBS, PAYMENT_MODE, PAYMENT_MODE_OPTIONS, POS_PAYMENT_MODE } from "../../../Data";
 
 const PaymentForm = () => {
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
@@ -42,7 +41,7 @@ const PaymentForm = () => {
     isActive: data?.isActive ?? true,
     accountId: data?.accountId?._id || "",
     remark: data?.remark || "",
-    voucherDetails: data?.voucherDetails || [{ billId: "", netAmount: 0, paidAmount: 0, pendingAmount: 0, kasarAmount: 0, amount: 0, paymentAmount: 0 }],
+    voucherDetails: data?.voucherDetails || [{ posOrderId: "", netAmount: 0, paidAmount: 0, pendingAmount: 0, kasarAmount: 0, amount: 0, paymentAmount: 0, paymentMode: "" }],
   };
 
   const handleSubmit = async (values: PosPaymentFormValues, { resetForm }: FormikHelpers<PosPaymentFormValues>) => {
@@ -94,15 +93,13 @@ const PaymentForm = () => {
           {({ resetForm, setFieldValue, dirty, values }) => {
             const voucherDetails = values.voucherDetails || [];
 
+            const { data: posOrderData, isLoading: posOrderLoading } = Queries.useGetPosOrderDropdown({ partyId: values?.partyId }, !!values?.partyId);
+
             const updateRow = <K extends keyof VoucherRow>(index: number, key: K, value: VoucherRow[K]) => {
               setFieldValue(
                 "voucherDetails",
                 voucherDetails.map((row, i) => (i === index ? { ...row, [key]: value } : row)),
               );
-            };
-
-            const addRow = () => {
-              setFieldValue("voucherDetails", [...voucherDetails, { billId: "", netAmount: 0, paidAmount: 0, pendingAmount: 0, kasarAmount: 0, amount: 0, paymentAmount: 0 }]);
             };
 
             const removeRow = (index: number) => {
@@ -118,26 +115,38 @@ const PaymentForm = () => {
                 header: "#",
                 render: (_, idx) => idx + 1,
                 bodyClass: "w-10",
-                footer: "",
               },
               {
-                key: "billId",
-                header: "Bill No.",
+                key: "posOrderId",
+                header: "Sales",
                 bodyClass: "min-w-40",
-                render: (r, idx) => <CommonSelect options={[]} placeholder="Select Bill" value={r.billId ? [r.billId] : []} onChange={(v) => updateRow(idx, "billId", v[0] || "")} />,
-                footer: () => (
-                  <Box sx={{ display: "flex", alignItems: "center", color: "primary.main", fontWeight: 600, cursor: "pointer" }} onClick={addRow}>
-                    <AddCircleIcon sx={{ fontSize: 18, mr: 0.5 }} /> Add More
-                  </Box>
+                render: (r, idx) => (
+                  <CommonSelect
+                    options={posOrderLoading ? [] : GenerateOptions(posOrderData?.data)}
+                    placeholder="Select Sales"
+                    value={r.posOrderId ? [r.posOrderId] : []}
+                    onChange={(v) => updateRow(idx, "posOrderId", v[0] || "")}
+                    disabled={!values?.partyId}
+                  />
                 ),
-                footerClass: "text-left",
               },
-              { key: "netAmount", header: "Net Amount", bodyClass: "min-w-30", render: (r) => r.netAmount || "", footer: "" },
-              { key: "paidAmount", header: "Paid Amount", bodyClass: "min-w-30", render: (r) => r.paidAmount || "", footer: "Total", footerClass: "text-right font-bold" },
-              { key: "pendingAmount", header: "Pending Amount", bodyClass: "min-w-30", render: (r) => r.pendingAmount || "", footer: "" },
-              { key: "kasarAmount", header: "Kasar Amount", bodyClass: "min-w-30", render: (r, idx) => <CommonTextField type="number" value={r.kasarAmount} onChange={(v) => updateRow(idx, "kasarAmount", Number(v))} />, footer: "" },
-              { key: "amount", header: "Amount*", bodyClass: "min-w-30", render: (r, idx) => <CommonTextField type="number" value={r.amount} onChange={(v) => updateRow(idx, "amount", Number(v))} />, footer: "" },
-              { key: "paymentAmount", header: "Payment Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField disabled type="number" value={r.amount} onChange={() => { }} />, footer: (data) => data.reduce((sum, row) => sum + Number((row as VoucherRow).amount || 0), 0).toFixed(2), footerClass: "font-bold text-center" },
+              {
+                key: "paymentMode",
+                header: "Payment Mode",
+                bodyClass: "min-w-40",
+                render: (r, idx) => (
+                  <CommonSelect
+                    options={PAYMENT_MODE}
+                    placeholder="Payment Mode"
+                    value={r.paymentMode ? [r.paymentMode] : []}
+                    onChange={(v) => updateRow(idx, "paymentMode", v[0] || "")}
+                  />
+                ),
+              },
+              { key: "netAmount", header: "Total Payment", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.netAmount} disabled /> },
+              { key: "paidAmount", header: "Paid Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.paidAmount} disabled /> },
+              { key: "pendingAmount", header: "Pending Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.pendingAmount} disabled /> },
+              { key: "kasarAmount", header: "Kasar Amount", bodyClass: "min-w-30", render: (r, idx) => <CommonTextField type="number" value={r.kasarAmount} onChange={(v) => updateRow(idx, "kasarAmount", Number(v))} /> },
               {
                 key: "actions",
                 header: "",
@@ -147,7 +156,6 @@ const PaymentForm = () => {
                     <ClearIcon />
                   </CommonButton>
                 ),
-                footer: "",
               },
             ];
 
@@ -191,7 +199,7 @@ const PaymentForm = () => {
                         <Grid size={{ xs: 12 }}>
                           <CommonCard hideDivider>
                             <Box sx={{ overflowX: "auto" }} className="custom-scrollbar">
-                              <CommonTable data={voucherDetails} columns={voucherColumns} rowKey={(_, index) => index.toString()} showFooter />
+                              <CommonTable data={voucherDetails} columns={voucherColumns} rowKey={(_, index) => index.toString()} />
                             </Box>
                           </CommonCard>
                         </Grid>

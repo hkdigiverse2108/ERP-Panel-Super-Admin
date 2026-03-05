@@ -72,7 +72,7 @@ const AdditionalCharges = () => {
 
   return (
     <>
-      <CommonCard title={PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE} hideDivider >
+      <CommonCard title={PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE} hideDivider>
         <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
           <AdvancedSearch filter={filter} />
         </Box>

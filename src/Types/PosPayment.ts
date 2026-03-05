@@ -56,7 +56,8 @@ export interface PosPaymentApiResponse extends MessageStatus {
 }
 export interface VoucherRow {
   id: string;
-  billId: string;
+  posOrderId?: string;
+  paymentMode?: string;
   netAmount: number;
   paidAmount: number;
   pendingAmount: number;
