@@ -4,3 +4,6 @@ export * from "./useDataGrid";
 export * from "./useDebounce";
 export * from "./usePagePermission";
 export * from "./useDependentReset";
+import { useCompanyFinancialYears } from "./useCompanyFinancialYears";
+
+export { useCompanyFinancialYears };
