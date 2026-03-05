@@ -50,7 +50,7 @@ export const UserFormSchema = Yup.object({
   designation: Validation("string", "Designation", { required: false }),
   role: Validation("string", "Role"),
   phoneNo: PhoneValidation(),
-  email: Validation("string", "Email", { required: false, extraRules: (s) => s.trim().email("Invalid email address") }),
+  email: Validation("string", "Email", { required: true, extraRules: (s) => s.trim().email("Invalid email address") }),
   branchId: Validation("string", "Branch Name", { required: false }),
   panNumber: Validation("string", "PAN Number", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
   password: Validation("string", "Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
@@ -139,7 +139,7 @@ export const ProductFormSchema = Yup.object({
   ),
   netWeight: Validation("number", "Net Weight", { required: false }),
   masterQty: Validation("number", "Master Quantity", { required: false }),
-  images: Yup.array().of(Yup.mixed().required("Image is required")).min(2, "At least two image is required"),
+  // images: Yup.array().of(Yup.mixed().required("Image is required")).min(2, "At least two image is required"),
   isActive: Yup.boolean(),
 });
 
@@ -184,10 +184,10 @@ export const CompanyFormSchemas = Yup.object({
   displayName: Validation("string", "display Name"),
   contactName: Validation("string", "contact Name"),
   email: Validation("string", "Email", { extraRules: (s) => s.trim().email("Invalid email address") }),
-  supportEmail: Validation("string", "support Email", { extraRules: (s) => s.trim().email("Invalid email address") }),
-  customerCareNumber: Validation("string", "customer Care Number"),
+  supportEmail: Validation("string", "support Email", { required: false, extraRules: (s) => s.trim().email("Invalid email address") }),
+  customerCareNumber: Validation("string", "customer Care Number", { required: false }),
   phoneNo: PhoneValidation(),
-  ownerNo: PhoneValidation(),
+  ownerNo: PhoneValidation("Owner No.", { requiredCountryCode: false, requiredNumber: false }),
   planStartDate: Validation("string", "Plan Start Date"),
   planEndDate: Validation("string", "Plan End Date"),
 
