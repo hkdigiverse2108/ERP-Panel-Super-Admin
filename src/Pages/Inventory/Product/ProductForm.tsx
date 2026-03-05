@@ -160,7 +160,7 @@ const ProductForm = () => {
                       <CommonValidationSelect name="productTypeId" label="Type" options={GenerateOptions(ProductTypeData?.data)} isLoading={ProductTypeDataLoading} grid={{ xs: 12, sm: 3 }} required />
                       <CommonValidationTextField name="shortDescription" label="short Description" multiline grid={{ xs: 12, sm: 6 }} />
                       <CommonValidationQuillInput name="description" label="Description" grid={{ xs: 12 }} />
-                      <CommonFormImageBox name="images" label="Product Images" type="image" grid={{ xs: 12 }} required multiple onUpload={handleUpload} />
+                      <CommonFormImageBox name="images" label="Product Images" type="image" grid={{ xs: 12 }} multiple onUpload={handleUpload} />
                       <Grid size={12}>
                         <FieldArray name="nutrition">
                           {({ push, remove }) => (

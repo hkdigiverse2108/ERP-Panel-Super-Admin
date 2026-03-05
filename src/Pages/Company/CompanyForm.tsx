@@ -11,8 +11,8 @@ import { ACCOUNTING_TYPE, BREADCRUMBS, DATE_FORMATS } from "../../Data";
 import { useAppDispatch, useAppSelector } from "../../Store/hooks";
 import { setSelectedFiles, setUploadModal } from "../../Store/Slices/ModalSlice";
 import type { BankBase, CompanyFormValues, Params } from "../../Types";
-import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
-import { usePagePermission } from "../../Utils/Hooks";
+import { DateConfig, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
+import { useCompanyFinancialYears, usePagePermission } from "../../Utils/Hooks";
 import { CompanyFormSchemas } from "../../Utils/ValidationSchemas";
 
 type CompanyImageKey = "logo" | "waterMark" | "reportFormatLogo" | "authorizedSignature";
@@ -41,6 +41,8 @@ const CompanyForm = () => {
   const pageMode = isEditing ? "EDIT" : "ADD";
 
   const BANK_UI_FIELDS: (keyof CompanyFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber", "upiId"];
+
+  const financialYears = useCompanyFinancialYears(DateConfig.utc().startOf("day").toISOString());
 
   const initialValues: CompanyFormValues = {
     accountingType: data?.accountingType || "",
@@ -80,7 +82,7 @@ const CompanyForm = () => {
     GSTIdentificationNumber: data?.GSTIdentificationNumber || "",
     PanNo: data?.PanNo || "",
     webSite: data?.webSite || "",
-    financialYear: data?.financialYear || "",
+    financialYear: data?.financialYear || financialYears[0].value,
     corporateIdentificationNumber: data?.corporateIdentificationNumber || "",
     letterOfUndertaking: data?.letterOfUndertaking || "",
     importerExporterCode: data?.importerExporterCode || "",
@@ -186,9 +188,9 @@ const CompanyForm = () => {
                     <CommonValidationTextField name="contactName" label="Contact Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} required />
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationTextField name="supportEmail" label="support Email" grid={{ xs: 12, md: 4 }} required />
-                    <CommonPhoneNumber label="Owner No." countryCodeName="ownerNo.countryCode" numberName="ownerNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationTextField name="customerCareNumber" label="Customer Care Number" type="number" grid={{ xs: 12, md: 4 }} required />
+                    <CommonValidationTextField name="supportEmail" label="support Email" grid={{ xs: 12, md: 4 }} />
+                    <CommonPhoneNumber label="Owner No." countryCodeName="ownerNo.countryCode" numberName="ownerNo.phoneNo" grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="customerCareNumber" label="Customer Care Number" type="number" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationDatePicker name="planStartDate" label="Plan Start Date" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationDatePicker name="planEndDate" label="Plan End Date" grid={{ xs: 12, md: 4 }} required />
                   </Grid>
@@ -227,7 +229,7 @@ const CompanyForm = () => {
                     <CommonValidationTextField name="PanNo" label="PAN No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="taxDeductionAndCollectionAccountNumber" label="TAN No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="webSite" label="Web Site" grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="financialYear" label="Default Financial Year" grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="financialYear" label="Financial Year" options={financialYears} disabled grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="corporateIdentificationNumber" label="CIN No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="letterOfUndertaking" label="LUT No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="importerExporterCode" label="IEC No." grid={{ xs: 12, md: 4 }} />

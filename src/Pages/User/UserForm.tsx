@@ -105,7 +105,7 @@ const UserForm = () => {
                     <CommonValidationTextField name="fullName" label="Full Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="username" label="User Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} required/>
                     <CommonValidationTextField name="password" label="Password" type="password" showPasswordToggle required grid={{ xs: 10, md: 4 }} />
                     <CommonValidationTextField name="panNumber" label="PAN No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="userType" label="User Type" required options={USER_TYPE}  grid={{ xs: 12, md: 4 }} />
