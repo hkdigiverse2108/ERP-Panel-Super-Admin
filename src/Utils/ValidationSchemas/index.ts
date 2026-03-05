@@ -385,9 +385,7 @@ const ContactBaseSchema = {
   companyId: Validation("string", "Company Name"),
   phoneNo: PhoneValidation(),
   whatsappNo: PhoneValidation("Whatsapp No", { requiredNumber: false, requiredCountryCode: false }),
-  panNo: Validation("string", "PAN No", {
-    extraRules: (s) => s.matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number"),
-  }),
+  panNo: Validation("string", "PAN No", { required: false, extraRules: (s) => s.matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
   paymentMode: Validation("string", "Payment Mode"),
   paymentTerms: Validation("string", "Payment Terms", { required: false }),
   openingBalance: Yup.object().shape({
@@ -396,7 +394,7 @@ const ContactBaseSchema = {
   }),
   dob: Validation("string", "Date of Birth", { required: false }),
   anniversaryDate: Validation("string", "Anniversary Date", { required: false }),
-  telephoneNo: Validation("string", "Telephone No"),
+  telephoneNo: Validation("string", "Telephone No", { required: false }),
   tanNo: Validation("string", "Tan No", { required: false }),
   remarks: Validation("string", "Remarks", { required: false }),
   address: Yup.array().of(ContactAddressSchema).min(1),
@@ -571,7 +569,7 @@ export const JournalVoucherFormSchema = Yup.object({
         debit: Validation("number", "Debit", { required: false }),
         credit: Validation("number", "Credit", { required: false }),
         description: Validation("string", "Description", { required: false }),
-      })
+      }),
     )
     .min(2, "At least two entries are required"),
   isActive: Yup.boolean(),
