@@ -10,7 +10,6 @@ import { GetChangedFields, RemoveEmptyFields, GenerateOptions } from "../../../U
 import { CommonValidationRadio, CommonValidationSelect, CommonValidationTextField, CommonValidationDatePicker, CommonValidationSwitch, CommonTextField, CommonSelect, CommonButton } from "../../../Attribute";
 import { CommonBreadcrumbs, CommonCard, CommonBottomActionBar, DependentSelect, CommonStatsCard, CommonTable } from "../../../Components/Common";
 import type { CommonTableColumn } from "../../../Types";
-import ClearIcon from "@mui/icons-material/Clear";
 import { BREADCRUMBS, PAYMENT_MODE, PAYMENT_MODE_OPTIONS, POS_PAYMENT_MODE } from "../../../Data";
 
 const PaymentForm = () => {
@@ -37,6 +36,10 @@ const PaymentForm = () => {
     paymentMode: data?.paymentMode || "cash",
     paymentDate: data?.paymentDate || null,
     amount: data?.amount || 0,
+    totalAmount: data?.totalAmount || 0,
+    paidAmount: data?.paidAmount || 0,
+    pendingAmount: data?.pendingAmount || 0,
+    kasar: data?.kasar || 0,
     isNonGST: data?.isNonGST || false,
     isActive: data?.isActive ?? true,
     accountId: data?.accountId?._id || "",
@@ -50,10 +53,7 @@ const PaymentForm = () => {
   const handleSubmit = async (values: PosPaymentFormValues, { resetForm }: FormikHelpers<PosPaymentFormValues>) => {
     const { _submitAction, voucherDetails, ...rest } = values;
 
-    const payload = {
-      ...rest,
-      ...(values.paymentType === "against_bill" && { voucherRow: voucherDetails }),
-    };
+    const payload = { ...rest, ...(values.paymentType === "against_bill" && { voucherRow: voucherDetails }) };
 
     const handleSuccess = () => {
       if (_submitAction === "SAVE_AND_NEW") {
@@ -71,17 +71,7 @@ const PaymentForm = () => {
     }
   };
 
-  const topContent = (
-    <CommonValidationRadio
-      name="paymentMode"
-      options={POS_PAYMENT_MODE.map((opt) => ({
-        label: opt,
-        value: opt,
-        disabled: isEditing && opt !== data?.paymentMode,
-      }))}
-      grid={{ xs: "auto" }}
-    />
-  );
+  const topContent = <CommonValidationRadio name="paymentMode" options={POS_PAYMENT_MODE.map((opt) => ({ label: opt, value: opt, disabled: isEditing && opt !== data?.paymentMode }))} grid={{ xs: "auto" }} />;
 
   useEffect(() => {
     const hasAccess = isEditing ? permission.edit : permission.add;
@@ -98,19 +88,49 @@ const PaymentForm = () => {
 
             const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: values.partyId, duePaymentFilter: true }, Boolean(values.partyId));
 
-            console.log("POS ORDER DROPDOWN:", posOrderDropdown);
-            const updateRow = <K extends keyof VoucherRow>(index: number, key: K, value: VoucherRow[K]) => {
-              setFieldValue(
-                "voucherDetails",
-                voucherDetails.map((row, i) => (i === index ? { ...row, [key]: value } : row)),
-              );
-            };
+            useEffect(() => {
+              if (values.paymentType === "against_bill") {
+                const totalAmount = voucherDetails.reduce((sum, row) => sum + (Number(row.amount) || 0), 0);
+                if (values.amount !== totalAmount) {
+                  setFieldValue("amount", totalAmount);
+                }
+              }
+            }, [voucherDetails, values.paymentType, setFieldValue, values.amount]);
 
-            const removeRow = (index: number) => {
-              setFieldValue(
-                "voucherDetails",
-                voucherDetails.filter((_, i) => i !== index),
-              );
+            const updateRow = <K extends keyof VoucherRow>(index: number, key: K, value: VoucherRow[K]) => {
+              const rows = [...voucherDetails];
+              const updatedRow = { ...rows[index], [key]: value };
+
+              if (key === "posOrderId") {
+                const selectedOrder = posOrderDropdown?.data?.find((item: any) => item._id === value);
+                if (selectedOrder) {
+                  updatedRow.netAmount = selectedOrder.totalAmount ?? 0;
+                  updatedRow.paidAmount = selectedOrder.paidAmount ?? 0;
+                  updatedRow.pendingAmount = selectedOrder.dueAmount ?? 0;
+                  updatedRow.amount = selectedOrder.dueAmount ?? 0;
+                  updatedRow.kasarAmount = 0;
+                }
+              }
+
+              if (key === "amount" || key === "kasarAmount" || key === "posOrderId") {
+                const pending = Number(updatedRow.pendingAmount ?? 0);
+                let kasar = Number(updatedRow.kasarAmount ?? 0);
+                let amount = Number(updatedRow.amount ?? 0);
+
+                if (kasar + amount > pending) {
+                  amount = pending - kasar;
+                  if (amount < 0) {
+                    amount = 0;
+                    kasar = pending;
+                  }
+                }
+                updatedRow.amount = amount;
+                updatedRow.kasarAmount = kasar;
+                updatedRow.paymentAmount = amount;
+              }
+
+              rows[index] = updatedRow;
+              setFieldValue("voucherDetails", rows);
             };
 
             const voucherColumns: CommonTableColumn<VoucherRow>[] = [
@@ -120,25 +140,13 @@ const PaymentForm = () => {
               { key: "netAmount", header: "Total Payment", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.netAmount} disabled /> },
               { key: "paidAmount", header: "Paid Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.paidAmount} disabled /> },
               { key: "pendingAmount", header: "Pending Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.pendingAmount} disabled /> },
+              { key: "amount", header: "Amount", bodyClass: "min-w-30", render: (r, idx) => <CommonTextField type="number" value={r.amount} onChange={(v) => updateRow(idx, "amount", Number(v))} /> },
               { key: "kasarAmount", header: "Kasar Amount", bodyClass: "min-w-30", render: (r, idx) => <CommonTextField type="number" value={r.kasarAmount} onChange={(v) => updateRow(idx, "kasarAmount", Number(v))} /> },
-              {
-                key: "actions",
-                header: "",
-                bodyClass: "w-10",
-                render: (_, idx) => (
-                  <CommonButton size="small" color="error" variant="outlined" onClick={() => removeRow(idx)}>
-                    <ClearIcon />
-                  </CommonButton>
-                ),
-              },
             ];
 
             return (
               <Form noValidate>
                 <Grid container spacing={2}>
-                  {/* PAYMENT TYPE CARDS */}
-
-                  {/* GENERAL DETAILS */}
                   <CommonCard topContent={topContent} title="Payment Details" grid={{ xs: 12 }}>
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
@@ -167,7 +175,7 @@ const PaymentForm = () => {
                           ]}
                         />
                       </Grid>
-                      <CommonValidationTextField name="amount" label="Amount" type="number" required isCurrency currencyDisabled grid={{ xs: 12, md: 4 }} />
+                      <CommonValidationTextField name="amount" label="Amount" type="number" required isCurrency currencyDisabled grid={{ xs: 12, md: 4 }} disabled={values.paymentType === "against_bill"} />
                       <CommonValidationTextField name="remark" label="Description" multiline grid={{ xs: 12, md: 8 }} />
                       {values.paymentType === "against_bill" && (
                         <Grid size={{ xs: 12 }}>
