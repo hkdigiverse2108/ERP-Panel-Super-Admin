@@ -40,6 +40,9 @@ const PaymentForm = () => {
     isNonGST: data?.isNonGST || false,
     isActive: data?.isActive ?? true,
     accountId: data?.accountId?._id || "",
+    transactionType: data?.transactionType || "cheque",
+    transactionDate: data?.transactionDate || null,
+    transactionNo: data?.transactionNo || "",
     remark: data?.remark || "",
     voucherDetails: data?.voucherDetails || [{ posOrderId: "", netAmount: 0, paidAmount: 0, pendingAmount: 0, kasarAmount: 0, amount: 0, paymentAmount: 0, paymentMode: "" }],
   };
@@ -175,8 +178,8 @@ const PaymentForm = () => {
                       )}
                       {values?.paymentMode === "bank" && (
                         <>
-                          <DependentSelect params={{ companyId: values?.companyId }} name="BankId" label="Bank" grid={{ xs: 12, md: 4 }} query={Queries.useGetBankDropdown} disabled={!values?.companyId} required />
-                          <CommonValidationRadio name="paymentMode" grid={{ xs: 12, md: 4 }} options={PAYMENT_MODE_OPTIONS} />
+                          <DependentSelect params={{ companyId: values?.companyId }} name="bankId" label="Bank" grid={{ xs: 12, md: 4 }} query={Queries.useGetBankDropdown} disabled={!values?.companyId} required />
+                          <CommonValidationRadio name="transactionType" grid={{ xs: 12, md: 4 }} options={PAYMENT_MODE_OPTIONS} />
                           <CommonValidationDatePicker name="transactionDate" label="Transaction Date" required grid={{ xs: 12, md: 4 }} />
                           <CommonValidationTextField name="transactionNo" label="Transaction No" type="number" required grid={{ xs: 12, md: 4 }} />
                         </>
