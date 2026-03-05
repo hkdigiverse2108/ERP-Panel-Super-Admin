@@ -2,12 +2,13 @@ import { useDataGrid } from "../../../Utils/Hooks";
 import { PAGE_TITLE } from "../../../Constants";
 import { Mutations, Queries } from "../../../Api";
 import type { AdditionalChargesBase, AppGridColDef } from "../../../Types";
-import { AdvancedSearch, CommonActionColumn, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { useDispatch } from "react-redux";
 import { setAdditionalChargeModal } from "../../../Store/Slices/ModalSlice";
 import AdditionalChargesForm from "./AdditionalChargesForm";
 import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { Box } from "@mui/material";
+import { BREADCRUMBS } from "../../../Data";
 
 const AdditionalCharges = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -72,14 +73,16 @@ const AdditionalCharges = () => {
 
   return (
     <>
-      <CommonCard title={PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE} hideDivider >
-        <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
-          <AdvancedSearch filter={filter} />
-        </Box>
-        <CommonDataGrid {...CommonDataGridOption} />
-      </CommonCard>
-      <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
-      <AdditionalChargesForm />
+      <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.SETTINGS.ADDITIONAL_CHARGES} />
+
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <AdvancedSearch filter={filter} />
+        <CommonCard hideDivider>
+          <CommonDataGrid {...CommonDataGridOption} />
+        </CommonCard>
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
+        <AdditionalChargesForm />
+      </Box>
     </>
   );
 };
