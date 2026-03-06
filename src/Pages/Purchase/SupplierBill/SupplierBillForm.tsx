@@ -110,7 +110,6 @@ const SupplierBillForm = () => {
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
   const taxOptions = useMemo(() => GenerateOptions(TaxData?.data || []), [TaxData]);
   const { data: ProductsData, isLoading: ProductsDataLoading } = Queries.useGetProductDropdown({ companyFilter: selectedCompanyId }, !!selectedCompanyId);
-  console.log("ProductsData -> ", ProductsData);
   const productOptions = useMemo(() => GenerateOptions(ProductsData?.data || []), [ProductsData]);
   const [flatDiscount, setFlatDiscount] = useState<string | number>(0);
   const { data: additionalchargedata, isLoading: additionalchargeLoading } = Queries.useGetAdditionalChargesDropdown();
@@ -223,7 +222,6 @@ const SupplierBillForm = () => {
         discount2: Number(r.disc2) || 0,
         taxable: Number(r.taxableAmount) || 0,
         taxId: r.taxId || "",
-        tax: r.taxName || "",
         landingCost: Number(r.landingCost) || 0,
         margin: Number(r.margin) || 0,
         total: Number(r.totalAmount) || 0,

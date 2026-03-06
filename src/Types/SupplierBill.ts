@@ -11,31 +11,18 @@ export type BillSupplier = ContactBase & { name?: string };
 
 export interface SupplierBillProductItem {
   productId?: ProductBase | string;
-
   qty?: number;
-
   freeQty?: number;
-
   mrp?: number;
-
   sellingPrice?: number;
-
   unitCost?: number;
-
   landingCost?: number;
-
   margin?: number;
-
   discount1?: number;
-
   discount2?: number;
-
   taxable?: number;
-
   taxId?: string;
-
   tax?: string;
-
   total?: number;
 }
 export interface SupplierBillProductDetails {
