@@ -4,7 +4,7 @@ import { FieldArray, Form, Formik, useFormikContext, type FormikHelpers, type Fo
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonButton, CommonValidationDatePicker, CommonValidationQuillInput, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
+import { CommonButton, CommonValidationCreatableSelect, CommonValidationDatePicker, CommonValidationQuillInput, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { CommonFormImageBox } from "../../../Components/Common/CommonUploadImage/CommonImageBox";
 import { PAGE_TITLE } from "../../../Constants";
@@ -53,7 +53,7 @@ const ProductForm = () => {
       calculateExpiryOn: data?.calculateExpiryOn || "",
       expiryReferenceDate: data?.expiryReferenceDate || DateConfig.utc().toISOString(),
       isExpiryProductSaleable: data?.isExpiryProductSaleable || true,
-      ingredients: data?.ingredients || "",
+      ingredients: data?.ingredients || [],
       shortDescription: data?.shortDescription || "",
       description: data?.description || "",
       nutrition: [...(data?.nutrition?.map((nutrition: NutritionInfo) => ({ name: nutrition.name, value: nutrition.value })) || [{ name: "", value: "" }])],
@@ -145,7 +145,7 @@ const ProductForm = () => {
                       <CommonValidationSelect name="brandId" label="Brand" isLoading={BrandsDataLoading} options={GenerateOptions(BrandsData?.data)} grid={{ xs: 12, sm: 6, xl: 3 }} required />
                       <SubBrandSelect id={values.brandId || ""} />
                       <CommonValidationTextField name="cessPercentage" label="cess Percentage" type="number" grid={{ xs: 12, sm: 6, xl: 3 }} />
-                      <CommonValidationTextField name="ingredients" label="ingredients" grid={{ xs: 12, sm: 6, xl: 3 }} />
+                      <CommonValidationTextField name="sku" label="sku" grid={{ xs: 12, sm: 3 }} />
                       <CommonValidationSwitch name="manageMultipleBatch" label="Manage Multiple Batch" syncFieldName="hasExpiry" grid={{ xs: 12, sm: 6, xl: 3 }} />
                       {values.manageMultipleBatch && <CommonValidationSwitch name="hasExpiry" label="hasExpiry" grid={{ xs: 12, sm: 6, xl: 3 }} />}
                       {values.manageMultipleBatch && values.hasExpiry && (
@@ -156,9 +156,9 @@ const ProductForm = () => {
                           <CommonValidationSwitch name="isExpiryProductSaleable" label="Expiry Product Saleable" grid={{ xs: 12, sm: 6, xl: 3 }} />
                         </>
                       )}
-                      <CommonValidationTextField name="sku" label="sku" grid={{ xs: 12, sm: 3 }} />
                       <CommonValidationSelect name="productTypeId" label="Type" options={GenerateOptions(ProductTypeData?.data)} isLoading={ProductTypeDataLoading} grid={{ xs: 12, sm: 3 }} required />
-                      <CommonValidationTextField name="shortDescription" label="short Description" multiline grid={{ xs: 12, sm: 6 }} />
+                      <CommonValidationCreatableSelect name="ingredients" label="Ingredients" options={[]} grid={{ xs: 12, sm: 9 }} required />
+                      <CommonValidationTextField name="shortDescription" label="short Description" multiline grid={{ xs: 12 }} />
                       <CommonValidationQuillInput name="description" label="Description" grid={{ xs: 12 }} />
                       <CommonFormImageBox name="images" label="Product Images" type="image" grid={{ xs: 12 }} multiple onUpload={handleUpload} />
                       <Grid size={12}>
