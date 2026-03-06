@@ -242,6 +242,7 @@ export const KEYS = {
   POS_CASH_REGISTER: {
     BASE: "pos-cash-register",
     DETAILS: "pos-cash-register-details",
+    DROPDOWN: "pos-cash-register-dropdown",
   },
 
   POS_CREDIT_NOTE: {

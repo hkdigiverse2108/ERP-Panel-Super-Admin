@@ -29,6 +29,7 @@ export interface PosPaymentFormValues {
   remark?: string;
   voucherDetails?: VoucherRow[];
   _submitAction?: "SAVE" | "SAVE_AND_NEW";
+  posCashRegisterId?: string;
 }
 
 export type AddPosPaymentPayload = PosPaymentFormValues & {

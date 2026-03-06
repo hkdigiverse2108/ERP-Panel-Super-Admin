@@ -260,6 +260,7 @@ export const URL_KEYS = {
   POS_CASH_REGISTER: {
     BASE: "/pos-cash-register",
     ALL: "/pos-cash-register/all",
+    DROPDOWN: "/pos-cash-register/dropdown",
   },
 
   POS_CREDIT_NOTE: {

@@ -7,13 +7,14 @@ import { PAGE_TITLE } from "../../../Constants";
 import { usePagePermission } from "../../../Utils/Hooks";
 import type { PosPaymentFormValues, VoucherRow } from "../../../Types";
 import { GetChangedFields, RemoveEmptyFields, GenerateOptions } from "../../../Utils";
-import { CommonValidationRadio, CommonValidationSelect, CommonValidationTextField, CommonValidationDatePicker, CommonValidationSwitch, CommonTextField, CommonSelect, CommonButton } from "../../../Attribute";
+import { CommonValidationRadio, CommonValidationSelect, CommonValidationTextField, CommonValidationDatePicker, CommonValidationSwitch, CommonTextField, CommonSelect } from "../../../Attribute";
 import { CommonBreadcrumbs, CommonCard, CommonBottomActionBar, DependentSelect, CommonStatsCard, CommonTable } from "../../../Components/Common";
 import type { CommonTableColumn } from "../../../Types";
 import { BREADCRUMBS, PAYMENT_MODE, PAYMENT_MODE_OPTIONS, POS_PAYMENT_MODE } from "../../../Data";
 
 const PaymentForm = () => {
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
+  const { data: posCashRegisterDropdown, isLoading: posCashRegisterDropdownLoading } = Queries.useGetPosCashRegisterDropdown();
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
@@ -46,6 +47,7 @@ const PaymentForm = () => {
     transactionType: data?.transactionType || "cheque",
     transactionDate: data?.transactionDate || null,
     transactionNo: data?.transactionNo || "",
+    posCashRegisterId: data?.posCashRegisterId?._id || "",
     remark: data?.remark || "",
     voucherDetails: data?.voucherDetails || [{ posOrderId: "", netAmount: 0, paidAmount: 0, pendingAmount: 0, kasarAmount: 0, amount: 0, paymentAmount: 0, paymentMode: "" }],
   };
@@ -80,7 +82,7 @@ const PaymentForm = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.CONTACT[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.CONTACT[pageMode]} />
+      <CommonBreadcrumbs title={PAGE_TITLE.PAYMENT[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.PAYMENT[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik initialValues={initialValues} onSubmit={handleSubmit} enableReinitialize>
           {({ resetForm, setFieldValue, dirty, values }) => {
@@ -152,7 +154,7 @@ const PaymentForm = () => {
                       <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
                       {values?.paymentMode === "cash" && (
                         <>
-                          <DependentSelect params={{ companyId: values?.companyId }} name="accountId" label="Cash / Account" grid={{ xs: 12, md: 4 }} query={Queries.useGetAccountDropdown} disabled={!values?.companyId} required />
+                          <CommonValidationSelect name="posCashRegisterId" label="Cash" grid={{ xs: 12, md: 4 }} options={GenerateOptions(posCashRegisterDropdown?.data)} isLoading={posCashRegisterDropdownLoading} required />
                         </>
                       )}
                       {values?.paymentMode === "bank" && (
