@@ -7,14 +7,13 @@ import { PAGE_TITLE } from "../../../Constants";
 import { usePagePermission } from "../../../Utils/Hooks";
 import type { PosPaymentFormValues, VoucherRow } from "../../../Types";
 import { GetChangedFields, RemoveEmptyFields, GenerateOptions } from "../../../Utils";
-import { CommonValidationRadio, CommonValidationSelect, CommonValidationTextField, CommonValidationDatePicker, CommonValidationSwitch, CommonTextField, CommonSelect } from "../../../Attribute";
+import { CommonValidationSelect, CommonValidationTextField, CommonValidationDatePicker, CommonValidationSwitch, CommonTextField, CommonSelect } from "../../../Attribute";
 import { CommonBreadcrumbs, CommonCard, CommonBottomActionBar, DependentSelect, CommonStatsCard, CommonTable } from "../../../Components/Common";
 import type { CommonTableColumn } from "../../../Types";
-import { BREADCRUMBS, PAYMENT_MODE, PAYMENT_MODE_OPTIONS, POS_PAYMENT_MODE } from "../../../Data";
+import { BREADCRUMBS, PAYMENT_MODE } from "../../../Data";
 
 const PaymentForm = () => {
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
-  const { data: posCashRegisterDropdown, isLoading: posCashRegisterDropdownLoading } = Queries.useGetPosCashRegisterDropdown();
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
@@ -72,8 +71,6 @@ const PaymentForm = () => {
       await addPayment(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
     }
   };
-
-  const topContent = <CommonValidationRadio name="paymentMode" options={POS_PAYMENT_MODE.map((opt) => ({ label: opt, value: opt, disabled: isEditing && opt !== data?.paymentMode }))} grid={{ xs: "auto" }} />;
 
   useEffect(() => {
     const hasAccess = isEditing ? permission.edit : permission.add;
@@ -157,22 +154,9 @@ const PaymentForm = () => {
             return (
               <Form noValidate>
                 <Grid container spacing={2}>
-                  <CommonCard topContent={topContent} title="Payment Details" grid={{ xs: 12 }}>
+                  <CommonCard title="Payment Details" grid={{ xs: 12 }}>
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
-                      {values?.paymentMode === "cash" && (
-                        <>
-                          <CommonValidationSelect name="posCashRegisterId" label="Cash" grid={{ xs: 12, md: 4 }} options={GenerateOptions(posCashRegisterDropdown?.data)} isLoading={posCashRegisterDropdownLoading} required />
-                        </>
-                      )}
-                      {values?.paymentMode === "bank" && (
-                        <>
-                          <DependentSelect params={{ companyId: values?.companyId }} name="bankId" label="Bank" grid={{ xs: 12, md: 4 }} query={Queries.useGetBankDropdown} disabled={!values?.companyId} required />
-                          <CommonValidationRadio name="transactionType" grid={{ xs: 12, md: 4 }} options={PAYMENT_MODE_OPTIONS} />
-                          <CommonValidationDatePicker name="transactionDate" label="Transaction Date" required grid={{ xs: 12, md: 4 }} />
-                          <CommonValidationTextField name="transactionNo" label="Transaction No" type="number" required grid={{ xs: 12, md: 4 }} />
-                        </>
-                      )}
                       <DependentSelect params={{ companyId: values?.companyId }} name="partyId" label="Party" grid={{ xs: 12, md: 4 }} query={Queries.useGetContactDropdown} disabled={!values?.companyId} required />
                       <CommonValidationDatePicker name="paymentDate" label="Payment Date" required grid={{ xs: 12, md: 4 }} />
                       <Grid size={{ xs: 12 }}>
