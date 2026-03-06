@@ -202,7 +202,6 @@ const SupplierBillForm = () => {
         setReturnRoundOffAmount(data.returnProductDetails.summary.roundOff);
       }
     }
-    // termsAndConditionIds handling moved to terms effect
   }, [data, isEditing, ProductsData]);
 
   const mapProductRows = (): SupplierBillProductDetails => {
