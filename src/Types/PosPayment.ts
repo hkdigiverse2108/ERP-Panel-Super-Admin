@@ -23,9 +23,6 @@ export interface PosPaymentFormValues {
   isActive?: boolean;
   companyId?: string;
   accountId?: string;
-  transactionType?: string;
-  transactionDate?: string | Date | null;
-  transactionNo?: string;
   remark?: string;
   voucherDetails?: VoucherRow[];
   _submitAction?: "SAVE" | "SAVE_AND_NEW";
