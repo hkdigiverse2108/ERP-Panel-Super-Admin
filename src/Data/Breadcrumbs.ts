@@ -159,4 +159,9 @@ export const BREADCRUMBS = {
   POS_ORDER_LIST: {
     BASE: [{ label: PAGE_TITLE.POS.ORDER_LIST }],
   },
+  ESTIMATE: {
+    BASE: [{ label: PAGE_TITLE.ESTIMATE.BASE }],
+    ADD: [{ label: PAGE_TITLE.ESTIMATE.BASE, href: ROUTES.ESTIMATE.BASE }, { label: PAGE_TITLE.ESTIMATE.ADD }],
+    EDIT: [{ label: PAGE_TITLE.ESTIMATE.BASE, href: ROUTES.ESTIMATE.BASE }, { label: PAGE_TITLE.ESTIMATE.EDIT }],
+  },
 };

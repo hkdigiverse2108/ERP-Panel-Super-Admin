@@ -295,3 +295,9 @@ export const LOYALTY_REDEMPTION_TYPE = [
   { label: "Single", value: "single" },
   { label: "Multiple", value: "multiple" },
 ];
+
+export const ESTIMATE_STATUS = [
+  { label: "Pending", value: "pending" },
+  { label: "Order Created", value: "order-created" },
+  { label: "Invoice Created", value: "invoice-created" },
+];

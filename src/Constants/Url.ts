@@ -301,4 +301,15 @@ export const URL_KEYS = {
     EDIT: "/pos-order/edit",
     DELETE: "/pos-order/delete",
   },
+
+  //*************** Estimate **************** */
+  ESTIMATE: {
+    BASE: "/estimate",
+    ALL: "/estimate/all",
+    ADD: "/estimate/add",
+    EDIT: "/estimate/edit",
+    DELETE: "/estimate/delete",
+    DROPDOWN: "/estimate/dropdown",
+  },
+
 } as const;

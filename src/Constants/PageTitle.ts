@@ -209,4 +209,12 @@ export const PAGE_TITLE = {
   CHANGE_PASSWORD: {
     BASE: "Change Password",
   },
+  SALES: {
+    BASE: "Sales",
+  },
+  ESTIMATE: {
+    BASE: "Estimate",
+    ADD: "Add Estimate",
+    EDIT: "Edit Estimate",
+  },
 } as const;

@@ -603,3 +603,13 @@ export interface CommonValidationCreatableSelectProps {
   disabled?: boolean;
   grid?: GridType;
 }
+
+// ************ Common Additional Charge Start ***********
+export interface AdditionalChargeItem {
+  chargeId?: string;
+  amount?: number;
+  taxAmount?: number;
+  taxId?: string;
+  totalAmount?: number;
+}
+// ************ Common Additional Charge End ***********

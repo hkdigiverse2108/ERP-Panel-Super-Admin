@@ -1,4 +1,4 @@
-import type { CommonDataType, MessageStatus, PageStatus, SelectOptionType } from "./Common";
+import type { AdditionalChargeItem, CommonDataType, MessageStatus, PageStatus, SelectOptionType } from "./Common";
 import type { ProductBase } from "./Product";
 import type { ContactBase } from "./Contacts";
 import type { TermsConditionBase } from "./TermsCondition";
@@ -60,13 +60,6 @@ export interface SupplierBillReturnProductDetails {
 
 /* ===================== ADDITIONAL CHARGES ===================== */
 
-export interface AdditionalChargeItem {
-  chargeId?: string;
-  amount?: number;
-  taxAmount?: number;
-  taxId?: string;
-  totalAmount?: number;
-}
 
 export interface AdditionalChargeDetails {
   item?: AdditionalChargeItem[];

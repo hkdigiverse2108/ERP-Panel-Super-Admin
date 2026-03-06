@@ -158,7 +158,7 @@ export const KEYS = {
     EDIT: "bill-of-live-product-edit",
     DELETE: "bill-of-live-product-delete",
   },
-  PRODUCT_TYPE:{
+  PRODUCT_TYPE: {
     BASE: "product-type",
     ADD: "product-type-add",
     EDIT: "product-type-edit",
@@ -283,5 +283,14 @@ export const KEYS = {
     ADD: "pos-add",
     EDIT: "pos-edit",
     DELETE: "pos-delete",
+  },
+
+  //*************** Estimate **************** */
+  ESTIMATE: {
+    BASE: "estimate",
+    ADD: "estimate-add",
+    EDIT: "estimate-edit",
+    DELETE: "estimate-delete",
+    DROPDOWN: "estimate-dropdown",
   },
 };
