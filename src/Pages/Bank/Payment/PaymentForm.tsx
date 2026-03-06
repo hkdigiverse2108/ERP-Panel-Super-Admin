@@ -51,7 +51,7 @@ const PaymentForm = () => {
   const handleSubmit = async (values: PosPaymentFormValues, { resetForm }: FormikHelpers<PosPaymentFormValues>) => {
     const { _submitAction, voucherDetails, ...rest } = values;
 
-    const payload = { ...rest, ...(values.paymentType === "against_bill" && { voucherRow: voucherDetails }) };
+    const payload = { ...rest };
 
     const handleSuccess = () => {
       if (_submitAction === "SAVE_AND_NEW") {
