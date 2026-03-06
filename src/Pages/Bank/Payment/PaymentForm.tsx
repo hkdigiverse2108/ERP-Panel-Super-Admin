@@ -49,7 +49,7 @@ const PaymentForm = () => {
     transactionNo: data?.transactionNo || "",
     posCashRegisterId: data?.posCashRegisterId?._id || "",
     remark: data?.remark || "",
-    voucherDetails: data?.voucherDetails || [{ posOrderId: "", netAmount: 0, paidAmount: 0, pendingAmount: 0, kasarAmount: 0, amount: 0, paymentAmount: 0, paymentMode: "" }],
+    voucherDetails: data?.voucherDetails || [{ posOrderId: "", netAmount: 0, paidAmount: 0, pendingAmount: 0, kasarAmount: 0, amount: 0, paymentAmount: 0, paymentMode: "", bankId: "" }],
   };
 
   const handleSubmit = async (values: PosPaymentFormValues, { resetForm }: FormikHelpers<PosPaymentFormValues>) => {
@@ -89,6 +89,7 @@ const PaymentForm = () => {
             const voucherDetails = values.voucherDetails || [];
 
             const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: values.partyId, duePaymentFilter: true }, Boolean(values.partyId));
+            const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown({ companyId: values?.companyId }, Boolean(values?.companyId));
 
             useEffect(() => {
               if (values.paymentType === "against_bill") {
@@ -111,6 +112,12 @@ const PaymentForm = () => {
                   updatedRow.pendingAmount = selectedOrder.dueAmount ?? 0;
                   updatedRow.amount = selectedOrder.dueAmount ?? 0;
                   updatedRow.kasarAmount = 0;
+                }
+              }
+
+              if (key === "paymentMode") {
+                if (typeof value === "string" && value.toLowerCase() === "cash") {
+                  updatedRow.bankId = "";
                 }
               }
 
@@ -139,6 +146,7 @@ const PaymentForm = () => {
               { key: "sr", header: "#", render: (_, idx) => idx + 1, bodyClass: "w-10" },
               { key: "posOrderId", header: "Sales", bodyClass: "min-w-40", render: (r, idx) => <CommonSelect options={GenerateOptions(posOrderDropdown?.data?.map((item) => ({ ...item, name: item.orderNo })))} isLoading={posOrderDropdownLoading} placeholder="Select Sales" value={r.posOrderId ? [r.posOrderId] : []} onChange={(v) => updateRow(idx, "posOrderId", v[0] || "")} disabled={!values?.partyId} /> },
               { key: "paymentMode", header: "Payment Mode", bodyClass: "min-w-40", render: (r, idx) => <CommonSelect options={PAYMENT_MODE} placeholder="Payment Mode" value={r.paymentMode ? [r.paymentMode] : []} onChange={(v) => updateRow(idx, "paymentMode", v[0] || "")} /> },
+              { key: "bankId", header: "Bank", bodyClass: "min-w-40", render: (r, idx) => <CommonSelect options={GenerateOptions(bankDropdown?.data)} isLoading={bankDropdownLoading} placeholder="Select Bank" value={r.bankId ? [r.bankId] : []} onChange={(v) => updateRow(idx, "bankId", v[0] || "")} disabled={!r.paymentMode || r.paymentMode.toLowerCase() === "cash"} /> },
               { key: "netAmount", header: "Total Payment", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.netAmount} disabled /> },
               { key: "paidAmount", header: "Paid Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.paidAmount} disabled /> },
               { key: "pendingAmount", header: "Pending Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.pendingAmount} disabled /> },

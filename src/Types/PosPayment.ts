@@ -62,6 +62,7 @@ export interface VoucherRow {
   id: string;
   posOrderId?: string;
   paymentMode?: string;
+  bankId?: string;
   netAmount: number;
   paidAmount: number;
   pendingAmount: number;
