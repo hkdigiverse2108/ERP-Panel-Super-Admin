@@ -31,14 +31,15 @@ const BillingSummary = ({ productData }: BillingSummaryProps) => {
       }, 0) || 0;
 
     const grossAmount = totalUnitCost;
-    const discountInput = Number(values.flatDiscount) || 0;
+    const discountInput = Number(values.summary?.flatDiscount) || 0;
     const taxableAmount = grossAmount;
 
-    if (values.grossAmount !== grossAmount) setFieldValue("grossAmount", grossAmount);
-    if (values.taxableAmount !== taxableAmount) setFieldValue("taxableAmount", taxableAmount);
-    if (values.discountAmount !== discountInput) setFieldValue("discountAmount", discountInput);
+    if (values.summary?.grossAmount !== grossAmount) setFieldValue("summary.grossAmount", grossAmount);
+    if (values.summary?.taxableAmount !== taxableAmount) setFieldValue("summary.taxableAmount", taxableAmount);
+    if (values.summary?.discountAmount !== discountInput) setFieldValue("summary.discountAmount", discountInput);
+    if (Number(values.summary?.taxAmount) !== Number(totalCalculatedTax)) setFieldValue("summary.taxAmount", totalCalculatedTax);
 
-    const roundOff = Number(values.roundOff) || 0;
+    const roundOff = Number(values.summary?.roundOff) || 0;
 
     // Net Amount Calculation
     let net = 0;
@@ -49,8 +50,8 @@ const BillingSummary = ({ productData }: BillingSummaryProps) => {
       net = grossAmount + totalCalculatedTax - discountInput + roundOff;
     }
 
-    if (values.netAmount !== net) setFieldValue("netAmount", net);
-  }, [values.items, values.taxType, values.flatDiscount, values.tax, values.roundOff, setFieldValue]);
+    if (values.summary?.netAmount !== net) setFieldValue("summary.netAmount", net);
+  }, [values.items, values.taxType, values.summary?.flatDiscount, values.summary?.roundOff, setFieldValue]);
 
   // Render Scope Calculation for Display
   const calculatedTaxAmount = (values.items || []).reduce((acc: number, item: PurchaseOrderItem) => {
@@ -68,11 +69,11 @@ const BillingSummary = ({ productData }: BillingSummaryProps) => {
   }, 0);
 
   const summary = {
-    grossAmount: Number(values.grossAmount) || 0,
-    discountAmount: Number(values.discountAmount) || 0,
-    taxableAmount: Number(values.taxableAmount) || 0,
-    taxAmount: calculatedTaxAmount,
-    netAmount: Number(values.netAmount) || 0,
+    grossAmount: Number(values.summary?.grossAmount) || 0,
+    discountAmount: Number(values.summary?.discountAmount) || 0,
+    taxableAmount: Number(values.summary?.taxableAmount) || 0,
+    taxAmount: Number(values.summary?.taxAmount) || Number(calculatedTaxAmount) || 0,
+    netAmount: Number(values.summary?.netAmount) || 0,
   };
 
   return (
@@ -86,7 +87,7 @@ const BillingSummary = ({ productData }: BillingSummaryProps) => {
             <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex items-center justify-end font-medium">Flat Discount</Box>
             <Box className="p-1 px-2 flex justify-end">
               <span className="text-gray-900 dark:text-gray-100 font-bold ml-1 w-50">
-                <CommonValidationTextField name="flatDiscount" label="" type="number" size="small" sx={{ width: "70px", "& input": { textAlign: "right" } }} isCurrency currencyDisabled />
+                <CommonValidationTextField name="summary.flatDiscount" label="" type="number" size="small" sx={{ width: "70px", "& input": { textAlign: "right" } }} isCurrency currencyDisabled />
               </span>
             </Box>
           </Box>
@@ -112,8 +113,7 @@ const BillingSummary = ({ productData }: BillingSummaryProps) => {
           {/* Tax */}
           <Box className="grid grid-cols-[130px_1fr] border-b cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => setShowTaxDetails(!showTaxDetails)}>
             <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium text-blue-500 gap-1 items-center">
-              Tax (%)
-              <span className="text-gray-900 dark:text-gray-100 font-bold ml-1">{values.tax || ""}</span>
+              Tax
             </Box>
             <Box className="p-2 flex justify-end items-center">
               <span className="font-medium align-middle">{summary.taxAmount.toFixed(2)}</span>
@@ -124,7 +124,7 @@ const BillingSummary = ({ productData }: BillingSummaryProps) => {
             <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium text-blue-500">Roundoff</Box>
             <Box className="p-1 px-2 flex justify-end">
               <span className="text-gray-900 dark:text-gray-100 font-bold ml-1 w-50">
-                <CommonValidationTextField name="roundOff" label="" type="number" size="small" sx={{ width: "100px", "& input": { textAlign: "right" } }} />
+                <CommonValidationTextField name="summary.roundOff" label="" type="number" size="small" sx={{ width: "100px", "& input": { textAlign: "right" } }} />
               </span>
 
             </Box>

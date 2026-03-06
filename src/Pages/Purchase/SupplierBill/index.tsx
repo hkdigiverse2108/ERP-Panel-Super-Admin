@@ -1,5 +1,4 @@
 import { Box } from "@mui/material";
-import type { GridRenderCellParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
@@ -39,16 +38,7 @@ const SupplierBill = () => {
   const filter = [CreateFilter("Payment Status", "paymentStatus", advancedFilter, updateAdvancedFilter, PAYMENT_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 
   const columns: AppGridColDef<SupplierBillBase>[] = [
-    {
-      field: "paymentStatus",
-      headerName: "Status",
-      width: 120,
-      renderCell: ({ value }: GridRenderCellParams<SupplierBillBase, string>) => {
-        if (value === "paid") return <span className="text-green-600 font-semibold">Paid</span>;
-        if (value === "partial") return <span className="text-orange-500 font-semibold">Partial</span>;
-        return <span className="text-red-600 font-semibold">Unpaid</span>;
-      },
-    },
+      { field: "paymentStatus", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.paymentStatus}`}>{params.row.paymentStatus}</span> },
     CommonObjectNameColumn<SupplierBillBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "supplierBillNo", headerName: "Bill No", width: 160 },
 

@@ -14,7 +14,6 @@ import TermsConditionModal from "./TermsConditionModal";
 import BillingSummary from "./BillingSummary";
 import SelectTermsModal from "./SelectTermsModal";
 
-
 const ProductSelectCell = ({ index, productData, taxData, isLoading }: ProductSelectCellProps) => {
   const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
   const productId = values.items?.[index]?.productId;
@@ -35,6 +34,8 @@ const ProductSelectCell = ({ index, productData, taxData, isLoading }: ProductSe
         }
         setFieldValue(`items.${index}.qty`, 1);
         setFieldValue(`items.${index}.unitCost`, product.landingCost || 0);
+        setFieldValue(`items.${index}.uomId`, product.uomId?._id || "");
+        setFieldValue(`items.${index}.unit`, product.uomId?.name || product.unit || "");
         setFieldValue(`items.${index}.mrp`, product.mrp || 0);
       }
       prevProductId.current = productId;
@@ -111,7 +112,10 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
 
   const handleRemoveTermFromPO = (id: string) => {
     const currentIds = values.termsAndConditionIds || [];
-    setFieldValue("termsAndConditionIds", currentIds.filter((termId) => termId !== id));
+    setFieldValue(
+      "termsAndConditionIds",
+      currentIds.filter((termId) => termId !== id),
+    );
   };
 
   const handleEditTerm = (term: TermsConditionBase) => {
@@ -210,8 +214,7 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
     if (hasChanges) {
       setFieldValue("items", newItems);
     }
-
-  }, [values.items, values.taxType, values.flatDiscount, values.tax, values.roundOff, setFieldValue]);
+  }, [values.items, values.taxType, values.summary?.flatDiscount, values.summary?.roundOff, setFieldValue]);
 
   return (
     <>
@@ -278,6 +281,12 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
                         render: (_row, index) => <CommonValidationTextField name={`items.${index}.qty`} type="number" size="small" />,
                       },
                       {
+                        key: "unit",
+                        header: "Unit",
+                        bodyClass: "min-w-[100px]",
+                        render: (_row, index) => <CommonValidationTextField name={`items.${index}.unit`} size="small" disabled />,
+                      },
+                      {
                         key: "unitCost",
                         header: "Unit Cost",
                         bodyClass: "min-w-[120px]",
@@ -333,7 +342,9 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
                   <Box fontWeight={600}>Terms & Conditions</Box>
                   <Box display="flex" gap={1}>
                     <CommonButton startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined" title="new term" disabled={!values.companyId} />
-                    <CommonButton onClick={() => setOpenSelectTermsModal(true)} variant="outlined" disabled={!values.companyId}><Edit /></CommonButton>
+                    <CommonButton onClick={() => setOpenSelectTermsModal(true)} variant="outlined" disabled={!values.companyId}>
+                      <Edit />
+                    </CommonButton>
                   </Box>
                 </Box>
 
@@ -348,22 +359,24 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {termsList.filter((term: TermsConditionBase) => values.termsAndConditionIds?.includes(term._id)).map((term: TermsConditionBase, index: number) => (
-                          <tr key={term._id} className="text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark border-b border-gray-100 dark:border-gray-700">
-                            <td className="p-2">{index + 1}</td>
-                            <td className="p-2">{term.termsCondition}</td>
-                            <td className="p-2 text-center">
-                              <Box display="flex" justifyContent="center" gap={1}>
-                                <CommonButton size="small" color="primary" variant="text" onClick={() => handleEditTerm(term)}>
-                                  <Edit fontSize="small" />
-                                </CommonButton>
-                                <CommonButton size="small" color="error" variant="text" onClick={() => handleRemoveTermFromPO(term._id)}>
-                                  <Clear fontSize="small" />
-                                </CommonButton>
-                              </Box>
-                            </td>
-                          </tr>
-                        ))}
+                        {termsList
+                          .filter((term: TermsConditionBase) => values.termsAndConditionIds?.includes(term._id))
+                          .map((term: TermsConditionBase, index: number) => (
+                            <tr key={term._id} className="text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark border-b border-gray-100 dark:border-gray-700">
+                              <td className="p-2">{index + 1}</td>
+                              <td className="p-2">{term.termsCondition}</td>
+                              <td className="p-2 text-center">
+                                <Box display="flex" justifyContent="center" gap={1}>
+                                  <CommonButton size="small" color="primary" variant="text" onClick={() => handleEditTerm(term)}>
+                                    <Edit fontSize="small" />
+                                  </CommonButton>
+                                  <CommonButton size="small" color="error" variant="text" onClick={() => handleRemoveTermFromPO(term._id)}>
+                                    <Clear fontSize="small" />
+                                  </CommonButton>
+                                </Box>
+                              </td>
+                            </tr>
+                          ))}
                       </tbody>
                     </table>
                   </Box>
@@ -386,7 +399,12 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
       <SelectTermsModal
         open={openSelectTermsModal}
         onClose={() => setOpenSelectTermsModal(false)}
-        onSave={(selected) => setFieldValue("termsAndConditionIds", selected.map((t) => t._id))}
+        onSave={(selected) =>
+          setFieldValue(
+            "termsAndConditionIds",
+            selected.map((t) => t._id),
+          )
+        }
         alreadySelected={termsList.filter((t: TermsConditionBase) => values.termsAndConditionIds?.includes(t._id)) || []}
         companyId={values.companyId}
       />

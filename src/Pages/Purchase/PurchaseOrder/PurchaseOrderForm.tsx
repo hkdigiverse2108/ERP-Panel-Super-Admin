@@ -16,7 +16,7 @@ const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate
   const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier", companyId: values.companyId || undefined }, supplierQueryEnabled);
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
 
-  const selectedSupplier = (supplierData?.data as unknown as Supplier[])?.find((s) => s._id === values.supplierId);
+  const selectedSupplier = (supplierData?.data as Supplier[])?.find((s) => s._id === values.supplierId);
 
   return (
     <Form noValidate>
@@ -65,7 +65,7 @@ const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate
               <CommonValidationTextField name="shippingNote" label="Shipping Note" grid={{ xs: 12 }} />
               {isEditing && <CommonValidationTextField name="orderNo" label="Purchase Order No." grid={{ xs: 12 }} />}
               <CommonValidationSelect name="taxType" label="Tax Type" required options={TAX_TYPE} grid={{ xs: 12 }} />
-              <CommonValidationSelect name="status" label="Order Status" required options={ORDER_STATUS} grid={{ xs: 12 }} />
+              <CommonValidationSelect name="status" label="Order Status" required options={ORDER_STATUS} grid={{ xs: 12 }}  />
             </Box>
           </Box>
         </CommonCard>
@@ -101,33 +101,17 @@ const PurchaseOrderForm = () => {
     orderNo: data?.orderNo || "",
     shippingDate: data?.shippingDate || data?.date || data?.orderDate || "",
     shippingNote: data?.shippingNote || "",
-    items: data?.items?.length
-      ? data.items
-      : [
-        {
-          productId: "",
-          qty: 1,
-          freeQty: 0,
-          mrp: 0,
-          sellingPrice: 0,
-          discount1: 0,
-          discount2: 0,
-          taxableAmount: 0,
-          unitCost: 0,
-          tax: "0",
-          landingCost: "0",
-          margin: "0",
-          total: 0,
-        },
-      ],
+    items: data?.items?.length ? data.items : [{ productId: "", qty: 1, freeQty: 0, mrp: 0, sellingPrice: 0, discount1: 0, discount2: 0, taxableAmount: 0, unitCost: 0, uomId: "", unit: "", taxName: "", taxAmount: 0, tax: "0", landingCost: "0", margin: "0", total: 0 }],
 
-    flatDiscount: data?.flatDiscount || 0,
-    grossAmount: data?.grossAmount || 0,
-    discountAmount: data?.discountAmount || 0,
-    taxableAmount: data?.taxableAmount || 0,
-    tax: data?.tax || 0,
-    roundOff: data?.roundOff || 0,
-    netAmount: data?.netAmount || 0,
+    summary: {
+      flatDiscount: data?.summary?.flatDiscount || data?.flatDiscount || 0,
+      grossAmount: data?.summary?.grossAmount || data?.grossAmount || 0,
+      discountAmount: data?.summary?.discountAmount || data?.discountAmount || 0,
+      taxableAmount: data?.summary?.taxableAmount || data?.taxableAmount || 0,
+      taxAmount: data?.summary?.taxAmount || data?.taxAmount || data?.tax || 0,
+      roundOff: data?.summary?.roundOff || data?.roundOff || 0,
+      netAmount: data?.summary?.netAmount || data?.netAmount || 0,
+    },
 
     notes: data?.notes || "",
     status: ["in_progress", "delivered", "partially_delivered", "exceed", "completed", "cancelled"].includes(data?.status) ? data.status : "in_progress",
@@ -156,7 +140,7 @@ const PurchaseOrderForm = () => {
       const changedFields = GetChangedFields(payload, data);
       await editPurchaseOrder({ ...changedFields, purchaseOrderId: data._id }, { onSuccess: handleSuccess });
     } else {
-      await addPurchaseOrder(RemoveEmptyFields(payload) as unknown as AddPurchaseOrderPayload, { onSuccess: handleSuccess });
+      await addPurchaseOrder(RemoveEmptyFields(payload)  as AddPurchaseOrderPayload, { onSuccess: handleSuccess });
     }
   };
 

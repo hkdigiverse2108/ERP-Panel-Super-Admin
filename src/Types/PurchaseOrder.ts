@@ -7,6 +7,16 @@ import type { TaxDropdownApiResponse } from "./Tax";
 import type { TermsConditionBase } from "./TermsCondition";
 // import { TAX_TYPE, ORDER_STATUS } from "../../Data";
 
+export interface PurchaseOrderSummary {
+  flatDiscount?: number;
+  grossAmount?: number;
+  discountAmount?: number;
+  taxableAmount?: number;
+  taxAmount?: number;
+  roundOff?: number;
+  netAmount?: number;
+}
+
 export interface PurchaseOrderBase extends Omit<PurchaseOrderFormValues, "supplierId">, CommonDataType {
   _id: string;
   supplierId?: ContactBase;
@@ -57,13 +67,7 @@ export interface PurchaseOrderFormValues {
   totalTax?: string | null;
   total?: string | null;
 
-  flatDiscount?: number;
-  grossAmount?: number;
-  discountAmount?: number;
-  taxableAmount?: number;
-  tax?: number;
-  roundOff?: number;
-  netAmount?: number;
+  summary?: PurchaseOrderSummary;
 
   status?: string;
   taxType?: string;

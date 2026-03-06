@@ -180,9 +180,9 @@ const ContactForm = () => {
                     <CommonTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
                     {["supplier", "customer"].includes(values?.contactType || "") && <CommonPhoneNumber label="Whatsapp No." countryCodeName="whatsappNo.countryCode" numberName="whatsappNo.phoneNo" grid={{ xs: 12, md: 4 }} />}
-                    <CommonTextField name="telephoneNo" label="Telephone No" required grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="telephoneNo" label="Telephone No" grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="remarks" label="Remarks" grid={{ xs: 12, md: 4 }} />
-                    <CommonTextField name="panNo" label="PAN No" required grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="panNo" label="PAN No" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="paymentMode" label="Payment Mode" options={PAYMENT_MODE} required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="paymentTerms" label="Payment Terms" options={PAYMENT_TERMS} grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="openingBalance.debitBalance" label="Debit Balance" grid={{ xs: 12, md: 4 }} />
