@@ -9,7 +9,7 @@ import SupplierBillDetails from "../../../Components/Purchase/SupplierBill/Suppl
 import SupplierBillTabs from "../../../Components/Purchase/SupplierBill/SupplierBillDetails/SupplierBillTab";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { AdditionalChargeDetails, AdditionalChargeRow, ProductBase, ProductRow, BillSupplier as Supplier, SupplierBillFormValues, SupplierBillProductDetails, SupplierBillProductItem, TermsConditionBase } from "../../../Types";
+import type { AdditionalChargeDetails, AdditionalChargeRow, ProductRow, BillSupplier as Supplier, SupplierBillFormValues, SupplierBillProductDetails, TermsConditionBase } from "../../../Types";
 import { DateConfig, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 
@@ -142,7 +142,6 @@ const SupplierBillForm = () => {
       }
     });
     const taxSummary = Object.entries(taxBreakdown).map(([name, data]) => ({ name, rate: data.rate, amount: Number(data.amount.toFixed(2)) }));
-    // const summaryDiscountAmount = discountAmount + flatDisc;
     const summaryGrossAmount = grossAmount - flatDisc;
     return { flatDiscount: flatDisc, discountAmount: Number(discountAmount.toFixed(2)), grossAmount: summaryGrossAmount, taxableAmount: taxableAfterDiscount, taxAmount: Number(taxAmount.toFixed(2)), roundOff, netAmount: Number(netAmount.toFixed(2)), taxSummary };
   };
@@ -162,16 +161,9 @@ const SupplierBillForm = () => {
     if (isEditing && data) {
       if (data.productDetails?.item) {
         setRows(
-          data.productDetails.item.map((item: SupplierBillProductItem) => {
-            let product = item.productId as ProductBase | undefined;
-            // If product data is not fully loaded, lookup from ProductsData
-            if (!product?.uomId && ProductsData?.data) {
-              const foundProduct = (ProductsData.data || []).find((p) => String(p._id) === String(item.productId));
-              if (foundProduct) {
-                product = foundProduct;
-              }
-            }
-            return { productId: product?._id || (item.productId as string), qty: item.qty || "", freeQty: item.freeQty || "", mrp: item.mrp || "", sellingPrice: item.sellingPrice || "", disc1: item.discount1 || "", disc2: item.discount2 || "", taxAmount: item.taxAmount || "", totalAmount: item.total || "", itemCode: product?.itemCode || "", uomId: product?.uomId?._id || "", unit: product?.uomId?.name || product?.unit || "", unitCost: item.sellingPrice || 0, taxableAmount: ((item.total || 0) - (item.taxAmount || 0)).toFixed(2), landingCost: item.landingCost || "", margin: item.margin || "", mfgDate: item.mfgDate ? DateConfig.utc(item.mfgDate).toISOString() : "", expiryDate: item.expiryDate ? DateConfig.utc(item.expiryDate).toISOString() : "", taxRate: product?.purchaseTaxId?.percentage || 0, taxName: product?.purchaseTaxId?.name || "", taxId: product?.purchaseTaxId?._id || "" };
+          data.productDetails.item.map((item: any) => {
+            const product = item.productId;
+            return { productId: product?._id || "", itemCode: product?.itemCode || "", qty: item.qty || "", freeQty: item.freeQty || "", mrp: item.mrp || "", sellingPrice: item.sellingPrice || "", disc1: item.discount1 || "", disc2: item.discount2 || "", taxableAmount: item.taxable || "", itemTax: "", landingCost: item.landingCost || "", margin: item.margin || "", totalAmount: item.total || "", unitCost: item.unitCost || "", uomId: product?.uomId?._id || "", unit: product?.uomId?.name || item.unit || "", mfgDate: "", expiryDate: "", taxRate: product?.purchaseTaxId?.percentage || 0, taxName: product?.purchaseTaxId?.name || "", taxId: item.taxId || product?.purchaseTaxId?._id || "" };
           }),
         );
       }
@@ -179,7 +171,7 @@ const SupplierBillForm = () => {
         if (data.additionalCharges?.item && data.additionalCharges.item.length > 0) {
           setAdditionalChargeRows(
             data.additionalCharges.item.map((item: any) => ({
-              chargeId: item.chargeId?._id || "", 
+              chargeId: item.chargeId?._id || "",
               amount: item.amount?.toString() || "",
               taxId: item.taxId?._id || item.taxId || "",
               taxAmount: item.totalAmount && item.amount ? (item.totalAmount - item.amount).toFixed(2) : "",
@@ -205,8 +197,8 @@ const SupplierBillForm = () => {
   }, [data, isEditing, ProductsData]);
 
   const mapProductRows = (): SupplierBillProductDetails => {
-    const item = rows.map((r) => ({ productId: r.productId, qty: +r.qty || 0, freeQty: +r.freeQty || 0, mrp: +r.mrp || 0, uomId: r.uomId, unit: r.unit, sellingPrice: +r.sellingPrice || 0, landingCost: +r.landingCost || 0, margin: +r.margin || 0, discount1: +r.disc1 || 0, discount2: +r.disc2 || 0, total: +r.totalAmount || 0 }));
-    return { item, totalQty: item.reduce((s, r) => s + r.qty!, 0), totalTax: rows.reduce((s, r) => s + (+r.itemTax || 0), 0), total: item.reduce((s, r) => s + r.total!, 0) };
+    const item = rows.filter((r) => r.productId).map((r) => ({ productId: r.productId, qty: Number(r.qty) || 0, freeQty: Number(r.freeQty) || 0, uomId: r.uomId, unit: r.unit, mrp: Number(r.mrp) || 0, sellingPrice: Number(r.sellingPrice) || 0, unitCost: Number(r.unitCost) || 0, discount1: Number(r.disc1) || 0, discount2: Number(r.disc2) || 0, taxable: Number(r.taxableAmount) || 0, taxId: r.taxId || "", tax: r.taxName || "", landingCost: Number(r.landingCost) || 0, margin: Number(r.margin) || 0, total: Number(r.totalAmount) || 0 }));
+    return { item, totalQty: item.reduce((s, r) => s + r.qty, 0), totalTax: rows.reduce((s, r) => s + (Number(r.itemTax) || 0), 0), total: item.reduce((s, r) => s + r.total, 0) };
   };
   const mapAdditionalCharges = (): AdditionalChargeDetails => {
     const validRows = additionalChargeRows.filter((row) => row.chargeId && row.taxId);

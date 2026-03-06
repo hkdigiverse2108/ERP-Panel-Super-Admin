@@ -10,21 +10,34 @@ export type BillSupplier = ContactBase & { name?: string };
 /* ===================== PRODUCT (FORM) ===================== */
 
 export interface SupplierBillProductItem {
-  productId?: string;
-  qty?: number;
-  freeQty?: number;
-  mrp?: number;
-  sellingPrice?: number;
-  landingCost?: number;
-  margin?: number;
-  discount1?: number;
-  discount2?: number;
-  taxAmount?: number;
-  total?: number;
-  mfgDate?: string;
-  expiryDate?: string;
-}
+  productId?: ProductBase | string;
 
+  qty?: number;
+
+  freeQty?: number;
+
+  mrp?: number;
+
+  sellingPrice?: number;
+
+  unitCost?: number;
+
+  landingCost?: number;
+
+  margin?: number;
+
+  discount1?: number;
+
+  discount2?: number;
+
+  taxable?: number;
+
+  taxId?: string;
+
+  tax?: string;
+
+  total?: number;
+}
 export interface SupplierBillProductDetails {
   item?: SupplierBillProductItem[];
   totalQty?: number;
@@ -243,14 +256,13 @@ export interface SupplierBillBase extends CommonDataType {
 
   isActive?: boolean;
 }
-export type AdditionalChargeApiItem =
-  Omit<AdditionalChargeItem, "chargeId"> & {
-    chargeId?: {
-      _id: string;
-      name?: string;
-      type?: string;
-    };
+export type AdditionalChargeApiItem = Omit<AdditionalChargeItem, "chargeId"> & {
+  chargeId?: {
+    _id: string;
+    name?: string;
+    type?: string;
   };
+};
 /* ===================== PAYLOADS ===================== */
 
 export type AddSupplierBillPayload = SupplierBillFormValues;
