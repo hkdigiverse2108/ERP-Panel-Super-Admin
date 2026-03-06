@@ -116,9 +116,9 @@ export interface SupplierBillFormValues {
   shippingDate?: string | Date;
   taxType?: string;
   invoiceAmount?: string;
-  productDetails?: SupplierBillProductDetails;
+  productDetails?: SupplierBillProductItem[];
   returnProductDetails?: SupplierBillReturnProductDetails;
-  additionalCharges?: AdditionalChargeDetails;
+  additionalCharges?: AdditionalChargeItem[];
   termsAndConditionIds?: string[];
   notes?: string;
   summary?: SupplierBillSummary;
@@ -226,16 +226,13 @@ export interface SupplierBillBase extends CommonDataType {
 
   returnProductDetails?: SupplierBillReturnProductDetails;
 
-  additionalCharges?: {
-    item?: (Omit<AdditionalChargeItem, "chargeId"> & {
-      chargeId?: {
-        _id: string;
-        name?: string;
-        type?: string;
-      };
-    })[];
-    total?: number;
-  };
+  additionalCharges?: (Omit<AdditionalChargeItem, "chargeId"> & {
+    chargeId?: {
+      _id: string;
+      name?: string;
+      type?: string;
+    };
+  })[];
 
   termsAndConditionIds?: TermsConditionBase[];
 
