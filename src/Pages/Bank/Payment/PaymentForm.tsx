@@ -55,7 +55,7 @@ const PaymentForm = () => {
     }
 
     const handleSuccess = () => {
-      if (_submitAction === "SAVE_AND_NEW") {
+      if (_submitAction === "saveAndNew") {
         resetForm();
       } else {
         navigate(-1);
@@ -131,7 +131,16 @@ const PaymentForm = () => {
               { key: "sr", header: "#", render: () => 1, bodyClass: "w-10" },
               { key: "posOrderId", header: "Sales", bodyClass: "min-w-40", render: (r) => <CommonSelect options={GenerateOptions(posOrderDropdown?.data?.map((item) => ({ ...item, name: item.orderNo })))} isLoading={posOrderDropdownLoading} placeholder="Select Sales" value={r.posOrderId ? [r.posOrderId] : []} onChange={(v) => handleTableChange("posOrderId", v[0] || "")} disabled={!r.partyId} /> },
               { key: "paymentMode", header: "Payment Mode", bodyClass: "min-w-40", render: (r) => <CommonSelect options={PAYMENT_MODE} placeholder="Payment Mode" value={r.paymentMode ? [r.paymentMode] : []} onChange={(v) => handleTableChange("paymentMode", v[0] || "")} /> },
-              { key: "bankId", header: "Bank", bodyClass: "min-w-40", render: (r) => <CommonSelect options={GenerateOptions(bankDropdown?.data)} isLoading={bankDropdownLoading} placeholder="Select Bank" value={r.bankId ? [r.bankId] : []} onChange={(v) => handleTableChange("bankId", v[0] || "")} disabled={!r.paymentMode || (typeof r.paymentMode === "string" && r.paymentMode.toLowerCase() === "cash")} /> },
+              ...(values.paymentMode?.toLowerCase() !== "cash"
+                ? [
+                  {
+                    key: "bankId",
+                    header: "Bank",
+                    bodyClass: "min-w-40",
+                    render: (r) => <CommonSelect options={GenerateOptions(bankDropdown?.data)} isLoading={bankDropdownLoading} placeholder="Select Bank" value={r.bankId ? [r.bankId] : []} onChange={(v) => handleTableChange("bankId", v[0] || "")} />,
+                  } as CommonTableColumn<PosPaymentFormValues>,
+                ]
+                : []),
               { key: "totalAmount", header: "Total Payment", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.totalAmount || 0} disabled /> },
               { key: "paidAmount", header: "Paid Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.paidAmount || 0} disabled /> },
               { key: "pendingAmount", header: "Pending Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.pendingAmount || 0} disabled /> },
