@@ -4,11 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BREADCRUMBS } from "../../../Data";
+import { BREADCRUMBS, VOUCHER_TYPE } from "../../../Data";
 import type { AppGridColDef, PosPaymentBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
-
 
 const Payment = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -38,17 +37,17 @@ const Payment = () => {
   const columns: AppGridColDef<PosPaymentBase>[] = [
     CommonObjectNameColumn<PosPaymentBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "paymentNo", headerName: "Payment No", width: 200 },
-    { field: "partyId", headerName: "Party Name", width: 230, valueGetter: (_v, row: PosPaymentBase) => row?.partyId ? `${row?.partyId?.firstName} ${row?.partyId?.lastName}` : "-" },
+    { field: "partyId", headerName: "Party Name", width: 230, valueGetter: (_v, row: PosPaymentBase) => (row?.partyId ? `${row?.partyId?.firstName} ${row?.partyId?.lastName}` : "-") },
     { field: "paymentMode", headerName: "Payment Mode", width: 140 },
     { field: "paymentType", headerName: "Payment Type", width: 140 },
     { field: "createdAt", headerName: "Payment Date", width: 190, valueGetter: (v) => FormatDate(v) },
-    { field: "amount", headerName: "Amount",  minWidth: 150, flex: 1, valueGetter: (_v, row: PosPaymentBase) => row?.amount ?? row?.totalAmount ?? 0 },
+    { field: "amount", headerName: "Amount", minWidth: 150, flex: 1, valueGetter: (_v, row: PosPaymentBase) => row?.amount ?? row?.totalAmount ?? 0 },
 
     ...(permission?.edit || permission?.delete
       ? [
         CommonActionColumn<PosPaymentBase>({
           ...(permission?.edit && {
-            active: (row) => editPayment({ paymentId: row._id, isActive: !row.isActive }),
+            active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
             editRoute: ROUTES.PAYMENT.ADD_EDIT,
           }),
           ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.paymentNo }) }),
@@ -73,7 +72,10 @@ const Payment = () => {
     onFilterModelChange: setFilterModel,
   };
 
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Voucher Type", "voucherTypeFilter", advancedFilter, updateAdvancedFilter, VOUCHER_TYPE, false, { xs: 12, sm: 6, md: 3 }),
+  ];
 
   return (
     <>
