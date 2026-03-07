@@ -613,3 +613,15 @@ export interface AdditionalChargeItem {
   totalAmount?: number;
 }
 // ************ Common Additional Charge End ***********
+// ************ Common Shipping Details Start ***********
+export interface ShippingDetails {
+  shippingType: "delivery" | "pickup";
+  shippingDate: string;
+  referenceNo: string;
+  transportDate: string;
+  modeOfTransport: string;
+  transporterId: string;
+  vehicleNo: string;
+  weight: number;
+}
+// ************ Common Shipping Details End ***********

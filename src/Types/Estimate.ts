@@ -1,4 +1,4 @@
-import type { AdditionalChargeItem, CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { AdditionalChargeItem, CommonDataType, MessageStatus, PageStatus, ShippingDetails } from "./Common";
 import type { CompanyBase } from "./Company";
 import type { Address, ContactBase } from "./Contacts";
 import type { TermsConditionBase } from "./TermsCondition";
@@ -13,16 +13,7 @@ export interface TransactionSummary {
   netAmount: number;
 }
 
-export interface ShippingDetails {
-  shippingType: "delivery" | "pickup";
-  shippingDate: string;
-  referenceNo: string;
-  transportDate: string;
-  modeOfTransport: string;
-  transporterId: string;
-  vehicleNo: string;
-  weight: number;
-}
+// Local ShippingDetails removed, now using common from ./Common
 
 export interface AdditionalCharge {
   chargeId: string;
@@ -31,7 +22,7 @@ export interface AdditionalCharge {
   totalAmount: number;
 }
 
-export interface InvoiceItem {
+export interface EstimateItem {
   productId: string;
   qty: number;
   freeQty: number;
@@ -55,13 +46,14 @@ export interface EstimateFormValues {
   paymentTerms?: string;
   taxType?: string;
   reverseCharge?: boolean;
-  sez?: string;
+  // sez?: string;
   termsAndConditionIds?: string[];
-  items?: InvoiceItem[];
+  items?: EstimateItem[];
   additionalCharges?: AdditionalCharge[];
   shippingDetails?: ShippingDetails;
   transactionSummary?: TransactionSummary;
   isActive?: boolean;
+  _submitAction?: string;
 }
 
 export type AddEstimatePayload = EstimateFormValues;
@@ -85,4 +77,20 @@ export interface EstimateDataResponse extends PageStatus {
 
 export interface EstimateApiResponse extends MessageStatus {
   data: EstimateDataResponse;
+}
+
+/* ===================== NEW UI TYPES ===================== */
+
+export interface EstimateDetailsProps {
+  customerOptions: { label: string; value: string }[];
+  selectedCustomer?: ContactBase | null;
+  isEditing: boolean;
+  companyOptions: { label: string; value: string }[];
+  isCompanyLoading: boolean;
+  isCustomerDisabled?: boolean;
+}
+
+export interface EstimateTabsProps {
+  selectedTermIds: string[];
+  onTermsChange: (ids: string[]) => void;
 }

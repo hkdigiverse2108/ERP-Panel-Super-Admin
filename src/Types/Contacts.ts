@@ -14,6 +14,7 @@ export interface Address {
   city?: string;
   pinCode?: string;
   contactCompanyName?: string;
+  _id?: string;
 }
 
 export interface ContactAddressApi extends Omit<Address, "country" | "state" | "city"> {

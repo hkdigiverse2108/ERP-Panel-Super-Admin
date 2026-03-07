@@ -178,6 +178,8 @@ export const PAYMENT_TERMS = [
   { label: "90 Days", value: "90_days" },
 ];
 
+export const PAYMENT_TERMS_OPTIONS = PAYMENT_TERMS;
+
 export const SEND_REMINDER = [
   { label: "Yes", value: "yes" },
   { label: "No", value: "no" },
@@ -191,6 +193,16 @@ export const PRODUCT_EXPIRY_TYPE = [
 export const REVERSE_CHARGE = [
   { label: "Yes", value: "true" },
   { label: "No", value: "false" },
+];
+
+// export const SEZ_OPTIONS = [
+//   { label: "Yes", value: "YES" },
+//   { label: "No", value: "NO" },
+// ];
+
+export const SHIPPING_TYPE_OPTIONS = [
+  { label: "Delivery", value: "delivery" },
+  { label: "Pickup", value: "pickup" },
 ];
 
 export const COMPANY = [
