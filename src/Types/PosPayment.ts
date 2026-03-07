@@ -34,7 +34,7 @@ export type AddPosPaymentPayload = PosPaymentFormValues & {
 };
 
 export type EditPosPaymentPayload = AddPosPaymentPayload & {
-  paymentId: string;
+  posPaymentId: string;
 };
 
 /* ================= BASE MODEL ================= */

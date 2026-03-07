@@ -52,6 +52,9 @@ const PaymentForm = () => {
     const { _submitAction, voucherDetails, ...rest } = values;
 
     const payload = { ...rest };
+    if (values.paymentMode?.toLowerCase() === "cash") {
+      delete payload.bankId;
+    }
 
     const handleSuccess = () => {
       if (_submitAction === "SAVE_AND_NEW") {
@@ -63,7 +66,7 @@ const PaymentForm = () => {
 
     if (isEditing) {
       const changedFields = GetChangedFields(payload, data);
-      await editPayment({ ...changedFields, paymentId: data._id }, { onSuccess: handleSuccess });
+      await editPayment({ ...changedFields, posPaymentId: data._id }, { onSuccess: handleSuccess });
     } else {
       await addPayment(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
     }
