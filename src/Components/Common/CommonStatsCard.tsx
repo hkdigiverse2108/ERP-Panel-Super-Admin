@@ -1,4 +1,4 @@
-import { Grid, Paper, Typography, Box, useTheme } from "@mui/material";
+import { Grid, Paper, Typography, Box, useTheme, alpha } from "@mui/material";
 import type { CommonStatsCardProps } from "../../Types";
 
 const CommonStatsCard = ({ stats, grid = { xs: 10, sm: 4, md: 4 }, paperSx, variant = "default" }: CommonStatsCardProps) => {
@@ -10,7 +10,7 @@ const CommonStatsCard = ({ stats, grid = { xs: 10, sm: 4, md: 4 }, paperSx, vari
         {stats.map((item, index) => (
           <Grid key={index} size={grid} display="flex" justifyContent="center">
             {variant === "radio" ? (
-              <Box onClick={item.onClick} sx={{ border: "1px solid", borderColor: item.selected ? "primary.main" : "divider", borderRadius: 1, p: 2, cursor: "pointer", display: "flex", alignItems: "flex-start", gap: 1.5, bgcolor: item.selected ? "primary.50" : "background.paper", width: "100%", transition: "all 0.2s", ...paperSx }}>
+              <Box onClick={item.onClick} sx={{ border: "1px solid", borderColor: item.selected ? "primary.main" : "divider", borderRadius: 1, p: 2, cursor: "pointer", display: "flex", alignItems: "flex-start", gap: 1.5, bgcolor: item.selected ? (theme.palette.mode === "dark" ? alpha(theme.palette.primary.main, 0.1) : "primary.50") : "transparent", width: "100%", transition: "all 0.2s", ...paperSx }}>
                 {/* Check if Radio exists, if not we will just render a circle for now, but assume MUI Radio is available. Let's import it at top. */}
                 <Box sx={{ width: 20, height: 20, borderRadius: "50%", border: "2px solid", borderColor: item.selected ? "primary.main" : "text.secondary", display: "flex", alignItems: "center", justifyContent: "center", mt: 0.2 }}>{item.selected && <Box sx={{ width: 10, height: 10, borderRadius: "50%", bgcolor: "primary.main" }} />}</Box>
                 <Box sx={{ flex: 1, textAlign: "left" }}>
