@@ -8,7 +8,7 @@ import { usePagePermission } from "../../../Utils/Hooks";
 import type { PosOrderBase, PosPaymentFormValues } from "../../../Types";
 import { GetChangedFields, RemoveEmptyFields, GenerateOptions } from "../../../Utils";
 import { CommonValidationSelect, CommonValidationTextField, CommonValidationDatePicker, CommonValidationSwitch, CommonTextField, CommonSelect } from "../../../Attribute";
-import { CommonBreadcrumbs, CommonCard, CommonBottomActionBar, DependentSelect, CommonStatsCard, CommonTable } from "../../../Components/Common";
+import { CommonBreadcrumbs, CommonCard, CommonBottomActionBar, CommonStatsCard, CommonTable } from "../../../Components/Common";
 import type { CommonTableColumn } from "../../../Types";
 import { BREADCRUMBS, PAYMENT_MODE } from "../../../Data";
 
@@ -24,7 +24,7 @@ const PaymentForm = () => {
 
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
-  console.log("Data:", data);
+
   const initialValues: PosPaymentFormValues = {
     companyId: data?.companyId?._id || "",
     paymentNo: data?.paymentNo || "",
@@ -46,11 +46,9 @@ const PaymentForm = () => {
     posCashRegisterId: data?.posCashRegisterId?._id || "",
     remark: data?.remark || "",
   };
-  console.log("Initial value:", initialValues);
 
   const handleSubmit = async (values: PosPaymentFormValues, { resetForm }: FormikHelpers<PosPaymentFormValues>) => {
     const { _submitAction, voucherDetails, ...rest } = values;
-
     const payload = { ...rest };
     if (values.paymentMode?.toLowerCase() === "cash") {
       delete payload.bankId;
@@ -85,10 +83,10 @@ const PaymentForm = () => {
           {({ resetForm, setFieldValue, dirty, values }) => {
             const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: values.partyId, duePaymentFilter: true }, Boolean(values.partyId));
             const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown({ companyId: values?.companyId }, Boolean(values?.companyId));
+            const { data: contactData, isLoading: contactLoading, isFetching: contactFetching } = Queries.useGetContactDropdown({ activeFilter: true, companyFilter: values?.companyId }, Boolean(values?.companyId));
 
-            const handleTableChange = (key: keyof PosPaymentFormValues, value: any) => {
+            const handleTableChange = (key: string, value: string | number | undefined) => {
               let newValues = { ...values, [key]: value };
-
               if (key === "posOrderId") {
                 const selectedOrder = posOrderDropdown?.data?.find((item: PosOrderBase) => item._id === value);
                 if (selectedOrder) {
@@ -147,7 +145,7 @@ const PaymentForm = () => {
                   <CommonCard title="Payment Details" grid={{ xs: 12 }}>
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
-                      <DependentSelect params={{ companyId: values?.companyId }} name="partyId" label="Party" grid={{ xs: 12, md: 4 }} query={Queries.useGetContactDropdown} disabled={!values?.companyId} required />
+                      <CommonValidationSelect name="partyId" label="Party" grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} options={contactLoading || contactFetching ? [] : GenerateOptions(contactData?.data || [])} isLoading={contactLoading || contactFetching} />
                       <CommonValidationDatePicker name="paymentDate" label="Payment Date" required grid={{ xs: 12, md: 4 }} />
                       <Grid size={{ xs: 12 }}>
                         <CommonStatsCard
