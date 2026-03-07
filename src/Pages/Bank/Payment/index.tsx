@@ -45,14 +45,14 @@ const Payment = () => {
 
     ...(permission?.edit || permission?.delete
       ? [
-        CommonActionColumn<PosPaymentBase>({
-          ...(permission?.edit && {
-            active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
-            editRoute: ROUTES.PAYMENT.ADD_EDIT,
+          CommonActionColumn<PosPaymentBase>({
+            ...(permission?.edit && {
+              active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
+              editRoute: ROUTES.PAYMENT.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.paymentNo }) }),
           }),
-          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.paymentNo }) }),
-        }),
-      ]
+        ]
       : []),
   ];
 
@@ -72,10 +72,7 @@ const Payment = () => {
     onFilterModelChange: setFilterModel,
   };
 
-  const filter = [
-    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }),
-    CreateFilter("Select Voucher Type", "voucherTypeFilter", advancedFilter, updateAdvancedFilter, VOUCHER_TYPE, false, { xs: 12, sm: 6, md: 3 }),
-  ];
+  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Voucher Type", "voucherTypeFilter", advancedFilter, updateAdvancedFilter, VOUCHER_TYPE, false, { xs: 12, sm: 6, md: 3 })];
 
   return (
     <>
