@@ -1,4 +1,4 @@
-import type { Breakpoint, ButtonProps, DrawerProps, PaperProps as MuiPaperProps, TextFieldProps } from "@mui/material";
+import type { Breakpoint, ButtonProps, DrawerProps, PaperProps as MuiPaperProps, SxProps, TextFieldProps } from "@mui/material";
 import type { GridColDef, GridFilterModel, GridPaginationModel, GridRowsProp, GridSlotsComponentsProps, GridSortModel, GridValidRowModel } from "@mui/x-data-grid";
 import type { Dayjs } from "dayjs";
 import type { MuiTelInputProps } from "mui-tel-input";
@@ -15,7 +15,7 @@ import type { TermsConditionBase } from "./TermsCondition";
 import type { AccountBase } from "./Account";
 import type { AdditionalChargesBase } from "./AdditionalCharges";
 import type { PosCreditNoteBase } from "./PosCreditNote";
-import type { ProductTypeBase } from "./ProductType";
+import type { Theme } from "@emotion/react";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -461,7 +461,6 @@ export interface ModalStateSlice {
   isTermsSelectionModal: { open: boolean; data: any | null };
   isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
   isOrderRefundModal: { open: boolean; data: PosCreditNoteBase | null };
-  isProductTypeModal: { open: boolean; data: ProductTypeBase | null };
 }
 
 // ************ Modal End ***********
@@ -602,4 +601,20 @@ export interface CommonValidationCreatableSelectProps {
   required?: boolean;
   disabled?: boolean;
   grid?: GridType;
+}
+
+export interface CommonStatsItem {
+  label: string;
+  value: number | string;
+  color?: string;
+  desc?: string;
+  selected?: boolean;
+  onClick?: () => void;
+}
+
+export interface CommonStatsCardProps {
+  stats: CommonStatsItem[];
+  grid?: GridType;
+  paperSx?: SxProps<Theme>;
+  variant?: "default" | "radio";
 }
