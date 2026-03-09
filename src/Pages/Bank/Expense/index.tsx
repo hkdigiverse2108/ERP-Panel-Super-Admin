@@ -48,7 +48,7 @@ const Expense = () => {
 
   const totalRows = data?.data?.totalData || 0;
 
-  const handleAdd = () => navigate(ROUTES.RECEIPT.ADD_EDIT);
+  const handleAdd = () => navigate(ROUTES.EXPENSE.ADD_EDIT);
 
   const handleDelete = () => {
     if (!rowToDelete) return;
