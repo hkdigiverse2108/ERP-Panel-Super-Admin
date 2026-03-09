@@ -1,17 +1,16 @@
 import { Box, Grid } from "@mui/material";
-import { Form, Formik, useFormikContext, type FormikHelpers } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Mutations, Queries } from "../../../Api";
+import { Mutations } from "../../../Api";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { ContactBase, EstimateFormValues } from "../../../Types";
-import { DateConfig, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
+import type { EstimateFormValues } from "../../../Types";
+import { DateConfig, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 import EstimateDetails from "../../../Components/Sales/Estimate/EstimateDetails/EstimateDetails";
 import EstimateTabs from "../../../Components/Sales/Estimate/EstimateDetails/EstimateTabs";
-import AdditionalChargesSection from "../../../Components/Purchase/SupplierBill/AdditionalChargeSection";
 
 // Watchers
 // const TaxTypeWatcher = ({ onChange }: { onChange: (taxType: string) => void }) => {
@@ -78,7 +77,7 @@ const EstimateForm = () => {
     paymentTerms: data?.paymentTerms || "",
     taxType: data?.taxType || "exclusive",
     reverseCharge: data?.reverseCharge || false,
-    termsAndConditionIds: data?.termsAndConditionIds?.map((t: { _id: string }) => t._id) || [],
+    termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
     items: data?.items || [emptyRow],
     additionalCharges: [],
     shippingDetails: {
@@ -102,7 +101,6 @@ const EstimateForm = () => {
     },
     isActive: data?.isActive || true,
   };
-
 
   const additionalChargeEmptyRow = { chargeId: "", amount: 0, taxId: "", taxAmount: 0, totalAmount: 0 };
   const [additionalChargeRows, setAdditionalChargeRows] = useState<any[]>(data?.additionalCharges || [additionalChargeEmptyRow]);
@@ -192,7 +190,7 @@ const EstimateForm = () => {
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") {
         resetForm();
-        
+
         setAdditionalChargeRows([additionalChargeEmptyRow]);
       } else {
         navigate(-1);
@@ -212,19 +210,14 @@ const EstimateForm = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.ESTIMATE[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.ESTIMATE[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8, display: "grid" }}>
         <Formik<EstimateFormValues> initialValues={initialValues} onSubmit={handleSubmit} enableReinitialize={isEditing}>
-          {({ values, setFieldValue, dirty, resetForm }) => (
+          {({ setFieldValue, dirty, resetForm }) => (
             <Form noValidate>
               <Grid container spacing={2}>
-                {/* <CompanyWatcher selectedCompanyId={selectedCompanyId} onChange={handleCompanyChange} />
-                <CustomerWatcher customers={customers} onChange={setSelectedCustomer} />
-                <TaxTypeWatcher onChange={(type) => setRows((prev) => prev.map((r) => calculateRow(r, type)))} /> */}
-
                 <CommonCard title="Estimate Details" grid={{ xs: 12 }}>
                   <EstimateDetails />
                 </CommonCard>
 
                 <CommonCard hideDivider grid={{ xs: 12 }}>
-                  {/* <EstimateTabs rows={rows} handleAdd={() => setRows([...rows, emptyRow])} handleCut={(i) => setRows(rows.filter((_, idx) => idx !== i))} handleRowChange={(i, f, v) => handleRowChange(i, f, v, values.taxType || "exclusive")} isProductDisabled={!values?.customerId} isTermsDisabled={!values?.customerId} selectedTermIds={selectedTermIds} onTermsChange={setSelectedTermIds} companyId={values?.customerId} /> */}
                   <EstimateTabs emptyRow={emptyRow} />
                 </CommonCard>
 

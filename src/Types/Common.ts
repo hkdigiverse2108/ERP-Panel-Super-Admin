@@ -448,6 +448,7 @@ type UploadType = "image" | "pdf";
 export interface ModalStateSlice {
   isUploadModal: { open: boolean; type: UploadType; multiple?: boolean };
   selectedFiles: string[];
+  selectedTermIds: string[];
   isModalVideoPlay: { open: boolean; link: string };
   isBrandModal: { open: boolean; data: BrandBase | null };
   isUomModal: { open: boolean; data: UomBase | null };
@@ -462,6 +463,8 @@ export interface ModalStateSlice {
   isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
   isOrderRefundModal: { open: boolean; data: PosCreditNoteBase | null };
   isProductTypeModal: { open: boolean; data: ProductTypeBase | null };
+  isTermsAndConditionFormModal: { open: boolean; data: TermsConditionBase | null; companyId?: string };
+  isTermsAndConditionSelectionModal: { open: boolean; alreadySelectedIds: string[]; companyId: string };
 }
 
 // ************ Modal End ***********

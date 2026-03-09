@@ -2,17 +2,17 @@ import AddIcon from "@mui/icons-material/Add";
 import { Box, Tab, Tabs } from "@mui/material";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
 import { CommonButton, CommonValidationSelect, CommonValidationTextField } from "../../../../Attribute";
-import { CommonTable, CommonTabPanel, CommonShippingDetails } from "../../../Common";
-import type { CommonTableColumn, ProductBase } from "../../../../Types";
-import type { EstimateFormValues } from "../../../../Types/Estimate";
+import { CommonTable, CommonTabPanel, CommonShippingDetails, CommonTermsAndCondition } from "../../../Common";
 import { useEffect, useState } from "react";
 import { Queries } from "../../../../Api";
 import { GenerateOptions } from "../../../../Utils";
 import { FieldArray, useFormikContext } from "formik";
-import type { EstimateItem } from "../../../../Types/Estimate";
+import type { EstimateItem, EstimateFormValues } from "../../../../Types/Estimate";
+import type { CommonTableColumn, ProductBase } from "../../../../Types";
 
 const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
   const [tabValue, setTabValue] = useState(0);
+
   const { values, setFieldValue } = useFormikContext<EstimateFormValues>();
 
   const isCustomerSelected = !!values?.customerId;
@@ -221,8 +221,9 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
         </Box>
       </CommonTabPanel>
 
+      {/* TAB 1: TERMS & CONDITIONS */}
       <CommonTabPanel value={tabValue} index={1}>
-        <Box sx={{ display: "flex", flexDirection: "column" }}>{/* <CommonTermsAndCondition selectedTermIds={selectedTermIds} onChange={onTermsChange} companyId={values?.companyId} isView={!isCustomerSelected} /> */}</Box>
+        <CommonTermsAndCondition selectedTermIds={values.termsAndConditionIds || []} onChange={(ids: string[]) => setFieldValue("termsAndConditionIds", ids)} companyId={values.companyId} isView={!values.companyId} />
       </CommonTabPanel>
 
       <CommonTabPanel value={tabValue} index={2}>

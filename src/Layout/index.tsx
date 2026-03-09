@@ -5,7 +5,7 @@ import { useAppSelector } from "../Store/hooks";
 import { setIsMobile, setPermission, setSidebarOpen } from "../Store/Slices/LayoutSlice";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-import { CommonUpload } from "../Components/Common";
+import { CommonTermsAndConditionFormModal, CommonTermsAndConditionSelectModal, CommonUpload } from "../Components/Common";
 import { Queries } from "../Api";
 import { setUser } from "../Store/Slices/AuthSlice";
 import CommonVideoModal from "../Components/Common/Modal/CommonVideoModal";
@@ -69,6 +69,8 @@ const Layout = () => {
       </div>
       <CommonUpload />
       <CommonVideoModal />
+      <CommonTermsAndConditionFormModal />
+      <CommonTermsAndConditionSelectModal />
     </>
   );
 };

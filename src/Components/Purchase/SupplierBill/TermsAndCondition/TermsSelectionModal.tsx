@@ -12,10 +12,10 @@ import type { TermsConditionApiResponse, TermsConditionBase, TermsSelectionFormV
 const TermsSelectionModal = ({ companyId }: TermsSelectionModalProps) => {
   const dispatch = useDispatch();
 
-  const { isTermsSelectionModal } = useAppSelector((state) => state.modal);
+  const { isTermsAndConditionSelectionModal } = useAppSelector((state) => state.modal);
 
-  const openModal = isTermsSelectionModal.open;
-  const selectedIds: string[] = isTermsSelectionModal.data || [];
+  const openModal = isTermsAndConditionSelectionModal.open;
+  const selectedIds: string[] = isTermsAndConditionSelectionModal.alreadySelectedIds || [];
 
   const { data, isLoading } = Queries.useGetTermsCondition({
     companyId: companyId,

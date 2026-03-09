@@ -17,7 +17,9 @@ import CommonStatsCard from "./CommonStatsCard";
 
 import CommonTable from "./CommonTable";
 import CommonTermsAndCondition from "./TermsAndConditions/CommonTermsAndCondition";
+import CommonTermsAndConditionFormModal from "./TermsAndConditions/commonTermsAndConditionFormModal";
+import CommonTermsAndConditionSelectModal from "./TermsAndConditions/CommonTermsAndConditionSelectModal";
 import CommonShippingDetails from "./CommonShippingDetails";
 import AddressSelectionModal from "./AddressSelectionModal";
 
-export { AddressSelectionModal, CommonShippingDetails, CommonTermsAndCondition, CommonDataGridSummaryFooter, CalculateGridSummary, CommonTabPanel, DependentSelect, CommonDrawer, CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonUpload, CommonModal, CommonActionColumn, CommonDeleteModal, CommonBottomActionBar, CommonImageBox, CommonPhoneColumns, CommonObjectNameColumn, AdvancedSearch, CommonStatsCard, CommonTable };
+export { CommonTermsAndConditionSelectModal, AddressSelectionModal, CommonShippingDetails, CommonTermsAndCondition, CommonTermsAndConditionFormModal, CommonDataGridSummaryFooter, CalculateGridSummary, CommonTabPanel, DependentSelect, CommonDrawer, CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonUpload, CommonModal, CommonActionColumn, CommonDeleteModal, CommonBottomActionBar, CommonImageBox, CommonPhoneColumns, CommonObjectNameColumn, AdvancedSearch, CommonStatsCard, CommonTable };
