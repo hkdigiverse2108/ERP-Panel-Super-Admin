@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Queries } from "../../../Api";
-import type { ProductRow, AdditionalChargeRow, TaxDetailsProps } from "../../../Types/SupplierBill";
+import type { ProductRow, AdditionalChargeRow, TaxDetailsProps } from "../../../Types";
 export const TaxDetails = ({ rows, additionalChargeRows, flatDiscount, roundOffAmount }: TaxDetailsProps) => {
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
 
@@ -9,7 +9,7 @@ export const TaxDetails = ({ rows, additionalChargeRows, flatDiscount, roundOffA
     const itemTaxable = rows.reduce((s: number, r: ProductRow) => s + (Number(r.taxableAmount) || 0), 0);
     const itemTax = rows.reduce((s: number, r: ProductRow) => s + (Number(r.itemTax) || 0), 0);
     const itemGross = rows.reduce((s: number, r: ProductRow) => s + (Number(r.qty) || 0) * (Number(r.sellingPrice) || 0), 0);
-    const additionalTaxable = additionalChargeRows.reduce((s: number, r: AdditionalChargeRow) => s + (Number(r.taxableAmount) || 0), 0);
+    const additionalTaxable = additionalChargeRows.reduce((s: number, r: AdditionalChargeRow) => s + (Number(r.taxAmount) || 0), 0);
     const additionalTax = additionalChargeRows.reduce((s: number, r: AdditionalChargeRow) => s + (Number(r.taxAmount) || 0), 0);
     const grossAmount = itemGross + additionalTaxable;
     const totalTaxableBeforeDiscount = itemTaxable + additionalTaxable;
@@ -34,8 +34,8 @@ export const TaxDetails = ({ rows, additionalChargeRows, flatDiscount, roundOffA
 
     additionalChargeRows.forEach((r: AdditionalChargeRow) => {
       const amount = Number(r.taxAmount) || 0;
-      if (r.tax) {
-        const taxObj = TaxData?.data?.find((t) => String(t._id) === String(r.tax));
+      if (r.taxId) {
+        const taxObj = TaxData?.data?.find((t) => String(t._id) === String(r.taxId));
         const name = taxObj?.name || "Tax";
         const rate = taxObj?.percentage || 0;
 

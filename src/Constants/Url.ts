@@ -168,6 +168,14 @@ export const URL_KEYS = {
     EDIT: "/bill-of-live-product/edit",
   },
 
+  PRODUCT_TYPE: {
+    BASE: "/product-type",
+    ALL: "/product-type/all",
+    DROPDOWN: "/product-type/dropdown",
+    ADD: "/product-type/add",
+    EDIT: "/product-type/edit",
+  },
+
   // ----------------------------- accounts -----------------------------
   ACCOUNT_GROUP: {
     BASE: "/account-group",
@@ -195,6 +203,12 @@ export const URL_KEYS = {
     ALL: "/credit-note/all",
     ADD: "/credit-note/add",
     EDIT: "/credit-note/edit",
+  },
+  JOURNAL_VOUCHER: {
+    BASE: "/journal-voucher",
+    ALL: "/journal-voucher/all",
+    ADD: "/journal-voucher/add",
+    EDIT: "/journal-voucher/edit",
   },
 
   // ----------------------------- purchase -----------------------------
@@ -301,5 +315,13 @@ export const URL_KEYS = {
     EDIT: "/pos-payment/edit",
     DELETE: "/pos-payment/delete",
     ALL: "/pos-payment/all",
+  },
+  RECEIPT: {
+    BASE: "/receipt",
+    ALL: "/receipt/all",
+    ADD: "/receipt/add",
+    EDIT: "/receipt/edit",
+    DELETE: "/receipt/delete",
+    DROPDOWN: "/receipt/dropdown",
   },
 } as const;

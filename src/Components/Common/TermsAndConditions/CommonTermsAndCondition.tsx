@@ -215,7 +215,12 @@ const CommonTermsAndCondition = ({ selectedTermIds, onChange, companyId, isView 
       {/* TABLE */}
       {!isView && (
         <Box sx={{ border: "1px solid", borderColor: "divider", borderRadius: 2, overflow: "hidden" }}>
-          <CommonTable data={displayTerms} columns={columns} rowKey={(row: TermsConditionBase) => row._id || ""} />
+          <CommonTable
+            data={displayTerms}
+            columns={columns}
+            rowKey={(row: TermsConditionBase) => row._id || ""}
+            getRowClass={() => "bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark border-b border-gray-100 dark:border-gray-700"}
+          />
         </Box>
       )}
 

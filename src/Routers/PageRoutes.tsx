@@ -32,6 +32,8 @@ import DebitNote from "../Pages/Accounting/DebitNote";
 import DebitNoteForm from "../Pages/Accounting/DebitNote/DebitNoteForm";
 import CreditNote from "../Pages/Accounting/CreditNote";
 import CreditNoteForm from "../Pages/Accounting/CreditNote/CreditNoteForm";
+import JournalVoucher from "../Pages/Accounting/JournalVoucher";
+import JournalVoucherForm from "../Pages/Accounting/JournalVoucher/JournalVoucherForm";
 import MaterialConsumption from "../Pages/Inventory/MaterialConsumption";
 import MaterialConsumptionForm from "../Pages/Inventory/MaterialConsumption/MaterialConsumptionForm";
 import SupplierBill from "../Pages/Purchase/SupplierBill";
@@ -67,6 +69,10 @@ import CreditNoteList from "../Pages/Pos/CreditNote";
 import OrderList from "../Pages/Pos/OrderList";
 import PaymentForm from "../Pages/Bank/Payment/PaymentForm";
 import Payment from "../Pages/Bank/Payment";
+import PosCreditNote from "../Pages/Pos/CreditNote";
+import ProductType from "../Pages/Inventory/ProductType";
+import Receipt from "../Pages/Bank/Receipt";
+import ReceiptForm from "../Pages/Bank/Receipt/ReceiptForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -99,6 +105,8 @@ export const PageRoutes = [
 
   { path: ROUTES.TAX.BASE, name: PAGE_TITLE.INVENTORY.TAX.BASE, element: <Tax /> },
 
+  { path: ROUTES.PRODUCT_TYPE.BASE, name: PAGE_TITLE.INVENTORY.PRODUCT_TYPE.BASE, element: <ProductType /> },
+
   { path: ROUTES.CATEGORY.BASE, name: PAGE_TITLE.INVENTORY.CATEGORY.BASE, element: <Category /> },
 
   { path: ROUTES.ACCOUNT_GROUP.BASE, name: PAGE_TITLE.ACCOUNT_GROUP.BASE, element: <AccountGroup /> },
@@ -111,6 +119,9 @@ export const PageRoutes = [
 
   { path: ROUTES.CREDIT_NOTE.BASE, name: PAGE_TITLE.CREDIT_NOTE.BASE, element: <CreditNote /> },
   { path: ROUTES.CREDIT_NOTE.ADD_EDIT, name: PAGE_TITLE.CREDIT_NOTE.BASE, element: <CreditNoteForm /> },
+
+  { path: ROUTES.JOURNAL_VOUCHER.BASE, name: PAGE_TITLE.JOURNAL_VOUCHER.BASE, element: <JournalVoucher /> },
+  { path: ROUTES.JOURNAL_VOUCHER.ADD_EDIT, name: PAGE_TITLE.JOURNAL_VOUCHER.BASE, element: <JournalVoucherForm /> },
 
   { path: ROUTES.ROLE.BASE, name: PAGE_TITLE.ROLE.BASE, element: <Role /> },
 
@@ -151,6 +162,8 @@ export const PageRoutes = [
 
   { path: ROUTES.PROFILE.BASE, name: PAGE_TITLE.SETTINGS.PROFILE.BASE, element: <Profile /> },
 
+  { path: ROUTES.POS_CREDIT_NOTE.BASE, name: PAGE_TITLE.POS.CREDIT_NOTE, element: <PosCreditNote /> },
+
   { path: ROUTES.ANNOUNCEMENT.BASE, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <Announcement /> },
   { path: ROUTES.ANNOUNCEMENT.ADD_EDIT, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <AnnouncementForm /> },
 
@@ -169,6 +182,8 @@ export const PageRoutes = [
 
   { path: ROUTES.PAYMENT.BASE, name: PAGE_TITLE.PAYMENT.BASE, element: <Payment /> },
   { path: ROUTES.PAYMENT.ADD_EDIT, name: PAGE_TITLE.PAYMENT.BASE, element: <PaymentForm /> },
+  { path: ROUTES.RECEIPT.BASE, name: PAGE_TITLE.RECEIPT.BASE, element: <Receipt /> },
+  { path: ROUTES.RECEIPT.ADD_EDIT, name: PAGE_TITLE.RECEIPT.BASE, element: <ReceiptForm /> },
 ];
 
 export const AuthRoutes = [

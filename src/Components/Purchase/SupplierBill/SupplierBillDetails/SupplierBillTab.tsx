@@ -1,11 +1,9 @@
-import { Box, Tab, Tabs } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { Box, Tab, Tabs } from "@mui/material";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
 import { CommonButton, CommonSelect, CommonTextField } from "../../../../Attribute";
-import { CommonTabPanel, CommonCard, CommonTermsAndCondition } from "../../../Common";
-import { CommonTable } from "../../../Common";
-import type { CommonTableColumn } from "../../../../Types";
-import type { ProductRow, SupplierBillTabsProps } from "../../../../Types/SupplierBill";
+import type { CommonTableColumn, ProductRow, SupplierBillTabsProps } from "../../../../Types";
+import { CommonCard, CommonTable, CommonTabPanel, CommonTermsAndCondition } from "../../../Common";
 
 const SupplierBillTabs = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange, isProductDisabled, isTermsDisabled, selectedTermIds, onTermsChange, companyId }: SupplierBillTabsProps) => {
   const ProductRowColumns: CommonTableColumn<ProductRow>[] = [
@@ -35,6 +33,7 @@ const SupplierBillTabs = ({ tabValue, setTabValue, rows, handleAdd, handleCut, h
     { key: "qty", header: "Qty", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="number" value={row.qty} onChange={(v) => handleRowChange(index, "qty", v)} />, footer: (data) => data.reduce((a, b) => a + (+b.qty || 0), 0) },
     { key: "freeQty", header: "Free Qty", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="number" value={row.freeQty} onChange={(v) => handleRowChange(index, "freeQty", v)} />, footer: (data) => data.reduce((a, b) => a + (+b.freeQty || 0), 0) },
     { key: "mrp", header: "MRP", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="number" value={row.mrp} onChange={(v) => handleRowChange(index, "mrp", v)} /> },
+    { key: "unit", header: "Unit", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="text" value={row.unit} onChange={(v) => handleRowChange(index, "unit", v)} disabled /> },
     { key: "unitCost", header: "Unit Cost", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="number" value={row.unitCost} onChange={(v) => handleRowChange(index, "unitCost", v)} /> },
     { key: "sellingPrice", header: "Selling", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="number" value={row.sellingPrice} onChange={(v) => handleRowChange(index, "sellingPrice", v)} /> },
     { key: "disc1", header: "Disc 1", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="number" value={row.disc1} onChange={(v) => handleRowChange(index, "disc1", v)} isCurrency currencyDisabled /> },

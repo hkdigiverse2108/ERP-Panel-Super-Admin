@@ -8,8 +8,8 @@ import { CommonButton, CommonValidationDatePicker, CommonValidationSelect, Commo
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, RECIPE_TYPE_OPTIONS } from "../../../Data";
+import type { RawRecipeProduct, RecipeFormValues } from "../../../Types";
 import { DateConfig, GenerateOptions, GetChangedFields, RecipeFormSchema, RemoveEmptyFields } from "../../../Utils";
-import type { RawRecipeProduct, RecipeFormValues } from "../../../Types/Recipe";
 
 const RecipeForm = () => {
   const location = useLocation();

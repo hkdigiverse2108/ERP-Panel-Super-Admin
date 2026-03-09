@@ -7,11 +7,10 @@ import { CommonPhoneNumber, CommonValidationSelect, CommonValidationTextField } 
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
 import { BANK_UI_FIELDS, BREADCRUMBS } from "../../Data";
-import type { BranchFormValues } from "../../Types";
-import type { BankBase } from "../../Types/Bank";
+import type { BankBase, BranchFormValues } from "../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
-import { BranchFormSchema } from "../../Utils/ValidationSchemas";
 import { usePagePermission } from "../../Utils/Hooks";
+import { BranchFormSchema } from "../../Utils/ValidationSchemas";
 
 const BranchForm = () => {
   const location = useLocation();

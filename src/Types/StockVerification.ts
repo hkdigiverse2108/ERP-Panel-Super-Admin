@@ -11,7 +11,6 @@ export interface StockVerificationItem {
   physicalQty: number;
   differenceQty: number;
   differenceAmount: number;
-  approvedQty: number;
 }
 
 export interface StockVerificationRow extends StockVerificationItem {
@@ -23,9 +22,7 @@ export interface StockVerificationFormValues {
   totalProducts?: number;
   totalPhysicalQty?: number;
   totalDifferenceAmount?: number;
-  approvedQty?: number;
   stockVerificationNo?: string;
-  totalApprovedQty?: number;
   status?: "pending" | "approved" | "rejected" | string;
   remark?: string;
   companyId?: string;

@@ -37,29 +37,28 @@ const StockVerification = () => {
     { field: "totalProducts", headerName: "Total Products", width: 200 },
     { field: "totalPhysicalQty", headerName: "Total Physical Qty", width: 200 },
     { field: "totalDifferenceAmount", headerName: "Difference Amount", width: 200 },
-    { field: "totalApprovedQty", headerName: "Approved Qty", width: 200 },
     { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
     ...(permission?.edit || permission?.delete
       ? [
-          {
-            ...CommonActionColumn<StockVerificationBase>({
-              ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
-              ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
-            }),
-            renderCell: (params: GridRenderCellParams<StockVerificationBase>) =>
-              params.row.status === "pending"
-                ? CommonActionColumn<StockVerificationBase>({
-                    ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
-                    ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
-                  }).renderCell?.(params)
-                : "-",
-          },
-        ]
+        {
+          ...CommonActionColumn<StockVerificationBase>({
+            ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
+          }),
+          renderCell: (params: GridRenderCellParams<StockVerificationBase>) =>
+            params.row.status === "pending"
+              ? CommonActionColumn<StockVerificationBase>({
+                ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
+                ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
+              }).renderCell?.(params)
+              : "-",
+        },
+      ]
       : []),
   ];
 
   const summary = useMemo(() => {
-    return CalculateGridSummary(allStock, ["totalProducts", "totalPhysicalQty", "totalDifferenceAmount", "totalApprovedQty"]);
+    return CalculateGridSummary(allStock, ["totalProducts", "totalPhysicalQty", "totalDifferenceAmount"]);
   }, [allStock]);
 
   const CommonDataGridOption = {

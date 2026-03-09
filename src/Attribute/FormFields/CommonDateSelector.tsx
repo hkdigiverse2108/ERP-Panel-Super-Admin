@@ -9,7 +9,7 @@ const todayUtc = () => DateConfig.utc().startOf("day");
 
 export const CommonValidationDatePicker: FC<CommonValidationDatePickerProps> = ({ name, label, required, disabled, grid, minDate, maxDate, ...props }) => {
   const [field, meta, helpers] = useField(name);
-  const value = field.value ? DateConfig.utc(field.value) : todayUtc();
+  const value = field.value ? DateConfig.utc(field.value) : null;
 
   const Input = (
     <FormControl fullWidth error={meta.touched && Boolean(meta.error)}>

@@ -6,8 +6,7 @@ import { CommonDateRangeSelector } from "../../../Attribute";
 import { AdvancedSearch, CalculateGridSummary, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { AppGridColDef } from "../../../Types";
-import type { PosCashRegisterBase } from "../../../Types/PosCashRegister";
+import type { AppGridColDef, PosCashRegisterBase } from "../../../Types";
 import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
 

@@ -74,6 +74,11 @@ export const PAGE_TITLE = {
       ADD: "Add Bill Of Live Product",
       EDIT: "Edit Bill Of Live Product",
     },
+    PRODUCT_TYPE: {
+      BASE: "Product Type",
+      ADD: "Add Product Type",
+      EDIT: "Edit Product Type",
+    },
   },
   CUSTOMER: {
     BASE: "Customer",
@@ -108,6 +113,11 @@ export const PAGE_TITLE = {
     BASE: "Credit Note",
     ADD: "Add Credit Note",
     EDIT: "Edit Credit Note",
+  },
+  JOURNAL_VOUCHER: {
+    BASE: "Journal Voucher",
+    ADD: "Add Journal Voucher",
+    EDIT: "Edit Journal Voucher",
   },
   ROLE: {
     BASE: "Role",
@@ -168,6 +178,11 @@ export const PAGE_TITLE = {
     BASE: "Payment",
     ADD: "Add Payment",
     EDIT: "Edit Payment",
+  },
+  RECEIPT: {
+    BASE: "Receipt",
+    ADD: "Add Receipt",
+    EDIT: "Edit Receipt",
   },
   CRM: {
     BASE: "CRM",

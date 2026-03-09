@@ -22,6 +22,10 @@ export const ROUTES = {
     ADD_EDIT: "/product/add-edit",
     ITEM_ADD_EDIT: "/product/item/add-edit",
   },
+  PRODUCT_TYPE: {
+    BASE: "/product-type",
+    ADD_EDIT: "/product-type/add-edit",
+  },
   ADMIN_SETTING: {
     BASE: "/admin-setting",
     ADD_EDIT: "/admin-setting/add-edit",
@@ -64,6 +68,10 @@ export const ROUTES = {
   CREDIT_NOTE: {
     BASE: "/credit-note",
     ADD_EDIT: "/credit-note/add-edit",
+  },
+  JOURNAL_VOUCHER: {
+    BASE: "/journal-voucher",
+    ADD_EDIT: "/journal-voucher/add-edit",
   },
   ROLE: {
     BASE: "/role",
@@ -118,6 +126,10 @@ export const ROUTES = {
  PAYMENT: {
     BASE: "/payment",
     ADD_EDIT: "/payment/add-edit",
+  },
+  RECEIPT: {
+    BASE: "/receipt",
+    ADD_EDIT: "/receipt/add-edit",
   },
   COUPON: {
     BASE: "/coupon",

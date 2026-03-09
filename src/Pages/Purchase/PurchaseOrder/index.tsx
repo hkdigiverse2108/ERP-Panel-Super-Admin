@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonObjectNameColumn, CommonStatsCard } from "../../../Components/Common";
+import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonStatsCard } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, ORDER_STATUS } from "../../../Data";
 import type { AppGridColDef, PurchaseOrderBase } from "../../../Types";
@@ -21,7 +21,7 @@ const PurchaseOrder = () => {
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
   const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier" });
 
-  const allPurchaseOrder = useMemo(() => purchaseOrderData?.data?.purchaseOrder_data?.map((purchaseOrder) => ({ ...purchaseOrder, id: purchaseOrder._id })) || [], [purchaseOrderData]);
+  const allPurchaseOrder = useMemo(() => purchaseOrderData?.data?.purchaseOrder_data?.map((purchaseOrder) => ({ ...purchaseOrder, id: purchaseOrder._id, netAmount: purchaseOrder.summary?.netAmount || 0 })) || [], [purchaseOrderData]);
   const totalRows = purchaseOrderData?.data?.totalData || 0;
 
   const summary = useMemo(() => {
@@ -37,10 +37,10 @@ const PurchaseOrder = () => {
 
   const columns: AppGridColDef<PurchaseOrderBase>[] = [
     { field: "orderNo", headerName: "Order No", width: 150 },
-    CommonObjectNameColumn<PurchaseOrderBase>("supplierId", { headerName: "Supplier", width: 250 }),
+    { field: "supplierId", headerName: "Supplier", width: 250, valueGetter: (_, row: PurchaseOrderBase) => (row?.supplierId ? `${row.supplierId.firstName || ""} ${row.supplierId.lastName || ""}`.trim() || row.supplierId.companyName || "" : "") },
     { field: "date", headerName: "Order Date", width: 150, renderCell: (params) => FormatDate(params.row.date || params.row.orderDate) },
     { field: "netAmount", headerName: "Amount", width: 170, type: "number" },
-    { field: "status", headerName: "Status", width: 150 },
+    { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
     { field: "notes", headerName: "Notes", flex: 1, minWidth: 150 },
     CommonActionColumn({
       active: (row) => editPurchaseOrder({ purchaseOrderId: row?._id, isActive: !row.isActive }),
@@ -48,7 +48,7 @@ const PurchaseOrder = () => {
       onDelete: (row) => setRowToDelete({ _id: row?._id }),
     }),
   ];
-``
+  
   const CommonDataGridOption = {
     columns,
     rows: allPurchaseOrder,
@@ -68,16 +68,12 @@ const PurchaseOrder = () => {
     },
   };
 
-  const filter = [
-    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(companyData?.data), companyDataLoading, { xs: 12, sm: 6, md: 3 }),
-    CreateFilter("Select Supplier", "supplier", advancedFilter, updateAdvancedFilter, GenerateOptions(supplierData?.data), supplierDataLoading, { xs: 12, sm: 6, md: 3 }),
-    CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ORDER_STATUS, false, { xs: 12, sm: 6, md: 3 }),
-  ];
+  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(companyData?.data), companyDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Supplier", "supplier", advancedFilter, updateAdvancedFilter, GenerateOptions(supplierData?.data), supplierDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ORDER_STATUS, false, { xs: 12, sm: 6, md: 3 })];
 
   const stats = [
     { label: "All Orders", value: totalRows || 0, color: "primary" },
     { label: "Delivered", value: allPurchaseOrder.filter((item) => item.status === "delivered").length, color: "success" },
-    { label: "Exceed", value: allPurchaseOrder.filter((item) => item.status === "exceed").length, color: "error" }, 
+    { label: "Exceed", value: allPurchaseOrder.filter((item) => item.status === "exceed").length, color: "error" },
     { label: "Completed", value: allPurchaseOrder.filter((item) => item.status === "completed").length, color: "info" },
     { label: "Cancelled", value: allPurchaseOrder.filter((item) => item.status === "cancelled").length, color: "warning" },
   ];

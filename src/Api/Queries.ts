@@ -10,6 +10,7 @@ import type { RecipeApiResponse, RecipeDropdownApiResponse } from "../Types/Reci
 import type { AdminSettingApiResponse } from "../Types/AdminSetting";
 import type { PosCashRegisterApiResponse, PosCashRegisterDropdownApiResponse } from "../Types/PosCashRegister";
 import type { PosCreditNoteApiResponse } from "../Types/PosCreditNote";
+import type { ProductTypeApiResponse, ProductTypeDropdownApiResponse } from "../Types/ProductType";
 
 export const Queries = {
   // ************ Upload ***********
@@ -60,6 +61,10 @@ export const Queries = {
   //***************bank**************** */
   useGetBank: (params?: Params) => useQueries<BankApiResponse>([KEYS.BANK.BASE, params], () => Get(URL_KEYS.BANK.ALL, params)),
   useGetBankDropdown: (params?: Params, enabled?: boolean) => useQueries<BankDropdownApiResponse>([KEYS.BANK.BASE, params], () => Get(URL_KEYS.BANK.DROPDOWN, params), { enabled: enabled }),
+
+  // ************ Product Type ***********
+  useGetProductType: (params?: Params) => useQueries<ProductTypeApiResponse>([KEYS.PRODUCT_TYPE.BASE, params], () => Get(URL_KEYS.PRODUCT_TYPE.ALL, params)),
+  useGetProductTypeDropdown: (params?: Params, enabled?: boolean) => useQueries<ProductTypeDropdownApiResponse>([KEYS.PRODUCT_TYPE.BASE, params], () => Get(URL_KEYS.PRODUCT_TYPE.DROPDOWN, params), { enabled: enabled }),
 
   //*************** Location **************** */
   useGetLocation: (params?: Params) => useQueries<LocationApiResponse>([KEYS.LOCATION.BASE, params], () => Get(URL_KEYS.LOCATION.ALL, params)),

@@ -59,7 +59,6 @@ const StockVerificationForm = () => {
           physicalQty: item.physicalQty,
           differenceQty: item.differenceQty,
           differenceAmount: item.differenceAmount,
-          approvedQty: item.approvedQty ?? item.physicalQty,
         })),
       );
 
@@ -79,7 +78,6 @@ const StockVerificationForm = () => {
     physicalQty: 0,
     differenceQty: 0 - ((product as ProductBase).qty ?? 0),
     differenceAmount: (product.landingCost ?? 0) * (0 - ((product as any).qty ?? 0)),
-    approvedQty: 0,
   });
 
   const updateRow = (id: string, data: Partial<StockVerificationRow>) => {
@@ -88,7 +86,7 @@ const StockVerificationForm = () => {
         if (r.productId !== id) return r;
 
         const updated = { ...r, ...data };
-        const differenceQty = isEditing ? updated?.approvedQty - updated?.systemQty : updated?.physicalQty - updated?.systemQty;
+        const differenceQty = updated?.physicalQty - updated?.systemQty;
         const differenceAmount = updated?.landingCost * differenceQty;
 
         return { ...updated, differenceQty, differenceAmount };
@@ -102,7 +100,6 @@ const StockVerificationForm = () => {
   };
   const totalDifferenceQty = rows.reduce((sum, r) => sum + r?.physicalQty, 0);
 
-  const totalApprovedQty = rows.reduce((sum, r) => sum + r?.approvedQty, 0);
 
   const totalDifferenceAmount = rows.reduce((sum, r) => sum + r?.differenceAmount, 0);
 
@@ -119,14 +116,12 @@ const StockVerificationForm = () => {
       physicalQty: r.physicalQty,
       differenceQty: r.differenceQty,
       differenceAmount: r.differenceAmount,
-      approvedQty: r.approvedQty,
     }));
     const payload: StockVerificationFormValues = {
       items,
       totalProducts: rows.length,
       totalPhysicalQty: totalDifferenceQty,
       totalDifferenceAmount: totalDifferenceAmount,
-      totalApprovedQty: totalApprovedQty,
       status: status[0],
       ...(enterRemark && { remark: enterRemark }),
       companyId: filter.companyFilter,
@@ -163,10 +158,6 @@ const StockVerificationForm = () => {
     { key: "differenceQty", header: "Difference Qty", footer: "" },
     { key: "differenceAmount", header: "Difference Amount", render: (row) => row.differenceAmount.toFixed(2), footer: (data) => data.reduce((sum, r) => sum + (r.differenceAmount || 0), 0).toFixed(2) },
   ];
-
-  if (isEditing) {
-    columns.push({ key: "approvedQty", header: "Approve Qty", bodyClass: "min-w-35 w-35", render: (row) => <CommonTextField type="number" value={row.approvedQty} onChange={(e) => updateRow(row.productId, { approvedQty: Number(e) })} />, footer: (data) => data.reduce((sum, r) => sum + (r.approvedQty || 0), 0) });
-  }
 
   columns.push({
     key: "actions",

@@ -44,6 +44,9 @@ export interface CompanyFormValues {
   reportFormatLogo?: string;
   authorizedSignature?: string;
 
+  planStartDate?: string;
+  planEndDate?: string;
+
   isActive?: boolean;
   _submitAction?: string;
 }

@@ -33,16 +33,16 @@ const Announcement = () => {
   };
 
   const columns: AppGridColDef<AnnouncementBase>[] = [
-      { field: "version", headerName: "Version", width: 100 },
+      { field: "version", headerName: "Version", width: 150 },
       { field: "link", headerName: "Link", width: 330 },
-      { field: "desc", headerName: "Description",flex:1, minWidth: 300, renderCell: (params) => (Array.isArray(params.row.desc) ? params.row.desc.join(", ") : params.row.desc) },
+      { field: "desc", headerName: "Description",flex:1, minWidth: 300 ,renderCell: (params) => <span dangerouslySetInnerHTML={{ __html: params.row.desc || "" }}/> },
     ...(permission?.edit || permission?.delete
       ? [
         CommonActionColumn<AnnouncementBase>({
           ...(permission?.edit && {
             active: (row) =>
               editAnnouncement({
-                announcementId: row._id,
+               announcementId: row._id,
                 isActive: !row.isActive,
               }),
             editRoute: ROUTES.ANNOUNCEMENT.ADD_EDIT,

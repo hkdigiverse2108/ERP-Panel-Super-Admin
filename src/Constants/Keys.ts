@@ -96,6 +96,12 @@ export const KEYS = {
     DELETE: "bank-delete",
   },
 
+   POS_PAYMENT: {
+    BASE: "pos-payment",
+    ADD: "pos-payment-add",
+    EDIT: "pos-payment-edit",
+    DELETE: "pos-payment-delete",
+  },
   // ----------------------------- inventory -----------------------------
 
   PRODUCT: {
@@ -158,6 +164,12 @@ export const KEYS = {
     EDIT: "bill-of-live-product-edit",
     DELETE: "bill-of-live-product-delete",
   },
+  PRODUCT_TYPE:{
+    BASE: "product-type",
+    ADD: "product-type-add",
+    EDIT: "product-type-edit",
+    DELETE: "product-type-delete",
+  },
   // ----------------------------- accounts -----------------------------
   ACCOUNT_GROUP: {
     BASE: "account-group",
@@ -182,6 +194,12 @@ export const KEYS = {
     ADD: "credit-note-add",
     EDIT: "credit-note-edit",
     DELETE: "credit-note-delete",
+  },
+  JOURNAL_VOUCHER: {
+    BASE: "journal-voucher",
+    ADD: "journal-voucher-add",
+    EDIT: "journal-voucher-edit",
+    DELETE: "journal-voucher-delete",
   },
 
   // ----------------------------- purchase -----------------------------

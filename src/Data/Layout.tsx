@@ -27,6 +27,7 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.INVENTORY.STOCK.BASE, path: ROUTES.STOCK.BASE, pro: false },
       { name: PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE, path: ROUTES.STOCK_VERIFICATION.BASE, pro: false },
       { name: PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE, path: ROUTES.BILL_OF_LIVE_PRODUCT.BASE, pro: false },
+      { name: PAGE_TITLE.INVENTORY.PRODUCT_TYPE.BASE, path: ROUTES.PRODUCT_TYPE.BASE },
     ],
   },
   {
@@ -35,6 +36,7 @@ export const NavItems: NavItem[] = [
     children: [
       { name: PAGE_TITLE.BANK.BASE, path: ROUTES.BANK.BASE },
       { name: PAGE_TITLE.PAYMENT.BASE, path: ROUTES.PAYMENT.BASE },
+      { name: PAGE_TITLE.RECEIPT.BASE, path: ROUTES.RECEIPT.BASE },
     ],
   },
   {
@@ -67,6 +69,7 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.ACCOUNT.BASE, path: ROUTES.ACCOUNT.BASE },
       { name: PAGE_TITLE.DEBIT_NOTE.BASE, path: ROUTES.DEBIT_NOTE.BASE },
       { name: PAGE_TITLE.CREDIT_NOTE.BASE, path: ROUTES.CREDIT_NOTE.BASE },
+      { name: PAGE_TITLE.JOURNAL_VOUCHER.BASE, path: ROUTES.JOURNAL_VOUCHER.BASE },
     ],
   },
 

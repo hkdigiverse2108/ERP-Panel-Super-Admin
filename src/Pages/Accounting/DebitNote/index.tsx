@@ -41,14 +41,14 @@ const DebitNote = () => {
     { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
-          CommonActionColumn<DebitNoteBase>({
-            ...(permission?.edit && {
-              active: (row) => editDebitNote({ debitNoteId: row?._id, isActive: !row.isActive }),
-              editRoute: ROUTES.DEBIT_NOTE.ADD_EDIT,
-            }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherNumber }) }),
+        CommonActionColumn<DebitNoteBase>({
+          ...(permission?.edit && {
+            active: (row) => editDebitNote({ debitNoteId: row?._id, isActive: !row.isActive }),
+            editRoute: ROUTES.DEBIT_NOTE.ADD_EDIT,
           }),
-        ]
+          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherNumber }) }),
+        }),
+      ]
       : []),
   ];
 
@@ -72,7 +72,7 @@ const DebitNote = () => {
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.DEBIT_NOTE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.DEBIT_NOTE.BASE} />
-      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
