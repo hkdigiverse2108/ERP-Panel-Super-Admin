@@ -16,6 +16,7 @@ import type { AccountBase } from "./Account";
 import type { AdditionalChargesBase } from "./AdditionalCharges";
 import type { PosCreditNoteBase } from "./PosCreditNote";
 import type { Theme } from "@emotion/react";
+import type { ProductTypeBase } from "./ProductType";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -461,6 +462,7 @@ export interface ModalStateSlice {
   isTermsSelectionModal: { open: boolean; data: any | null };
   isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
   isOrderRefundModal: { open: boolean; data: PosCreditNoteBase | null };
+  isProductTypeModal: { open: boolean; data: ProductTypeBase | null };
 }
 
 // ************ Modal End ***********
