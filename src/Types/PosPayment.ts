@@ -24,6 +24,7 @@ export interface PosPaymentFormValues {
   companyId?: string;
   accountId?: string;
   remark?: string;
+  status?: string;
   voucherDetails?: VoucherRow[];
   _submitAction?: string;
   posCashRegisterId?: string;

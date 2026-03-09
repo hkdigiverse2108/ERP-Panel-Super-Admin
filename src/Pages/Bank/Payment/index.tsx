@@ -42,6 +42,7 @@ const Payment = () => {
     { field: "paymentType", headerName: "Payment Type", width: 140 },
     { field: "createdAt", headerName: "Payment Date", width: 190, valueGetter: (v) => FormatDate(v) },
     { field: "amount", headerName: "Amount", minWidth: 150, flex: 1, valueGetter: (_v, row: PosPaymentBase) => row?.amount ?? row?.totalAmount ?? 0 },
+    { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
 
     ...(permission?.edit || permission?.delete
       ? [
