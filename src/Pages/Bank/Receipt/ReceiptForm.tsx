@@ -156,14 +156,14 @@ const ReceiptForm = () => {
                       <CommonValidationSelect name="partyId" label="Party" grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} options={contactLoading || contactFetching ? [] : GenerateOptions(contactData?.data || [])} isLoading={contactLoading || contactFetching} />
                       <CommonValidationDatePicker name="paymentDate" label="Payment Date" required grid={{ xs: 12, md: 4 }} />
                       <Grid size={{ xs: 12 }}>
-                        {/* <CommonStatsCard
+                        <CommonStatsCard
                           variant="radio"
                           grid={{ xs: 12, md: 4 }}
                           stats={[
                             { value: "Advance Payment", label: "", desc: "Will be offset by upcoming bills", selected: values.paymentType === "advance", onClick: () => setFieldValue("paymentType", "advance") },
                             { value: "Against Voucher", label: "", desc: "Make Payment Against Voucher", selected: values.paymentType === "against_bill", onClick: () => setFieldValue("paymentType", "against_bill") },
                           ]}
-                        /> */}
+                        />
                       </Grid>
                       <CommonValidationTextField name="amount" label="Amount" type="number" required isCurrency currencyDisabled grid={{ xs: 12, md: 4 }} disabled={values.paymentType === "against_bill"} />
                       <CommonValidationTextField name="remark" label="Description" multiline grid={{ xs: 12, md: 8 }} />
