@@ -33,7 +33,7 @@ const PaymentForm = () => {
     bankId: data?.bankId?._id || data?.bankId || "",
     posOrderId: data?.posOrderId?._id || data?.posOrderId || "",
     paymentMode: data?.paymentMode || "cash",
-    paymentDate: data?.paymentDate || null,
+    date: data?.paymentDate || null,
     amount: data?.amount || 0,
     totalAmount: data?.totalAmount || 0,
     paidAmount: data?.paidAmount || 0,
@@ -153,8 +153,8 @@ const PaymentForm = () => {
                   <CommonCard title="Payment Details" grid={{ xs: 12 }}>
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
-                      <CommonValidationSelect name="partyId" label="Party" grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} options={contactLoading || contactFetching ? [] : GenerateOptions(contactData?.data || [])} isLoading={contactLoading || contactFetching} />
-                      <CommonValidationDatePicker name="paymentDate" label="Payment Date" required grid={{ xs: 12, md: 4 }} />
+                      <CommonValidationSelect name="partyId" label="Party" grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} options={contactLoading || contactFetching ? [] : GenerateOptions(contactData?.data || [])} isLoading={contactLoading || contactFetching} required/>
+                      <CommonValidationDatePicker name="date" label="Payment Date" required grid={{ xs: 12, md: 4 }} />
                       <Grid size={{ xs: 12 }}>
                         <CommonStatsCard
                           variant="radio"

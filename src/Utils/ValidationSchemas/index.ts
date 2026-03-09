@@ -559,7 +559,7 @@ export const ReturnPosOrderFormSchema = Yup.object({
 export const PaymentFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
   partyId: Validation("string", "Party"),
-  paymentDate: Yup.mixed().required("Payment Date is required"),
+  date: Yup.mixed().required("Payment Date is required"),
   paymentType: Validation("string", "Payment Type"),
   posOrderId: RequiredWhen("paymentType", ["against_bill"], "Sales", "string"),
   paymentMode: Validation("string", "Payment Mode"),
