@@ -33,7 +33,10 @@ export const NavItems: NavItem[] = [
   {
     name: PAGE_TITLE.BANK_CASH.BASE,
     icon: <AccountBalance />,
-    children: [{ name: PAGE_TITLE.BANK.BASE, path: ROUTES.BANK.BASE }],
+    children: [
+      { name: PAGE_TITLE.BANK.BASE, path: ROUTES.BANK.BASE },
+      { name: PAGE_TITLE.RECEIPT.BASE, path: ROUTES.RECEIPT.BASE },
+    ],
   },
   {
     name: PAGE_TITLE.SUPPORT.BASE,

@@ -174,6 +174,11 @@ export const PAGE_TITLE = {
     ADD: "Add Bank",
     EDIT: "Edit Bank",
   },
+  RECEIPT: {
+    BASE: "Receipt",
+    ADD: "Add Receipt",
+    EDIT: "Edit Receipt",
+  },
   CRM: {
     BASE: "CRM",
     COUPON: {

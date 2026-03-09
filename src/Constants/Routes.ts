@@ -123,6 +123,10 @@ export const ROUTES = {
     BASE: "/bank",
     ADD_EDIT: "/bank/add-edit",
   },
+  RECEIPT: {
+    BASE: "/receipt",
+    ADD_EDIT: "/receipt/add-edit",
+  },
   COUPON: {
     BASE: "/coupon",
     ADD_EDIT: "/coupon/add-edit",
