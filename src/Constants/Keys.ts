@@ -96,6 +96,12 @@ export const KEYS = {
     DELETE: "bank-delete",
   },
 
+   POS_PAYMENT: {
+    BASE: "pos-payment",
+    ADD: "pos-payment-add",
+    EDIT: "pos-payment-edit",
+    DELETE: "pos-payment-delete",
+  },
   // ----------------------------- inventory -----------------------------
 
   PRODUCT: {

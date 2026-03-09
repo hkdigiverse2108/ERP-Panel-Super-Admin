@@ -121,6 +121,7 @@ export const BREADCRUMBS = {
     ADD: [{ label: PAGE_TITLE.BANK.BASE, href: ROUTES.BANK.BASE }, { label: PAGE_TITLE.BANK.ADD }],
     EDIT: [{ label: PAGE_TITLE.BANK.BASE, href: ROUTES.BANK.BASE }, { label: PAGE_TITLE.BANK.EDIT }],
   },
+  
   COUPON: {
     BASE: [{ label: PAGE_TITLE.CRM.COUPON.BASE }],
     ADD: [{ label: PAGE_TITLE.CRM.COUPON.BASE, href: ROUTES.COUPON.BASE }, { label: PAGE_TITLE.CRM.COUPON.ADD }],
@@ -158,5 +159,10 @@ export const BREADCRUMBS = {
   },
   POS_ORDER_LIST: {
     BASE: [{ label: PAGE_TITLE.POS.ORDER_LIST }],
+  },
+   RECEIPT: {
+    BASE: [{ label: PAGE_TITLE.RECEIPT.BASE }],
+    ADD: [{ label: PAGE_TITLE.RECEIPT.BASE, href: ROUTES.RECEIPT.BASE }, { label: PAGE_TITLE.RECEIPT.ADD }],
+    EDIT: [{ label: PAGE_TITLE.RECEIPT.BASE, href: ROUTES.RECEIPT.BASE }, { label: PAGE_TITLE.RECEIPT.EDIT }],
   },
 };
