@@ -13,7 +13,7 @@ export interface PosPaymentFormValues {
   bankId?: string;
   posOrderId?: string;
   paymentMode?: string;
-  paymentDate?: string | Date | null;
+  date?: string | Date | null;
   totalAmount?: number;
   paidAmount?: number;
   pendingAmount?: number;
