@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn, CommonStatsCard } from "../../../Components/Common";
+import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonObjectNameColumn, CommonStatsCard } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, PosPaymentBase } from "../../../Types";
@@ -20,8 +20,20 @@ const Expense = () => {
   const { mutate: deletePayment, isPending: isDeleteLoading } = Mutations.useDeletePosPayment();
   const { mutate: editPayment, isPending: isEditLoading } = Mutations.useEditPosPayment();
   const rows = useMemo(() => {
-    return data?.data?.posPayment_data.map((r: PosPaymentBase) => ({ ...r, id: r?._id })) || [];
+    return (
+      data?.data?.posPayment_data.map((r: PosPaymentBase) => ({
+        ...r,
+        id: r?._id,
+        totalAmount: Number(r?.totalAmount ?? 0),
+        paidAmount: Number(r?.paidAmount ?? 0),
+        pendingAmount: Number(r?.pendingAmount ?? 0),
+      })) || []
+    );
   }, [data]);
+
+  const summary = useMemo(() => {
+    return CalculateGridSummary(rows, ["totalAmount", "paidAmount", "pendingAmount"]);
+  }, [rows]);
 
   const stats = useMemo(() => {
     const totalAmount = rows.reduce((acc, r) => acc + Number(r.totalAmount || 0), 0);
@@ -51,21 +63,21 @@ const Expense = () => {
     { field: "partyId", headerName: "Party Name", width: 230, valueGetter: (_v, row: PosPaymentBase) => (row?.partyId ? `${row?.partyId?.firstName} ${row?.partyId?.lastName}` : "-") },
     { field: "paymentMode", headerName: "Payment Mode", width: 140 },
     { field: "paymentType", headerName: "Payment Type", width: 140 },
-    { field: "paymentDate", headerName: "Payment Date", width: 190, valueGetter: (v) => FormatDate(v) },
-    { field: "totalAmount", headerName: "Total", minWidth: 150, flex: 1, valueGetter: (_v, row: PosPaymentBase) => row?.totalAmount ?? row?.totalAmount ?? 0 },
-    { field: "paidAmount", headerName: "Paid", minWidth: 150, flex: 1, valueGetter: (_v, row: PosPaymentBase) => row?.paidAmount ?? row?.totalAmount ?? 0 },
-    { field: "pendingAmount", headerName: "Unpaid", minWidth: 150, flex: 1, valueGetter: (_v, row: PosPaymentBase) => row?.pendingAmount ?? row?.totalAmount ?? 0 },
+    { field: "date", headerName: "Expense Date", width: 190, valueGetter: (v) => FormatDate(v) },
+    { field: "totalAmount", headerName: "Total", minWidth: 150, flex: 1, type: "number" },
+    { field: "paidAmount", headerName: "Paid", minWidth: 150, flex: 1, type: "number" },
+    { field: "pendingAmount", headerName: "Unpaid", minWidth: 150, flex: 1, type: "number" },
 
     ...(permission?.edit || permission?.delete
       ? [
-          CommonActionColumn<PosPaymentBase>({
-            ...(permission?.edit && {
-              active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
-              editRoute: ROUTES.RECEIPT.ADD_EDIT,
-            }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherType }) }),
+        CommonActionColumn<PosPaymentBase>({
+          ...(permission?.edit && {
+            active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
+            editRoute: ROUTES.RECEIPT.ADD_EDIT,
           }),
-        ]
+          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherType }) }),
+        }),
+      ]
       : []),
   ];
 
@@ -83,6 +95,9 @@ const Expense = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    slots: {
+      bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
+    },
   };
 
   const filter = [

@@ -51,7 +51,7 @@ const Payment = () => {
               active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
               editRoute: ROUTES.PAYMENT.ADD_EDIT,
             }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.paymentNo }) }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherType }) }),
           }),
         ]
       : []),
