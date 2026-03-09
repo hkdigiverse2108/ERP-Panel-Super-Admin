@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn, CommonStatsCard } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, PosPaymentBase } from "../../../Types";
@@ -20,8 +20,19 @@ const Expense = () => {
   const { mutate: deletePayment, isPending: isDeleteLoading } = Mutations.useDeletePosPayment();
   const { mutate: editPayment, isPending: isEditLoading } = Mutations.useEditPosPayment();
   const rows = useMemo(() => {
-    return data?.data?.posPayment_data.map((r) => ({ ...r, id: r?._id })) || [];
+    return data?.data?.posPayment_data.map((r: PosPaymentBase) => ({ ...r, id: r?._id })) || [];
   }, [data]);
+
+  const stats = useMemo(() => {
+    const totalAmount = rows.reduce((acc, r) => acc + Number(r.totalAmount || 0), 0);
+    const paidAmount = rows.reduce((acc, r) => acc + Number(r.paidAmount || 0), 0);
+    const unpaidAmount = rows.reduce((acc, r) => acc + Number(r.pendingAmount || 0), 0);
+    return [
+      { label: "Total Expense", value: totalAmount },
+      { label: "Paid", value: paidAmount },
+      { label: "Unpaid", value: unpaidAmount },
+    ];
+  }, [rows]);
 
   const totalRows = data?.data?.totalData || 0;
 
@@ -80,9 +91,10 @@ const Expense = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.RECEIPT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.RECEIPT.BASE} />
+      <CommonBreadcrumbs title={PAGE_TITLE.EXPENSE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.EXPENSE.BASE} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <CommonStatsCard stats={stats} />
         <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...gridOptions} />
