@@ -29,7 +29,7 @@ export interface EstimateItem {
   uomId: string;
   price: number;
   discount1: number;
-  discount2: number;
+  // discount2: number;
   taxId: string;
   taxableAmount: number;
   totalAmount: number;

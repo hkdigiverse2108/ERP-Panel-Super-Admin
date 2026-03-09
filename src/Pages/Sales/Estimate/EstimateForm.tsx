@@ -65,7 +65,7 @@ const EstimateForm = () => {
   const { data } = location.state || {};
 
   // const { _id, createdAt, updatedAt, isDeleted, createdBy, updatedBy, __v, ...data } = data || {};
-  const emptyRow = { productId: "", qty: 0, freeQty: 0, uomId: "", price: 0, discount1: 0, discount2: 0, taxId: "", taxableAmount: 0, totalAmount: 0 };
+  const emptyRow = { productId: "", qty: 1, freeQty: 0, uomId: "", price: 0, discount1: 0, taxId: "", taxableAmount: 0, totalAmount: 0 };
 
   const initialValues: EstimateFormValues = {
     companyId: data?.companyId || "",
@@ -103,30 +103,9 @@ const EstimateForm = () => {
     isActive: data?.isActive || true,
   };
 
-  // const initialValues: EstimateFormValues = {
-  //   ...defaultValues,
-  //   ...data,
-  //   companyId: data?.companyId?._id || data?.companyId || "",
-  //   customerId: data?.customerId?._id || data?.customerId || "",
-  //   billingAddress: data?.billingAddress?._id || data?.billingAddress || "",
-  //   shippingAddress: data?.shippingAddress?._id || data?.shippingAddress || "",
-  //   termsAndConditionIds: data?.termsAndConditionIds?.map((t: { _id: string }) => t._id) || [],
-  // };
-  // const [tabValue, setTabValue] = useState(0);
-  // const { values = {} } = useFormikContext<EstimateFormValues>();
-  // const [selectedCompanyId, setSelectedCompanyId] = useState<string>(initialValues.companyId || "");
-  // const [selectedCustomer, setSelectedCustomer] = useState<ContactBase | null>(null);
-  // const [selectedTermIds, setSelectedTermIds] = useState<string[]>(initialValues.termsAndConditionIds || []);
-  // const [showAdditionalCharge, setShowAdditionalCharge] = useState(false);
-
-  // Dynamic State for Rows
-  // const [rows, setRows] = useState<any[]>(data?.items || [emptyRow]);
 
   const additionalChargeEmptyRow = { chargeId: "", amount: 0, taxId: "", taxAmount: 0, totalAmount: 0 };
   const [additionalChargeRows, setAdditionalChargeRows] = useState<any[]>(data?.additionalCharges || [additionalChargeEmptyRow]);
-
-  // const [flatDiscount, setFlatDiscount] = useState<number>(data?.transactionSummary?.flatDiscount || 0);
-  // const [roundOffAmount, setRoundOffAmount] = useState<number>(data?.transactionSummary?.roundOff || 0);
 
   // Queries
   // const { data: companyData, isLoading: isCompanyLoading } = Queries.useGetCompanyDropdown();
@@ -156,72 +135,6 @@ const EstimateForm = () => {
     const hasAccess = isEditing ? permission.edit : permission.add;
     if (!hasAccess) navigate(-1);
   }, [isEditing, permission, navigate]);
-
-  // const handleCompanyChange = (newCompanyId: string) => {
-  //   setSelectedCompanyId(newCompanyId);
-  //   if (newCompanyId) {
-  //     setRows([emptyRow]);
-  //     setSelectedTermIds([]);
-  //   }
-  // };
-
-  // const calculateRow = (row: any, taxType: string): any => {
-  //   const qty = Number(row.qty) || 0;
-  //   const price = Number(row.price) || 0;
-  //   const disc1 = Number(row.discount1) || 0;
-  //   const disc2 = Number(row.discount2) || 0;
-  //   const taxRate = taxType === "out_of_scope" ? 0 : Number(row.taxRate) || 0;
-
-  //   const discountedPrice = price - disc1 - disc2;
-  //   const totalRowTaxable = discountedPrice * qty;
-
-  //   let taxableAmount = 0;
-  //   let taxAmount = 0;
-  //   let totalAmount = 0;
-
-  //   if (taxType === "tax_inclusive") {
-  //     totalAmount = totalRowTaxable;
-  //     taxAmount = totalAmount - totalAmount / (1 + taxRate / 100);
-  //     taxableAmount = totalAmount - taxAmount;
-  //   } else {
-  //     taxableAmount = totalRowTaxable;
-  //     taxAmount = (taxableAmount * taxRate) / 100;
-  //     totalAmount = taxableAmount + taxAmount;
-  //   }
-
-  //   return { ...row, taxableAmount: Number(taxableAmount.toFixed(2)), taxAmount: Number(taxAmount.toFixed(2)), totalAmount: Number(totalAmount.toFixed(2)) };
-  // };
-
-  // const handleRowChange = (index: number, field: string, value: any, currentTaxType: string) => {
-  //   setRows((prev) => {
-  //     const newRows = [...prev];
-  //     let updatedRow = { ...newRows[index], [field]: value };
-
-  //     if (field === "productId") {
-  //       const product = productsData?.data?.find((p) => p._id === value);
-  //       if (product) {
-  //         updatedRow = {
-  //           ...updatedRow,
-  //           qty: 1,
-  //           price: product.sellingPrice || 0,
-  //           uomId: product.uomId?._id || "",
-  //           taxId: product.salesTaxId?._id || "",
-  //           taxRate: product.salesTaxId?.percentage || 0,
-  //           taxName: product.salesTaxId?.name || "",
-  //         };
-  //       }
-  //     }
-
-  //     if (field === "taxId") {
-  //       const tax = taxData?.data?.find((t) => t._id === value);
-  //       updatedRow.taxRate = tax?.percentage || 0;
-  //       updatedRow.taxName = tax?.name || "";
-  //     }
-
-  //     newRows[index] = calculateRow(updatedRow, currentTaxType);
-  //     return newRows;
-  //   });
-  // };
 
   // const handleAdditionalChargeRowChange = (index: number, field: string, value: any) => {
   //   setAdditionalChargeRows((prev) => {
@@ -279,7 +192,7 @@ const EstimateForm = () => {
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") {
         resetForm();
-        // setRows([emptyRow]);
+        
         setAdditionalChargeRows([additionalChargeEmptyRow]);
       } else {
         navigate(-1);

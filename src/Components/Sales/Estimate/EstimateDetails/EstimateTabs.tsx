@@ -5,7 +5,7 @@ import { CommonButton, CommonValidationSelect, CommonValidationTextField } from 
 import { CommonTable, CommonTabPanel, CommonShippingDetails } from "../../../Common";
 import type { CommonTableColumn, ProductBase } from "../../../../Types";
 import type { EstimateFormValues } from "../../../../Types/Estimate";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Queries } from "../../../../Api";
 import { GenerateOptions } from "../../../../Utils";
 import { FieldArray, useFormikContext } from "formik";
@@ -17,6 +17,63 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
 
   const isCustomerSelected = !!values?.customerId;
   const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown({ companyFilter: values?.companyId }, !!values?.companyId);
+
+  const calculateTotalAmount = (index: number) => {
+    const row = values?.items?.[index];
+
+    const product = productsData?.data?.find((p: ProductBase) => p._id === row?.productId);
+
+    if (!product) return 0;
+
+    const qty = Number(row?.qty || 0);
+    const price = Number(row?.price || 0);
+    const discount = Number(row?.discount1 || 0);
+
+    const taxRate = Number(product?.salesTaxId?.percentage || 0);
+    const taxIncluded = product?.isSalesTaxIncluding;
+
+    const amount = qty * price;
+
+    let taxableAmount = amount - discount;
+    let taxAmount = 0;
+
+    if (taxIncluded) {
+      taxAmount = taxableAmount * (taxRate / (100 + taxRate));
+      taxableAmount = taxableAmount - taxAmount;
+    } else {
+      taxAmount = taxableAmount * (taxRate / 100);
+    }
+
+    const totalAmount = taxableAmount + taxAmount;
+
+    return totalAmount;
+  };
+
+  useEffect(() => {
+    values?.items?.forEach((item, index) => {
+      if (!item?.productId) return;
+
+      const product = productsData?.data?.find((p: ProductBase) => p._id === item.productId);
+
+      if (!product) return;
+
+      setFieldValue(`items.${index}.uomId`, product?.uomId?._id || "");
+      setFieldValue(`items.${index}.taxId`, product?.salesTaxId?._id || "");
+      setFieldValue(`items.${index}.totalAmount`, calculateTotalAmount(index));
+      if (!item?.price) {
+        setFieldValue(`items.${index}.price`, product?.mrp || 0);
+      }
+
+      if (item?.discount1) {
+        const discount = item?.discount1;
+        const qty = Number(item?.qty || 0);
+        const price = Number(item?.price || 0);
+        const amount = qty * price;
+
+        if (discount > amount) setFieldValue(`items.${index}.discount1`, 0);
+      }
+    });
+  }, [values?.items, productsData]);
 
   return (
     <>
@@ -62,26 +119,7 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
                     key: "productId",
                     header: "Product",
                     bodyClass: "min-w-60",
-                    render: (_, index) => (
-                      <CommonValidationSelect
-                        name={`items.${index}.productId`}
-                        label="Select Product"
-                        options={GenerateOptions(productsData?.data)}
-                        isLoading={isProductLoading}
-                        required
-                        disabled={!isCustomerSelected}
-                        // onChange={(value: string) => {
-                        //   const product = productsData?.data?.find((p: ProductBase) => String(p._id) === String(value));
-
-                        //   setFieldValue(`items.${index}.productId`, value);
-                        //   setFieldValue(`items.${index}.uom`, product?.uomId?.name || "");
-                        //   setFieldValue(`items.${index}.uomId`, product?.uomId?._id || "");
-                        //   setFieldValue(`items.${index}.tax`, product?.salesTaxId?.name || "");
-                        //   setFieldValue(`items.${index}.taxId`, product?.salesTaxId?._id || "");
-                        //   setFieldValue(`items.${index}.price`, product?.price || 0);
-                        // }}
-                      />
-                    ),
+                    render: (_, index) => <CommonValidationSelect name={`items.${index}.productId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isCustomerSelected} />,
                   },
 
                   {
@@ -112,9 +150,6 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
                       });
 
                       const uom = product?.uomId?.name || "";
-                      // const uomId = product?.uomId?._id || "";
-                      // setFieldValue(`items.${index}.uom`, uom);
-                      // setFieldValue(`items.${index}.uomId`, uomId);
 
                       return <span>{uom}</span>;
                     },
@@ -133,19 +168,10 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
                     bodyClass: "min-w-28",
                     render: (_, index) => <CommonValidationTextField name={`items.${index}.discount1`} type="number" size="small" />,
                   },
-
-                  {
-                    key: "discount2",
-                    header: "Discount 2",
-                    bodyClass: "min-w-28",
-                    render: (_, index) => <CommonValidationTextField name={`items.${index}.discount2`} type="number" size="small" />,
-                  },
-
                   {
                     key: "taxId",
                     header: "Tax",
                     bodyClass: "min-w-28",
-                    // render: (_, index) => <CommonValidationTextField name={`items.${index}.taxId`} size="small" />,
                     render: (_, index) => {
                       const productId = values?.items?.[index]?.productId;
 
@@ -153,12 +179,26 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
                         return p._id === productId;
                       });
 
-                      const tax = product?.salesTaxId?.name || "";
-                      // const taxId = product?.salesTaxId?._id || "";
-                      // setFieldValue(`items.${index}.tax`, tax);
-                      // setFieldValue(`items.${index}.taxId`, taxId);
+                      const taxName = product?.salesTaxId?.name || "";
+                      const taxPercentage = product?.salesTaxId?.percentage || 0;
+                      const qty = values?.items?.[index]?.qty || 0;
+                      const price = values?.items?.[index]?.price || 0;
+                      const discount1 = values?.items?.[index]?.discount1 || 0;
 
-                      return <span className="text-md">{tax}</span>;
+                      const finalPrice = price - discount1;
+
+                      const finalTotal = finalPrice * qty;
+
+                      const tax = finalTotal * (taxPercentage / 100);
+
+                      return (
+                        <div className="text-md flex flex-col">
+                          <span className="text-xs text-blue-500">
+                            {taxName} ({taxPercentage}%)
+                          </span>
+                          <span>Rs. {tax.toFixed(2)}</span>
+                        </div>
+                      );
                     },
                   },
 
@@ -166,52 +206,11 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
                     key: "totalAmount",
                     header: "Total",
                     bodyClass: "min-w-28",
-                    // render: (_, index) => <CommonValidationTextField name={`items.${index}.totalAmount`} type="number" size="small" />,
-                    // render: (_, index) => {
-                    //   const total = 0;
-                    //   // const tax = product?.salesTaxId?.name || "";
-                    //   // const taxId = product?.salesTaxId?._id || "";
-                    //   // setFieldValue(`items.${index}.tax`, tax);
-                    //   // setFieldValue(`items.${index}.taxId`, taxId);
-
-                    //   return <span className="text-md">{total}</span>;
-                    // },
                     render: (_, index) => {
-                      const row = values?.items?.[index];
-
-                      const product = productsData?.data?.find((p: ProductBase) => p._id === row?.productId);
-
-                      if (!product) return <span>0.00</span>;
-
-                      const qty = Number(row?.qty || 0);
-                      const price = Number(product?.sellingPrice || 0);
-                      const dis1 = Number(row?.discount1 || 0);
-                      const dis2 = Number(row?.discount2 || 0);
-
-                      const taxRate = Number(product?.salesTaxId?.percentage || 0);
-                      const taxIncluded = product?.isSalesTaxIncluding;
-
-                      let amount = qty * price;
-
-                      const discount1Amount = (amount * dis1) / 100;
-                      const discount2Amount = ((amount - discount1Amount) * dis2) / 100;
-
-                      let taxableAmount = amount - discount1Amount - discount2Amount;
-                      let taxAmount = 0;
-                      let total = 0;
-
-                      if (taxIncluded) {
-                        taxableAmount = taxableAmount / (1 + taxRate / 100);
-                        taxAmount = taxableAmount * (taxRate / 100);
-                        total = taxableAmount + taxAmount;
-                      } else {
-                        taxAmount = taxableAmount * (taxRate / 100);
-                        total = taxableAmount + taxAmount;
-                      }
-
-                      return <span>{total.toFixed(2)}</span>;
+                      const totalAmount = calculateTotalAmount(index);
+                      return <span>{totalAmount}</span>;
                     },
-                    footer: (data) => data.reduce((a, b) => a + (+b.totalAmount || 0), 0).toFixed(2),
+                    footer: (data) => data.reduce((acc, item) => acc + (+item.totalAmount || 0), 0).toFixed(2),
                   },
                 ];
 
