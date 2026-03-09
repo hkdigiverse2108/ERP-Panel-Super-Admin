@@ -6,7 +6,6 @@ import type { ContactBase } from "./Contacts";
 import type { PosOrderBase } from "./PosOrder";
 
 export interface PosPaymentFormValues {
-  paymentNo?: string;
   voucherType?: string;
   paymentType?: string;
   partyId?: string;

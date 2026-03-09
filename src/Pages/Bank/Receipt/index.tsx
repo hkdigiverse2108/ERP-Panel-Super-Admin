@@ -15,7 +15,7 @@ const Receipt = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.RECEIPT.BASE);
 
-  const { data, isLoading, isFetching } = Queries.useGetPosPayment({ ...params,  voucherTypeFilter: "sales" });
+  const { data, isLoading, isFetching } = Queries.useGetPosPayment({ ...params, voucherTypeFilter: "sales" });
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deletePayment, isPending: isDeleteLoading } = Mutations.useDeletePosPayment();
   const { mutate: editPayment, isPending: isEditLoading } = Mutations.useEditPosPayment();
@@ -36,7 +36,7 @@ const Receipt = () => {
 
   const columns: AppGridColDef<PosPaymentBase>[] = [
     CommonObjectNameColumn<PosPaymentBase>("companyId", { headerName: "Company", width: 200 }),
-    { field: "paymentNo", headerName: "Payment No", width: 200 },
+    { field: "voucherType", headerName: "Receipt No", width: 200 },
     { field: "partyId", headerName: "Party Name", width: 230, valueGetter: (_v, row: PosPaymentBase) => (row?.partyId ? `${row?.partyId?.firstName} ${row?.partyId?.lastName}` : "-") },
     { field: "paymentMode", headerName: "Payment Mode", width: 140 },
     { field: "paymentType", headerName: "Payment Type", width: 140 },
@@ -46,14 +46,14 @@ const Receipt = () => {
 
     ...(permission?.edit || permission?.delete
       ? [
-        CommonActionColumn<PosPaymentBase>({
-          ...(permission?.edit && {
-            active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
-            editRoute: ROUTES.RECEIPT.ADD_EDIT,
+          CommonActionColumn<PosPaymentBase>({
+            ...(permission?.edit && {
+              active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
+              editRoute: ROUTES.RECEIPT.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherType }) }),
           }),
-          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.paymentNo }) }),
-        }),
-      ]
+        ]
       : []),
   ];
 
@@ -94,4 +94,3 @@ const Receipt = () => {
 };
 
 export default Receipt;
-

@@ -26,7 +26,6 @@ const ReceiptForm = () => {
 
   const initialValues: PosPaymentFormValues = {
     companyId: data?.companyId?._id || "",
-    paymentNo: data?.paymentNo || "",
     voucherType: data?.voucherType || "sales",
     paymentType: data?.paymentType || "advance",
     partyId: data?.partyId?._id || "",
