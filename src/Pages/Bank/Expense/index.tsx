@@ -41,7 +41,9 @@ const Expense = () => {
     { field: "paymentMode", headerName: "Payment Mode", width: 140 },
     { field: "paymentType", headerName: "Payment Type", width: 140 },
     { field: "paymentDate", headerName: "Payment Date", width: 190, valueGetter: (v) => FormatDate(v) },
-    { field: "amount", headerName: "Amount", minWidth: 150, flex: 1, valueGetter: (_v, row: PosPaymentBase) => row?.amount ?? row?.totalAmount ?? 0 },
+    { field: "totalAmount", headerName: "Total", minWidth: 150, flex: 1, valueGetter: (_v, row: PosPaymentBase) => row?.totalAmount ?? row?.totalAmount ?? 0 },
+    { field: "paidAmount", headerName: "Paid", minWidth: 150, flex: 1, valueGetter: (_v, row: PosPaymentBase) => row?.paidAmount ?? row?.totalAmount ?? 0 },
+    { field: "pendingAmount", headerName: "Unpaid", minWidth: 150, flex: 1, valueGetter: (_v, row: PosPaymentBase) => row?.pendingAmount ?? row?.totalAmount ?? 0 },
 
     ...(permission?.edit || permission?.delete
       ? [
