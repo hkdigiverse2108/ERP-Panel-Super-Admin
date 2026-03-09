@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BREADCRUMBS, VOUCHER_TYPE } from "../../../Data";
+import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, PosPaymentBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
@@ -15,7 +15,7 @@ const Receipt = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.RECEIPT.BASE);
 
-  const { data, isLoading, isFetching } = Queries.useGetPosPayment(params);
+  const { data, isLoading, isFetching } = Queries.useGetPosPayment({ ...params,  voucherTypeFilter: "sales" });
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deletePayment, isPending: isDeleteLoading } = Mutations.useDeletePosPayment();
   const { mutate: editPayment, isPending: isEditLoading } = Mutations.useEditPosPayment();
@@ -40,19 +40,20 @@ const Receipt = () => {
     { field: "partyId", headerName: "Party Name", width: 230, valueGetter: (_v, row: PosPaymentBase) => (row?.partyId ? `${row?.partyId?.firstName} ${row?.partyId?.lastName}` : "-") },
     { field: "paymentMode", headerName: "Payment Mode", width: 140 },
     { field: "paymentType", headerName: "Payment Type", width: 140 },
-    { field: "createdAt", headerName: "Payment Date", width: 190, valueGetter: (v) => FormatDate(v) },
+    { field: "paymentDate", headerName: "Payment Date", width: 190, valueGetter: (v) => FormatDate(v) },
     { field: "amount", headerName: "Amount", minWidth: 150, flex: 1, valueGetter: (_v, row: PosPaymentBase) => row?.amount ?? row?.totalAmount ?? 0 },
+    { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
 
     ...(permission?.edit || permission?.delete
       ? [
-          CommonActionColumn<PosPaymentBase>({
-            ...(permission?.edit && {
-              active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
-              editRoute: ROUTES.RECEIPT.ADD_EDIT,
-            }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.paymentNo }) }),
+        CommonActionColumn<PosPaymentBase>({
+          ...(permission?.edit && {
+            active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
+            editRoute: ROUTES.RECEIPT.ADD_EDIT,
           }),
-        ]
+          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.paymentNo }) }),
+        }),
+      ]
       : []),
   ];
 
@@ -74,7 +75,6 @@ const Receipt = () => {
 
   const filter = [
     CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
-    CreateFilter("Select Voucher Type", "voucherTypeFilter", advancedFilter, updateAdvancedFilter, VOUCHER_TYPE, false, { xs: 12, sm: 6, md: 3 }),
   ];
 
   return (
@@ -94,3 +94,4 @@ const Receipt = () => {
 };
 
 export default Receipt;
+
