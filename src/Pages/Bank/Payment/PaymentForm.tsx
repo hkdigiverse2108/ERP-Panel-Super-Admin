@@ -27,7 +27,7 @@ const PaymentForm = () => {
   const initialValues: PosPaymentFormValues = {
     companyId: data?.companyId?._id || "",
     paymentNo: data?.paymentNo || "",
-    voucherType: data?.voucherType || "expense",
+    voucherType: data?.voucherType || "purchase",
     paymentType: data?.paymentType || "advance",
     partyId: data?.partyId?._id || "",
     bankId: data?.bankId?._id || data?.bankId || "",

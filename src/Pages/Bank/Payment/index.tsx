@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BREADCRUMBS, VOUCHER_TYPE } from "../../../Data";
+import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, PosPaymentBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
@@ -15,7 +15,7 @@ const Payment = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.PAYMENT.BASE);
 
-  const { data, isLoading, isFetching } = Queries.useGetPosPayment(params);
+  const { data, isLoading, isFetching } = Queries.useGetPosPayment({ ...params, voucherTypeFilter: "purchase" });
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deletePayment, isPending: isDeleteLoading } = Mutations.useDeletePosPayment();
   const { mutate: editPayment, isPending: isEditLoading } = Mutations.useEditPosPayment();
@@ -73,10 +73,7 @@ const Payment = () => {
     onFilterModelChange: setFilterModel,
   };
 
-  const filter = [
-    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
-    CreateFilter("Select Voucher Type", "voucherTypeFilter", advancedFilter, updateAdvancedFilter, VOUCHER_TYPE, false, { xs: 12, sm: 6, md: 3 }),
-  ];
+  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 
   return (
     <>
