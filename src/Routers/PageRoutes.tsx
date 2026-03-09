@@ -69,8 +69,8 @@ import CreditNoteList from "../Pages/Pos/CreditNote";
 import OrderList from "../Pages/Pos/OrderList";
 import PosCreditNote from "../Pages/Pos/CreditNote";
 import ProductType from "../Pages/Inventory/ProductType";
-import Receipt from "../Pages/Bank/Recipt";
-import ReceiptForm from "../Pages/Bank/Recipt/ReceiptForm";
+import Receipt from "../Pages/Bank/Receipt";
+import ReceiptForm from "../Pages/Bank/Receipt/ReceiptForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },

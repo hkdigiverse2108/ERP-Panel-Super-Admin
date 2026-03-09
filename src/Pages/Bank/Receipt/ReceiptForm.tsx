@@ -1,7 +1,7 @@
 const ReceiptForm = () => {
     return (
         <div>
-            <h1>Recipt Form</h1>
+            <h1>Receipt Form</h1>
         </div>
     )
 };
