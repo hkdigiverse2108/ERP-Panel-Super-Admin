@@ -1,16 +1,15 @@
 import { Box, Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
-import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
+import { CommonSelect, CommonTextField, CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonStatsCard, CommonTable } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { usePagePermission } from "../../../Utils/Hooks";
-import type { PosOrderBase, PosPaymentFormValues } from "../../../Types";
-import { GetChangedFields, RemoveEmptyFields, GenerateOptions } from "../../../Utils";
-import { CommonValidationSelect, CommonValidationTextField, CommonValidationDatePicker, CommonValidationSwitch, CommonTextField, CommonSelect } from "../../../Attribute";
-import { CommonBreadcrumbs, CommonCard, CommonBottomActionBar, CommonStatsCard, CommonTable } from "../../../Components/Common";
-import type { CommonTableColumn } from "../../../Types";
 import { BREADCRUMBS, PAYMENT_MODE } from "../../../Data";
+import type { CommonTableColumn, PosOrderBase, PosPaymentFormValues } from "../../../Types";
+import { GenerateOptions, GetChangedFields, PaymentFormSchema, RemoveEmptyFields } from "../../../Utils";
+import { usePagePermission } from "../../../Utils/Hooks";
 
 const PaymentForm = () => {
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
@@ -79,7 +78,7 @@ const PaymentForm = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.PAYMENT[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.PAYMENT[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
-        <Formik initialValues={initialValues} onSubmit={handleSubmit} enableReinitialize>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={PaymentFormSchema} enableReinitialize>
           {({ resetForm, setFieldValue, dirty, values }) => {
             const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: values.partyId, duePaymentFilter: true }, Boolean(values.partyId));
             const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown({ companyId: values?.companyId }, Boolean(values?.companyId));
@@ -133,13 +132,13 @@ const PaymentForm = () => {
               { key: "paymentMode", header: "Payment Mode", bodyClass: "min-w-40", render: (r) => <CommonSelect options={PAYMENT_MODE} placeholder="Payment Mode" value={r.paymentMode ? [r.paymentMode] : []} onChange={(v) => handleTableChange("paymentMode", v[0] || "")} /> },
               ...(values.paymentMode?.toLowerCase() !== "cash"
                 ? [
-                  {
-                    key: "bankId",
-                    header: "Bank",
-                    bodyClass: "min-w-40",
-                    render: (r) => <CommonSelect options={GenerateOptions(bankDropdown?.data)} isLoading={bankDropdownLoading} placeholder="Select Bank" value={r.bankId ? [r.bankId] : []} onChange={(v) => handleTableChange("bankId", v[0] || "")} />,
-                  } as CommonTableColumn<PosPaymentFormValues>,
-                ]
+                    {
+                      key: "bankId",
+                      header: "Bank",
+                      bodyClass: "min-w-40",
+                      render: (r) => <CommonSelect options={GenerateOptions(bankDropdown?.data)} isLoading={bankDropdownLoading} placeholder="Select Bank" value={r.bankId ? [r.bankId] : []} onChange={(v) => handleTableChange("bankId", v[0] || "")} />,
+                    } as CommonTableColumn<PosPaymentFormValues>,
+                  ]
                 : []),
               { key: "totalAmount", header: "Total Payment", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.totalAmount || 0} disabled /> },
               { key: "paidAmount", header: "Paid Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.paidAmount || 0} disabled /> },
@@ -178,9 +177,8 @@ const PaymentForm = () => {
                         </Grid>
                       )}
                     </Grid>
+                    {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                   </CommonCard>
-
-                  {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
 
                   <CommonBottomActionBar
                     save={isEditing}

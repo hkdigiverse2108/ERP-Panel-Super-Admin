@@ -555,3 +555,25 @@ export const ReturnPosOrderFormSchema = Yup.object({
   }),
   refundDescription: Validation("string", "Refund Description", { required: false }),
 });
+
+export const PaymentFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
+  partyId: Validation("string", "Party"),
+  paymentDate: Yup.mixed().required("Payment Date is required"),
+  paymentType: Validation("string", "Payment Type"),
+  posOrderId: RequiredWhen("paymentType", ["against_bill"], "Sales", "string"),
+  paymentMode: Validation("string", "Payment Mode"),
+  bankId: RequiredWhen("paymentMode", ["bank", "upi", "cheque", "card"], "Bank", "string"),
+  amount: Validation("number", "Amount", {
+    extraRules: (s) => s.min(1, "Amount must be greater than 0"),
+  }),
+  totalAmount: Validation("number", "Total Amount", { required: false }).nullable(),
+  paidAmount: Validation("number", "Paid Amount", { required: false }).nullable(),
+  pendingAmount: Validation("number", "Pending Amount", { required: false }).nullable(),
+  kasar: Validation("number", "Kasar Amount", { required: false }).nullable(),
+  remark: Validation("string", "Description", {
+    required: false,
+    extraRules: (s) => s.trim().max(200, "Maximum 200 characters allowed"),
+  }),
+  isActive: Yup.boolean(),
+});

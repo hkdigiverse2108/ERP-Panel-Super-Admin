@@ -1,7 +1,8 @@
 import { Grid, Paper, Typography, Box, useTheme, alpha } from "@mui/material";
 import type { CommonStatsCardProps } from "../../Types";
+import type { FC } from "react";
 
-const CommonStatsCard = ({ stats, grid = { xs: 10, sm: 4, md: 4 }, paperSx, variant = "default" }: CommonStatsCardProps) => {
+const CommonStatsCard:FC<CommonStatsCardProps> = ({ stats, grid = { xs: 10, sm: 4, md: 4 }, paperSx, variant = "default" }) => {
   const theme = useTheme();
 
   return (
