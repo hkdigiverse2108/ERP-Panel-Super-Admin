@@ -37,6 +37,7 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.BANK.BASE, path: ROUTES.BANK.BASE },
       { name: PAGE_TITLE.PAYMENT.BASE, path: ROUTES.PAYMENT.BASE },
       { name: PAGE_TITLE.RECEIPT.BASE, path: ROUTES.RECEIPT.BASE },
+      { name: PAGE_TITLE.EXPENSE.BASE, path: ROUTES.EXPENSE.BASE },
     ],
   },
   {

@@ -324,4 +324,12 @@ export const URL_KEYS = {
     DELETE: "/receipt/delete",
     DROPDOWN: "/receipt/dropdown",
   },
+  EXPENSE: {
+    BASE: "/expense",
+    ALL: "/expense/all",
+    ADD: "/expense/add",
+    EDIT: "/expense/edit",
+    DELETE: "/expense/delete",
+    DROPDOWN: "/expense/dropdown",
+  },
 } as const;

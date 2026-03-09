@@ -123,13 +123,17 @@ export const ROUTES = {
     BASE: "/bank",
     ADD_EDIT: "/bank/add-edit",
   },
- PAYMENT: {
+  PAYMENT: {
     BASE: "/payment",
     ADD_EDIT: "/payment/add-edit",
   },
   RECEIPT: {
     BASE: "/receipt",
     ADD_EDIT: "/receipt/add-edit",
+  },
+  EXPENSE: {
+    BASE: "/expense",
+    ADD_EDIT: "/expense/add-edit",
   },
   COUPON: {
     BASE: "/coupon",
@@ -163,7 +167,7 @@ export const ROUTES = {
     BASE: "/pos-credit-note",
     ADD_EDIT: "/pos-credit-note/add-edit",
   },
-  POS_ORDER_LIST:{
+  POS_ORDER_LIST: {
     BASE: "/pos-order-list",
     ADD_EDIT: "/pos-order-list/add-edit",
   },

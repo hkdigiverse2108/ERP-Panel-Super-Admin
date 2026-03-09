@@ -73,6 +73,8 @@ import PosCreditNote from "../Pages/Pos/CreditNote";
 import ProductType from "../Pages/Inventory/ProductType";
 import Receipt from "../Pages/Bank/Receipt";
 import ReceiptForm from "../Pages/Bank/Receipt/ReceiptForm";
+import Expense from "../Pages/Bank/Expense";
+import ExpenseForm from "../Pages/Bank/Expense/ExpenseForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -182,8 +184,12 @@ export const PageRoutes = [
 
   { path: ROUTES.PAYMENT.BASE, name: PAGE_TITLE.PAYMENT.BASE, element: <Payment /> },
   { path: ROUTES.PAYMENT.ADD_EDIT, name: PAGE_TITLE.PAYMENT.BASE, element: <PaymentForm /> },
+
   { path: ROUTES.RECEIPT.BASE, name: PAGE_TITLE.RECEIPT.BASE, element: <Receipt /> },
   { path: ROUTES.RECEIPT.ADD_EDIT, name: PAGE_TITLE.RECEIPT.BASE, element: <ReceiptForm /> },
+
+  { path: ROUTES.EXPENSE.BASE, name: PAGE_TITLE.EXPENSE.BASE, element: <Expense /> },
+  { path: ROUTES.EXPENSE.ADD_EDIT, name: PAGE_TITLE.EXPENSE.BASE, element: <ExpenseForm /> },
 ];
 
 export const AuthRoutes = [
