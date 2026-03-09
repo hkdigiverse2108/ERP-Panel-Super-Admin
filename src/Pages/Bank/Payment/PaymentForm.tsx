@@ -26,7 +26,6 @@ const PaymentForm = () => {
 
   const initialValues: PosPaymentFormValues = {
     companyId: data?.companyId?._id || "",
-    paymentNo: data?.paymentNo || "",
     voucherType: data?.voucherType || "purchase",
     paymentType: data?.paymentType || "advance",
     partyId: data?.partyId?._id || "",
@@ -153,7 +152,7 @@ const PaymentForm = () => {
                   <CommonCard title="Payment Details" grid={{ xs: 12 }}>
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
-                      <CommonValidationSelect name="partyId" label="Party" grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} options={contactLoading || contactFetching ? [] : GenerateOptions(contactData?.data || [])} isLoading={contactLoading || contactFetching} required/>
+                      <CommonValidationSelect name="partyId" label="Party" grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} options={contactLoading || contactFetching ? [] : GenerateOptions(contactData?.data || [])} isLoading={contactLoading || contactFetching} required />
                       <CommonValidationDatePicker name="date" label="Payment Date" required grid={{ xs: 12, md: 4 }} />
                       <Grid size={{ xs: 12 }}>
                         <CommonStatsCard
