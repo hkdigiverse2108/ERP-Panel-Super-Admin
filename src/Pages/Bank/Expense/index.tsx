@@ -70,14 +70,14 @@ const Expense = () => {
 
     ...(permission?.edit || permission?.delete
       ? [
-        CommonActionColumn<PosPaymentBase>({
-          ...(permission?.edit && {
-            active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
-            editRoute: ROUTES.EXPENSE.ADD_EDIT,
+          CommonActionColumn<PosPaymentBase>({
+            ...(permission?.edit && {
+              active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
+              editRoute: ROUTES.EXPENSE.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherType }) }),
           }),
-          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherType }) }),
-        }),
-      ]
+        ]
       : []),
   ];
 

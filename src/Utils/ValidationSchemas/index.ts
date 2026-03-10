@@ -602,7 +602,6 @@ export const PaymentFormSchema = Yup.object({
   isActive: Yup.boolean(),
 });
 
-
 export const ReciptFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
   partyId: Validation("string", "Party"),
@@ -624,7 +623,6 @@ export const ReciptFormSchema = Yup.object({
   }),
   isActive: Yup.boolean(),
 });
-
 
 export const ExpenseFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
