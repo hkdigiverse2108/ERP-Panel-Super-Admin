@@ -109,6 +109,7 @@ export interface SupplierBillFormValues {
   termsAndConditionIds?: string[];
   notes?: string;
   summary?: SupplierBillSummary;
+  billAmount?: number;
   paidAmount?: number;
   balanceAmount?: number;
   paymentStatus?: "paid" | "unpaid" | "partial";

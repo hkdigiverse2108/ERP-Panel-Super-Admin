@@ -16,6 +16,7 @@ import type { AccountBase } from "./Account";
 import type { AdditionalChargesBase } from "./AdditionalCharges";
 import type { PosCreditNoteBase } from "./PosCreditNote";
 import type { Theme } from "@emotion/react";
+import type { ProductTypeBase } from "./ProductType";
 
 export type GridType = number | object | "auto" | "grow";
 
