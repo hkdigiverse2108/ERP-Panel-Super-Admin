@@ -1,22 +1,14 @@
-import type { Breakpoint, ButtonProps, DrawerProps, PaperProps as MuiPaperProps, SxProps, TextFieldProps } from "@mui/material";
+import type { Breakpoint, ButtonProps, DrawerProps, PaperProps as MuiPaperProps, TextFieldProps } from "@mui/material";
 import type { GridColDef, GridFilterModel, GridPaginationModel, GridRowsProp, GridSlotsComponentsProps, GridSortModel, GridValidRowModel } from "@mui/x-data-grid";
 import type { Dayjs } from "dayjs";
 import type { MuiTelInputProps } from "mui-tel-input";
 import type { FocusEvent, ReactNode } from "react";
 import * as Yup from "yup";
-import type { AccountGroupBase } from "./AccountGroup";
-import type { BrandBase } from "./Brand";
-import type { CategoryBase } from "./Category";
+import type { ContactBase } from "./Contacts";
 import type { LocationBase } from "./Location";
-import type { RolesBase } from "./Roles";
-import type { TaxBase } from "./Tax";
-import type { UomBase } from "./Uom";
-import type { TermsConditionBase } from "./TermsCondition";
-import type { AccountBase } from "./Account";
 import type { AdditionalChargesBase } from "./AdditionalCharges";
 import type { PosCreditNoteBase } from "./PosCreditNote";
-import type { Theme } from "@emotion/react";
-import type { ProductTypeBase } from "./ProductType";
+import type { MultiplePaymentType, PosProductDataModal } from "./Pos";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -50,7 +42,13 @@ export interface CommonDrawerProps extends Omit<DrawerProps, "anchor" | "title">
 export type SelectOptionType = {
   label: string;
   value: string;
+  [key: string]: any;
 };
+export interface CommonStatsItem {
+  label: string;
+  value: number | string;
+  color?: string;
+}
 
 export interface CommonSelectProps {
   label?: string;
@@ -68,10 +66,20 @@ export interface CommonSelectProps {
   placeholder?: string;
   syncFieldName?: string;
   isLoading?: boolean;
+  searchKeys?: string[];
 }
 
 export interface CommonValidationSelectProps extends Omit<CommonSelectProps, "onChange" | "value"> {
   name: string;
+}
+
+export interface CommonValidationCreatableSelectProps {
+  name: string;
+  label: string;
+  options: string[];
+  required?: boolean;
+  disabled?: boolean;
+  grid?: GridType;
 }
 
 // ************ Select End ***********
@@ -132,6 +140,7 @@ export interface UseDataGridOptions {
   active?: boolean;
   debounceDelay?: number;
   pagination?: boolean;
+  defaultFilterKey?: { [key: string]: string[] };
 }
 
 export interface CommonDataGridProps {
@@ -163,6 +172,7 @@ export interface CommonDataGridProps {
   isExport?: boolean;
   fileName?: string;
   pagination?: boolean;
+  isToolbar?: boolean;
 
   slots?: any;
   slotProps?: GridSlotsComponentsProps;
@@ -206,14 +216,14 @@ export interface CommonObjectNameColumnOptions {
 export interface CommonActionColumnProps<T> {
   editRoute?: string;
   permissionRoute?: string;
-  onEdit?: (row: T) => void;
+  onEdit?: { handleEdit: (row: T) => void; isPermission?: (row: T) => boolean };
   onDelete?: (row: T) => void;
   active?: (row: T) => void;
   onRefund?: (row: T) => void;
   onPrint?: (row: T) => void;
-  showRefund?: (row: T) => boolean;
-  showDelete?: (row: T) => boolean;
+  onSalesInvoice?: { handleSalesInvoice: (row: T) => void; isPermission?: (row: T) => boolean };
 }
+
 export interface CommonTableColumn<T> {
   key: string;
   header: string;
@@ -227,9 +237,10 @@ export interface CommonTableColumn<T> {
 export interface CommonTableProps<T> {
   data: T[];
   columns: CommonTableColumn<T>[];
-  rowKey: (row: T, index: number) => string;
+  rowKey: (row: T, index: number) => number | string;
   getRowClass?: (row: T, index: number) => string;
   showFooter?: boolean;
+  isLoading?: boolean;
 }
 
 // ************ Table End ***********
@@ -259,12 +270,10 @@ export interface CommonValidationTextFieldProps {
   isCurrency?: boolean;
   color?: TextFieldProps["color"];
   focused?: boolean;
+  readOnly?: boolean;
   rows?: number;
   onCurrencyLog?: (value: string) => void;
-  sx?: object;
-  size?: "small" | "medium";
   maxDigits?: number;
-  InputLabelProps?: TextFieldProps["InputLabelProps"];
 }
 export interface CommonTextFieldProps extends Omit<CommonValidationTextFieldProps, "name"> {
   value: string | number;
@@ -352,8 +361,8 @@ export interface MessageStatus {
 export interface CommonDataType {
   _id: string;
   isDeleted: boolean;
-  createdBy?: string | Record<string, unknown> | null;
-  updatedBy?: string | Record<string, unknown> | null;
+  createdBy: null;
+  updatedBy: null;
   createdAt: string;
   updatedAt: string;
 }
@@ -450,19 +459,24 @@ export interface ModalStateSlice {
   isUploadModal: { open: boolean; type: UploadType; multiple?: boolean };
   selectedFiles: string[];
   isModalVideoPlay: { open: boolean; link: string };
-  isBrandModal: { open: boolean; data: BrandBase | null };
-  isUomModal: { open: boolean; data: UomBase | null };
-  isTaxModal: { open: boolean; data: TaxBase | null };
-  isCategoryModal: { open: boolean; data: CategoryBase | null };
-  isLocationModal: { open: boolean; data: LocationBase | null };
-  isAccountGroupModal: { open: boolean; data: AccountGroupBase | null };
-  isRoleModal: { open: boolean; data: RolesBase | null };
-  isAccountModal: { open: boolean; data: AccountBase | null };
-  isTermsAndConditionModal: { open: boolean; data: TermsConditionBase | null };
-  isTermsSelectionModal: { open: boolean; data: any | null };
+  isCustomerModal: { open: boolean; data: ContactBase | null };
+  isContactModal: { open: boolean; data: ContactBase | null };
+  isPaymentListModal: boolean;
+  isAddPaymentModal: boolean;
+  isRedeemLoyaltyModal: boolean;
+  isCreditNoteModal: boolean;
+  isOrderModal: boolean;
+  isCashControlModal: boolean;
+  isRedeemCreditModal: boolean;
+  isCardModal: boolean;
+  isApplyCouponModal: boolean;
+  isPayLaterModal: { open: boolean; data: MultiplePaymentType[] };
+  isCashModal: boolean;
   isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
-  isOrderRefundModal: { open: boolean; data: PosCreditNoteBase | null };
-  isProductTypeModal: { open: boolean; data: ProductTypeBase | null };
+  isProductDetailsModal: { open: boolean; data: PosProductDataModal | null };
+  isQtyCountModal: { open: boolean; data: PosProductDataModal | null };
+  isOrderRefundModal: { open: boolean; data: PosCreditNoteBase | null; isSalesReturn?: boolean };
+  isDiscardModal: boolean;
 }
 
 // ************ Modal End ***********
@@ -473,7 +487,9 @@ export type RadioOptionType = {
   label: string;
   value: string;
   disabled?: boolean;
+  default?: boolean;
 };
+
 export type ImageSyncProps = {
   activeKey: "image" | null | string;
   clearActiveKey: () => void;
@@ -482,11 +498,12 @@ export type ImageSyncProps = {
 export interface CommonRadioProps {
   label?: string;
   value: string;
-  options: RadioOptionType[];
+  options?: RadioOptionType[];
   onChange: (value: string) => void;
   row?: boolean;
   disabled?: boolean;
   grid?: GridType;
+  readOnly?: boolean;
 }
 
 export interface CommonValidationRadioProps extends Omit<CommonRadioProps, "value" | "onChange"> {
@@ -495,20 +512,6 @@ export interface CommonValidationRadioProps extends Omit<CommonRadioProps, "valu
 }
 
 // ************ Radio End ***********
-
-// ************ Quill Input Start ***********
-
-export interface CommonValidationQuillInputProps {
-  label?: string;
-  name: string;
-  required?: boolean;
-  placeholder?: string;
-  disabled?: boolean;
-  grid?: number | object;
-  modules?: any;
-}
-
-// ************ Quill Input End ***********
 
 // ************ Advanced Search Start ***********
 
@@ -531,6 +534,20 @@ export interface AdvancedSearchProps {
 
 // ************ Advanced Search End ***********
 
+// ************ Quill Input Start ***********
+
+export interface CommonValidationQuillInputProps {
+  label?: string;
+  name: string;
+  required?: boolean;
+  placeholder?: string;
+  disabled?: boolean;
+  grid?: number | object;
+  modules?: any;
+}
+
+// ************ Quill Input End ***********
+
 // ************ Dependent Select End ***********
 
 export type ApiOption = {
@@ -549,8 +566,6 @@ export type DependentSelectProps<T extends ApiOption, P = string | undefined> = 
   required?: boolean;
   disabled?: boolean;
   enabled?: boolean;
-  value?: string[];
-  onChange?: (values: string[]) => void;
   query: (
     params?: P,
     enabled?: boolean,
@@ -560,7 +575,6 @@ export type DependentSelectProps<T extends ApiOption, P = string | undefined> = 
   };
 };
 
-// ************ Dependent Select End ***********
 // ************ Dependent Select End ***********
 export type ControlPlacement = "start" | "between";
 
@@ -579,44 +593,18 @@ export interface CommonCheckboxProps extends CommonValidationCheckboxProps {
   value?: boolean;
   onChange?: (value: boolean) => void;
 }
-
-// ************ Tab Select End ***********
-
-export interface TabPanelProps {
-  children?: ReactNode;
-  index: number;
-  value: number;
-}
-
 // ************ Common Terms And Condition Start ***********
 
 export interface CommonTermsAndConditionProps {
   selectedTermIds: string[];
   onChange: (ids: string[]) => void;
   isView?: boolean;
-  companyId?: string;
-}
-export interface CommonValidationCreatableSelectProps {
-  name: string;
-  label: string;
-  options: string[];
-  required?: boolean;
-  disabled?: boolean;
-  grid?: GridType;
 }
 
-export interface CommonStatsItem {
-  label: string;
-  value: number | string;
-  color?: string;
-  desc?: string;
-  selected?: boolean;
-  onClick?: () => void;
-}
+// ************ Common Terms And Condition End ***********
 
-export interface CommonStatsCardProps {
-  stats: CommonStatsItem[];
-  grid?: GridType;
-  paperSx?: SxProps<Theme>;
-  variant?: "default" | "radio";
+export interface TabPanelProps {
+  children?: ReactNode;
+  index: number;
+  value: number;
 }
