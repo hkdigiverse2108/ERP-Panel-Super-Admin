@@ -1,6 +1,6 @@
 import { Box, Grid } from "@mui/material";
-import { Form, Formik, type FormikHelpers } from "formik";
-import { useEffect } from "react";
+import { Form, Formik, useFormikContext, type FormikHelpers } from "formik";
+import { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
@@ -12,6 +12,63 @@ import type { CouponFormValues } from "../../../Types";
 import { DateConfig, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 import { CouponFormSchema } from "../../../Utils/ValidationSchemas";
+const AutoCalculator = () => {
+  const { values, setFieldValue } = useFormikContext<CouponFormValues>();
+  const prevValues = useRef(values);
+
+  useEffect(() => {
+    if (prevValues.current === values) return;
+
+    const { startDate, endDate, expiryDays } = values;
+    const prev = prevValues.current;
+
+    const isStartChanged = startDate !== prev.startDate;
+    const isEndChanged = endDate !== prev.endDate;
+    const isDaysChanged = expiryDays !== prev.expiryDays;
+
+    const start = startDate ? DateConfig.utc(startDate).startOf("day") : null;
+    const rawDays = expiryDays as any;
+
+    if (!start) {
+      prevValues.current = values;
+      return;
+    }
+
+    const update = (updates: Partial<CouponFormValues>) => {
+      Object.entries(updates).forEach(([k, v]) => setFieldValue(k, v));
+      prevValues.current = { ...values, ...updates };
+    };
+
+    if (isDaysChanged) {
+      if (rawDays === "" || rawDays === null) {
+        if (endDate !== null) update({ endDate: undefined });
+      } else {
+        const safeDays = Math.max(0, isNaN(Number(rawDays)) ? 0 : Number(rawDays));
+        if (safeDays.toString() !== String(rawDays)) setFieldValue("expiryDays", safeDays);
+
+        const newEndDate = start.add(safeDays, "day").toISOString();
+        if (newEndDate !== endDate) update({ expiryDays: safeDays, endDate: newEndDate });
+      }
+    } else if (isStartChanged && rawDays !== null && rawDays !== "") {
+      const newEndDate = start.add(Math.max(0, Number(rawDays)), "day").toISOString();
+      if (newEndDate !== endDate) update({ endDate: newEndDate });
+
+    } else if ((isStartChanged && endDate) || (isEndChanged && startDate && (rawDays === null || rawDays === ""))) {
+      const end = DateConfig.utc(endDate).startOf("day");
+      const diff = Math.max(0, end.diff(start, "day"));
+      if (diff !== rawDays) update({ expiryDays: diff });
+
+    } else if (isEndChanged && endDate && rawDays !== null && rawDays !== "") {
+      const newStartDate = DateConfig.utc(endDate).startOf("day").subtract(Math.max(0, Number(rawDays)), "day").toISOString();
+      if (newStartDate !== startDate) update({ startDate: newStartDate });
+    } else {
+      prevValues.current = values;
+    }
+  }, [values, setFieldValue]);
+
+  return null;
+};
+
 
 const CouponForm = () => {
   const location = useLocation();
@@ -71,6 +128,8 @@ const CouponForm = () => {
             <Form noValidate>
               <Grid container spacing={2}>
                 {/* BASIC DETAILS */}
+                                <AutoCalculator />
+
                 <CommonCard hideDivider grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
