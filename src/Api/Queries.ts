@@ -79,7 +79,7 @@ export const Queries = {
 
   //*************** Account **************** */
   useGetAccount: (params?: Params) => useQueries<AccountApiResponse>([KEYS.ACCOUNT.BASE, params], () => Get(URL_KEYS.ACCOUNT.ALL, params)),
-  useGetAccountDropdown: (params?: Params) => useQueries<AccountDropdownApiResponse>([KEYS.ACCOUNT.BASE, params], () => Get(URL_KEYS.ACCOUNT.DROPDOWN, params)),
+  useGetAccountDropdown: (params?: Params, enabled?: boolean) => useQueries<AccountDropdownApiResponse>([KEYS.ACCOUNT.BASE, params], () => Get(URL_KEYS.ACCOUNT.DROPDOWN, params), { enabled: enabled }),
 
   //*************** Contact **************** */
 

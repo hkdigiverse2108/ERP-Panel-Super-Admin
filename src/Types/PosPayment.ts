@@ -27,8 +27,12 @@ export interface PosPaymentFormValues {
   voucherDetails?: VoucherRow[];
   _submitAction?: string;
   posCashRegisterId?: string;
+  expenseType?: ExpenseType;
+  discountAmount?: number;
+  taxId?: string;
 }
 
+export type ExpenseType = "service" | "product";
 export type AddPosPaymentPayload = PosPaymentFormValues & {
   companyId?: string;
 };

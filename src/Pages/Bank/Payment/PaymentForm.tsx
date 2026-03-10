@@ -126,24 +126,25 @@ const PaymentForm = () => {
             };
 
             const voucherColumns: CommonTableColumn<PosPaymentFormValues>[] = [
-              { key: "sr", header: "#", render: () => 1, bodyClass: "w-10" },
-              { key: "posOrderId", header: "Sales", bodyClass: "min-w-40", render: (r) => <CommonSelect options={GenerateOptions(posOrderDropdown?.data?.map((item) => ({ ...item, name: item.orderNo })))} isLoading={posOrderDropdownLoading} placeholder="Select Sales" value={r.posOrderId ? [r.posOrderId] : []} onChange={(v) => handleTableChange("posOrderId", v[0] || "")} disabled={!r.partyId} /> },
-              { key: "paymentMode", header: "Payment Mode", bodyClass: "min-w-40", render: (r) => <CommonSelect options={PAYMENT_MODE} placeholder="Payment Mode" value={r.paymentMode ? [r.paymentMode] : []} onChange={(v) => handleTableChange("paymentMode", v[0] || "")} /> },
+              { key: "sr", header: "#", render: () => 1, bodyClass: "w-10", footer: "" },
+              { key: "posOrderId", header: "Sales", bodyClass: "min-w-40", render: (r) => <CommonSelect options={GenerateOptions(posOrderDropdown?.data?.map((item) => ({ ...item, name: item.orderNo })))} isLoading={posOrderDropdownLoading} placeholder="Select Sales" value={r.posOrderId ? [r.posOrderId] : []} onChange={(v) => handleTableChange("posOrderId", v[0] || "")} disabled={!r.partyId} />, footer: "Total" },
+              { key: "paymentMode", header: "Payment Mode", bodyClass: "min-w-40", render: (r) => <CommonSelect options={PAYMENT_MODE} placeholder="Payment Mode" value={r.paymentMode ? [r.paymentMode] : []} onChange={(v) => handleTableChange("paymentMode", v[0] || "")} />, footer: "" },
               ...(values.paymentMode?.toLowerCase() !== "cash"
                 ? [
-                    {
-                      key: "bankId",
-                      header: "Bank",
-                      bodyClass: "min-w-40",
-                      render: (r) => <CommonSelect options={GenerateOptions(bankDropdown?.data)} isLoading={bankDropdownLoading} placeholder="Select Bank" value={r.bankId ? [r.bankId] : []} onChange={(v) => handleTableChange("bankId", v[0] || "")} />,
-                    } as CommonTableColumn<PosPaymentFormValues>,
-                  ]
+                  {
+                    key: "bankId",
+                    header: "Bank",
+                    bodyClass: "min-w-40",
+                    render: (r) => <CommonSelect options={GenerateOptions(bankDropdown?.data)} isLoading={bankDropdownLoading} placeholder="Select Bank" value={r.bankId ? [r.bankId] : []} onChange={(v) => handleTableChange("bankId", v[0] || "")} />,
+                    footer: "",
+                  } as CommonTableColumn<PosPaymentFormValues>,
+                ]
                 : []),
-              { key: "totalAmount", header: "Total Payment", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.totalAmount || 0} disabled /> },
-              { key: "paidAmount", header: "Paid Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.paidAmount || 0} disabled /> },
-              { key: "pendingAmount", header: "Pending Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.pendingAmount || 0} disabled /> },
-              { key: "amount", header: "Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.amount || 0} onChange={(v) => handleTableChange("amount", Number(v))} /> },
-              { key: "kasar", header: "Kasar Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.kasar || 0} onChange={(v) => handleTableChange("kasar", Number(v))} /> },
+              { key: "totalAmount", header: "Total Payment", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.totalAmount || 0} disabled />, footer: (data) => data.reduce((sum, r) => sum + (Number(r.totalAmount) || 0), 0).toFixed(2) },
+              { key: "paidAmount", header: "Paid Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.paidAmount || 0} disabled />, footer: (data) => data.reduce((sum, r) => sum + (Number(r.paidAmount) || 0), 0).toFixed(2) },
+              { key: "pendingAmount", header: "Pending Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.pendingAmount || 0} disabled />, footer: (data) => data.reduce((sum, r) => sum + (Number(r.pendingAmount) || 0), 0).toFixed(2) },
+              { key: "amount", header: "Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.amount || 0} onChange={(v) => handleTableChange("amount", Number(v))} />, footer: (data) => data.reduce((sum, r) => sum + (Number(r.amount) || 0), 0).toFixed(2) },
+              { key: "kasar", header: "Kasar Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.kasar || 0} onChange={(v) => handleTableChange("kasar", Number(v))} />, footer: (data) => data.reduce((sum, r) => sum + (Number(r.kasar) || 0), 0).toFixed(2) },
             ];
 
             return (
@@ -170,7 +171,7 @@ const PaymentForm = () => {
                         <Grid size={{ xs: 12 }}>
                           <CommonCard hideDivider>
                             <Box sx={{ overflowX: "auto" }} className="custom-scrollbar">
-                              <CommonTable data={[values]} columns={voucherColumns} rowKey={() => "1"} />
+                              <CommonTable showFooter data={[values]} columns={voucherColumns} rowKey={() => "1"} />
                             </Box>
                           </CommonCard>
                         </Grid>

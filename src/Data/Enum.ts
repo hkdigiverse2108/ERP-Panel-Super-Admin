@@ -301,3 +301,8 @@ export const PAYMENT_MODE_OPTIONS = [
   { label: "Online", value: "online" },
   { label: "Cheque", value: "cheque" },
 ];
+
+export const EXPENSE_TYPE_OPTIONS = [
+  { label: "Product", value: "product" },
+  { label: "Service", value: "service" },
+];
