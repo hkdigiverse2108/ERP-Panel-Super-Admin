@@ -3,12 +3,12 @@ import { Form, Formik, type FormikHelpers } from "formik";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonSelect, CommonTextField, CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
+import { CommonSelect, CommonTextField, CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField, CommonValidationCheckbox } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonTable } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, EXPENSE_TYPE_OPTIONS } from "../../../Data";
 import type { CommonTableColumn, PosPaymentFormValues, TaxBase } from "../../../Types";
-import { GenerateOptions, GetChangedFields, PaymentFormSchema, RemoveEmptyFields } from "../../../Utils";
+import { ExpenseFormSchema, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 
 const ExpenseForm = () => {
@@ -29,22 +29,13 @@ const ExpenseForm = () => {
 
   const initialValues: PosPaymentFormValues = {
     companyId: data?.companyId?._id || "",
-    voucherType: data?.voucherType || "Expense",
-    paymentType: data?.paymentType || "advance",
+    voucherType: data?.voucherType || "expense",
     partyId: data?.partyId?._id || "",
-    bankId: data?.bankId?._id || data?.bankId || "",
-    posOrderId: data?.posOrderId?._id || data?.posOrderId || "",
-    paymentMode: data?.paymentMode || "cash",
-    date: data?.paymentDate || null,
+    date: data?.date || null,
     amount: data?.amount || 0,
-    totalAmount: data?.totalAmount || 0,
-    paidAmount: data?.paidAmount || 0,
-    pendingAmount: data?.pendingAmount || 0,
-    kasar: data?.kasar || 0,
     isNonGST: data?.isNonGST || false,
     isActive: data?.isActive ?? true,
     accountId: data?.accountId?._id || "",
-    posCashRegisterId: data?.posCashRegisterId?._id || "",
     remark: data?.remark || "",
     expenseType: data?.expenseType || "service",
     discountAmount: data?.discountAmount || 0,
@@ -54,9 +45,6 @@ const ExpenseForm = () => {
   const handleSubmit = async (values: PosPaymentFormValues, { resetForm }: FormikHelpers<PosPaymentFormValues>) => {
     const { _submitAction, voucherDetails, ...rest } = values;
     const payload = { ...rest };
-    if (values.paymentMode?.toLowerCase() === "cash") {
-      delete payload.bankId;
-    }
 
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") {
@@ -81,9 +69,9 @@ const ExpenseForm = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.PAYMENT[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.PAYMENT[pageMode]} />
+      <CommonBreadcrumbs title={PAGE_TITLE.EXPENSE[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.EXPENSE[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
-        <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={PaymentFormSchema} enableReinitialize>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={ExpenseFormSchema} enableReinitialize>
           {({ resetForm, setFieldValue, dirty, values }) => {
             const { data: contactData, isLoading: contactLoading, isFetching: contactFetching } = Queries.useGetContactDropdown({ activeFilter: true, companyFilter: values?.companyId }, Boolean(values?.companyId));
 
@@ -172,11 +160,12 @@ const ExpenseForm = () => {
             return (
               <Form noValidate>
                 <Grid container spacing={2}>
-                  <CommonCard title="Payment Details" grid={{ xs: 12 }}>
+                  <CommonCard title="Expense Details" grid={{ xs: 12 }}>
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
                       <CommonValidationSelect name="partyId" label="Party" grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} options={contactLoading || contactFetching ? [] : GenerateOptions(contactData?.data || [])} isLoading={contactLoading || contactFetching} required />
                       <CommonValidationDatePicker name="date" label="Expense Date" required grid={{ xs: 12, md: 4 }} />
+                      <CommonValidationCheckbox name="isNonGST" label="Non-GST" grid={{ xs: 12, md: 12 }} />
                       <CommonValidationTextField name="remark" label="Description" multiline grid={{ xs: 12 }} />
                       <Grid size={{ xs: 12 }}>
                         <CommonCard hideDivider>

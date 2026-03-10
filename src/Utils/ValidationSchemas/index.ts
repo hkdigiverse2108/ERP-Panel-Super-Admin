@@ -606,7 +606,7 @@ export const PaymentFormSchema = Yup.object({
 export const ReciptFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
   partyId: Validation("string", "Party"),
-  date: Yup.mixed().required("Payment Date is required"),
+  date: Yup.mixed().required("Receipt Date is required"),
   paymentType: Validation("string", "Payment Type"),
   posOrderId: RequiredWhen("paymentType", ["against_bill"], "Sales", "string"),
   paymentMode: Validation("string", "Payment Mode"),
@@ -625,3 +625,20 @@ export const ReciptFormSchema = Yup.object({
   isActive: Yup.boolean(),
 });
 
+
+export const ExpenseFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
+  partyId: Validation("string", "Party"),
+  date: Yup.mixed().required("Expense Date is required"),
+  amount: Validation("number", "Amount", {
+    extraRules: (s) => s.min(1, "Amount must be greater than 0"),
+  }),
+  discountAmount: Validation("number", "Discount Amount", { required: false }).nullable(),
+  taxId: Validation("string", "Tax", { required: false }).nullable(),
+  remark: Validation("string", "Description", {
+    required: false,
+    extraRules: (s) => s.trim().max(200, "Maximum 200 characters allowed"),
+  }),
+  isNonGST: Validation("boolean", "Is Non GST", { required: false }),
+  isActive: Yup.boolean(),
+});
