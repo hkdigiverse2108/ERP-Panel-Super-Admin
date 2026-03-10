@@ -9,6 +9,15 @@ import type { LocationBase } from "./Location";
 import type { AdditionalChargesBase } from "./AdditionalCharges";
 import type { PosCreditNoteBase } from "./PosCreditNote";
 import type { MultiplePaymentType, PosProductDataModal } from "./Pos";
+import type { BrandBase } from "./Brand";
+import type { UomBase } from "./Uom";
+import type { TaxBase } from "./Tax";
+import type { CategoryBase } from "./Category";
+import type { AccountGroupBase } from "./AccountGroup";
+import type { AccountBase } from "./Account";
+import type { RolesBase } from "./Roles";
+import type { TermsConditionBase } from "./TermsCondition";
+import type { ProductTypeBase } from "./ProductType";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -461,6 +470,17 @@ export interface ModalStateSlice {
   isModalVideoPlay: { open: boolean; link: string };
   isCustomerModal: { open: boolean; data: ContactBase | null };
   isContactModal: { open: boolean; data: ContactBase | null };
+  isBrandModal: { open: boolean; data: BrandBase | null };
+  isUomModal: { open: boolean; data:UomBase | null };
+  isTaxModal: { open: boolean; data: TaxBase | null };
+  isCategoryModal: { open: boolean; data: CategoryBase | null };
+  isLocationModal: { open: boolean; data: LocationBase | null };
+  isAccountGroupModal: { open: boolean; data: AccountGroupBase | null };
+  isAccountModal: { open: boolean; data: AccountBase | null };
+  isRoleModal: { open: boolean; data: RolesBase | null };
+  isTermsAndConditionModal: { open: boolean; data: TermsConditionBase | null };
+  isTermsSelectionModal: { open: boolean; data: TermsConditionBase | null };
+  isProductTypeModal: { open: boolean; data: ProductTypeBase | null };
   isPaymentListModal: boolean;
   isAddPaymentModal: boolean;
   isRedeemLoyaltyModal: boolean;
@@ -599,6 +619,7 @@ export interface CommonTermsAndConditionProps {
   selectedTermIds: string[];
   onChange: (ids: string[]) => void;
   isView?: boolean;
+  companyId?: string;
 }
 
 // ************ Common Terms And Condition End ***********
