@@ -99,9 +99,9 @@ const ExpenseForm = () => {
             };
 
             const voucherColumns: CommonTableColumn<PosPaymentFormValues>[] = [
-              { key: "sr", header: "#", render: () => 1, bodyClass: "w-10", footer: "" },
-              { key: "accountId", header: "Account", bodyClass: "min-w-40", render: (r) => <CommonSelect options={GenerateOptions(accountDropdown?.data)} isLoading={accountDropdownLoading} placeholder="Search Account" value={r.accountId ? [r.accountId] : []} onChange={(v) => setFieldValue("accountId", v[0] || "")} />, footer: "Total" },
-              { key: "expenseType", header: "Service/Product", bodyClass: "min-w-40", render: (r) => <CommonSelect options={EXPENSE_TYPE_OPTIONS} placeholder="Service/Product" value={r.expenseType ? [r.expenseType] : []} onChange={(v) => setFieldValue("expenseType", v[0] || "")} />, footer: "" },
+              { key: "sr", header: "#", render: () => 1, bodyClass: "w-10" },
+              { key: "accountId", header: "Account", bodyClass: "min-w-40", render: (r) => <CommonSelect options={GenerateOptions(accountDropdown?.data)} isLoading={accountDropdownLoading} placeholder="Search Account" value={r.accountId ? [r.accountId] : []} onChange={(v) => setFieldValue("accountId", v[0] || "")} /> },
+              { key: "expenseType", header: "Service/Product", bodyClass: "min-w-40", render: (r) => <CommonSelect options={EXPENSE_TYPE_OPTIONS} placeholder="Service/Product" value={r.expenseType ? [r.expenseType] : []} onChange={(v) => setFieldValue("expenseType", v[0] || "")} /> },
               {
                 key: "amount",
                 header: "Amount",
@@ -118,7 +118,6 @@ const ExpenseForm = () => {
                     }}
                   />
                 ),
-                footer: (data) => data.reduce((sum, r) => sum + (Number(r.amount) || 0), 0).toFixed(2),
               },
               {
                 key: "discountAmount",
@@ -136,7 +135,6 @@ const ExpenseForm = () => {
                     }}
                   />
                 ),
-                footer: (data) => data.reduce((sum, r) => sum + (Number(r.discountAmount) || 0), 0).toFixed(2),
               },
               {
                 key: "taxId",
@@ -155,7 +153,6 @@ const ExpenseForm = () => {
                     }}
                   />
                 ),
-                footer: "",
               },
               {
                 key: "taxValue",
@@ -168,18 +165,8 @@ const ExpenseForm = () => {
                   const taxValue = (taxableAmount * taxPercentage) / 100;
                   return taxValue.toFixed(2);
                 },
-                footer: (data) =>
-                  data
-                    .reduce((sum, r) => {
-                      const tax = (taxDropdown?.data as TaxBase[])?.find((t: TaxBase) => t._id === r.taxId);
-                      const taxPercentage = Number(tax?.percentage) || 0;
-                      const taxableAmount = Math.max(0, (r.amount || 0) - (r.discountAmount || 0));
-                      const taxValue = (taxableAmount * taxPercentage) / 100;
-                      return sum + taxValue;
-                    }, 0)
-                    .toFixed(2),
               },
-              { key: "totalAmount", header: "Total", bodyClass: "min-w-20", render: (r) => (r.totalAmount || 0).toFixed(2), footer: (data) => data.reduce((sum, r) => sum + (Number(r.totalAmount) || 0), 0).toFixed(2) },
+              { key: "totalAmount", header: "Total", bodyClass: "min-w-20", render: (r) => (r.totalAmount || 0).toFixed(2) },
             ];
 
             return (
@@ -194,7 +181,7 @@ const ExpenseForm = () => {
                       <Grid size={{ xs: 12 }}>
                         <CommonCard hideDivider>
                           <Box sx={{ overflowX: "auto" }} className="custom-scrollbar">
-                            <CommonTable showFooter data={[values]} columns={voucherColumns} rowKey={() => "1"} />
+                            <CommonTable data={[values]} columns={voucherColumns} rowKey={() => "1"} />
                           </Box>
                         </CommonCard>
                       </Grid>
