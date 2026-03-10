@@ -8,7 +8,7 @@ import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonStatsCard, 
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, PAYMENT_MODE } from "../../../Data";
 import type { CommonTableColumn, PosOrderBase, PosPaymentFormValues } from "../../../Types";
-import { GenerateOptions, GetChangedFields, PaymentFormSchema, RemoveEmptyFields } from "../../../Utils";
+import { GenerateOptions, GetChangedFields, ReciptFormSchema, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 
 const ReceiptForm = () => {
@@ -41,7 +41,7 @@ const ReceiptForm = () => {
     isNonGST: data?.isNonGST || false,
     isActive: data?.isActive ?? true,
     accountId: data?.accountId?._id || "",
-    posCashRegisterId: data?.posCashRegisterId?._id || "",
+    posCashRegisterId: data?.posCashRegisterId?._id || undefined,
     remark: data?.remark || "",
   };
 
@@ -77,7 +77,7 @@ const ReceiptForm = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.RECEIPT[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.RECEIPT[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
-        <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={PaymentFormSchema} enableReinitialize>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={ReciptFormSchema} enableReinitialize>
           {({ resetForm, setFieldValue, dirty, values }) => {
             const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: values.partyId, duePaymentFilter: true }, Boolean(values.partyId));
             const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown({ companyId: values?.companyId }, Boolean(values?.companyId));
@@ -131,13 +131,13 @@ const ReceiptForm = () => {
               { key: "paymentMode", header: "Payment Mode", bodyClass: "min-w-40", render: (r) => <CommonSelect options={PAYMENT_MODE} placeholder="Payment Mode" value={r.paymentMode ? [r.paymentMode] : []} onChange={(v) => handleTableChange("paymentMode", v[0] || "")} /> },
               ...(values.paymentMode?.toLowerCase() !== "cash"
                 ? [
-                  {
-                    key: "bankId",
-                    header: "Bank",
-                    bodyClass: "min-w-40",
-                    render: (r) => <CommonSelect options={GenerateOptions(bankDropdown?.data)} isLoading={bankDropdownLoading} placeholder="Select Bank" value={r.bankId ? [r.bankId] : []} onChange={(v) => handleTableChange("bankId", v[0] || "")} />,
-                  } as CommonTableColumn<PosPaymentFormValues>,
-                ]
+                    {
+                      key: "bankId",
+                      header: "Bank",
+                      bodyClass: "min-w-40",
+                      render: (r) => <CommonSelect options={GenerateOptions(bankDropdown?.data)} isLoading={bankDropdownLoading} placeholder="Select Bank" value={r.bankId ? [r.bankId] : []} onChange={(v) => handleTableChange("bankId", v[0] || "")} />,
+                    } as CommonTableColumn<PosPaymentFormValues>,
+                  ]
                 : []),
               { key: "totalAmount", header: "Total Payment", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.totalAmount || 0} disabled /> },
               { key: "paidAmount", header: "Paid Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.paidAmount || 0} disabled /> },
