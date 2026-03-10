@@ -116,7 +116,7 @@ const RecipeForm = () => {
                 {/* FINAL PRODUCTS */}
                 <CommonCard title="Final Products">
                   <Box p={2} display="flex" flexWrap="wrap" gap={2}>
-                    <DependentSelect name="finalProducts.productId" label="Product" query={Queries.useGetProductDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} required grid={{ xs: 12, md: 4 }} />
+                    <DependentSelect name="finalProducts.productId" label="Product" query={Queries.useGetProductDropdown} params={{ companyFilter: values.companyId ,}} enabled={Boolean(values.companyId)} disabled={!values.companyId} required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="finalProducts.qtyGenerate" label="Qty Generate" type="number" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="finalProducts.mrp" label="MRP" type="number" grid={{ xs: 12, md: 4 }} />
                   </Box>
