@@ -20,6 +20,7 @@ export interface UserFormValues {
   designation?: string;
   phoneNo?: PhoneNumberType;
   email?: string;
+  profileImage?: string | File | null;
   branchId?: string;
   panNumber?: string;
   role?: string;
