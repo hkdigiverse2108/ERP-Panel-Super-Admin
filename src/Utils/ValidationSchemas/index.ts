@@ -398,17 +398,17 @@ const ContactBaseSchema = {
   tanNo: Validation("string", "Tan No", { required: false }),
   remarks: Validation("string", "Remarks", { required: false }),
   address: Yup.array().of(
-  ContactAddressSchema.when("$contactType", (contactType, schema) => {
-    if (contactType?.[0] === "customer") return schema;
-    return schema.shape({
-      contactFirstName: Validation("string", "Contact First Name", { required: false }),
-      country: Validation("string", "Country", { required: false }),
-      state: Validation("string", "State", { required: false }),
-      city: Validation("string", "City", { required: false }),
-      gstIn: Yup.string().notRequired(),
-    });
-  })
-),
+    ContactAddressSchema.when("$contactType", (contactType, schema) => {
+      if (contactType?.[0] === "customer") return schema;
+      return schema.shape({
+        contactFirstName: Validation("string", "Contact First Name", { required: false }),
+        country: Validation("string", "Country", { required: false }),
+        state: Validation("string", "State", { required: false }),
+        city: Validation("string", "City", { required: false }),
+        gstIn: Yup.string().notRequired(),
+      });
+    }),
+  ),
   bankDetails: Yup.object().shape({
     ifscCode: Validation("string", "IFSC Code", { required: false }),
     name: Validation("string", "Bank Name", { required: false }),
@@ -519,7 +519,6 @@ export const ChangePasswordSchema = Yup.object({
   email: Validation("string", "Email", { required: true, extraRules: (s) => s.trim().email("Invalid email address") }),
   oldPassword: Validation("string", "Old Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
   newPassword: Validation("string", "New Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
-  confirmPassword: Validation("string", "Confirm Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
   loginSource: Validation("string", "Login Source", { required: false }),
 });
 

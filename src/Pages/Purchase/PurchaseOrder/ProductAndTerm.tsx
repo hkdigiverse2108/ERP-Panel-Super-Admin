@@ -37,7 +37,7 @@ const ProductSelectCell = ({ index, productData, taxData, isLoading }: ProductSe
     }
   }, [productId, productData, taxData, setFieldValue, index]);
 
-  return <CommonValidationSelect name={`items.${index}.productId`} label="Search Product" isLoading={isLoading} options={GenerateOptions(productData?.data)} required />;
+  return <CommonValidationSelect name={`items.${index}.productId`} label="Search Product" isLoading={isLoading} options={GenerateOptions(productData?.data)} required size="small" />;
 };
 
 const TotalInputCell = ({ index }: { index: number }) => {
@@ -182,14 +182,14 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
                         render: (_row, index) => (
                           <Box display="flex" justifyContent="center" gap={1}>
                             {index === (values.items?.length || 0) - 1 && (
-                              <CommonButton variant="outlined" onClick={() => push({ productId: "", qty: 1, freeQty: 0, mrp: 0, sellingPrice: 0, discount1: 0, discount2: 0, taxableAmount: 0, unitCost: 0, tax: "0", landingCost: "0", margin: "0", total: 0 })}>
-                                <Add />
+                              <CommonButton size="small" variant="outlined" onClick={() => push({ productId: "", qty: 1, freeQty: 0, mrp: 0, sellingPrice: 0, discount1: 0, discount2: 0, taxableAmount: 0, unitCost: 0, tax: "0", landingCost: "0", margin: "0", total: 0 })}>
+                                <Add fontSize="small" />
                               </CommonButton>
                             )}
 
                             {(values.items?.length || 0) > 1 && (
-                              <CommonButton color="error" variant="outlined" onClick={() => remove(index)}>
-                                <Clear />
+                              <CommonButton size="small" color="error" variant="outlined" onClick={() => remove(index)}>
+                                <Clear fontSize="small" />
                               </CommonButton>
                             )}
                           </Box>
@@ -198,10 +198,10 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
                       },
                       { key: "sr", header: "#", bodyClass: "align-middle text-center w-[50px]", render: (_row, index) => index + 1 },
                       { key: "productId", header: "Product*", bodyClass: "min-w-[250px]", render: (_row, index) => <ProductSelectCell index={index} productData={productData} taxData={taxData} isLoading={productDataLoading} /> },
-                      { key: "mrp", header: "MRP", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.mrp`} type="number" /> },
-                      { key: "qty", header: "Qty", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.qty`} type="number" /> },
-                      { key: "unit", header: "Unit", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.unit`} disabled /> },
-                      { key: "unitCost", header: "Unit Cost", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.unitCost`} type="number" /> },
+                      { key: "mrp", header: "MRP", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.mrp`} type="number" size="small" /> },
+                      { key: "qty", header: "Qty", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.qty`} type="number" size="small" /> },
+                      { key: "unit", header: "Unit", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.unit`} size="small" disabled /> },
+                      { key: "unitCost", header: "Unit Cost", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.unitCost`} type="number" size="small" /> },
                       {
                         key: "tax",
                         header: "Tax",
@@ -215,8 +215,8 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
                           </Box>
                         ),
                       },
-                      { key: "landingCost", header: "Landing Cost", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.landingCost`} type="number" disabled /> },
-                      { key: "margin", header: "Margin", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.margin`} type="number" disabled /> },
+                      { key: "landingCost", header: "Landing Cost", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.landingCost`} type="number" disabled size="small" /> },
+                      { key: "margin", header: "Margin", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.margin`} type="number" disabled size="small" /> },
                       { key: "total", header: "Total", bodyClass: "min-w-[140px]", render: (_row, index) => <TotalInputCell index={index} />, footer: (data) => data.reduce((sum, item) => sum + (Number(item.total) || 0), 0).toFixed(2) },
                     ];
 
