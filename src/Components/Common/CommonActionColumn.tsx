@@ -14,6 +14,7 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ ac
   field: "actions",
   headerName: "Actions",
   headerAlign: "center",
+  align: "center",
   width: permissionRoute ? 240 : 180,
   minWidth: 100,
   sortable: false,
@@ -22,7 +23,7 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ ac
   renderCell: (params) => {
     const isActive = params.row.isActive;
     return (
-      <Grid container spacing={1} className="flex items-center justify-center">
+      <Grid container spacing={1} className="flex items-center justify-center w-full">
         {active && (
           <Grid size="auto">
             <IconButton className="iconButtonStyle" size="small" color={isActive ? "success" : "error"} onClick={() => active(params.row)}>
