@@ -31,7 +31,6 @@ const ExpenseForm = () => {
     date: data?.date || null,
     amount: data?.amount || 0,
     isActive: data?.isActive ?? true,
-    accountId: data?.accountId?._id || "",
     remark: data?.remark || "",
     type: data?.type || "",
   };

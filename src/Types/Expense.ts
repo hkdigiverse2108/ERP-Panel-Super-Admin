@@ -6,28 +6,17 @@ import type { ContactBase } from "./Contacts";
 import type { PosOrderBase } from "./PosOrder";
 
 export interface ExpenseFormValues {
-  paymentType?: string;
   partyId?: string;
   bankId?: string;
   posOrderId?: string;
-  paymentMode?: string;
   date?: string | Date | null;
-  totalAmount?: number;
-  paidAmount?: number;
-  pendingAmount?: number;
-  kasar?: number;
   amount?: number;
-  isNonGST?: boolean;
   isActive?: boolean;
   companyId?: string;
-  accountId?: string;
   remark?: string;
   status?: string;
   _submitAction?: string;
-  posCashRegisterId?: string;
   type?: string;
-  discountAmount?: number;
-  taxId?: string;
 }
 
 export type AddExpensePayload = ExpenseFormValues & {

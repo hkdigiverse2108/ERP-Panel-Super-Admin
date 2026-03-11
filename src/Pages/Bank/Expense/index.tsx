@@ -2,10 +2,10 @@ import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonObjectNameColumn, CommonStatsCard } from "../../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { AppGridColDef, PosPaymentBase } from "../../../Types";
+import type { AppGridColDef, ExpenseBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 
@@ -15,36 +15,13 @@ const Expense = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.EXPENSE.BASE);
 
-  const { data, isLoading, isFetching } = Queries.useGetPosPayment({ ...params, voucherTypeFilter: "expense" });
+  const { data, isLoading, isFetching } = Queries.useGetExpense(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deletePayment, isPending: isDeleteLoading } = Mutations.useDeletePosPayment();
   const { mutate: editPayment, isPending: isEditLoading } = Mutations.useEditPosPayment();
   const rows = useMemo(() => {
-    return (
-      data?.data?.posPayment_data.map((r: PosPaymentBase) => ({
-        ...r,
-        id: r?._id,
-        totalAmount: Number(r?.totalAmount ?? 0),
-        paidAmount: Number(r?.paidAmount ?? 0),
-        pendingAmount: Number(r?.pendingAmount ?? 0),
-      })) || []
-    );
+    return data?.data?.expense_data.map((r) => ({ ...r, id: r?._id })) || [];
   }, [data]);
-
-  const summary = useMemo(() => {
-    return CalculateGridSummary(rows, ["totalAmount", "paidAmount", "pendingAmount"]);
-  }, [rows]);
-
-  const stats = useMemo(() => {
-    const totalAmount = rows.reduce((acc, r) => acc + Number(r.totalAmount || 0), 0);
-    const paidAmount = rows.reduce((acc, r) => acc + Number(r.paidAmount || 0), 0);
-    const unpaidAmount = rows.reduce((acc, r) => acc + Number(r.pendingAmount || 0), 0);
-    return [
-      { label: "Total Expense", value: totalAmount },
-      { label: "Paid", value: paidAmount },
-      { label: "Unpaid", value: unpaidAmount },
-    ];
-  }, [rows]);
 
   const totalRows = data?.data?.totalData || 0;
 
@@ -57,25 +34,21 @@ const Expense = () => {
     });
   };
 
-  const columns: AppGridColDef<PosPaymentBase>[] = [
-    CommonObjectNameColumn<PosPaymentBase>("companyId", { headerName: "Company", width: 200 }),
-    { field: "voucherType", headerName: "Expense No", width: 200 },
-    { field: "partyId", headerName: "Party Name", width: 230, valueGetter: (_v, row: PosPaymentBase) => (row?.partyId ? `${row?.partyId?.firstName} ${row?.partyId?.lastName}` : "-") },
-    { field: "paymentMode", headerName: "Payment Mode", width: 140 },
-    { field: "paymentType", headerName: "Payment Type", width: 140 },
+  const columns: AppGridColDef<ExpenseBase>[] = [
+       CommonObjectNameColumn<ExpenseBase>("companyId", { headerName: "Company", width: 200 }),
+    { field: "partyId", headerName: "Party Name", width: 230, valueGetter: (_v, row: ExpenseBase) => (row?.partyId ? `${row?.partyId?.firstName} ${row?.partyId?.lastName}` : "-") },
     { field: "date", headerName: "Expense Date", width: 190, valueGetter: (v) => FormatDate(v) },
-    { field: "totalAmount", headerName: "Total", minWidth: 150, flex: 1, type: "number" },
-    { field: "paidAmount", headerName: "Paid", minWidth: 150, flex: 1, type: "number" },
-    { field: "pendingAmount", headerName: "Unpaid", minWidth: 150, flex: 1, type: "number" },
+    { field: "amount", headerName: "Amount", width: 200 },
+    { field: "remark", headerName: "Remark", minWidth: 150, flex: 1 },
 
     ...(permission?.edit || permission?.delete
       ? [
-          CommonActionColumn<PosPaymentBase>({
+          CommonActionColumn<ExpenseBase>({
             ...(permission?.edit && {
               active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
-              editRoute: ROUTES.EXPENSE.ADD_EDIT,
+              editRoute: ROUTES.PAYMENT.ADD_EDIT,
             }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherType }) }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.remark }) }),
           }),
         ]
       : []),
@@ -95,21 +68,15 @@ const Expense = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    slots: {
-      bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
-    },
   };
 
-  const filter = [
-    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
-  ];
+  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.EXPENSE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.EXPENSE.BASE} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <CommonStatsCard stats={stats} />
         <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...gridOptions} />
