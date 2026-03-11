@@ -4,19 +4,19 @@ import { CommonValidationDatePicker, CommonValidationSelect } from "../../../../
 import { PAYMENT_TERMS_OPTIONS, REVERSE_CHARGE, TAX_TYPE } from "../../../../Data";
 import { useFormikContext } from "formik";
 import type { EstimateFormValues } from "../../../../Types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AddressSelectionModal } from "../../../Common";
 import { Queries } from "../../../../Api";
 import { GenerateOptions } from "../../../../Utils";
 
 const EstimateDetails = () => {
-  const { values, setFieldValue } = useFormikContext<EstimateFormValues>(); 
+  const { values, setFieldValue } = useFormikContext<EstimateFormValues>();
   const [modalType, setModalType] = useState<"billing" | "shipping" | null>(null);
 
   const { data: companyData, isLoading: isCompanyLoading } = Queries.useGetCompanyDropdown();
   const companyOptions = GenerateOptions(companyData?.data || []);
 
-  const { data: customerData, isLoading: isCustomerLoading } = Queries.useGetContactDropdown({ typeFilter: "customer", companyFilter: values?.companyId }, !!values?.companyId);
+  const { data: customerData, isLoading: isCustomerLoading, isFetching: isCustomerFetching } = Queries.useGetContactDropdown({ typeFilter: "customer", companyFilter: values?.companyId }, !!values?.companyId);
   const customers = customerData?.data || [];
 
   // console.log("values", values, customers);
@@ -33,6 +33,26 @@ const EstimateDetails = () => {
     if (modalType === "shipping") setFieldValue("shippingAddress", addressId);
   };
 
+  // Set default addresses when customer is selected
+  useEffect(() => {
+    if (selectedCustomer && selectedCustomer.address && selectedCustomer.address.length > 0) {
+      if (!values.billingAddress) {
+        setFieldValue("billingAddress", selectedCustomer.address[0]._id);
+      }
+      if (!values.shippingAddress) {
+        setFieldValue("shippingAddress", selectedCustomer.address[0]._id);
+      }
+    }
+  }, [selectedCustomer, values.customerId, setFieldValue]);
+
+  // Sync place of supply with billing address
+  useEffect(() => {
+    const activeBilling = selectedCustomer?.address?.find((a: any) => a._id === values.billingAddress) || selectedCustomer?.address?.[0];
+    if (activeBilling?.state?.name) {
+      setFieldValue("placeOfSupply", activeBilling.state.name);
+    }
+  }, [values.billingAddress, selectedCustomer, setFieldValue]);
+
   return (
     <Grid container spacing={2} sx={{ p: 2 }}>
       <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 1, md: 1 } }}>
@@ -40,7 +60,7 @@ const EstimateDetails = () => {
       </Grid>
 
       <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 2, md: 2 } }}>
-        <CommonValidationSelect name="customerId" label="Select Customer" required options={GenerateOptions(customers)} disabled={!values.companyId} />
+        <CommonValidationSelect name="customerId" label="Select Customer" required options={GenerateOptions(customers)} disabled={!values.companyId} isLoading={isCustomerLoading || isCustomerFetching} />
       </Grid>
 
       <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 3, md: 3 } }}>
@@ -78,7 +98,7 @@ const EstimateDetails = () => {
               </Typography>
             ) : (
               <Typography variant="body2" color="text.secondary">
-                Billing Address is not provided
+                {!values?.customerId ? "-" : "Billing Address is not provided"}
               </Typography>
             )}
           </Box>
@@ -102,7 +122,7 @@ const EstimateDetails = () => {
               </Typography>
             ) : (
               <Typography variant="body2" color="text.secondary">
-                Shipping Address is not provided
+                {!values?.customerId ? "-" : "Shipping Address is not provided"}
               </Typography>
             )}
           </Box>

@@ -28,7 +28,7 @@ const AddressSelectionModal: FC<AddressSelectionModalProps> = ({ isOpen, onClose
                     onSelect(addr._id);
                     onClose();
                   }}
-                  className={`p-4 border-2 cursor-pointer transition-all hover:border-blue-500 ${isSelected ? "border-blue-500 bg-blue-50/50 dark:bg-blue-900/10" : "border-gray-200 dark:border-gray-800"}`}
+                  className={`p-4 border-2 cursor-pointer transition-all hover:border-blue-500 dark:bg-gray-800! ${isSelected ? "border-blue-500 bg-blue-50/50 dark:bg-gray-800" : "border-gray-200 dark:border-gray-800"}`}
                 >
                   <Box display="flex" justifyContent="space-between" alignItems="flex-start">
                     <Box>

@@ -1,17 +1,7 @@
-import type { AdditionalChargeItem, CommonDataType, MessageStatus, PageStatus, ShippingDetails } from "./Common";
+import type { AdditionalChargeItem, CommonDataType, MessageStatus, PageStatus, ShippingDetails, TransactionSummary } from "./Common";
 import type { CompanyBase } from "./Company";
 import type { Address, ContactBase } from "./Contacts";
 import type { TermsConditionBase } from "./TermsCondition";
-
-export interface TransactionSummary {
-  flatDiscount: number;
-  grossAmount: number;
-  discountAmount: number;
-  taxableAmount: number;
-  taxAmount: number;
-  roundOff: number;
-  netAmount: number;
-}
 
 // Local ShippingDetails removed, now using common from ./Common
 
@@ -33,6 +23,8 @@ export interface EstimateItem {
   taxId: string;
   taxableAmount: number;
   totalAmount: number;
+  unit?: string;
+  tax?: number;
 }
 
 export interface EstimateFormValues {

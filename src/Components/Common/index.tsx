@@ -16,10 +16,39 @@ import { CommonDataGridSummaryFooter, CalculateGridSummary } from "./CommonDataG
 import CommonStatsCard from "./CommonStatsCard";
 
 import CommonTable from "./CommonTable";
+import CommonSummarySection from "./CommonSummarySection";
+import CommonAdditionalChargeSection from "./CommonAdditionalChargeSection";
 import CommonTermsAndCondition from "./TermsAndConditions/CommonTermsAndCondition";
 import CommonTermsAndConditionFormModal from "./TermsAndConditions/commonTermsAndConditionFormModal";
 import CommonTermsAndConditionSelectModal from "./TermsAndConditions/CommonTermsAndConditionSelectModal";
 import CommonShippingDetails from "./CommonShippingDetails";
 import AddressSelectionModal from "./AddressSelectionModal";
 
-export { CommonTermsAndConditionSelectModal, AddressSelectionModal, CommonShippingDetails, CommonTermsAndCondition, CommonTermsAndConditionFormModal, CommonDataGridSummaryFooter, CalculateGridSummary, CommonTabPanel, DependentSelect, CommonDrawer, CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonUpload, CommonModal, CommonActionColumn, CommonDeleteModal, CommonBottomActionBar, CommonImageBox, CommonPhoneColumns, CommonObjectNameColumn, AdvancedSearch, CommonStatsCard, CommonTable };
+export {
+  CommonTermsAndConditionSelectModal,
+  AddressSelectionModal,
+  CommonShippingDetails,
+  CommonTermsAndCondition,
+  CommonTermsAndConditionFormModal,
+  CommonDataGridSummaryFooter,
+  CalculateGridSummary,
+  CommonTabPanel,
+  DependentSelect,
+  CommonDrawer,
+  CommonCard,
+  CommonDataGrid,
+  CommonBreadcrumbs,
+  CommonUpload,
+  CommonModal,
+  CommonActionColumn,
+  CommonDeleteModal,
+  CommonBottomActionBar,
+  CommonImageBox,
+  CommonPhoneColumns,
+  CommonObjectNameColumn,
+  AdvancedSearch,
+  CommonStatsCard,
+  CommonTable,
+  CommonSummarySection,
+  CommonAdditionalChargeSection,
+};

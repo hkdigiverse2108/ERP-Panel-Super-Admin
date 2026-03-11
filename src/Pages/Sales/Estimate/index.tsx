@@ -83,7 +83,7 @@ const Estimate = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.ESTIMATE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.ESTIMATE.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <CommonStatsCard stats={stats} grid={{ xs: 6, sm: 4, md: 2.4 }} />
+        <CommonStatsCard stats={stats} grid={{ xs: 6, md: 3 }} />
         <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />

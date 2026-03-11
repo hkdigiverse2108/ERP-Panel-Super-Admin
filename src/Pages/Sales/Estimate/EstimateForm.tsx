@@ -1,6 +1,6 @@
 import { Box, Grid } from "@mui/material";
-import { Form, Formik, type FormikHelpers } from "formik";
-import { useEffect, useState } from "react";
+import { Form, Formik, type FormikHelpers, useFormikContext } from "formik";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations } from "../../../Api";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
@@ -9,53 +9,74 @@ import { BREADCRUMBS } from "../../../Data";
 import type { EstimateFormValues } from "../../../Types";
 import { DateConfig, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
+import { EstimateFormSchema } from "../../../Utils/ValidationSchemas";
 import EstimateDetails from "../../../Components/Sales/Estimate/EstimateDetails/EstimateDetails";
 import EstimateTabs from "../../../Components/Sales/Estimate/EstimateDetails/EstimateTabs";
+import CommonAdditionalChargeSection from "../../../Components/Common/CommonAdditionalChargeSection";
 
-// Watchers
-// const TaxTypeWatcher = ({ onChange }: { onChange: (taxType: string) => void }) => {
-//   const { values } = useFormikContext<EstimateFormValues>();
-//   useEffect(() => {
-//     onChange(values.taxType || "default");
-//   }, [values.taxType, onChange]);
-//   return null;
-// };
+import { Queries } from "../../../Api";
 
-// const CompanyWatcher = ({ selectedCompanyId, onChange }: { selectedCompanyId: string; onChange: (companyId: string) => void }) => {
-//   const { values, setFieldValue } = useFormikContext<EstimateFormValues>();
-//   useEffect(() => {
-//     const newCompanyId = values.companyId || "";
-//     if (newCompanyId !== selectedCompanyId) {
-//       onChange(newCompanyId);
-//       if (selectedCompanyId) {
-//         setFieldValue("customerId", "");
-//         setFieldValue("termsAndConditionIds", []);
-//       }
-//     }
-//   }, [values.companyId, selectedCompanyId, onChange, setFieldValue]);
-//   return null;
-// };
+const SummaryWatcher = ({ onSummaryChange }: { onSummaryChange: (summary: any) => void }) => {
+  const { values } = useFormikContext<EstimateFormValues>();
+  const { data: taxData } = Queries.useGetTaxDropdown();
 
-// const CustomerWatcher = ({ customers, onChange }: { customers: ContactBase[]; onChange: (customer: ContactBase | null) => void }) => {
-//   const { values, setFieldValue } = useFormikContext<EstimateFormValues>();
-//   useEffect(() => {
-//     const customerId = values.customerId;
-//     if (!customerId) {
-//       onChange(null);
-//       return;
-//     }
-//     const customer = customers.find((c) => String(c._id) === String(customerId));
-//     const selectedCustomer = customer ?? null;
-//     onChange(selectedCustomer);
+  const calculateSummary = () => {
+    const itemGross = values.items?.reduce((s: number, r: any) => s + Number(r.qty || 0) * Number(r.price || 0), 0) || 0;
+    const itemDiscount = values.items?.reduce((s: number, r: any) => s + Number(r.discount1 || 0), 0) || 0;
+    const itemTaxable = values.items?.reduce((s: number, r: any) => s + Number(r.taxableAmount || 0), 0) || 0;
+    const itemTax = values.items?.reduce((s: number, r: any) => s + Number(r.totalAmount || 0) - Number(r.taxableAmount || 0), 0) || 0;
 
-//     // Auto-select first address if none selected
-//     if (selectedCustomer?.address?.length) {
-//       if (!values.billingAddress) setFieldValue("billingAddress", selectedCustomer.address[0]._id);
-//       if (!values.shippingAddress) setFieldValue("shippingAddress", selectedCustomer.address[0]._id);
-//     }
-//   }, [values.customerId, customers, onChange, setFieldValue]);
-//   return null;
-// };
+    const chargeTaxable = values.additionalCharges?.reduce((s: number, r: any) => s + Number(r.amount || 0), 0) || 0;
+    const chargeTax = values.additionalCharges?.reduce((s: number, r: any) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0;
+
+    const totalTaxable = itemTaxable + chargeTaxable;
+    const totalTax = itemTax + chargeTax;
+
+    const flatDiscount = Number(values.transactionSummary?.flatDiscount || 0);
+    const roundOffAmount = Number(values.transactionSummary?.roundOff || 0);
+
+    const netBeforeRoundOff = totalTaxable + totalTax - flatDiscount;
+    const netAmount = netBeforeRoundOff + roundOffAmount;
+
+    // Calculate Tax Summary
+    const taxMap: Record<string, { name: string; rate: number; amount: number }> = {};
+    const processTax = (taxId: string | undefined, amount: number) => {
+      if (!taxId) return;
+      const tax = taxData?.data?.find((t: any) => t._id === taxId);
+      if (!tax) return;
+      if (!taxMap[taxId]) {
+        taxMap[taxId] = { name: tax.name || "Tax", rate: tax.percentage || 0, amount: 0 };
+      }
+      taxMap[taxId].amount += amount;
+    };
+
+    values.items?.forEach((r: any) => processTax(r.taxId, Number(r.totalAmount || 0) - Number(r.taxableAmount || 0)));
+    values.additionalCharges?.forEach((r: any) => processTax(r.taxId, Number(r.totalAmount || 0) - Number(r.amount || 0)));
+
+    return {
+      flatDiscount,
+      grossAmount: Number(itemGross.toFixed(2)),
+      discountAmount: Number((itemDiscount + flatDiscount).toFixed(2)),
+      taxableAmount: Number(totalTaxable.toFixed(2)),
+      taxAmount: Number(totalTax.toFixed(2)),
+      roundOff: Number(roundOffAmount.toFixed(2)),
+      netAmount: Number(netAmount.toFixed(2)),
+      taxSummary: Object.values(taxMap).map((t) => ({ ...t, amount: Number(t.amount.toFixed(2)) })),
+    };
+  };
+
+  useEffect(() => {
+    const newSummary = calculateSummary();
+    const currentSummary = values.transactionSummary;
+
+    // Deep comparison to prevent infinite loop
+    if (JSON.stringify(newSummary) !== JSON.stringify(currentSummary)) {
+      onSummaryChange(newSummary);
+    }
+  }, [values.items, values.additionalCharges, values.transactionSummary?.flatDiscount, values.transactionSummary?.roundOff, taxData]);
+
+  return null;
+};
 
 const EstimateForm = () => {
   const location = useLocation();
@@ -63,7 +84,6 @@ const EstimateForm = () => {
   const permission = usePagePermission(PAGE_TITLE.ESTIMATE.BASE);
   const { data } = location.state || {};
 
-  // const { _id, createdAt, updatedAt, isDeleted, createdBy, updatedBy, __v, ...data } = data || {};
   const emptyRow = { productId: "", qty: 1, freeQty: 0, uomId: "", price: 0, discount1: 0, taxId: "", taxableAmount: 0, totalAmount: 0 };
 
   const initialValues: EstimateFormValues = {
@@ -75,7 +95,7 @@ const EstimateForm = () => {
     billingAddress: data?.billingAddress?._id || "",
     shippingAddress: data?.shippingAddress?._id || "",
     paymentTerms: data?.paymentTerms || "",
-    taxType: data?.taxType || "exclusive",
+    taxType: data?.taxType || "default",
     reverseCharge: data?.reverseCharge || false,
     termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
     items: data?.items || [emptyRow],
@@ -99,29 +119,7 @@ const EstimateForm = () => {
       roundOff: data?.transactionSummary?.roundOff || 0,
       netAmount: data?.transactionSummary?.netAmount || 0,
     },
-    isActive: data?.isActive || true,
   };
-
-  const additionalChargeEmptyRow = { chargeId: "", amount: 0, taxId: "", taxAmount: 0, totalAmount: 0 };
-  const [additionalChargeRows, setAdditionalChargeRows] = useState<any[]>(data?.additionalCharges || [additionalChargeEmptyRow]);
-
-  // Queries
-  // const { data: companyData, isLoading: isCompanyLoading } = Queries.useGetCompanyDropdown();
-  // const companyOptions = GenerateOptions(companyData?.data || []);
-
-  // const { data: customerData } = Queries.useGetContactDropdown({ typeFilter: "customer", companyFilter: initialValues?.customerId }, !!initialValues?.customerId);
-  // const customers = customerData?.data || [];
-  // const updatedCustomers = customers.map((c) => ({ ...c, name: c.companyName || `${c.firstName} ${c.lastName}` }));
-  // const customerOptions = GenerateOptions(updatedCustomers);
-
-  // const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown({ companyFilter: values?.customerId }, !!values?.customerId);
-  // const productOptions = GenerateOptions(productsData?.data || []);
-
-  // const { data: taxData, isLoading: isTaxLoading } = Queries.useGetTaxDropdown();
-  // const taxOptions = GenerateOptions(taxData?.data || []);
-
-  // const { data: additionalChargeData, isLoading: isAdditionalChargeLoading } = Queries.useGetAdditionalChargesDropdown();
-  // const additionalChargeOptions = GenerateOptions(additionalChargeData?.data || []);
 
   const { mutate: addEstimate, isPending: isAddLoading } = Mutations.useAddEstimate();
   const { mutate: editEstimate, isPending: isEditLoading } = Mutations.useEditEstimate();
@@ -134,64 +132,63 @@ const EstimateForm = () => {
     if (!hasAccess) navigate(-1);
   }, [isEditing, permission, navigate]);
 
-  // const handleAdditionalChargeRowChange = (index: number, field: string, value: any) => {
-  //   setAdditionalChargeRows((prev) => {
-  //     const newRows = [...prev];
-  //     let row = { ...newRows[index], [field]: value };
+  const getCalculatedSummary = (values: EstimateFormValues, taxData: any) => {
+    const itemGross = values.items?.reduce((s: number, r: any) => s + Number(r.qty || 0) * Number(r.price || 0), 0) || 0;
+    const itemDiscount = values.items?.reduce((s: number, r: any) => s + Number(r.discount1 || 0), 0) || 0;
+    const itemTaxable = values.items?.reduce((s: number, r: any) => s + Number(r.taxableAmount || 0), 0) || 0;
+    const itemTax = values.items?.reduce((s: number, r: any) => s + Number(r.totalAmount || 0) - Number(r.taxableAmount || 0), 0) || 0;
 
-  //     if (field === "chargeId") {
-  //       const charge = additionalChargeData?.data?.find((c) => c._id === value);
-  //       if (charge) {
-  //         row.amount = charge.defaultValue || 0;
-  //         row.taxId = charge.taxId?._id || "";
-  //       }
-  //     }
+    const chargeTaxable = values.additionalCharges?.reduce((s: number, r: any) => s + Number(r.amount || 0), 0) || 0;
+    const chargeTax = values.additionalCharges?.reduce((s: number, r: any) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0;
 
-  //     const amount = Number(row.amount) || 0;
-  //     const tax = taxData?.data?.find((t) => t._id === row.taxId);
-  //     const taxRate = tax?.percentage || 0;
-  //     const taxAmount = (amount * taxRate) / 100;
+    const totalTaxable = itemTaxable + chargeTaxable;
+    const totalTax = itemTax + chargeTax;
 
-  //     row.taxAmount = Number(taxAmount.toFixed(2));
-  //     row.totalAmount = Number((amount + taxAmount).toFixed(2));
+    const flatDiscount = Number(values.transactionSummary?.flatDiscount || 0);
+    const roundOffAmount = Number(values.transactionSummary?.roundOff || 0);
 
-  //     newRows[index] = row;
-  //     return newRows;
-  //   });
-  // };
+    const netBeforeRoundOff = totalTaxable + totalTax - flatDiscount;
+    const netAmount = netBeforeRoundOff + roundOffAmount;
 
-  const calculateSummary = () => {
-    // const itemGross = rows.reduce((s, r) => s + Number(r.qty) * Number(r.price), 0);
-    // const itemDiscount = rows.reduce((s, r) => s + (Number(r.discount1) + Number(r.discount2)), 0);
-    // const itemTaxable = rows.reduce((s, r) => s + Number(r.taxableAmount), 0);
-    // const itemTax = rows.reduce((s, r) => s + Number(r.taxAmount), 0);
-    // const chargeTaxable = additionalChargeRows.reduce((s, r) => s + (Number(r.amount) || 0), 0);
-    // const chargeTax = additionalChargeRows.reduce((s, r) => s + (Number(r.taxAmount) || 0), 0);
-    // const totalTaxable = itemTaxable + chargeTaxable;
-    // const totalTax = itemTax + chargeTax;
-    // const netBeforeRoundOff = totalTaxable + totalTax - flatDiscount;
-    // const netAmount = netBeforeRoundOff + roundOffAmount;
-    // return { flatDiscount, grossAmount: Number(itemGross.toFixed(2)), discountAmount: Number((itemDiscount + flatDiscount).toFixed(2)), taxableAmount: Number(totalTaxable.toFixed(2)), taxAmount: Number(totalTax.toFixed(2)), roundOff: roundOffAmount, netAmount: Number(netAmount.toFixed(2)) };
+    // Calculate Tax Summary
+    const taxMap: Record<string, { name: string; rate: number; amount: number }> = {};
+    const processTax = (taxId: string | undefined, amount: number) => {
+      if (!taxId) return;
+      const tax = taxData?.data?.find((t: any) => t._id === taxId);
+      if (!tax) return;
+      if (!taxMap[taxId]) {
+        taxMap[taxId] = { name: tax.name || "Tax", rate: tax.percentage || 0, amount: 0 };
+      }
+      taxMap[taxId].amount += amount;
+    };
+
+    values.items?.forEach((r: any) => processTax(r.taxId, Number(r.totalAmount || 0) - Number(r.taxableAmount || 0)));
+    values.additionalCharges?.forEach((r: any) => processTax(r.taxId, Number(r.totalAmount || 0) - Number(r.amount || 0)));
+
+    return {
+      flatDiscount,
+      grossAmount: Number(itemGross.toFixed(2)),
+      discountAmount: Number((itemDiscount + flatDiscount).toFixed(2)),
+      taxableAmount: Number(totalTaxable.toFixed(2)),
+      taxAmount: Number(totalTax.toFixed(2)),
+      roundOff: Number(roundOffAmount.toFixed(2)),
+      netAmount: Number(netAmount.toFixed(2)),
+    };
   };
 
-  const summary = calculateSummary();
+  const { data: taxData } = Queries.useGetTaxDropdown();
 
   const handleSubmit = async (values: EstimateFormValues, { resetForm }: FormikHelpers<EstimateFormValues>) => {
     const { _submitAction, ...rest } = values;
-    // console.log("Submit values", values);
     const payload: any = {
       ...rest,
-      // items: rows.filter((r) => r.productId).map((r) => ({ productId: r.productId, qty: r.qty, freeQty: r.freeQty, uomId: r.uomId, price: r.price, discount1: r.discount1, discount2: r.discount2, taxId: r.taxId, taxableAmount: r.taxableAmount, totalAmount: r.totalAmount })),
-      additionalCharges: additionalChargeRows.filter((r) => r.chargeId).map((r) => ({ chargeId: r.chargeId, taxId: r.taxId, amount: r.amount, totalAmount: r.totalAmount })),
-      // termsAndConditionIds: selectedTermIds,
-      transactionSummary: summary,
+      additionalCharges: values.additionalCharges?.filter((r) => r.chargeId).map((r) => ({ chargeId: r.chargeId, taxId: r.taxId, amount: Number(r.amount), totalAmount: Number(r.totalAmount) })),
+      transactionSummary: getCalculatedSummary(values, taxData),
     };
 
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") {
         resetForm();
-
-        setAdditionalChargeRows([additionalChargeEmptyRow]);
       } else {
         navigate(-1);
       }
@@ -209,9 +206,10 @@ const EstimateForm = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.ESTIMATE[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.ESTIMATE[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8, display: "grid" }}>
-        <Formik<EstimateFormValues> initialValues={initialValues} onSubmit={handleSubmit} enableReinitialize={isEditing}>
-          {({ setFieldValue, dirty, resetForm }) => (
+        <Formik<EstimateFormValues> initialValues={initialValues} validationSchema={EstimateFormSchema} onSubmit={handleSubmit} enableReinitialize={isEditing} validateOnMount>
+          {({ setFieldValue, dirty, isValid, resetForm }) => (
             <Form noValidate>
+              <SummaryWatcher onSummaryChange={(summary) => setFieldValue("transactionSummary", summary)} />
               <Grid container spacing={2}>
                 <CommonCard title="Estimate Details" grid={{ xs: 12 }}>
                   <EstimateDetails />
@@ -221,11 +219,11 @@ const EstimateForm = () => {
                   <EstimateTabs emptyRow={emptyRow} />
                 </CommonCard>
 
-                {/* <CommonCard hideDivider>
-                  <AdditionalChargesSection show={showAdditionalCharge} onToggle={setShowAdditionalCharge} rows={additionalChargeRows} onAdd={() => setAdditionalChargeRows([...additionalChargeRows, additionalChargeEmptyRow])} onRemove={(i) => setAdditionalChargeRows(additionalChargeRows.filter((_, idx) => idx !== i))} onChange={handleAdditionalChargeRowChange} taxOptions={taxOptions} isTaxLoading={isTaxLoading} flatDiscount={flatDiscount} onFlatDiscountChange={(v) => setFlatDiscount(Number(v))} summary={summary as any} isAdditionalChargeLoading={isAdditionalChargeLoading} additionalChargeOptions={additionalChargeOptions} roundOffAmount={roundOffAmount} onRoundOffAmountChange={(v) => setRoundOffAmount(Number(v))} />
-                </CommonCard> */}
+                <CommonCard grid={{ xs: 12 }} hideDivider>
+                  <CommonAdditionalChargeSection />
+                </CommonCard>
 
-                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty || !isValid} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}

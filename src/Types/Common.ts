@@ -616,6 +616,24 @@ export interface AdditionalChargeItem {
   totalAmount?: number;
 }
 // ************ Common Additional Charge End ***********
+// ************ Common Transaction Summary Start ***********
+export interface TaxSummaryItem {
+  name: string;
+  rate: number;
+  amount: number;
+}
+
+export interface TransactionSummary {
+  flatDiscount: number;
+  grossAmount: number;
+  discountAmount: number;
+  taxableAmount: number;
+  taxAmount: number;
+  roundOff: number;
+  netAmount: number;
+  taxSummary?: TaxSummaryItem[];
+}
+// ************ Common Transaction Summary End ***********
 // ************ Common Shipping Details Start ***********
 export interface ShippingDetails {
   shippingType: "delivery" | "pickup";

@@ -140,7 +140,7 @@ export interface AdditionalChargeRow {
   chargeId: string;
   amount: string;
   taxId: string;
-  taxAmount: string;
+  taxAmount?: string;
   totalAmount: string;
 }
 
