@@ -37,7 +37,7 @@ export interface EstimateFormValues {
   shippingAddress?: string;
   paymentTerms?: string;
   taxType?: string;
-  reverseCharge?: boolean;
+  reverseCharge?: boolean | string;
   // sez?: string;
   termsAndConditionIds?: string[];
   items?: EstimateItem[];

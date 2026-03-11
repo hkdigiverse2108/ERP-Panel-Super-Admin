@@ -16,7 +16,7 @@ const CommonTermsAndConditionSelectModal = () => {
   const { data: termsData, isLoading } = Queries.useGetTermsCondition({ all: true, companyId: companyId || undefined }, { enabled: !!companyId && open });
   const termsList = termsData?.data?.termsCondition_data || [];
 
-  console.log("termsList", companyId);
+  // console.log("termsList", companyId);
 
   const [localSelectedIds, setLocalSelectedIds] = useState<string[]>([]);
 

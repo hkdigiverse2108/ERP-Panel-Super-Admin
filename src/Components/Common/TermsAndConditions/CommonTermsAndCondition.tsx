@@ -78,33 +78,35 @@ const CommonTermsAndCondition = ({ selectedTermIds, onChange, companyId, isView 
 
       {/* TABLE */}
       <Box sx={{ minWidth: "max-content" }}>
-        <table className="w-full text-sm  border border-gray-200 dark:border-gray-700  ">
-          <thead className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-200">
-            <tr>
-              <th className="p-2 w-10">#</th>
-              <th className="p-2 text-left">Terms & Condition</th>
-              <th className="p-2 w-20 text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {displayTerms?.map((term: TermsConditionBase, index: number) => (
-              <tr key={term._id} className="text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark border-b border-gray-100 dark:border-gray-700">
-                <td className="p-2">{index + 1}</td>
-                <td className="p-2">{term.termsCondition}</td>
-                <td className="p-2 text-center">
-                  <Box display="flex" justifyContent="center" gap={1}>
-                    <CommonButton size="small" color="primary" variant="text" onClick={() => handleEditSingleTerm(term)}>
-                      <Edit fontSize="small" />
-                    </CommonButton>
-                    <CommonButton size="small" color="error" variant="text" onClick={() => handleDeleteTerm(term._id)}>
-                      <Clear fontSize="small" />
-                    </CommonButton>
-                  </Box>
-                </td>
+        <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden max-h-64 overflow-y-auto">
+          <table className="w-full text-sm  border border-gray-200 dark:border-gray-700 rounded-t-lg overflow-hidden ">
+            <thead className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-200 rounded-2xl! sticky top-0">
+              <tr>
+                <th className="p-2 w-10">#</th>
+                <th className="p-2 text-left">Terms & Condition</th>
+                <th className="p-2 w-20 text-center">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {displayTerms?.map((term: TermsConditionBase, index: number) => (
+                <tr key={term._id} className="text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark border-b border-gray-100 dark:border-gray-700 ">
+                  <td className="p-2">{index + 1}</td>
+                  <td className="p-2">{term.termsCondition}</td>
+                  <td className="p-2 text-center">
+                    <Box display="flex" justifyContent="center" gap={1}>
+                      <CommonButton size="small" color="primary" variant="text" onClick={() => handleEditSingleTerm(term)}>
+                        <Edit fontSize="small" />
+                      </CommonButton>
+                      <CommonButton size="small" color="error" variant="text" onClick={() => handleDeleteTerm(term._id)}>
+                        <Clear fontSize="small" />
+                      </CommonButton>
+                    </Box>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </Box>
       {/* NOTE */}
       <Box mt={3}>

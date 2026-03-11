@@ -1,7 +1,9 @@
 import { Box } from "@mui/material";
 import { useFormikContext } from "formik";
+import { useState } from "react";
 import { CommonValidationTextField } from "../../Attribute";
-import type { TransactionSummary } from "../../Types";
+import type { CommonTableColumn } from "../../Types";
+import CommonTable from "./CommonTable";
 
 interface CommonSummarySectionProps {
   name?: string;
@@ -9,23 +11,31 @@ interface CommonSummarySectionProps {
 
 const CommonSummarySection = ({ name = "transactionSummary" }: CommonSummarySectionProps) => {
   const { values } = useFormikContext<any>();
-  //   const [showTaxBreakdown, setShowTaxBreakdown] = useState(false);
-  const summary: Partial<TransactionSummary> = values[name] || {};
+  const [showTaxBreakdown, setShowTaxBreakdown] = useState(false);
+  const summary = values[name] || {};
 
-  //   const taxBreakdownColumns: CommonTableColumn<{
-  //     name: string;
-  //     rate: number;
-  //     amount: number;
-  //   }>[] = [
-  //     { key: "name", header: "Tax", headerClass: "text-left px-4 w-52", bodyClass: "text-left px-4 w-52" },
-  //     { key: "rate", header: "Tax Rate", headerClass: "text-center px-4 w-32", bodyClass: "text-center px-4 w-32 whitespace-nowrap", render: (row) => `${row.rate}%` },
-  //     { key: "amount", header: "Tax Amount", headerClass: "text-right px-4 w-36", bodyClass: "text-right px-4 w-36 whitespace-nowrap font-medium", render: (row) => (row.amount || 0).toFixed(2) },
-  //   ];
+  const taxBreakdownColumns: CommonTableColumn<{
+    name: string;
+    rate: number;
+    amount: number;
+  }>[] = [
+    { key: "name", header: "Tax", headerClass: "text-left px-4 w-52", bodyClass: "text-left px-4 w-52", render: (row) => row.name },
+    { key: "rate", header: "Tax Rate", headerClass: "text-center px-4 w-32", bodyClass: "text-center px-4 w-32 whitespace-nowrap", render: (row) => `${row.rate}%` },
+    { key: "amount", header: "Tax Amount", headerClass: "text-right px-4 w-36", bodyClass: "text-right px-4 w-36 whitespace-nowrap font-medium", render: (row) => (row.amount || 0).toFixed(2) },
+  ];
+
+  const taxBreakdownData = summary?.taxSummary || [];
 
   return (
     <>
-      <Box sx={{ p: 2, display: "flex", gap: 2, flexDirection: { xs: "column", md: "row" }, justifyContent: "end", alignItems: "flex-start" }}>
-        {/* <Box sx={{ width: { xs: "100%", md: "60%" } }}>{showTaxDetails && <TaxDetailsTable items={values.items || []} productData={productData?.data || []} taxType={values.taxType} />}</Box> */}
+      <Box sx={{ p: 2, display: "flex", gap: 2, flexDirection: { xs: "column", md: "row" }, justifyContent: "space-between", alignItems: "flex-start" }}>
+        <Box sx={{ width: { xs: "100%", md: "60%" } }}>
+          {showTaxBreakdown && taxBreakdownData.length > 0 && (
+            <Box className="border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden">
+              <CommonTable data={taxBreakdownData} columns={taxBreakdownColumns} rowKey={(row: { name: string; rate: number; amount: number }) => row.name + row.rate} />
+            </Box>
+          )}
+        </Box>
 
         <Box className="border dark:border-gray-700 text-sm w-full md:w-fit" sx={{ borderRadius: "8px", overflow: "hidden" }}>
           {/* Row 1: Flat Discount */}
@@ -58,8 +68,8 @@ const CommonSummarySection = ({ name = "transactionSummary" }: CommonSummarySect
 
           {/* Tax */}
           <Box
-            className="grid grid-cols-[130px_1fr] border-b cursor-pointer  border-gray-200 dark:border-gray-700"
-            //onClick={() => setShowTaxDetails(!showTaxDetails)}
+            className="grid grid-cols-[130px_1fr] border-b cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 border-gray-200 dark:border-gray-700"
+            onClick={() => setShowTaxBreakdown(!showTaxBreakdown)}
           >
             <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium text-blue-500 gap-1 items-center">Tax</Box>
             <Box className="p-2 flex justify-end items-center">

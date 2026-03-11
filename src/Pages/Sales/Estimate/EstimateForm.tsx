@@ -26,8 +26,9 @@ const SummaryWatcher = ({ onSummaryChange }: { onSummaryChange: (summary: any) =
     const itemTaxable = values.items?.reduce((s: number, r: any) => s + Number(r.taxableAmount || 0), 0) || 0;
     const itemTax = values.items?.reduce((s: number, r: any) => s + Number(r.totalAmount || 0) - Number(r.taxableAmount || 0), 0) || 0;
 
-    const chargeTaxable = values.additionalCharges?.reduce((s: number, r: any) => s + Number(r.amount || 0), 0) || 0;
-    const chargeTax = values.additionalCharges?.reduce((s: number, r: any) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0;
+    const isReverseCharge = String(values.reverseCharge) === "true";
+    const chargeTaxable = isReverseCharge ? 0 : (values.additionalCharges?.reduce((s: number, r: any) => s + Number(r.amount || 0), 0) || 0);
+    const chargeTax = isReverseCharge ? 0 : (values.additionalCharges?.reduce((s: number, r: any) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0);
 
     const totalTaxable = itemTaxable + chargeTaxable;
     const totalTax = itemTax + chargeTax;
@@ -51,7 +52,9 @@ const SummaryWatcher = ({ onSummaryChange }: { onSummaryChange: (summary: any) =
     };
 
     values.items?.forEach((r: any) => processTax(r.taxId, Number(r.totalAmount || 0) - Number(r.taxableAmount || 0)));
-    values.additionalCharges?.forEach((r: any) => processTax(r.taxId, Number(r.totalAmount || 0) - Number(r.amount || 0)));
+    if (!isReverseCharge) {
+      values.additionalCharges?.forEach((r: any) => processTax(r.taxId, Number(r.totalAmount || 0) - Number(r.amount || 0)));
+    }
 
     return {
       flatDiscount,
@@ -73,7 +76,7 @@ const SummaryWatcher = ({ onSummaryChange }: { onSummaryChange: (summary: any) =
     if (JSON.stringify(newSummary) !== JSON.stringify(currentSummary)) {
       onSummaryChange(newSummary);
     }
-  }, [values.items, values.additionalCharges, values.transactionSummary?.flatDiscount, values.transactionSummary?.roundOff, taxData]);
+  }, [values.items, values.additionalCharges, values.transactionSummary?.flatDiscount, values.transactionSummary?.roundOff, values.reverseCharge, taxData]);
 
   return null;
 };
@@ -96,7 +99,7 @@ const EstimateForm = () => {
     shippingAddress: data?.shippingAddress?._id || "",
     paymentTerms: data?.paymentTerms || "",
     taxType: data?.taxType || "default",
-    reverseCharge: data?.reverseCharge || false,
+    reverseCharge: data?.reverseCharge !== undefined ? String(data.reverseCharge) : "false",
     termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
     items: data?.items || [emptyRow],
     additionalCharges: [],
@@ -138,8 +141,9 @@ const EstimateForm = () => {
     const itemTaxable = values.items?.reduce((s: number, r: any) => s + Number(r.taxableAmount || 0), 0) || 0;
     const itemTax = values.items?.reduce((s: number, r: any) => s + Number(r.totalAmount || 0) - Number(r.taxableAmount || 0), 0) || 0;
 
-    const chargeTaxable = values.additionalCharges?.reduce((s: number, r: any) => s + Number(r.amount || 0), 0) || 0;
-    const chargeTax = values.additionalCharges?.reduce((s: number, r: any) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0;
+    const isReverseCharge = String(values.reverseCharge) === "true";
+    const chargeTaxable = isReverseCharge ? 0 : (values.additionalCharges?.reduce((s: number, r: any) => s + Number(r.amount || 0), 0) || 0);
+    const chargeTax = isReverseCharge ? 0 : (values.additionalCharges?.reduce((s: number, r: any) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0);
 
     const totalTaxable = itemTaxable + chargeTaxable;
     const totalTax = itemTax + chargeTax;
@@ -163,7 +167,9 @@ const EstimateForm = () => {
     };
 
     values.items?.forEach((r: any) => processTax(r.taxId, Number(r.totalAmount || 0) - Number(r.taxableAmount || 0)));
-    values.additionalCharges?.forEach((r: any) => processTax(r.taxId, Number(r.totalAmount || 0) - Number(r.amount || 0)));
+    if (!isReverseCharge) {
+      values.additionalCharges?.forEach((r: any) => processTax(r.taxId, Number(r.totalAmount || 0) - Number(r.amount || 0)));
+    }
 
     return {
       flatDiscount,
@@ -176,7 +182,7 @@ const EstimateForm = () => {
     };
   };
 
-  const { data: taxData } = Queries.useGetTaxDropdown();
+  const { data: taxData} = Queries.useGetTaxDropdown();
 
   const handleSubmit = async (values: EstimateFormValues, { resetForm }: FormikHelpers<EstimateFormValues>) => {
     const { _submitAction, ...rest } = values;

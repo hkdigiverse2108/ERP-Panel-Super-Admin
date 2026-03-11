@@ -19,7 +19,7 @@ const CommonTermsAndConditionFormModal: FC = () => {
 
   const handleCloseBtn = () => dispatch(setTermsAndConditionFormModal({ open: false, data: null }));
 
-  console.log("isTermsAndConditionFormModal", isTermsAndConditionFormModal);
+  // console.log("isTermsAndConditionFormModal", isTermsAndConditionFormModal);
   const handleSubmit = (values: TermsConditionFormValues, { resetForm }: FormikHelpers<TermsConditionFormValues>) => {
     const onSuccessHandler = () => {
       resetForm();

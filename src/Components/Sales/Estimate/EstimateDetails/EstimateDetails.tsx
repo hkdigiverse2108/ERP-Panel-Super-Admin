@@ -4,10 +4,10 @@ import { CommonValidationDatePicker, CommonValidationSelect } from "../../../../
 import { PAYMENT_TERMS_OPTIONS, REVERSE_CHARGE, TAX_TYPE } from "../../../../Data";
 import { useFormikContext } from "formik";
 import type { EstimateFormValues } from "../../../../Types";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { AddressSelectionModal } from "../../../Common";
 import { Queries } from "../../../../Api";
-import { GenerateOptions } from "../../../../Utils";
+import { GenerateOptions, DateConfig } from "../../../../Utils";
 
 const EstimateDetails = () => {
   const { values, setFieldValue } = useFormikContext<EstimateFormValues>();
@@ -53,6 +53,27 @@ const EstimateDetails = () => {
     }
   }, [values.billingAddress, selectedCustomer, setFieldValue]);
 
+  // Sync due date with date and payment terms
+  const prevDateRef = useRef(values.date);
+  const prevPaymentTermsRef = useRef(values.paymentTerms);
+
+  useEffect(() => {
+    const dateChanged = values.date !== prevDateRef.current;
+    const termsChanged = values.paymentTerms !== prevPaymentTermsRef.current;
+
+    if (dateChanged || termsChanged) {
+      if (values.paymentTerms && values.date) {
+        const days = parseInt(values.paymentTerms.split("_")[0]);
+        if (!isNaN(days)) {
+          const newDueDate = DateConfig(values.date).add(days, "day").toISOString();
+          setFieldValue("dueDate", newDueDate);
+        }
+      }
+      prevDateRef.current = values.date;
+      prevPaymentTermsRef.current = values.paymentTerms;
+    }
+  }, [values.paymentTerms, values.date, setFieldValue]);
+
   return (
     <Grid container spacing={2} sx={{ p: 2 }}>
       <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 1, md: 1 } }}>
@@ -68,7 +89,7 @@ const EstimateDetails = () => {
       </Grid>
 
       <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 4, md: 4 } }}>
-        <CommonValidationDatePicker name="dueDate" label="Due Date" required />
+        <CommonValidationSelect name="paymentTerms" label="Payment Term" options={PAYMENT_TERMS_OPTIONS} />
       </Grid>
 
       <Grid size={{ xs: 12, md: 3 }} container spacing={2} sx={{ order: { xs: 10, md: 5 } }}>
@@ -130,7 +151,7 @@ const EstimateDetails = () => {
       </Grid>
 
       <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 5, md: 5 } }}>
-        <CommonValidationSelect name="paymentTerms" label="Payment Term" options={PAYMENT_TERMS_OPTIONS} />
+        <CommonValidationDatePicker name="dueDate" label="Due Date" required />
       </Grid>
 
       <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 6, md: 6 } }}>
