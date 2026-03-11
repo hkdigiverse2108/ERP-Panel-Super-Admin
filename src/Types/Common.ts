@@ -230,6 +230,7 @@ export interface CommonTableProps<T> {
   rowKey: (row: T, index: number) => string;
   getRowClass?: (row: T, index: number) => string;
   showFooter?: boolean;
+  isLoading?: boolean;
 }
 
 // ************ Table End ***********
