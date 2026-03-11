@@ -303,6 +303,6 @@ export const PAYMENT_MODE_OPTIONS = [
 ];
 
 export const EXPENSE_TYPE_OPTIONS = [
-  { label: "Product", value: "product" },
-  { label: "Service", value: "service" },
+  { label: "Income", value: "income" },
+  { label: "Expense", value: "expense" },
 ];

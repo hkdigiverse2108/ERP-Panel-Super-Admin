@@ -3,47 +3,41 @@ import { Form, Formik, type FormikHelpers } from "formik";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonSelect, CommonTextField, CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField, CommonValidationCheckbox } from "../../../Attribute";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonTable } from "../../../Components/Common";
+import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, EXPENSE_TYPE_OPTIONS } from "../../../Data";
-import type { CommonTableColumn, PosPaymentFormValues, TaxBase } from "../../../Types";
 import { ExpenseFormSchema, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
+import type { ExpenseFormValues } from "../../../Types/Expense";
 
 const ExpenseForm = () => {
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
-  const { data: accountDropdown, isLoading: accountDropdownLoading } = Queries.useGetAccountDropdown();
-  const { data: taxDropdown, isLoading: taxDropdownLoading } = Queries.useGetTaxDropdown();
 
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
   const permission = usePagePermission(PAGE_TITLE.EXPENSE.BASE);
 
-  const { mutate: addPayment, isPending: isAddLoading } = Mutations.useAddPosPayment();
-  const { mutate: editPayment, isPending: isEditLoading } = Mutations.useEditPosPayment();
+  const { mutate: addExpense, isPending: isAddLoading } = Mutations.useAddExpense();
+  const { mutate: editExpense, isPending: isEditLoading } = Mutations.useEditExpense();
 
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
 
-  const initialValues: PosPaymentFormValues = {
+  const initialValues: ExpenseFormValues = {
     companyId: data?.companyId?._id || "",
-    voucherType: data?.voucherType || "expense",
     partyId: data?.partyId?._id || "",
     date: data?.date || null,
     amount: data?.amount || 0,
-    isNonGST: data?.isNonGST || false,
     isActive: data?.isActive ?? true,
     accountId: data?.accountId?._id || "",
     remark: data?.remark || "",
-    expenseType: data?.expenseType || "service",
-    discountAmount: data?.discountAmount || 0,
-    taxId: data?.taxId?._id || data?.taxId || "",
+    type: data?.type || "",
   };
 
-  const handleSubmit = async (values: PosPaymentFormValues, { resetForm }: FormikHelpers<PosPaymentFormValues>) => {
-    const { _submitAction, voucherDetails, ...rest } = values;
+  const handleSubmit = async (values: ExpenseFormValues, { resetForm }: FormikHelpers<ExpenseFormValues>) => {
+    const { _submitAction, ...rest } = values;
     const payload = { ...rest };
 
     const handleSuccess = () => {
@@ -56,9 +50,9 @@ const ExpenseForm = () => {
 
     if (isEditing) {
       const changedFields = GetChangedFields(payload, data);
-      await editPayment({ ...changedFields, posPaymentId: data._id }, { onSuccess: handleSuccess });
+      await editExpense({ ...changedFields, expenseId: data._id }, { onSuccess: handleSuccess });
     } else {
-      await addPayment(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
+      await addExpense(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
     }
   };
 
@@ -74,89 +68,6 @@ const ExpenseForm = () => {
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={ExpenseFormSchema} enableReinitialize>
           {({ resetForm, setFieldValue, dirty, values }) => {
             const { data: contactData, isLoading: contactLoading, isFetching: contactFetching } = Queries.useGetContactDropdown({ activeFilter: true, companyFilter: values?.companyId }, Boolean(values?.companyId));
-
-            const updateTotalAmount = (newVal: { amount?: number; discountAmount?: number; taxId?: string }) => {
-              const amount = newVal.amount ?? values.amount ?? 0;
-              const discount = newVal.discountAmount ?? values.discountAmount ?? 0;
-              const taxId = newVal.taxId ?? values.taxId ?? "";
-              const tax = (taxDropdown?.data as TaxBase[])?.find((t: TaxBase) => t._id === taxId);
-              const taxPercentage = Number(tax?.percentage) || 0;
-              const taxableAmount = Math.max(0, amount - discount);
-              const totalAmount = taxableAmount + (taxableAmount * taxPercentage) / 100;
-              setFieldValue("totalAmount", totalAmount);
-            };
-
-            const voucherColumns: CommonTableColumn<PosPaymentFormValues>[] = [
-              { key: "sr", header: "#", render: () => 1, bodyClass: "w-10" },
-              { key: "accountId", header: "Account", bodyClass: "min-w-40", render: (r) => <CommonSelect options={GenerateOptions(accountDropdown?.data)} isLoading={accountDropdownLoading} placeholder="Search Account" value={r.accountId ? [r.accountId] : []} onChange={(v) => setFieldValue("accountId", v[0] || "")} /> },
-              { key: "expenseType", header: "Service/Product", bodyClass: "min-w-40", render: (r) => <CommonSelect options={EXPENSE_TYPE_OPTIONS} placeholder="Service/Product" value={r.expenseType ? [r.expenseType] : []} onChange={(v) => setFieldValue("expenseType", v[0] || "")} /> },
-              {
-                key: "amount",
-                header: "Amount",
-                bodyClass: "min-w-10",
-                render: (r) => (
-                  <CommonTextField
-                    type="number"
-                    value={r.amount || 0}
-                    disabled={!r.accountId}
-                    onChange={(v) => {
-                      const amount = Number(v);
-                      setFieldValue("amount", amount);
-                      updateTotalAmount({ amount });
-                    }}
-                  />
-                ),
-              },
-              {
-                key: "discountAmount",
-                header: "Discount Amount",
-                bodyClass: "min-w-10",
-                render: (r) => (
-                  <CommonTextField
-                    type="number"
-                    value={r.discountAmount || 0}
-                    disabled={!r.accountId}
-                    onChange={(v) => {
-                      const discountAmount = Number(v);
-                      setFieldValue("discountAmount", discountAmount);
-                      updateTotalAmount({ discountAmount });
-                    }}
-                  />
-                ),
-              },
-              {
-                key: "taxId",
-                header: "Tax",
-                bodyClass: "min-w-40",
-                render: (r) => (
-                  <CommonSelect
-                    options={GenerateOptions(taxDropdown?.data)}
-                    isLoading={taxDropdownLoading}
-                    placeholder="Select Tax"
-                    value={r.taxId ? [r.taxId] : []}
-                    onChange={(v) => {
-                      const taxId = v[0] || "";
-                      setFieldValue("taxId", taxId);
-                      updateTotalAmount({ taxId });
-                    }}
-                  />
-                ),
-              },
-              {
-                key: "taxValue",
-                header: "Tax Value",
-                bodyClass: "min-w-20",
-                render: (r) => {
-                  const tax = (taxDropdown?.data as TaxBase[])?.find((t: TaxBase) => t._id === r.taxId);
-                  const taxPercentage = Number(tax?.percentage) || 0;
-                  const taxableAmount = Math.max(0, (r.amount || 0) - (r.discountAmount || 0));
-                  const taxValue = (taxableAmount * taxPercentage) / 100;
-                  return taxValue.toFixed(2);
-                },
-              },
-              { key: "totalAmount", header: "Total", bodyClass: "min-w-20", render: (r) => (r.totalAmount || 0).toFixed(2) },
-            ];
-
             return (
               <Form noValidate>
                 <Grid container spacing={2}>
@@ -164,16 +75,10 @@ const ExpenseForm = () => {
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
                       <CommonValidationSelect name="partyId" label="Party" grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} options={contactLoading || contactFetching ? [] : GenerateOptions(contactData?.data || [])} isLoading={contactLoading || contactFetching} required />
+                      <CommonValidationSelect name="type" label="Expense Type" grid={{ xs: 12, md: 4 }} options={EXPENSE_TYPE_OPTIONS} />
                       <CommonValidationDatePicker name="date" label="Expense Date" required grid={{ xs: 12, md: 4 }} />
-                      <CommonValidationCheckbox name="isNonGST" label="Non-GST" grid={{ xs: 12, md: 12 }} />
-                      <CommonValidationTextField name="remark" label="Description" multiline grid={{ xs: 12 }} />
-                      <Grid size={{ xs: 12 }}>
-                        <CommonCard hideDivider>
-                          <Box sx={{ overflowX: "auto" }} className="custom-scrollbar">
-                            <CommonTable data={[values]} columns={voucherColumns} rowKey={() => "1"} />
-                          </Box>
-                        </CommonCard>
-                      </Grid>
+                      <CommonValidationTextField name="amount" label="Amount"  grid={{ xs: 12, md: 4 }} />
+                      <CommonValidationTextField name="remark" label="Description" multiline grid={{ xs: 12, md:4 }} />
                     </Grid>
                     {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                   </CommonCard>

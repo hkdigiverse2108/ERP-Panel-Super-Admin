@@ -96,7 +96,7 @@ export const KEYS = {
     DELETE: "bank-delete",
   },
 
-   POS_PAYMENT: {
+  POS_PAYMENT: {
     BASE: "pos-payment",
     ADD: "pos-payment-add",
     EDIT: "pos-payment-edit",
@@ -164,7 +164,7 @@ export const KEYS = {
     EDIT: "bill-of-live-product-edit",
     DELETE: "bill-of-live-product-delete",
   },
-  PRODUCT_TYPE:{
+  PRODUCT_TYPE: {
     BASE: "product-type",
     ADD: "product-type-add",
     EDIT: "product-type-edit",
@@ -291,5 +291,10 @@ export const KEYS = {
     EDIT: "pos-edit",
     DELETE: "pos-delete",
   },
-
+  EXPENSE: {
+    BASE: "expense",
+    ADD: "expense-add",
+    EDIT: "expense-edit",
+    DELETE: "expense-delete",
+  },
 };

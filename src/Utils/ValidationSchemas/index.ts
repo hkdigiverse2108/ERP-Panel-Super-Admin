@@ -630,6 +630,7 @@ export const ExpenseFormSchema = Yup.object({
   date: Yup.mixed().required("Expense Date is required"),
   amount: Validation("number", "Amount", {
     extraRules: (s) => s.min(1, "Amount must be greater than 0"),
+    required: false,
   }),
   discountAmount: Validation("number", "Discount Amount", { required: false }).nullable(),
   taxId: Validation("string", "Tax", { required: false }).nullable(),
@@ -637,6 +638,7 @@ export const ExpenseFormSchema = Yup.object({
     required: false,
     extraRules: (s) => s.trim().max(200, "Maximum 200 characters allowed"),
   }),
+  type: Validation("string", "Type", { required: false }),
   isNonGST: Validation("boolean", "Is Non GST", { required: false }),
   isActive: Yup.boolean(),
 });

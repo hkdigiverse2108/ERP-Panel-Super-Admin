@@ -5,8 +5,7 @@ import type { CompanyBase } from "./Company";
 import type { ContactBase } from "./Contacts";
 import type { PosOrderBase } from "./PosOrder";
 
-export interface PosPaymentFormValues {
-  voucherType?: string;
+export interface ExpenseFormValues {
   paymentType?: string;
   partyId?: string;
   bankId?: string;
@@ -24,23 +23,23 @@ export interface PosPaymentFormValues {
   accountId?: string;
   remark?: string;
   status?: string;
-  voucherDetails?: VoucherRow[];
   _submitAction?: string;
   posCashRegisterId?: string;
+  type?: string;
   discountAmount?: number;
   taxId?: string;
 }
 
-export type AddPosPaymentPayload = PosPaymentFormValues & {
+export type AddExpensePayload = ExpenseFormValues & {
   companyId?: string;
 };
 
-export type EditPosPaymentPayload = AddPosPaymentPayload & {
-  posPaymentId: string;
+export type EditExpensePayload = AddExpensePayload & {
+  expenseId: string;
 };
 
 /* ================= BASE MODEL ================= */
-export type PosPaymentBase = Omit<PosPaymentFormValues, "partyId" | "bankId" | "posOrderId" | "companyId" | "accountId"> &
+export type ExpenseBase = Omit<ExpenseFormValues, "partyId" | "bankId" | "posOrderId" | "companyId" | "accountId"> &
   CommonDataType & {
     partyId?: ContactBase;
     bankId?: BankBase;
@@ -50,22 +49,10 @@ export type PosPaymentBase = Omit<PosPaymentFormValues, "partyId" | "bankId" | "
   };
 
 /* ================= API RESPONSES ================= */
-export interface PosPaymentDataResponse extends PageStatus {
-  posPayment_data: PosPaymentBase[];
+export interface ExpenseDataResponse extends PageStatus {
+  expense_data: ExpenseBase[];
 }
 
-export interface PosPaymentApiResponse extends MessageStatus {
-  data: PosPaymentDataResponse;
-}
-export interface VoucherRow {
-  id: string;
-  posOrderId?: string;
-  paymentMode?: string;
-  bankId?: string;
-  netAmount: number;
-  paidAmount: number;
-  pendingAmount: number;
-  kasarAmount: number;
-  amount: number;
-  paymentAmount: number;
+export interface ExpenseApiResponse extends MessageStatus {
+  data: ExpenseDataResponse;
 }
