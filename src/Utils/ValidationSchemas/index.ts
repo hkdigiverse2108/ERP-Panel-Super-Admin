@@ -273,11 +273,10 @@ export const AccountFormSchema = Yup.object({
 });
 
 export const DebitNoteFormSchema = Yup.object({
-  voucherNumber: Validation("string", "Voucher Number", { required: false }),
   companyId: Validation("string", "Company"),
   date: Validation("string", "Date"),
-  fromAccountId: Validation("string", "From Account"),
-  toAccountId: Validation("string", "To Account"),
+  bankAccountId: Validation("string", "Bank Account"),
+  phoneNo: PhoneValidation(),
   amount: Validation("string", "Amount", { required: true, extraRules: (s) => s?.matches(/^\d+(\.\d{1,2})?$/, "The amount no can only consist of number").max(10, "The amount no must be 10 digit long") }),
   description: Validation("string", "Description", { required: false, extraRules: (s) => s?.trim().max(200, "Maximum 200 characters allowed") }),
 });
