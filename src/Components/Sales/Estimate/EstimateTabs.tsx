@@ -187,11 +187,6 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
                       header: "Price",
                       bodyClass: "min-w-28",
                       render: (_, index) => {
-                        const productId = values?.items?.[index]?.productId;
-                        // const product = productsData?.data?.find((p: ProductBase) => p._id === productId);
-
-                        // const isOutOfScope = values?.taxType === "out_of_scope";
-
                         return (
                           <div className="flex flex-col gap-1">
                             <CommonValidationTextField name={`items.${index}.price`} type="number" size="small" />

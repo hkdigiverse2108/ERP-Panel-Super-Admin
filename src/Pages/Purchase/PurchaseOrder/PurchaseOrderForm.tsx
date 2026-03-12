@@ -1,75 +1,15 @@
 import { Box, Grid } from "@mui/material";
 import type { FormikHelpers } from "formik";
-import { Form, Formik, useFormikContext } from "formik";
+import { Form, Formik } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Mutations, Queries } from "../../../Api";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonSummarySection } from "../../../Components/Common";
+import { Mutations } from "../../../Api";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonSummarySection, CommonSummaryWatcher } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AddPurchaseOrderPayload, PurchaseOrderFormValues } from "../../../Types";
 import { GetChangedFields, PurchaseOrderFormSchema, RemoveEmptyFields } from "../../../Utils";
 import { PurchaseOrderDetails, PurchaseOrderTabs } from "../../../Components/Purchase";
-import { useEffect } from "react";
 
-const SummaryWatcher = ({ onSummaryChange }: { onSummaryChange: (summary: any) => void }) => {
-  const { values } = useFormikContext<PurchaseOrderFormValues>();
-  const { data: taxData } = Queries.useGetTaxDropdown();
-
-  const calculateSummary = () => {
-    // Replicates standard logic based on items array calculations for Purchase Order
-    const itemGross = values.items?.reduce((s: number, r: any) => s + Number(r.qty || 0) * Number(r.unitCost || 0), 0) || 0;
-    const itemDiscount = values.items?.reduce((s: number, r: any) => s + Number(r.discount1 || 0), 0) || 0;
-    const itemTaxable = values.items?.reduce((s: number, r: any) => s + Number(r.taxableAmount || 0), 0) || 0;
-    const itemTax = values.items?.reduce((s: number, r: any) => s + Number(r.taxAmount || 0), 0) || 0;
-
-    const totalTaxable = itemTaxable;
-    const totalTax = itemTax;
-
-    const flatDiscount = Number(values.summary?.flatDiscount || 0);
-    const roundOffAmount = Number(values.summary?.roundOff || 0);
-
-    const netBeforeRoundOff = totalTaxable + totalTax - flatDiscount;
-    const netAmount = netBeforeRoundOff + roundOffAmount;
-
-    // Calculate Tax Summary
-    const taxMap: Record<string, { name: string; rate: number; amount: number }> = {};
-    const processTax = (taxId: string | undefined, amount: number) => {
-      if (!taxId || !amount) return;
-      const tax = taxData?.data?.find((t: any) => t._id === taxId);
-      if (!tax) return;
-      if (!taxMap[taxId]) {
-        taxMap[taxId] = { name: tax.name || "Tax", rate: tax.percentage || 0, amount: 0 };
-      }
-      taxMap[taxId].amount += amount;
-    };
-
-    values.items?.forEach((r: any) => processTax(r.taxId, Number(r.taxAmount || 0)));
-
-    return {
-      flatDiscount,
-      grossAmount: Number(itemGross.toFixed(2)),
-      discountAmount: Number((itemDiscount + flatDiscount).toFixed(2)),
-      taxableAmount: Number(totalTaxable.toFixed(2)),
-      taxAmount: Number(totalTax.toFixed(2)),
-      roundOff: Number(roundOffAmount.toFixed(2)),
-      netAmount: Number(netAmount.toFixed(2)),
-      taxSummary: Object.values(taxMap).map((t) => ({ ...t, amount: Number(t.amount.toFixed(2)) })),
-    };
-  };
-
-  useEffect(() => {
-    const newSummary = calculateSummary();
-    const currentSummary = values.summary;
-    const currentTaxSummary = values.summary?.taxSummary;
-
-    // Simplified deep compare check before bubbling changes back
-    if (newSummary.grossAmount !== currentSummary?.grossAmount || newSummary.discountAmount !== currentSummary?.discountAmount || newSummary.taxableAmount !== currentSummary?.taxableAmount || newSummary.taxAmount !== currentSummary?.taxAmount || newSummary.netAmount !== currentSummary?.netAmount || JSON.stringify(newSummary.taxSummary) !== JSON.stringify(currentTaxSummary)) {
-      onSummaryChange({ ...currentSummary, ...newSummary });
-    }
-  }, [values.items, values.summary?.flatDiscount, values.summary?.roundOff, taxData]);
-
-  return null;
-};
 
 const PurchaseOrderForm = () => {
   const navigate = useNavigate();
@@ -164,11 +104,7 @@ const PurchaseOrderForm = () => {
         <Formik<PurchaseOrderFormValues> initialValues={initialValues} validationSchema={PurchaseOrderFormSchema} onSubmit={handleSubmit} enableReinitialize={isEditing} validateOnMount>
           {({ setFieldValue, dirty, isValid, resetForm }) => (
             <Form noValidate>
-              <SummaryWatcher
-                onSummaryChange={(newSum) => {
-                  setFieldValue("summary", newSum);
-                }}
-              />
+              <CommonSummaryWatcher summaryKey="summary" priceKey="unitCost" taxAmountKey="taxAmount" />
               <Grid container spacing={2}>
                 <Box sx={{ display: "grid", gap: 2 }}>
                   <CommonCard title="Purchase Order Details" grid={{ xs: 12 }}>

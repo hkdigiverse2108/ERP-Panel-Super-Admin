@@ -147,7 +147,6 @@ const PurchaseOrderTabs = ({ emptyRow }: { emptyRow: PurchaseOrderItem }) => {
       if (Number(item.total) !== totalAmount) setFieldValue(`items.${index}.total`, totalAmount);
       if (Number(item.landingCost) !== landingCost) setFieldValue(`items.${index}.landingCost`, String(landingCost));
       if (Number(item.margin) !== margin) setFieldValue(`items.${index}.margin`, String(margin));
-      // if (Number(item.sellingPrice) !== sellingPrice) setFieldValue(`items.${index}.sellingPrice`, String(sellingPrice));
 
       const discount = Number(item?.discount1 || 0);
       const qty = Number(item?.qty || 0);
@@ -204,12 +203,6 @@ const PurchaseOrderTabs = ({ emptyRow }: { emptyRow: PurchaseOrderItem }) => {
                       bodyClass: " min-w-[250px]",
                       render: (_, index) => <CommonValidationSelect name={`items.${index}.productId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isSupplierSelected} />,
                     },
-                    // {
-                    //   key: "mrp",
-                    //   header: "MRP",
-                    //   bodyClass: "min-w-[120px]",
-                    //   render: (_, index) => <CommonValidationTextField name={`items.${index}.mrp`} type="number" size="small" />,
-                    // },
                     {
                       key: "qty",
                       header: "Qty",
@@ -227,12 +220,7 @@ const PurchaseOrderTabs = ({ emptyRow }: { emptyRow: PurchaseOrderItem }) => {
                         return <span>{product?.uomId?.name || ""}</span>;
                       },
                     },
-                    // {
-                    //   key: "unit",
-                    //   header: "Unit",
-                    //   bodyClass: "min-w-[100px]",
-                    //   render: (_, index) => <CommonValidationTextField name={`items.${index}.unit`} size="small" disabled />,
-                    // },
+  
                     {
                       key: "unitCost",
                       header: "Unit Cost",
@@ -247,30 +235,6 @@ const PurchaseOrderTabs = ({ emptyRow }: { emptyRow: PurchaseOrderItem }) => {
                         );
                       },
                     },
-                    // {
-                    //   key: "taxId",
-                    //   header: "Tax",
-                    //   bodyClass: "min-w-[140px] text-center align-middle",
-                    //   render: (_, index) => {
-                    //     const row = values?.items?.[index];
-                    //     if (!row?.productId) return null;
-
-                    //     const isOutOfScope = values?.taxType === "out_of_scope";
-                    //     const taxName = isOutOfScope ? "No Tax" : row?.taxName || "";
-                    //     const taxPercentage = isOutOfScope ? 0 : Number(row?.tax || 0);
-                    //     const { taxAmount } = calculateRowValues(index);
-
-                    //     return (
-                    //       <Box className="flex flex-col items-center">
-                    //         <span className="text-xs text-blue-500">
-                    //           {taxName} ({taxPercentage}%)
-                    //         </span>
-                    //         <span className="text-sm font-medium">₹{taxAmount.toFixed(2)}</span>
-                    //       </Box>
-                    //     );
-                    //   },
-                    // },
-
                     {
                       key: "taxId",
                       header: "Tax",

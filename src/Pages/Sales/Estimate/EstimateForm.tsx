@@ -1,9 +1,9 @@
 import { Box, Grid } from "@mui/material";
-import { Form, Formik, type FormikHelpers, useFormikContext } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations } from "../../../Api";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonSummaryWatcher } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { EstimateFormValues } from "../../../Types";
@@ -15,70 +15,6 @@ import CommonAdditionalChargeSection from "../../../Components/Common/CommonAddi
 
 import { Queries } from "../../../Api";
 
-const SummaryWatcher = ({ onSummaryChange }: { onSummaryChange: (summary: any) => void }) => {
-  const { values } = useFormikContext<EstimateFormValues>();
-  const { data: taxData } = Queries.useGetTaxDropdown();
-
-  const calculateSummary = () => {
-    const itemGross = values.items?.reduce((s: number, r: any) => s + Number(r.qty || 0) * Number(r.price || 0), 0) || 0;
-    const itemDiscount = values.items?.reduce((s: number, r: any) => s + Number(r.discount1 || 0), 0) || 0;
-    const itemTaxable = values.items?.reduce((s: number, r: any) => s + Number(r.taxableAmount || 0), 0) || 0;
-    const itemTax = values.items?.reduce((s: number, r: any) => s + Number(r.totalAmount || 0) - Number(r.taxableAmount || 0), 0) || 0;
-
-    const isReverseCharge = String(values.reverseCharge) === "true";
-    const chargeTaxable = isReverseCharge ? 0 : values.additionalCharges?.reduce((s: number, r: any) => s + Number(r.amount || 0), 0) || 0;
-    const chargeTax = isReverseCharge ? 0 : values.additionalCharges?.reduce((s: number, r: any) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0;
-
-    const totalTaxable = itemTaxable + chargeTaxable;
-    const totalTax = itemTax + chargeTax;
-
-    const flatDiscount = Number(values.transactionSummary?.flatDiscount || 0);
-    const roundOffAmount = Number(values.transactionSummary?.roundOff || 0);
-
-    const netBeforeRoundOff = totalTaxable + totalTax - flatDiscount;
-    const netAmount = netBeforeRoundOff + roundOffAmount;
-
-    // Calculate Tax Summary
-    const taxMap: Record<string, { name: string; rate: number; amount: number }> = {};
-    const processTax = (taxId: string | undefined, amount: number) => {
-      if (!taxId) return;
-      const tax = taxData?.data?.find((t: any) => t._id === taxId);
-      if (!tax) return;
-      if (!taxMap[taxId]) {
-        taxMap[taxId] = { name: tax.name || "Tax", rate: tax.percentage || 0, amount: 0 };
-      }
-      taxMap[taxId].amount += amount;
-    };
-
-    values.items?.forEach((r: any) => processTax(r.taxId, Number(r.totalAmount || 0) - Number(r.taxableAmount || 0)));
-    if (!isReverseCharge) {
-      values.additionalCharges?.forEach((r: any) => processTax(r.taxId, Number(r.totalAmount || 0) - Number(r.amount || 0)));
-    }
-
-    return {
-      flatDiscount,
-      grossAmount: Number(itemGross.toFixed(2)),
-      discountAmount: Number((itemDiscount + flatDiscount).toFixed(2)),
-      taxableAmount: Number(totalTaxable.toFixed(2)),
-      taxAmount: Number(totalTax.toFixed(2)),
-      roundOff: Number(roundOffAmount.toFixed(2)),
-      netAmount: Number(netAmount.toFixed(2)),
-      taxSummary: Object.values(taxMap).map((t) => ({ ...t, amount: Number(t.amount.toFixed(2)) })),
-    };
-  };
-
-  useEffect(() => {
-    const newSummary = calculateSummary();
-    const currentSummary = values.transactionSummary;
-
-    // Deep comparison to prevent infinite loop
-    if (JSON.stringify(newSummary) !== JSON.stringify(currentSummary)) {
-      onSummaryChange(newSummary);
-    }
-  }, [values.items, values.additionalCharges, values.transactionSummary?.flatDiscount, values.transactionSummary?.roundOff, values.reverseCharge, taxData]);
-
-  return null;
-};
 
 const EstimateForm = () => {
   const location = useLocation();
@@ -214,7 +150,7 @@ const EstimateForm = () => {
         <Formik<EstimateFormValues> initialValues={initialValues} validationSchema={EstimateFormSchema} onSubmit={handleSubmit} enableReinitialize={isEditing} validateOnMount>
           {({ setFieldValue, dirty, isValid, resetForm }) => (
             <Form noValidate>
-              <SummaryWatcher onSummaryChange={(summary) => setFieldValue("transactionSummary", summary)} />
+              <CommonSummaryWatcher summaryKey="transactionSummary" priceKey="price" hasAdditionalCharges />
               <Grid container spacing={2}>
                 <CommonCard title="Estimate Details" grid={{ xs: 12 }}>
                   <EstimateDetails />

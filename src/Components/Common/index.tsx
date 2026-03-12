@@ -16,13 +16,13 @@ import { CommonDataGridSummaryFooter, CalculateGridSummary } from "./CommonDataG
 import CommonStatsCard from "./CommonStatsCard";
 
 import CommonTable from "./CommonTable";
-import CommonSummarySection from "./CommonSummarySection";
 import CommonAdditionalChargeSection from "./CommonAdditionalChargeSection";
 import CommonTermsAndCondition from "./TermsAndConditions/CommonTermsAndCondition";
 import CommonTermsAndConditionFormModal from "./TermsAndConditions/commonTermsAndConditionFormModal";
 import CommonTermsAndConditionSelectModal from "./TermsAndConditions/CommonTermsAndConditionSelectModal";
 import CommonShippingDetails from "./CommonShippingDetails";
 import AddressSelectionModal from "./AddressSelectionModal";
+import CommonSummarySection, { CommonSummaryWatcher } from "./CommonSummarySection";
 
 export {
   CommonTermsAndConditionSelectModal,
@@ -50,5 +50,6 @@ export {
   CommonStatsCard,
   CommonTable,
   CommonSummarySection,
+  CommonSummaryWatcher,
   CommonAdditionalChargeSection,
 };
