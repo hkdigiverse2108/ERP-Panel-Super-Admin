@@ -78,8 +78,8 @@ const ExpenseForm = () => {
                       <CommonValidationDatePicker name="fromDate" label="Expense Date" required grid={{ xs: 12, md: 4 }} />
                       <CommonValidationTextField name="amount" label="Amount"  grid={{ xs: 12, md: 4 }} />
                       <CommonValidationTextField name="remark" label="Description" multiline grid={{ xs: 12, md:4 }} />
-                    </Grid>
                     {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
+                    </Grid>
                   </CommonCard>
 
                   <CommonBottomActionBar

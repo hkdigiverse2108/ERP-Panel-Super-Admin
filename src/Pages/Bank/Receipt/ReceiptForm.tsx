@@ -175,8 +175,8 @@ const ReceiptForm = () => {
                           </CommonCard>
                         </Grid>
                       )}
-                    </Grid>
                     {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
+                    </Grid>
                   </CommonCard>
 
                   <CommonBottomActionBar
