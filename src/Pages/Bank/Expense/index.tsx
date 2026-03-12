@@ -15,7 +15,7 @@ const Expense = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.EXPENSE.BASE);
 
-  const { data, isLoading, isFetching } = Queries.useGetExpense(params);
+  const { data, isLoading, isFetching } = Queries.useGetExpense({ ...params, avoidSalary: true });
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deletePayment, isPending: isDeleteLoading } = Mutations.useDeletePosPayment();
   const { mutate: editPayment, isPending: isEditLoading } = Mutations.useEditPosPayment();
@@ -35,7 +35,7 @@ const Expense = () => {
   };
 
   const columns: AppGridColDef<ExpenseBase>[] = [
-       CommonObjectNameColumn<ExpenseBase>("companyId", { headerName: "Company", width: 200 }),
+    CommonObjectNameColumn<ExpenseBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "partyId", headerName: "Party Name", width: 230, valueGetter: (_v, row: ExpenseBase) => (row?.partyId ? `${row?.partyId?.firstName} ${row?.partyId?.lastName}` : "-") },
     { field: "fromDate", headerName: "Expense Date", width: 190, valueGetter: (v) => FormatDate(v) },
     { field: "amount", headerName: "Amount", width: 200 },
@@ -46,7 +46,7 @@ const Expense = () => {
           CommonActionColumn<ExpenseBase>({
             ...(permission?.edit && {
               active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
-              editRoute: ROUTES.PAYMENT.ADD_EDIT,
+              editRoute: ROUTES.EXPENSE.ADD_EDIT,
             }),
             ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.remark }) }),
           }),

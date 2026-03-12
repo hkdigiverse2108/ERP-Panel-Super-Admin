@@ -21,6 +21,7 @@ const ExpenseForm = () => {
 
   const { mutate: addExpense, isPending: isAddLoading } = Mutations.useAddExpense();
   const { mutate: editExpense, isPending: isEditLoading } = Mutations.useEditExpense();
+  
 
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
@@ -77,7 +78,7 @@ const ExpenseForm = () => {
                       <CommonValidationSelect name="type" label="Expense Type" grid={{ xs: 12, md: 4 }} options={EXPENSE_TYPE_OPTIONS} />
                       <CommonValidationDatePicker name="fromDate" label="Expense Date" required grid={{ xs: 12, md: 4 }} />
                       <CommonValidationTextField name="amount" label="Amount"  grid={{ xs: 12, md: 4 }} />
-                      <CommonValidationTextField name="remark" label="Description" multiline grid={{ xs: 12, md:4 }} />
+                      <CommonValidationTextField name="remark" label="Remark" multiline grid={{ xs: 12, md:4 }} />
                     {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                     </Grid>
                   </CommonCard>
