@@ -105,7 +105,7 @@ const EstimateDetails = () => {
           <Box display="flex" flexDirection="column" gap={0.5}>
             <Box display="flex" justifyContent="space-between" alignItems="center">
               <Typography variant="caption" color="text.secondary" fontWeight={600}>
-                Billing Address
+                Billing Address :
               </Typography>
               {selectedCustomer && (
                 <IconButton size="small" onClick={() => setModalType("billing")} sx={{ p: 0.5 }}>
@@ -129,7 +129,7 @@ const EstimateDetails = () => {
           <Box display="flex" flexDirection="column" gap={0.5}>
             <Box display="flex" justifyContent="space-between" alignItems="center">
               <Typography variant="caption" color="text.secondary" fontWeight={600}>
-                Shipping Address
+                Shipping Address :
               </Typography>
               {selectedCustomer && (
                 <IconButton size="small" onClick={() => setModalType("shipping")} sx={{ p: 0.5 }}>

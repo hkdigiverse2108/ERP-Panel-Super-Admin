@@ -18,7 +18,6 @@ export interface SupplierBillProductItem {
   landingCost?: number;
   margin?: number;
   discount1?: number;
-  discount2?: number;
   taxAmount?: number;
   total?: number;
   mfgDate?: string;
@@ -38,7 +37,6 @@ export interface SupplierBillReturnProductItem {
   productId?: string;
   qty?: number;
   discount1?: number;
-  discount2?: number;
   taxAmount?: number;
   landingCost?: number;
   total?: number;
@@ -89,6 +87,9 @@ export interface SupplierBillFormValues {
   supplierBillNo?: string;
   referenceBillNo?: string;
   supplierBillDate: string | Date;
+  placeOfSupply?: string;
+  gstIn?: string;
+  billingAddress?: string;
   paymentTerm?: string;
   dueDate?: string | Date;
   reverseCharge?: boolean;

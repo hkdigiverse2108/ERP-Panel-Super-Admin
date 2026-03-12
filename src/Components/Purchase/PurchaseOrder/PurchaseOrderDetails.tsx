@@ -80,11 +80,11 @@ const PurchaseOrderDetails = () => {
           </Box>
         </Grid>
 
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 12 }}>
           <Box display="flex" flexDirection="column" gap={0.5}>
             <Box display="flex" justifyContent="space-between" alignItems="center">
               <Typography variant="caption" color="text.secondary" fontWeight={600}>
-                Billing Address
+                Billing Address :
               </Typography>
               {selectedSupplier && (
                 <IconButton size="small" onClick={() => setAddressModal(true)} sx={{ p: 0.5 }}>

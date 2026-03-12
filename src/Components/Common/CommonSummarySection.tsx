@@ -105,6 +105,7 @@ export interface CommonSummaryWatcherProps {
   priceKey?: string;
   taxAmountKey?: string;
   hasAdditionalCharges?: boolean;
+  itemsKey?: string;
 }
 
 export const CommonSummaryWatcher = ({
@@ -112,9 +113,12 @@ export const CommonSummaryWatcher = ({
   priceKey = "price",
   taxAmountKey,
   hasAdditionalCharges = false,
+  itemsKey = "items",
 }: CommonSummaryWatcherProps) => {
   const { values, setFieldValue } = useFormikContext<any>();
   const { data: taxData } = Queries.useGetTaxDropdown();
+
+  const items = itemsKey.split('.').reduce((o, i) => o?.[i], values) || [];
 
   const getTaxAmount = (r: any) => {
     if (taxAmountKey) {
@@ -124,18 +128,20 @@ export const CommonSummaryWatcher = ({
   };
 
   const calculateSummary = () => {
-    const itemGross = values.items?.reduce((s: number, r: any) => s + Number(r.qty || 0) * Number(r[priceKey] || 0), 0) || 0;
-    const itemDiscount = values.items?.reduce((s: number, r: any) => s + Number(r.discount1 || 0), 0) || 0;
-    const itemTaxable = values.items?.reduce((s: number, r: any) => s + Number(r.taxableAmount || 0), 0) || 0;
-    const itemTax = values.items?.reduce((s: number, r: any) => s + getTaxAmount(r), 0) || 0;
+    const itemGross = items?.reduce((s: number, r: any) => s + Number(r.qty || 0) * Number(r[priceKey] || 0), 0) || 0;
+    const itemDiscount = items?.reduce((s: number, r: any) => s + Number(r.discount1 || 0), 0) || 0;
+    const itemTaxable = items?.reduce((s: number, r: any) => s + Number(r.taxableAmount || 0), 0) || 0;
+    const itemTax = items?.reduce((s: number, r: any) => s + getTaxAmount(r), 0) || 0;
 
     let chargeTaxable = 0;
     let chargeTax = 0;
     const isReverseCharge = hasAdditionalCharges && String(values.reverseCharge) === "true";
 
-    if (hasAdditionalCharges && !isReverseCharge) {
+    if (hasAdditionalCharges) {
       chargeTaxable = values.additionalCharges?.reduce((s: number, r: any) => s + Number(r.amount || 0), 0) || 0;
-      chargeTax = values.additionalCharges?.reduce((s: number, r: any) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0;
+      if (!isReverseCharge) {
+        chargeTax = values.additionalCharges?.reduce((s: number, r: any) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0;
+      }
     }
 
     const totalTaxable = itemTaxable + chargeTaxable;
@@ -160,7 +166,7 @@ export const CommonSummaryWatcher = ({
       taxMap[taxId].amount += amount;
     };
 
-    values.items?.forEach((r: any) => processTax(r.taxId, getTaxAmount(r)));
+    items?.forEach((r: any) => processTax(r.taxId, getTaxAmount(r)));
     if (hasAdditionalCharges && !isReverseCharge) {
       values.additionalCharges?.forEach((r: any) => processTax(r.taxId, Number(r.totalAmount || 0) - Number(r.amount || 0)));
     }
@@ -193,7 +199,7 @@ export const CommonSummaryWatcher = ({
     }
 
   }, [
-    values.items,
+    items,
     values.additionalCharges,
     values[summaryKey]?.flatDiscount,
     values[summaryKey]?.roundOff,
