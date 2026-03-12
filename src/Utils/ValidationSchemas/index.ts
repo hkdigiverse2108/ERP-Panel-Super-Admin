@@ -333,9 +333,8 @@ export const AdditionalChargesFormSchema = Yup.object({
 export const RecipeFormSchema = Yup.object({
   name: Validation("string", "name"),
   date: Yup.mixed().required("Date is required"),
-  number: Validation("string", "number"),
+  number: Validation("string", "number", { required: false }),
   type: Validation("string", "type"),
-
   rawProducts: Yup.array()
     .of(
       Yup.object({
