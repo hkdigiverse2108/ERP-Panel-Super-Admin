@@ -588,9 +588,7 @@ export const PaymentFormSchema = Yup.object({
   posOrderId: RequiredWhen("paymentType", ["against_bill"], "Sales", "string"),
   paymentMode: Validation("string", "Payment Mode"),
   bankId: RequiredWhen("paymentMode", ["bank", "upi", "cheque", "card"], "Bank", "string"),
-  amount: Validation("number", "Amount", {
-    extraRules: (s) => s.min(1, "Amount must be greater than 0"),
-  }),
+  amount: Validation("string", "Amount", { required: true, extraRules: (s) => s?.matches(/^\d+(\.\d{1,2})?$/, "The amount no can only consist of number").max(10, "The amount no must be 10 digit long") }),
   totalAmount: Validation("number", "Total Amount", { required: false }).nullable(),
   paidAmount: Validation("number", "Paid Amount", { required: false }).nullable(),
   pendingAmount: Validation("number", "Pending Amount", { required: false }).nullable(),
@@ -610,9 +608,7 @@ export const ReciptFormSchema = Yup.object({
   posOrderId: RequiredWhen("paymentType", ["against_bill"], "Sales", "string"),
   paymentMode: Validation("string", "Payment Mode"),
   bankId: RequiredWhen("paymentMode", ["bank", "upi", "cheque", "card"], "Bank", "string"),
-  amount: Validation("number", "Amount", {
-    extraRules: (s) => s.min(1, "Amount must be greater than 0"),
-  }),
+  amount: Validation("string", "Amount", { required: true, extraRules: (s) => s?.matches(/^\d+(\.\d{1,2})?$/, "The amount no can only consist of number").max(10, "The amount no must be 10 digit long") }),
   totalAmount: Validation("number", "Total Amount", { required: false }).nullable(),
   paidAmount: Validation("number", "Paid Amount", { required: false }).nullable(),
   pendingAmount: Validation("number", "Pending Amount", { required: false }).nullable(),
@@ -627,11 +623,9 @@ export const ReciptFormSchema = Yup.object({
 export const ExpenseFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
   partyId: Validation("string", "Party"),
+  image: Validation("string", "Image", { required: false }),
   fromDate: Validation("string", "Date"),
-  amount: Validation("number", "Amount", {
-    extraRules: (s) => s.min(1, "Amount must be greater than 0"),
-    required: false,
-  }),
+  amount: Validation("string", "Amount", { required: true, extraRules: (s) => s?.matches(/^\d+(\.\d{1,2})?$/, "The amount no can only consist of number").max(10, "The amount no must be 10 digit long") }),
   discountAmount: Validation("number", "Discount Amount", { required: false }).nullable(),
   taxId: Validation("string", "Tax", { required: false }).nullable(),
   remark: Validation("string", "Description", {

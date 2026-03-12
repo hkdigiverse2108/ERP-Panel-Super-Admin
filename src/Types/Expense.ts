@@ -17,6 +17,7 @@ export interface ExpenseFormValues {
   status?: string;
   _submitAction?: string;
   type?: string;
+  image?: string | File | null;
 }
 
 export type AddExpensePayload = ExpenseFormValues & {
