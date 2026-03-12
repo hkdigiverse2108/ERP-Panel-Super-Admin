@@ -30,7 +30,7 @@ const CommonSummarySection = ({ name = "transactionSummary" }: CommonSummarySect
     <>
       <Box sx={{ p: 2, display: "flex", gap: 2, flexDirection: { xs: "column", md: "row" }, justifyContent: "space-between", alignItems: "flex-start" }}>
         <Box sx={{ width: { xs: "100%", md: "60%" } }}>
-          {showTaxBreakdown && taxBreakdownData.length > 0 && (
+          {showTaxBreakdown && (
             <Box className="border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden">
               <CommonTable data={taxBreakdownData} columns={taxBreakdownColumns} rowKey={(row: { name: string; rate: number; amount: number }) => row.name + row.rate} />
             </Box>

@@ -1,83 +1,74 @@
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import type { FormikHelpers } from "formik";
 import { Form, Formik, useFormikContext } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonSummarySection } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { BREADCRUMBS, ORDER_STATUS, TAX_TYPE } from "../../../Data";
-import type { AddPurchaseOrderPayload, PurchaseOrderFormContentProps, PurchaseOrderFormValues, Supplier } from "../../../Types";
-import { GenerateOptions, GetChangedFields, PurchaseOrderFormSchema, RemoveEmptyFields } from "../../../Utils";
-import ProductAndTerm from "./ProductAndTerm";
+import { BREADCRUMBS } from "../../../Data";
+import type { AddPurchaseOrderPayload, PurchaseOrderFormValues } from "../../../Types";
+import { GetChangedFields, PurchaseOrderFormSchema, RemoveEmptyFields } from "../../../Utils";
+import { PurchaseOrderDetails, PurchaseOrderTabs } from "../../../Components/Purchase";
+import { useEffect } from "react";
 
-const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate, resetForm, setFieldValue, dirty, supplierQueryEnabled }: PurchaseOrderFormContentProps) => {
+const SummaryWatcher = ({ onSummaryChange }: { onSummaryChange: (summary: any) => void }) => {
   const { values } = useFormikContext<PurchaseOrderFormValues>();
-  const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier", companyId: values.companyId || undefined }, supplierQueryEnabled);
-  const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
+  const { data: taxData } = Queries.useGetTaxDropdown();
 
-  const selectedSupplier = (supplierData?.data as Supplier[])?.find((s) => s._id === values.supplierId);
+  const calculateSummary = () => {
+    // Replicates standard logic based on items array calculations for Purchase Order
+    const itemGross = values.items?.reduce((s: number, r: any) => s + Number(r.qty || 0) * Number(r.unitCost || 0), 0) || 0;
+    const itemDiscount = values.items?.reduce((s: number, r: any) => s + Number(r.discount1 || 0), 0) || 0;
+    const itemTaxable = values.items?.reduce((s: number, r: any) => s + Number(r.taxableAmount || 0), 0) || 0;
+    const itemTax = values.items?.reduce((s: number, r: any) => s + Number(r.taxAmount || 0), 0) || 0;
 
-  return (
-    <Form noValidate>
-      <Box sx={{ display: "grid", gap: 2 }}>
-        {/* BASIC DETAILS */}
-        <CommonCard title="Purchase Order Details" grid={{ xs: 12 }}>
-          <Box sx={{ p: 2, display: "grid", gridTemplateColumns: { xs: "1fr", md: "340px 1fr" }, gap: 2 }}>
-            {/* ================= LEFT SIDE ================= */}
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <CommonValidationSelect name="supplierId" label="Select Supplier" required isLoading={supplierDataLoading} options={GenerateOptions(supplierData?.data)} grid={{ xs: 12 }} disabled={!values.companyId} />
+    const totalTaxable = itemTaxable;
+    const totalTax = itemTax;
 
-              {/* PLACE OF SUPPLY */}
-              <Box display="flex" gap={1} flexWrap="wrap">
-                <Box fontWeight={600}>Place of Supply:</Box>
-                <Box color="text.secondary">{selectedSupplier?.address?.[0]?.state?.name || "-"}</Box>
-              </Box>
+    const flatDiscount = Number(values.summary?.flatDiscount || 0);
+    const roundOffAmount = Number(values.summary?.roundOff || 0);
 
-              {/* GSTIN */}
-              <Box display="flex" gap={1} flexWrap="wrap">
-                <Box fontWeight={600}>GSTIN:</Box>
-                <Box color="text.secondary">{selectedSupplier?.address?.[0]?.gstIn || "-"}</Box>
-              </Box>
+    const netBeforeRoundOff = totalTaxable + totalTax - flatDiscount;
+    const netAmount = netBeforeRoundOff + roundOffAmount;
 
-              {/* BILLING ADDRESS */}
-              <Box display="flex" gap={1}>
-                <Box fontWeight={600}>Billing Address:</Box>
-                {selectedSupplier?.address?.length ? (
-                  <Box color="text.secondary">
-                    <Box>{selectedSupplier.address[0]?.addressLine1}</Box>
-                    <Box>
-                      {selectedSupplier.address[0]?.city?.name}, {selectedSupplier.address[0]?.state?.name}
-                    </Box>
-                    <Box>{selectedSupplier.address[0]?.pinCode}</Box>
-                  </Box>
-                ) : (
-                  <Box color="text.secondary">-</Box>
-                )}
-              </Box>
-            </Box>
+    // Calculate Tax Summary
+    const taxMap: Record<string, { name: string; rate: number; amount: number }> = {};
+    const processTax = (taxId: string | undefined, amount: number) => {
+      if (!taxId || !amount) return;
+      const tax = taxData?.data?.find((t: any) => t._id === taxId);
+      if (!tax) return;
+      if (!taxMap[taxId]) {
+        taxMap[taxId] = { name: tax.name || "Tax", rate: tax.percentage || 0, amount: 0 };
+      }
+      taxMap[taxId].amount += amount;
+    };
 
-            {/* ================= RIGHT SIDE ================= */}
-            <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: 2 }}>
-              <CommonValidationSelect name="companyId" label="Select Company" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12 }} />
-              <CommonValidationDatePicker name="orderDate" label="Purchase Order Date" required grid={{ xs: 12 }} />
-              <CommonValidationDatePicker name="shippingDate" label="Shipping Date" required grid={{ xs: 12 }} />
-              <CommonValidationTextField name="shippingNote" label="Shipping Note" grid={{ xs: 12 }} />
-              {isEditing && <CommonValidationTextField name="orderNo" label="Purchase Order No." grid={{ xs: 12 }} />}
-              <CommonValidationSelect name="taxType" label="Tax Type" required options={TAX_TYPE} grid={{ xs: 12 }} />
-              <CommonValidationSelect name="status" label="Order Status" required options={ORDER_STATUS} grid={{ xs: 12 }}  />
-            </Box>
-          </Box>
-        </CommonCard>
-      </Box>
+    values.items?.forEach((r: any) => processTax(r.taxId, Number(r.taxAmount || 0)));
 
-      <Box sx={{ display: "grid", gap: 2, mt: 2 }}>
-        <ProductAndTerm isEditing={isEditing} />
-      </Box>
+    return {
+      flatDiscount,
+      grossAmount: Number(itemGross.toFixed(2)),
+      discountAmount: Number((itemDiscount + flatDiscount).toFixed(2)),
+      taxableAmount: Number(totalTaxable.toFixed(2)),
+      taxAmount: Number(totalTax.toFixed(2)),
+      roundOff: Number(roundOffAmount.toFixed(2)),
+      netAmount: Number(netAmount.toFixed(2)),
+      taxSummary: Object.values(taxMap).map((t) => ({ ...t, amount: Number(t.amount.toFixed(2)) })),
+    };
+  };
 
-      <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={addLoading || editLoading} onClear={() => (isEditing ? navigate(-1) : resetForm())} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
-    </Form>
-  );
+  useEffect(() => {
+    const newSummary = calculateSummary();
+    const currentSummary = values.summary;
+    const currentTaxSummary = values.summary?.taxSummary;
+
+    // Simplified deep compare check before bubbling changes back
+    if (newSummary.grossAmount !== currentSummary?.grossAmount || newSummary.discountAmount !== currentSummary?.discountAmount || newSummary.taxableAmount !== currentSummary?.taxableAmount || newSummary.taxAmount !== currentSummary?.taxAmount || newSummary.netAmount !== currentSummary?.netAmount || JSON.stringify(newSummary.taxSummary) !== JSON.stringify(currentTaxSummary)) {
+      onSummaryChange({ ...currentSummary, ...newSummary });
+    }
+  }, [values.items, values.summary?.flatDiscount, values.summary?.roundOff, taxData]);
+
+  return null;
 };
 
 const PurchaseOrderForm = () => {
@@ -91,32 +82,36 @@ const PurchaseOrderForm = () => {
   const { mutate: editPurchaseOrder, isPending: editLoading } = Mutations.useEditPurchaseOrder();
 
   const pageMode = isEditing ? "EDIT" : "ADD";
+  const emptyRow = { productId: "", qty: 1, uomId: "", unit: "", unitCost: 0, taxId: "", tax: "0", landingCost: "0", margin: "0", total: 0 };
+
   const initialValues: PurchaseOrderFormValues = {
-    // New Fields
     companyId: data?.companyId?._id || "",
 
     supplierId: data?.supplierId?._id || "",
-    contactId: data?.contactId?._id || "",
     orderDate: data?.orderDate || data?.date || "",
-    orderNo: data?.orderNo || "",
     shippingDate: data?.shippingDate || data?.date || data?.orderDate || "",
     shippingNote: data?.shippingNote || "",
-    items: data?.items?.length ? data.items : [{ productId: "", qty: 1, freeQty: 0, mrp: 0, sellingPrice: 0, discount1: 0, discount2: 0, taxableAmount: 0, unitCost: 0, uomId: "", unit: "", taxName: "", taxAmount: 0, tax: "0", landingCost: "0", margin: "0", total: 0 }],
+
+    placeOfSupply: data?.placeOfSupply,
+    billingAddress: data?.billingAddress?._id || "",
+    gstIn: data?.gstIn || "",
+    taxType: data?.taxType || "default",
+
+    items: data?.items?.length ? data.items : [emptyRow],
+    termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
+    notes: data?.notes || "",
 
     summary: {
-      flatDiscount: data?.summary?.flatDiscount || data?.flatDiscount || 0,
-      grossAmount: data?.summary?.grossAmount || data?.grossAmount || 0,
-      discountAmount: data?.summary?.discountAmount || data?.discountAmount || 0,
-      taxableAmount: data?.summary?.taxableAmount || data?.taxableAmount || 0,
-      taxAmount: data?.summary?.taxAmount || data?.taxAmount || data?.tax || 0,
-      roundOff: data?.summary?.roundOff || data?.roundOff || 0,
-      netAmount: data?.summary?.netAmount || data?.netAmount || 0,
+      flatDiscount: data?.summary?.flatDiscount || 0,
+      grossAmount: data?.summary?.grossAmount || 0,
+      discountAmount: data?.summary?.discountAmount || 0,
+      taxableAmount: data?.summary?.taxableAmount || 0,
+      taxAmount: data?.summary?.taxAmount || 0,
+      roundOff: data?.summary?.roundOff || 0,
+      netAmount: data?.summary?.netAmount || 0,
     },
 
-    notes: data?.notes || "",
     status: ["in_progress", "delivered", "partially_delivered", "exceed", "completed", "cancelled"].includes(data?.status) ? data.status : "in_progress",
-    taxType: data?.taxType || "",
-    termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
   };
 
   const handleSubmit = async (values: PurchaseOrderFormValues, { resetForm }: FormikHelpers<PurchaseOrderFormValues>) => {
@@ -124,12 +119,29 @@ const PurchaseOrderForm = () => {
 
     const payload = {
       ...rest,
-      items: rest.items?.map(({ taxAmount, taxName, freeQty, mrp, sellingPrice, discount1, discount2, taxableAmount, unitCost, ...item }) => ({
-        ...item,
+      items: rest.items?.map((item: any) => ({
+        productId: typeof item.productId === "object" ? item.productId?._id : item.productId,
+        qty: Number(item.qty || 0),
+        uomId: typeof item.uomId === "object" ? item.uomId?._id : item.uomId,
+        unit: String(item.unit || ""),
+        unitCost: Number(item.unitCost || 0),
+        taxId: typeof item.taxId === "object" ? item.taxId?._id : item.taxId,
         tax: String(item.tax || 0),
         landingCost: String(item.landingCost || 0),
         margin: String(item.margin || 0),
+        total: Number(item.total || 0),
       })),
+      summary: rest.summary
+        ? {
+            flatDiscount: Number(rest.summary.flatDiscount || 0),
+            grossAmount: Number(rest.summary.grossAmount || 0),
+            discountAmount: Number(rest.summary.discountAmount || 0),
+            taxableAmount: Number(rest.summary.taxableAmount || 0),
+            taxAmount: Number(rest.summary.taxAmount || 0),
+            roundOff: Number(rest.summary.roundOff || 0),
+            netAmount: Number(rest.summary.netAmount || 0),
+          }
+        : undefined,
     };
 
     const handleSuccess = () => {
@@ -140,7 +152,7 @@ const PurchaseOrderForm = () => {
       const changedFields = GetChangedFields(payload, data);
       await editPurchaseOrder({ ...changedFields, purchaseOrderId: data._id }, { onSuccess: handleSuccess });
     } else {
-      await addPurchaseOrder(RemoveEmptyFields(payload)  as AddPurchaseOrderPayload, { onSuccess: handleSuccess });
+      await addPurchaseOrder(RemoveEmptyFields(payload) as AddPurchaseOrderPayload, { onSuccess: handleSuccess });
     }
   };
 
@@ -149,8 +161,33 @@ const PurchaseOrderForm = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE_ORDER[pageMode]} breadcrumbs={BREADCRUMBS.PURCHASE_ORDER[pageMode]} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 14 }}>
-        <Formik initialValues={initialValues} validationSchema={PurchaseOrderFormSchema} onSubmit={handleSubmit}>
-          {(formikProps) => <PurchaseOrderFormContent {...formikProps} isEditing={isEditing} addLoading={addLoading} editLoading={editLoading} navigate={navigate} />}
+        <Formik<PurchaseOrderFormValues> initialValues={initialValues} validationSchema={PurchaseOrderFormSchema} onSubmit={handleSubmit} enableReinitialize={isEditing} validateOnMount>
+          {({ setFieldValue, dirty, isValid, resetForm }) => (
+            <Form noValidate>
+              <SummaryWatcher
+                onSummaryChange={(newSum) => {
+                  setFieldValue("summary", newSum);
+                }}
+              />
+              <Grid container spacing={2}>
+                <Box sx={{ display: "grid", gap: 2 }}>
+                  <CommonCard title="Purchase Order Details" grid={{ xs: 12 }}>
+                    <PurchaseOrderDetails />
+                  </CommonCard>
+
+                  <CommonCard hideDivider grid={{ xs: 12 }}>
+                    <PurchaseOrderTabs emptyRow={emptyRow} />
+                  </CommonCard>
+                </Box>
+
+                <CommonCard hideDivider grid={{ xs: 12 }}>
+                  <CommonSummarySection name="summary" />
+                </CommonCard>
+
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty || !isValid} isLoading={addLoading || editLoading} onClear={() => (isEditing ? navigate(-1) : resetForm())} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+              </Grid>
+            </Form>
+          )}
         </Formik>
       </Box>
     </>

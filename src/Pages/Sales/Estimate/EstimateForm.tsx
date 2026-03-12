@@ -10,8 +10,7 @@ import type { EstimateFormValues } from "../../../Types";
 import { DateConfig, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 import { EstimateFormSchema } from "../../../Utils/ValidationSchemas";
-import EstimateDetails from "../../../Components/Sales/Estimate/EstimateDetails/EstimateDetails";
-import EstimateTabs from "../../../Components/Sales/Estimate/EstimateDetails/EstimateTabs";
+import { EstimateDetails, EstimateTabs } from "../../../Components/Sales";
 import CommonAdditionalChargeSection from "../../../Components/Common/CommonAdditionalChargeSection";
 
 import { Queries } from "../../../Api";
@@ -27,8 +26,8 @@ const SummaryWatcher = ({ onSummaryChange }: { onSummaryChange: (summary: any) =
     const itemTax = values.items?.reduce((s: number, r: any) => s + Number(r.totalAmount || 0) - Number(r.taxableAmount || 0), 0) || 0;
 
     const isReverseCharge = String(values.reverseCharge) === "true";
-    const chargeTaxable = isReverseCharge ? 0 : (values.additionalCharges?.reduce((s: number, r: any) => s + Number(r.amount || 0), 0) || 0);
-    const chargeTax = isReverseCharge ? 0 : (values.additionalCharges?.reduce((s: number, r: any) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0);
+    const chargeTaxable = isReverseCharge ? 0 : values.additionalCharges?.reduce((s: number, r: any) => s + Number(r.amount || 0), 0) || 0;
+    const chargeTax = isReverseCharge ? 0 : values.additionalCharges?.reduce((s: number, r: any) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0;
 
     const totalTaxable = itemTaxable + chargeTaxable;
     const totalTax = itemTax + chargeTax;
@@ -142,8 +141,8 @@ const EstimateForm = () => {
     const itemTax = values.items?.reduce((s: number, r: any) => s + Number(r.totalAmount || 0) - Number(r.taxableAmount || 0), 0) || 0;
 
     const isReverseCharge = String(values.reverseCharge) === "true";
-    const chargeTaxable = isReverseCharge ? 0 : (values.additionalCharges?.reduce((s: number, r: any) => s + Number(r.amount || 0), 0) || 0);
-    const chargeTax = isReverseCharge ? 0 : (values.additionalCharges?.reduce((s: number, r: any) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0);
+    const chargeTaxable = isReverseCharge ? 0 : values.additionalCharges?.reduce((s: number, r: any) => s + Number(r.amount || 0), 0) || 0;
+    const chargeTax = isReverseCharge ? 0 : values.additionalCharges?.reduce((s: number, r: any) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0;
 
     const totalTaxable = itemTaxable + chargeTaxable;
     const totalTax = itemTax + chargeTax;
@@ -182,7 +181,7 @@ const EstimateForm = () => {
     };
   };
 
-  const { data: taxData} = Queries.useGetTaxDropdown();
+  const { data: taxData } = Queries.useGetTaxDropdown();
 
   const handleSubmit = async (values: EstimateFormValues, { resetForm }: FormikHelpers<EstimateFormValues>) => {
     const { _submitAction, ...rest } = values;

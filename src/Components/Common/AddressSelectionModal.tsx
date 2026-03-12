@@ -9,7 +9,7 @@ interface AddressSelectionModalProps {
   onClose: () => void;
   addresses: ContactAddressApi[];
   onSelect: (addressId: string) => void;
-  selectedAddressId?: string;
+  selectedAddressId?: string | null;
   title: string;
 }
 

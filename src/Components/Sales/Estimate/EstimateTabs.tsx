@@ -1,14 +1,14 @@
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Tab, Tabs } from "@mui/material";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
-import { CommonButton, CommonValidationSelect, CommonValidationTextField } from "../../../../Attribute";
-import { CommonTable, CommonTabPanel, CommonShippingDetails, CommonTermsAndCondition, CommonCard } from "../../../Common";
+import { CommonButton, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
+import { CommonTable, CommonTabPanel, CommonShippingDetails, CommonTermsAndCondition } from "../../Common";
 import { useEffect, useState, useRef } from "react";
-import { Queries } from "../../../../Api";
-import { GenerateOptions } from "../../../../Utils";
+import { Queries } from "../../../Api";
+import { GenerateOptions } from "../../../Utils";
 import { FieldArray, useFormikContext } from "formik";
-import type { EstimateItem, EstimateFormValues } from "../../../../Types/Estimate";
-import type { CommonTableColumn, ProductBase } from "../../../../Types";
+import type { EstimateItem, EstimateFormValues } from "../../../Types/Estimate";
+import type { CommonTableColumn, ProductBase } from "../../../Types";
 
 const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
   const [tabValue, setTabValue] = useState(0);
@@ -188,23 +188,13 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
                       bodyClass: "min-w-28",
                       render: (_, index) => {
                         const productId = values?.items?.[index]?.productId;
-                        const product = productsData?.data?.find((p: ProductBase) => p._id === productId);
-
-                        let taxIncluded = false;
-                        if (values?.taxType === "tax_inclusive") {
-                          taxIncluded = true;
-                        } else if (values?.taxType === "tax_exclusive") {
-                          taxIncluded = false;
-                        } else {
-                          taxIncluded = typeof product?.isSalesTaxIncluding === "boolean" ? product.isSalesTaxIncluding : false;
-                        }
+                        // const product = productsData?.data?.find((p: ProductBase) => p._id === productId);
 
                         // const isOutOfScope = values?.taxType === "out_of_scope";
 
                         return (
                           <div className="flex flex-col gap-1">
                             <CommonValidationTextField name={`items.${index}.price`} type="number" size="small" />
-                            {/* {product && !isOutOfScope && <span className="text-[10px] text-gray-500 whitespace-nowrap">{taxIncluded ? "Incl. Tax" : "Excl. Tax"}</span>} */}
                           </div>
                         );
                       },

@@ -1,13 +1,13 @@
 import { Box, Grid, Typography, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import { CommonValidationDatePicker, CommonValidationSelect } from "../../../../Attribute";
-import { PAYMENT_TERMS_OPTIONS, REVERSE_CHARGE, TAX_TYPE } from "../../../../Data";
+import { CommonValidationDatePicker, CommonValidationSelect } from "../../../Attribute";
+import { PAYMENT_TERMS_OPTIONS, REVERSE_CHARGE, TAX_TYPE } from "../../../Data";
 import { useFormikContext } from "formik";
-import type { EstimateFormValues } from "../../../../Types";
+import type { EstimateFormValues } from "../../../Types";
 import { useState, useEffect, useRef } from "react";
-import { AddressSelectionModal } from "../../../Common";
-import { Queries } from "../../../../Api";
-import { GenerateOptions, DateConfig } from "../../../../Utils";
+import { AddressSelectionModal } from "../../Common";
+import { Queries } from "../../../Api";
+import { GenerateOptions, DateConfig } from "../../../Utils";
 
 const EstimateDetails = () => {
   const { values, setFieldValue } = useFormikContext<EstimateFormValues>();

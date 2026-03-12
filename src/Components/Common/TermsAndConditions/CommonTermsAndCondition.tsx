@@ -89,9 +89,9 @@ const CommonTermsAndCondition = ({ selectedTermIds, onChange, companyId, isView 
             </thead>
             <tbody>
               {displayTerms?.map((term: TermsConditionBase, index: number) => (
-                <tr key={term._id} className="text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark border-b border-gray-100 dark:border-gray-700 ">
+                <tr key={term._id} className="text-gray-600 overflow-hidden dark:text-gray-300 bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark border-b border-gray-100 dark:border-gray-700 ">
                   <td className="p-2">{index + 1}</td>
-                  <td className="p-2">{term.termsCondition}</td>
+                  <td className="p-2 overflow-hidden max-w-xs">{term.termsCondition}</td>
                   <td className="p-2 text-center">
                     <Box display="flex" justifyContent="center" gap={1}>
                       <CommonButton size="small" color="primary" variant="text" onClick={() => handleEditSingleTerm(term)}>
