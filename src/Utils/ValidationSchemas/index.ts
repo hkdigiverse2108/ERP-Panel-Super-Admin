@@ -238,13 +238,6 @@ export const LocationFormSchema = Yup.object({
   isActive: Validation("boolean", "is Active", { required: false }),
 });
 
-export const AccountGroupFormSchema = Yup.object({
-  name: Validation("string", "Group name"),
-  nature: Validation("string", "Nature"),
-  parentGroupId: Validation("string", "Parent Group", { required: false }),
-  isActive: Validation("boolean", "is Active", { required: false }),
-});
-
 export const RoleFormSchema = Yup.object({
   name: Validation("string", "Role name"),
   isActive: Validation("boolean", "is Active", { required: false }),
@@ -563,24 +556,6 @@ export const ReturnPosOrderFormSchema = Yup.object({
     otherwise: (schema) => schema.notRequired(),
   }),
   refundDescription: Validation("string", "Refund Description", { required: false }),
-});
-
-export const JournalVoucherFormSchema = Yup.object({
-  companyId: Validation("string", "Company"),
-  date: Validation("string", "Date"),
-  status: Validation("string", "Status"),
-  description: Validation("string", "Description", { required: false }),
-  entries: Yup.array()
-    .of(
-      Yup.object({
-        accountId: Validation("string", "Account"),
-        debit: Validation("number", "Debit", { required: false }),
-        credit: Validation("number", "Credit", { required: false }),
-        description: Validation("string", "Description", { required: false }),
-      }),
-    )
-    .min(2, "At least two entries are required"),
-  isActive: Yup.boolean(),
 });
 
 export const ProductTypeFormSchema = Yup.object({

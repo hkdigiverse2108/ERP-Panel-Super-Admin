@@ -10,8 +10,6 @@ const initialState: ModalStateSlice = {
   isTaxModal: { open: false, data: null },
   isCategoryModal: { open: false, data: null },
   isLocationModal: { open: false, data: null },
-  isAccountGroupModal: { open: false, data: null },
-  isAccountModal: { open: false, data: null },
   isRoleModal: { open: false, data: null },
   isTermsAndConditionModal: { open: false, data: null },
   isTermsSelectionModal: { open: false, data: null },
@@ -49,12 +47,6 @@ const ModalSlice = createSlice({
     setLocationModal(state, action) {
       state.isLocationModal = action.payload;
     },
-    setAccountGroupModal(state, action) {
-      state.isAccountGroupModal = action.payload;
-    },
-    setAccountModal(state, action) {
-      state.isAccountModal = action.payload;
-    },
     setRoleModal(state, action) {
       state.isRoleModal = action.payload;
     },
@@ -75,6 +67,6 @@ const ModalSlice = createSlice({
   },
 });
 
-export const { setRoleModal, setUploadModal,setAdditionalChargeModal, setSelectedFiles, setModalVideoPlay, setBrandModal, setCategoryModal, setUomModal, setTaxModal, setLocationModal, setAccountGroupModal, setAccountModal, setTermsAndConditionModal,setTermsSelectionModal, setOrderRefundModal, setProductTypeModal } = ModalSlice.actions;
+export const { setRoleModal, setUploadModal,setAdditionalChargeModal, setSelectedFiles, setModalVideoPlay, setBrandModal, setCategoryModal, setUomModal, setTaxModal, setLocationModal, setTermsAndConditionModal,setTermsSelectionModal, setOrderRefundModal, setProductTypeModal } = ModalSlice.actions;
 
 export default ModalSlice.reducer;

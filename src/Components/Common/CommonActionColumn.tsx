@@ -1,16 +1,17 @@
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
+import KeyIcon from "@mui/icons-material/Key";
+import PrintIcon from "@mui/icons-material/Print";
+import RotateLeftIcon from "@mui/icons-material/RotateLeft";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
-import PrintIcon from "@mui/icons-material/Print";
 import { Grid, IconButton } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import type { CommonActionColumnProps } from "../../Types";
-import KeyIcon from '@mui/icons-material/Key';
 
-const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ active, editRoute, onDelete, showDelete, onEdit, permissionRoute, onRefund, showRefund, onPrint }: CommonActionColumnProps<T>): GridColDef<T> => ({
+const CommonActionColumn = <T extends { _id?: string; isActive?: boolean; creditsRemaining?: number }>({ onSalesInvoice, onPrint, active, editRoute, onDelete, onEdit, onRefund, permissionRoute }: CommonActionColumnProps<T>): GridColDef<T> => ({
   field: "actions",
   headerName: "Actions",
   headerAlign: "center",
@@ -49,31 +50,38 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ ac
             </Link>
           </Grid>
         )}
-        {onEdit && (
-          <Grid size="auto">
-            <IconButton className="iconButtonStyle" size="small" onClick={() => onEdit(params.row)}>
-              <DriveFileRenameOutlineIcon fontSize="small" />
-            </IconButton>
-          </Grid>
-        )}
-        {onRefund && (!showRefund || showRefund(params.row)) && (
-          <Grid size="auto">
-            <IconButton className="iconButtonStyle" size="small" color="primary" onClick={() => onRefund(params.row)}>
-              <CurrencyRupeeIcon fontSize="small" />
-            </IconButton>
-          </Grid>
-        )}
         {onPrint && (
           <Grid size="auto">
-            <IconButton className="iconButtonStyle" size="small" color="info" onClick={() => onPrint(params.row)}>
+            <IconButton className="iconButtonStyle" size="small" onClick={() => onPrint(params.row)}>
               <PrintIcon fontSize="small" />
             </IconButton>
           </Grid>
         )}
-        {onDelete && (!showDelete || showDelete(params.row)) && (
+        {onEdit?.handleEdit && !onEdit?.isPermission?.(params.row) && (
+          <Grid size="auto">
+            <IconButton className="iconButtonStyle" size="small" onClick={() => onEdit.handleEdit(params.row)}>
+              <DriveFileRenameOutlineIcon fontSize="small" />
+            </IconButton>
+          </Grid>
+        )}
+        {onRefund && params.row.creditsRemaining !== 0 && (
+          <Grid size="auto">
+            <IconButton className="iconButtonStyle" size="small" onClick={() => onRefund(params.row)}>
+              <CurrencyRupeeIcon fontSize="small" />
+            </IconButton>
+          </Grid>
+        )}
+        {onDelete && (
           <Grid size="auto">
             <IconButton className="iconButtonStyle" color="error" size="small" onClick={() => onDelete(params.row)}>
               <DeleteForeverIcon fontSize="small" />
+            </IconButton>
+          </Grid>
+        )}
+        {onSalesInvoice?.handleSalesInvoice && !onSalesInvoice?.isPermission?.(params.row) && (
+          <Grid size="auto">
+            <IconButton className="iconButtonStyle" color="primary" size="small" onClick={() => onSalesInvoice.handleSalesInvoice(params.row)}>
+              <RotateLeftIcon fontSize="small" />
             </IconButton>
           </Grid>
         )}

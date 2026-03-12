@@ -165,18 +165,6 @@ export const KEYS = {
     DELETE: "product-type-delete",
   },
   // ----------------------------- accounts -----------------------------
-  ACCOUNT_GROUP: {
-    BASE: "account-group",
-    ADD: "account-group-add",
-    EDIT: "account-group-edit",
-    DELETE: "account-group-delete",
-  },
-  ACCOUNT: {
-    BASE: "account",
-    ADD: "account-add",
-    EDIT: "account-edit",
-    DELETE: "account-delete",
-  },
   DEBIT_NOTE: {
     BASE: "debit-note",
     ADD: "debit-note-add",
@@ -188,12 +176,6 @@ export const KEYS = {
     ADD: "credit-note-add",
     EDIT: "credit-note-edit",
     DELETE: "credit-note-delete",
-  },
-  JOURNAL_VOUCHER: {
-    BASE: "journal-voucher",
-    ADD: "journal-voucher-add",
-    EDIT: "journal-voucher-edit",
-    DELETE: "journal-voucher-delete",
   },
 
   // ----------------------------- purchase -----------------------------
