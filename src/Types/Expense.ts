@@ -9,7 +9,7 @@ export interface ExpenseFormValues {
   partyId?: string;
   bankId?: string;
   posOrderId?: string;
-  date?: string | Date | null;
+  fromDate?: string | Date | null;
   amount?: number;
   isActive?: boolean;
   companyId?: string;

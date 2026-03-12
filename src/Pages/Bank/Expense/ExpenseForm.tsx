@@ -28,7 +28,7 @@ const ExpenseForm = () => {
   const initialValues: ExpenseFormValues = {
     companyId: data?.companyId?._id || "",
     partyId: data?.partyId?._id || "",
-    date: data?.date || null,
+    fromDate: data?.fromDate || null,
     amount: data?.amount || 0,
     isActive: data?.isActive ?? true,
     remark: data?.remark || "",
@@ -75,7 +75,7 @@ const ExpenseForm = () => {
                       <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
                       <CommonValidationSelect name="partyId" label="Party" grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} options={contactLoading || contactFetching ? [] : GenerateOptions(contactData?.data || [])} isLoading={contactLoading || contactFetching} required />
                       <CommonValidationSelect name="type" label="Expense Type" grid={{ xs: 12, md: 4 }} options={EXPENSE_TYPE_OPTIONS} />
-                      <CommonValidationDatePicker name="date" label="Expense Date" required grid={{ xs: 12, md: 4 }} />
+                      <CommonValidationDatePicker name="fromDate" label="Expense Date" required grid={{ xs: 12, md: 4 }} />
                       <CommonValidationTextField name="amount" label="Amount"  grid={{ xs: 12, md: 4 }} />
                       <CommonValidationTextField name="remark" label="Description" multiline grid={{ xs: 12, md:4 }} />
                     </Grid>

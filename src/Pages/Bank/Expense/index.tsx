@@ -37,7 +37,7 @@ const Expense = () => {
   const columns: AppGridColDef<ExpenseBase>[] = [
        CommonObjectNameColumn<ExpenseBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "partyId", headerName: "Party Name", width: 230, valueGetter: (_v, row: ExpenseBase) => (row?.partyId ? `${row?.partyId?.firstName} ${row?.partyId?.lastName}` : "-") },
-    { field: "date", headerName: "Expense Date", width: 190, valueGetter: (v) => FormatDate(v) },
+    { field: "fromDate", headerName: "Expense Date", width: 190, valueGetter: (v) => FormatDate(v) },
     { field: "amount", headerName: "Amount", width: 200 },
     { field: "remark", headerName: "Remark", minWidth: 150, flex: 1 },
 

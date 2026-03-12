@@ -627,7 +627,7 @@ export const ReciptFormSchema = Yup.object({
 export const ExpenseFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
   partyId: Validation("string", "Party"),
-  date: Yup.mixed().required("Expense Date is required"),
+  fromDate: Validation("string", "Date"),
   amount: Validation("number", "Amount", {
     extraRules: (s) => s.min(1, "Amount must be greater than 0"),
     required: false,
