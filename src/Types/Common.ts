@@ -553,6 +553,7 @@ export type DependentSelectProps<T extends ApiOption, P = string | undefined> = 
   ) => {
     data?: { data: T[] };
     isLoading: boolean;
+    isFetching: boolean;
   };
 };
 
