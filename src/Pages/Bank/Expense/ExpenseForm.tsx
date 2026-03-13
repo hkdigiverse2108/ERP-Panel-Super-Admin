@@ -102,7 +102,7 @@ const ExpenseForm = () => {
                       <CommonValidationSelect name="partyId" label="Party" grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} options={contactLoading || contactFetching ? [] : GenerateOptions(contactData?.data || [])} isLoading={contactLoading || contactFetching} required />
                       <CommonValidationSelect name="type" label="Expense Type" grid={{ xs: 12, md: 4 }} options={EXPENSE_TYPE_OPTIONS} required/>
                       <CommonValidationDatePicker name="fromDate" label="Expense Date" required grid={{ xs: 12, md: 4 }} />
-                      <CommonValidationTextField name="amount" label="Amount" grid={{ xs: 12, md: 4 }} required />
+                      <CommonValidationTextField name="amount" label="Amount" grid={{ xs: 12, md: 4 }} maxDigits={10} required />
                       <CommonValidationTextField name="remark" label="Remark" multiline grid={{ xs: 12, md: 4 }} />
                       <CommonFormImageBox name="image" label="Image" type="image" grid={{ xs: 12 }} onUpload={handleUpload} onDelete={() => setFieldValue("image", null)} />
                       {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}

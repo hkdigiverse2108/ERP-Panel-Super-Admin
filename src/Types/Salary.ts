@@ -7,9 +7,10 @@ export interface SalaryFormValues {
   description?: string;
   partyId?: string;
   type?: string;
-  incentive?: string;
+  incentive?: number;
   fromDate?: string | Date | null;
   toDate?: string | Date | null;
+  total?: number | null;
   isActive?: boolean;
   _submitAction?: string;
 }

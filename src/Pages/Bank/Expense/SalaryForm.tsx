@@ -7,7 +7,7 @@ import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwi
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, EXPENSE_TYPE_OPTIONS } from "../../../Data";
-import { ExpenseFormSchema, GenerateOptions, RemoveEmptyFields } from "../../../Utils";
+import { GenerateOptions, RemoveEmptyFields, SalaryFormSchema } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 import { CommonFormImageBox } from "../../../Components/Common/CommonUploadImage/CommonImageBox";
 import type { ImageSyncProps, SalaryFormValues } from "../../../Types";
@@ -33,8 +33,9 @@ const SalaryForm = () => {
     partyId: data?.partyId?._id || "",
     fromDate: data?.fromDate || null,
     toDate: data?.toDate || null,
-    incentive: data?.incentive || "",
+    incentive: data?.incentive || 0,
     amount: data?.amount || 0,
+    total: data?.total || 0,
     isActive: data?.isActive ?? true,
     description: data?.description || "",
     type: data?.type || "",
@@ -58,6 +59,18 @@ const SalaryForm = () => {
   const handleUpload = () => {
     setActiveImageKey("file");
     dispatch(setUploadModal({ open: true, type: "image" }));
+  };
+  const SalaryTotalCalculator = () => {
+    const { values, setFieldValue } = useFormikContext<SalaryFormValues>();
+
+    useEffect(() => {
+      const amount = Number(values.amount || 0);
+      const incentive = Number(values.incentive || 0);
+
+      setFieldValue("total", amount + incentive);
+    }, [values.amount, values.incentive, setFieldValue]);
+
+    return null;
   };
 
   const handleSubmit = async (values: SalaryFormValues, { resetForm }: FormikHelpers<SalaryFormValues>) => {
@@ -83,21 +96,25 @@ const SalaryForm = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.SALARY[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.SALARY[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
-        <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={ExpenseFormSchema} enableReinitialize>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={SalaryFormSchema} enableReinitialize>
           {({ resetForm, setFieldValue, dirty, values }) => {
             const { data: contactData, isLoading: contactLoading, isFetching: contactFetching } = Queries.useGetContactDropdown({ activeFilter: true, companyFilter: values?.companyId }, Boolean(values?.companyId));
             return (
               <Form noValidate>
+                <SalaryTotalCalculator />
                 <FormikImageSync activeKey={activeImageKey} clearActiveKey={() => setActiveImageKey(null)} />
                 <Grid container spacing={2}>
-                  <CommonCard title="Expense Details" grid={{ xs: 12 }}>
+                  <CommonCard grid={{ xs: 12 }}>
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
                       <CommonValidationSelect name="partyId" label="Party" grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} options={contactLoading || contactFetching ? [] : GenerateOptions(contactData?.data || [])} isLoading={contactLoading || contactFetching} required />
                       <CommonValidationSelect name="type" label="Expense Type" grid={{ xs: 12, md: 4 }} options={EXPENSE_TYPE_OPTIONS} required />
-                      <CommonValidationDatePicker name="fromDate" label="Expense Date" required grid={{ xs: 12, md: 4 }} />
-                      <CommonValidationTextField name="amount" label="Amount" grid={{ xs: 12, md: 4 }} required />
-                      <CommonValidationTextField name="remark" label="Remark" multiline grid={{ xs: 12, md: 4 }} />
+                      <CommonValidationDatePicker name="fromDate" label="From Date" required grid={{ xs: 12, md: 4 }} />
+                      <CommonValidationDatePicker name="toDate" label="To Date" required grid={{ xs: 12, md: 4 }} />
+                      <CommonValidationTextField name="amount" label="Amount" grid={{ xs: 12, md: 4 }} maxDigits={10} required />
+                      <CommonValidationTextField name="incentive" label="Incentive" grid={{ xs: 12, md: 4 }} />
+                      <CommonValidationTextField name="total" label="Total" grid={{ xs: 12, md: 4 }} disabled />
+                      <CommonValidationTextField name="description" label="Description" multiline grid={{ xs: 12 }} />
                       <CommonFormImageBox name="image" label="Image" type="image" grid={{ xs: 12 }} onUpload={handleUpload} onDelete={() => setFieldValue("image", null)} />
                       {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                     </Grid>

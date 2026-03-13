@@ -625,14 +625,27 @@ export const ExpenseFormSchema = Yup.object({
   partyId: Validation("string", "Party"),
   image: Validation("string", "Image", { required: false }),
   fromDate: Validation("string", "Date"),
-  amount: Validation("string", "Amount", { required: true, extraRules: (s) => s?.matches(/^\d+(\.\d{1,2})?$/, "The amount no can only consist of number").max(10, "The amount no must be 10 digit long") }),
-  discountAmount: Validation("number", "Discount Amount", { required: false }).nullable(),
-  taxId: Validation("string", "Tax", { required: false }).nullable(),
+  amount: Validation("number", "Amount"),
   remark: Validation("string", "Description", {
     required: false,
     extraRules: (s) => s.trim().max(200, "Maximum 200 characters allowed"),
   }),
   type: Validation("string", "Type", { required: false }),
-  isNonGST: Validation("boolean", "Is Non GST", { required: false }),
+  isActive: Yup.boolean(),
+});
+
+export const SalaryFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
+  partyId: Validation("string", "Party"),
+  image: Validation("string", "Image", { required: false }),
+  fromDate: Validation("string", "Date"),
+  toDate: Validation("string", "Date"),
+  amount: Validation("number", "Amount"),
+  incentive: Validation("number", "Incentive", { required: false }),
+  description: Validation("string", "Description", {
+    required: false,
+    extraRules: (s) => s.trim().max(200, "Maximum 200 characters allowed"),
+  }),
+  type: Validation("string", "Type", { required: false }),
   isActive: Yup.boolean(),
 });
