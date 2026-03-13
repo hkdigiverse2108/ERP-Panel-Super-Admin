@@ -29,7 +29,7 @@ const Expense = () => {
 
   const handleAdd = () => navigate(ROUTES.EXPENSE.ADD_EDIT);
 
-  const handleSalary = () => navigate(ROUTES.SALARY.ADD_EDIT);
+  const handleSalary = () => navigate(ROUTES.SALARY.ADD_EDIT, { state: { companyId: advancedFilter?.companyFilter?.[0] } });
 
   const handleDelete = () => {
     if (!rowToDelete) return;
@@ -81,7 +81,7 @@ const Expense = () => {
       <Grid container spacing={1}>
         {permissionSalary?.add && (
           <Grid size={"auto"}>
-            <CommonButton variant="contained" title="Add Salary" size="medium" onClick={handleSalary}  />
+            <CommonButton variant="contained" title="Add Salary" size="medium" onClick={handleSalary} disabled={!advancedFilter?.companyFilter?.length} />
           </Grid>
         )}
       </Grid>
