@@ -36,7 +36,7 @@ const Salary = () => {
 
   const columns: AppGridColDef<SalaryBase>[] = [
     CommonObjectNameColumn<SalaryBase>("companyId", { headerName: "Company", width: 200 }),
-    CommonObjectNameColumn<SalaryBase>("partyId", { headerName: "Party Name", width: 200 }),
+    { field: "partyId", headerName: "Party Name", width: 200, valueGetter: (_v, row) => row?.partyId?.fullName || "-" },
     { field: "fromDate", headerName: "From Date", width: 190, valueGetter: (v) => FormatDate(v) },
     { field: "toDate", headerName: "To Date", width: 190, valueGetter: (v) => FormatDate(v) },
     { field: "amount", headerName: "Amount", width: 200 },
