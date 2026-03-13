@@ -134,10 +134,10 @@ export const ROUTES = {
   EXPENSE: {
     BASE: "/expense",
     ADD_EDIT: "/expense/add-edit",
-    SALARY_ADD_EDIT: "/expense/salary/add-edit",
   },
   SALARY: {
     BASE: "/salary",
+    ADD_EDIT: "/salary/add-edit",
   },
   COUPON: {
     BASE: "/coupon",

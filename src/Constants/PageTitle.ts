@@ -188,14 +188,11 @@ export const PAGE_TITLE = {
     BASE: "Expense",
     ADD: "Add Expense",
     EDIT: "Edit Expense",
-    SALARY_ITEM: {
-      BASE: "Salary",
-      ADD: "Add Salary",
-      EDIT: "Edit Salary",
-    },
   },
-  SALARY:{
-    BASE:"Salary",
+  SALARY: {
+    BASE: "Salary",
+    ADD: "Add Salary",
+    EDIT: "Edit Salary",
   },
 
   CRM: {

@@ -192,9 +192,9 @@ export const PageRoutes = [
 
   { path: ROUTES.EXPENSE.BASE, name: PAGE_TITLE.EXPENSE.BASE, element: <Expense /> },
   { path: ROUTES.EXPENSE.ADD_EDIT, name: PAGE_TITLE.EXPENSE.BASE, element: <ExpenseForm /> },
-  { path: ROUTES.EXPENSE.SALARY_ADD_EDIT, name: PAGE_TITLE.SALARY.BASE, element: <SalaryForm /> },
 
   { path: ROUTES.SALARY.BASE, name: PAGE_TITLE.SALARY.BASE, element: <Salary /> },
+  { path: ROUTES.SALARY.ADD_EDIT, name: PAGE_TITLE.SALARY.BASE, element: <SalaryForm /> },
 ];
 
 export const AuthRoutes = [

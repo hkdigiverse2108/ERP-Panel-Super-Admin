@@ -29,7 +29,7 @@ const Expense = () => {
 
   const handleAdd = () => navigate(ROUTES.EXPENSE.ADD_EDIT);
 
-  const handleSalary = () => navigate(ROUTES.EXPENSE.SALARY_ADD_EDIT);
+  const handleSalary = () => navigate(ROUTES.SALARY.ADD_EDIT);
 
   const handleDelete = () => {
     if (!rowToDelete) return;
@@ -93,7 +93,7 @@ const Expense = () => {
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <AdvancedSearch filter={filter} />
-        <CommonCard title={PAGE_TITLE.EXPENSE.SALARY_ITEM.BASE} topContent={topContent}>
+        <CommonCard title={PAGE_TITLE.SALARY.BASE} topContent={topContent}>
           <CommonDataGrid {...gridOptions} />
         </CommonCard>
 
