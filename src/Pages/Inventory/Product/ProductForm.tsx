@@ -27,6 +27,7 @@ const ProductForm = () => {
   const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true });
   const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true });
   const { data: ProductTypeData, isLoading: ProductTypeDataLoading } = Queries.useGetProductTypeDropdown();
+  console.log("data", data);
 
   const { mutate: addProduct, isPending: isAddLoading } = Mutations.useAddProduct();
   const { mutate: editProduct, isPending: isEditLoading } = Mutations.useEditProduct();
@@ -47,12 +48,12 @@ const ProductForm = () => {
       subBrandId: data?.subBrandId?._id || "",
       cessPercentage: data?.cessPercentage || null,
       // uomId: data?.uomId || "",
-      manageMultipleBatch: data?.manageMultipleBatch || true,
-      hasExpiry: data?.hasExpiry || true,
+      manageMultipleBatch: data?.manageMultipleBatch ?? true,
+      hasExpiry: data?.hasExpiry ?? true,
       expiryDays: data?.expiryDays || null,
       calculateExpiryOn: data?.calculateExpiryOn || "",
       expiryReferenceDate: data?.expiryReferenceDate || DateConfig.utc().toISOString(),
-      isExpiryProductSaleable: data?.isExpiryProductSaleable || true,
+      isExpiryProductSaleable: data?.isExpiryProductSaleable ?? true,
       ingredients: data?.ingredients || [],
       shortDescription: data?.shortDescription || "",
       description: data?.description || "",
@@ -60,7 +61,7 @@ const ProductForm = () => {
       netWeight: data?.netWeight || null,
       masterQty: data?.masterQty || null,
       images: data?.images || [],
-      isActive: data?.isActive || true,
+      isActive: data?.isActive ?? true,
       productTypeId: data?.productTypeId?._id || "",
     }),
     [data],
