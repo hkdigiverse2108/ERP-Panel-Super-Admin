@@ -49,3 +49,4 @@ export * from "./AdminSetting";
 export * from "./PosCashRegister";
 export * from "./PosPayment";
 export * from "./Expense";
+export * from "./Salary";
