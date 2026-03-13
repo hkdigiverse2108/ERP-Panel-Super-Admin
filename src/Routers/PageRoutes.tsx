@@ -75,6 +75,8 @@ import Receipt from "../Pages/Bank/Receipt";
 import ReceiptForm from "../Pages/Bank/Receipt/ReceiptForm";
 import Expense from "../Pages/Bank/Expense";
 import ExpenseForm from "../Pages/Bank/Expense/ExpenseForm";
+import SalaryForm from "../Pages/Bank/Expense/SalaryForm";
+import Salary from "../Pages/Bank/Salary";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -190,6 +192,9 @@ export const PageRoutes = [
 
   { path: ROUTES.EXPENSE.BASE, name: PAGE_TITLE.EXPENSE.BASE, element: <Expense /> },
   { path: ROUTES.EXPENSE.ADD_EDIT, name: PAGE_TITLE.EXPENSE.BASE, element: <ExpenseForm /> },
+  { path: ROUTES.EXPENSE.SALARY_ADD_EDIT, name: PAGE_TITLE.SALARY.BASE, element: <SalaryForm /> },
+
+  { path: ROUTES.SALARY.BASE, name: PAGE_TITLE.SALARY.BASE, element: <Salary /> },
 ];
 
 export const AuthRoutes = [

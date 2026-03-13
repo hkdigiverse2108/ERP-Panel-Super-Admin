@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
@@ -8,12 +8,14 @@ import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, ExpenseBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CommonButton } from "../../../Attribute";
 
 const Expense = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
 
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.EXPENSE.BASE);
+  const permissionSalary = usePagePermission(PAGE_TITLE.SALARY.BASE);
 
   const { data, isLoading, isFetching } = Queries.useGetExpense({ ...params, avoidSalary: true });
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
@@ -26,6 +28,8 @@ const Expense = () => {
   const totalRows = data?.data?.totalData || 0;
 
   const handleAdd = () => navigate(ROUTES.EXPENSE.ADD_EDIT);
+
+  const handleSalary = () => navigate(ROUTES.EXPENSE.SALARY_ADD_EDIT);
 
   const handleDelete = () => {
     if (!rowToDelete) return;
@@ -72,13 +76,24 @@ const Expense = () => {
 
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 
+  const topContent = (
+    <Grid size={"auto"}>
+      <Grid container spacing={1}>
+        {permissionSalary?.add && (
+          <Grid size={"auto"}>
+            <CommonButton variant="contained" title="Add Salary" size="medium" onClick={handleSalary}  />
+          </Grid>
+        )}
+      </Grid>
+    </Grid>
+  );
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.EXPENSE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.EXPENSE.BASE} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <AdvancedSearch filter={filter} />
-        <CommonCard hideDivider>
+        <CommonCard title={PAGE_TITLE.EXPENSE.SALARY_ITEM.BASE} topContent={topContent}>
           <CommonDataGrid {...gridOptions} />
         </CommonCard>
 
