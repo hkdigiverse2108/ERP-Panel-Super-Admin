@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, EXPENSE_TYPE_OPTIONS } from "../../../Data";
 import { ExpenseFormSchema, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
@@ -91,7 +91,6 @@ const ExpenseForm = () => {
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={ExpenseFormSchema} enableReinitialize>
           {({ resetForm, setFieldValue, dirty, values }) => {
-            const { data: contactData, isLoading: contactLoading, isFetching: contactFetching } = Queries.useGetContactDropdown({ activeFilter: true, companyFilter: values?.companyId }, Boolean(values?.companyId));
             return (
               <Form noValidate>
                 <FormikImageSync activeKey={activeImageKey} clearActiveKey={() => setActiveImageKey(null)} />
@@ -99,8 +98,8 @@ const ExpenseForm = () => {
                   <CommonCard title="Expense Details" grid={{ xs: 12 }}>
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
-                      <CommonValidationSelect name="partyId" label="Party" grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} options={contactLoading || contactFetching ? [] : GenerateOptions(contactData?.data || [])} isLoading={contactLoading || contactFetching} required />
-                      <CommonValidationSelect name="type" label="Expense Type" grid={{ xs: 12, md: 4 }} options={EXPENSE_TYPE_OPTIONS} required/>
+                      <DependentSelect params={{ companyFilter: values?.companyId }} name="partyId" label="Party" required query={Queries.useGetContactDropdown} grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} />
+                      <CommonValidationSelect name="type" label="Expense Type" grid={{ xs: 12, md: 4 }} options={EXPENSE_TYPE_OPTIONS} required />
                       <CommonValidationDatePicker name="fromDate" label="Expense Date" required grid={{ xs: 12, md: 4 }} />
                       <CommonValidationTextField name="amount" label="Amount" grid={{ xs: 12, md: 4 }} maxDigits={10} required />
                       <CommonValidationTextField name="remark" label="Remark" multiline grid={{ xs: 12, md: 4 }} />

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { CommonSelect, CommonTextField, CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonStatsCard, CommonTable } from "../../../Components/Common";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonStatsCard, CommonTable, DependentSelect } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, PAYMENT_MODE } from "../../../Data";
 import type { CommonTableColumn, PosOrderBase, PosPaymentFormValues } from "../../../Types";
@@ -81,7 +81,6 @@ const ReceiptForm = () => {
           {({ resetForm, setFieldValue, dirty, values }) => {
             const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: values.partyId, duePaymentFilter: true }, Boolean(values.partyId));
             const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown({ companyId: values?.companyId }, Boolean(values?.companyId));
-            const { data: contactData, isLoading: contactLoading, isFetching: contactFetching } = Queries.useGetContactDropdown({ activeFilter: true, companyFilter: values?.companyId }, Boolean(values?.companyId));
 
             const handleTableChange = (key: string, value: string | number | undefined) => {
               let newValues = { ...values, [key]: value };
@@ -152,7 +151,7 @@ const ReceiptForm = () => {
                   <CommonCard title="Receipt Details" grid={{ xs: 12 }}>
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
-                      <CommonValidationSelect name="partyId" label="Party" grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} options={contactLoading || contactFetching ? [] : GenerateOptions(contactData?.data || [])} isLoading={contactLoading || contactFetching} required />
+                      <DependentSelect params={{ companyFilter: values?.companyId }} name="partyId" label="Party" required query={Queries.useGetContactDropdown} grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} />
                       <CommonValidationDatePicker name="date" label="Receipt Date" required grid={{ xs: 12, md: 4 }} />
                       <Grid size={{ xs: 12 }}>
                         <CommonStatsCard
@@ -175,7 +174,7 @@ const ReceiptForm = () => {
                           </CommonCard>
                         </Grid>
                       )}
-                    {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
+                      {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                     </Grid>
                   </CommonCard>
 

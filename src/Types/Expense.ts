@@ -1,9 +1,7 @@
-import type { AccountBase } from "./Account";
-import type { BankBase } from "./Bank";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { CompanyBase } from "./Company";
 import type { ContactBase } from "./Contacts";
-import type { PosOrderBase } from "./PosOrder";
+
 
 export interface ExpenseFormValues {
   partyId?: string;
@@ -29,13 +27,10 @@ export type EditExpensePayload = AddExpensePayload & {
 };
 
 /* ================= BASE MODEL ================= */
-export type ExpenseBase = Omit<ExpenseFormValues, "partyId" | "bankId" | "posOrderId" | "companyId" | "accountId"> &
+export type ExpenseBase = Omit<ExpenseFormValues, "partyId" |  "companyId" > &
   CommonDataType & {
     partyId?: ContactBase;
-    bankId?: BankBase;
-    posOrderId?: PosOrderBase;
     companyId?: CompanyBase;
-    accountId?: AccountBase;
   };
 
 /* ================= API RESPONSES ================= */
