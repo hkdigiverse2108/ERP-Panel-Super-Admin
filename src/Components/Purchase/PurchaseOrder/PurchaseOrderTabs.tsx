@@ -264,9 +264,8 @@ const PurchaseOrderTabs = ({ emptyRow }: { emptyRow: PurchaseOrderItem }) => {
                       header: "Landing Cost",
                       bodyClass: "min-w-[120px] align-middle",
                       render: (_, index) => {
-                        const productId = values?.items?.[index]?.productId;
-                        const product = productsData?.data?.find((p: ProductBase) => p._id === productId);
-                        return <span>{product?.landingCost || ""}</span>;
+                        const { landingCost } = calculateRowValues(index);
+                        return <span>{landingCost.toFixed(2)}</span>;
                       },
                     },
                     {

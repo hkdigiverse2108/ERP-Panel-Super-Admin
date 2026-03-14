@@ -33,11 +33,15 @@ const PurchaseOrderDetails = () => {
   // Set default addresses when customer is selected
   useEffect(() => {
     if (selectedSupplier && selectedSupplier.address && selectedSupplier.address.length > 0) {
-      if (!values.billingAddress) {
+      const isBillingValid = selectedSupplier.address.some((a: any) => a._id === values.billingAddress);
+
+      if (!values.billingAddress || !isBillingValid) {
         setFieldValue("billingAddress", selectedSupplier.address[0]._id);
       }
+    } else if (!selectedSupplier || !selectedSupplier.address || selectedSupplier.address.length === 0) {
+      if (values.billingAddress) setFieldValue("billingAddress", "");
     }
-  }, [selectedSupplier, values.supplierId, setFieldValue]);
+  }, [selectedSupplier, values.billingAddress, setFieldValue]);
 
   // Sync place of supply with billing address
   useEffect(() => {
