@@ -35,22 +35,22 @@ const SupplierBill = () => {
       { label: "Unpaid", value: unpaid },
     ];
   }, [rows]);
-  const filter = [CreateFilter("Payment Status", "paymentStatus", advancedFilter, updateAdvancedFilter, PAYMENT_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [CreateFilter("Payment Status", "statusFilter", advancedFilter, updateAdvancedFilter, PAYMENT_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 
   const columns: AppGridColDef<SupplierBillBase>[] = [
       { field: "paymentStatus", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.paymentStatus}`}>{params.row.paymentStatus}</span> },
-    CommonObjectNameColumn<SupplierBillBase>("companyId", { headerName: "Company", width: 200 }),
-    { field: "supplierBillNo", headerName: "Bill No", width: 160 },
+    CommonObjectNameColumn<SupplierBillBase>("companyId", { headerName: "Company", width: 150 }),
+    { field: "supplierBillNo", headerName: "Bill No", width: 110 },
 
-    { field: "supplierId", headerName: "Supplier", width: 240, valueGetter: (_, row: SupplierBillBase) => (row?.supplierId ? row.supplierId.name || `${row.supplierId.firstName || ""} ${row.supplierId.lastName || ""}`.trim() || row.supplierId.companyName || "" : "") },
+    { field: "supplierId", headerName: "Supplier", width: 150, valueGetter: (_, row: SupplierBillBase) => (row?.supplierId ? row.supplierId.name || `${row.supplierId.firstName || ""} ${row.supplierId.lastName || ""}`.trim() || row.supplierId.companyName || "" : "") },
 
-    { field: "supplierBillDate", headerName: "Bill Date", width: 140, valueGetter: (v) => FormatDate(v) },
+    { field: "supplierBillDate", headerName: "Bill Date", width: 130, valueGetter: (v) => FormatDate(v) },
 
-    { field: "billAmount", headerName: "Bill Amount", width: 150, valueGetter: (_, row: SupplierBillBase) => row?.summary?.netAmount ?? Number(row?.invoiceAmount ?? 0) },
+    { field: "billAmount", headerName: "Bill Amount", width: 130, valueGetter: (_, row: SupplierBillBase) => row?.summary?.netAmount ?? Number(row?.invoiceAmount ?? 0) },
 
-    { field: "paidAmount", headerName: "Paid Amount", width: 140, valueGetter: (v) => Number(v ?? 0) },
+    { field: "paidAmount", headerName: "Paid Amount", width: 130, valueGetter: (v) => Number(v ?? 0) },
 
-    { field: "balanceAmount", headerName: "Due Amount", width: 140, valueGetter: (v) => Number(v ?? 0) },
+    { field: "balanceAmount", headerName: "Due Amount", width: 130, valueGetter: (v) => Number(v ?? 0) },
 
     { field: "taxAmount", headerName: "Tax Amount", width: 140, valueGetter: (_, row: SupplierBillBase) => Number(row?.summary?.taxAmount ?? 0) },
 

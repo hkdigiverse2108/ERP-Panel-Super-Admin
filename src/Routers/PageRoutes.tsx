@@ -71,6 +71,7 @@ import ProductType from "../Pages/Inventory/ProductType";
 import Estimate from "../Pages/Sales/Estimate";
 import EstimateForm from "../Pages/Sales/Estimate/EstimateForm";
 import SalesOrder from "../Pages/Sales/SalesOrder";
+import SalesOrderForm from "../Pages/Sales/SalesOrder/SalesOrderForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -180,7 +181,7 @@ export const PageRoutes = [
   { path: ROUTES.ESTIMATE.ADD_EDIT, name: PAGE_TITLE.ESTIMATE.BASE, element: <EstimateForm /> },
 
   { path: ROUTES.SALES_ORDER.BASE, name: PAGE_TITLE.SALES_ORDER.BASE, element: <SalesOrder /> },
-  // { path: ROUTES.SALES_ORDER.ADD_EDIT, name: PAGE_TITLE.SALES_ORDER.BASE, element: <SalesOrderForm /> },
+  { path: ROUTES.SALES_ORDER.ADD_EDIT, name: PAGE_TITLE.SALES_ORDER.BASE, element: <SalesOrderForm /> },
 ];
 
 export const AuthRoutes = [

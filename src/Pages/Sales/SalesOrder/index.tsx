@@ -22,12 +22,12 @@ const SalesOrder = () => {
     const companyId = advancedFilter?.companyFilter?.[0];
     const { data: customerData, isLoading: customerDataLoading } = Queries.useGetContactDropdown({ typeFilter: "customer", companyFilter: companyId });
 
-    const allEstimate = useMemo(() => salesOrder?.data?.sales_order_data?.map((salesOrder) => ({ ...salesOrder, id: salesOrder._id, netAmount: salesOrder.transactionSummary?.netAmount || 0, taxAmount: salesOrder.transactionSummary?.taxAmount || 0 })) || [], [salesOrder]);
+    const allSalesOrder = useMemo(() => salesOrder?.data?.salesOrder_data?.map((salesOrder) => ({ ...salesOrder, id: salesOrder._id, netAmount: salesOrder.transactionSummary?.netAmount || 0, taxAmount: salesOrder.transactionSummary?.taxAmount || 0 })) || [], [salesOrder]);
     const totalRows = salesOrder?.data?.totalData || 0;
 
     const summary = useMemo(() => {
-        return CalculateGridSummary(allEstimate, ["netAmount", "taxAmount"]);
-    }, [allEstimate]);
+        return CalculateGridSummary(allSalesOrder, ["netAmount", "taxAmount"]);
+    }, [allSalesOrder]);
 
     const handleDeleteBtn = () => {
         if (!rowToDelete) return;
@@ -37,13 +37,13 @@ const SalesOrder = () => {
     const handleAdd = () => navigate(ROUTES.SALES_ORDER.ADD_EDIT);
 
     const columns: AppGridColDef<EstimateBase>[] = [
-        { field: "date", headerName: "Sales Order Date", width: 150, renderCell: (params) => FormatDate(params.row.date) },
         { field: "salesOrderNo", headerName: "Sales Order No", width: 150 },
+        { field: "date", headerName: "Sales Order Date", width: 150, renderCell: (params) => FormatDate(params.row.date) },
         { field: "dueDate", headerName: "Due Date", width: 150, renderCell: (params) => FormatDate(params.row.dueDate) },
-        { field: "customerId", headerName: "Customer Name", width: 250, valueGetter: (_, row: EstimateBase) => (row?.customerId ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || row.customerId.companyName || "" : "") },
-        { field: "netAmount", headerName: "Amount", width: 170, type: "number" },
+        { field: "customerId", headerName: "Customer Name", width: 150, valueGetter: (_, row: EstimateBase) => (row?.customerId ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || row.customerId.companyName || "" : "") },
+        { field: "netAmount", headerName: "Amount", width: 110, type: "number" },
         { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
-        { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 150 },
+        { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 110 },
         CommonActionColumn({
             active: (row) => editSalesOrder({ salesOrderId: row?._id, isActive: !row.isActive }),
             editRoute: ROUTES.SALES_ORDER.ADD_EDIT,
@@ -53,7 +53,7 @@ const SalesOrder = () => {
 
     const CommonDataGridOption = {
         columns,
-        rows: allEstimate,
+        rows: allSalesOrder,
         rowCount: totalRows,
         loading: salesOrderLoading || salesOrderFetching || isEditLoading,
         isActive,
@@ -94,7 +94,7 @@ const SalesOrder = () => {
         value:
             status.value === "all"
                 ? totalRows || 0
-                : allEstimate.filter((item) => item.status === status.value).length,
+                : allSalesOrder.filter((item) => item.status === status.value).length,
         color: STATUS_COLOR[status.value] || "primary",
     }));
 

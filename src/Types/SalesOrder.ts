@@ -52,6 +52,10 @@ export interface SalesOrderFormValues {
   shippingDetails?: ShippingDetails;
   transactionSummary?: TransactionSummary;
   isActive?: boolean;
+  status?: string;
+  salesManId?: string;
+  selectedEstimateId?: string;
+  estimateNo?: string;
   notes?: string;
   _submitAction?: string;
 }
@@ -72,6 +76,7 @@ export interface SalesOrderBase
       | "shippingAddress"
     >,
     CommonDataType {
+  salesOrderNo: string;
   estimateNo: string;
   companyId: CompanyBase;
   customerId: ContactBase;
@@ -83,7 +88,7 @@ export interface SalesOrderBase
 }
 
 export interface SalesOrderDataResponse extends PageStatus {
-  sales_order_data: SalesOrderBase[];
+  salesOrder_data: SalesOrderBase[];
 }
 
 export interface SalesOrderApiResponse extends MessageStatus {

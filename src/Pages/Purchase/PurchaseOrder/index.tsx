@@ -37,9 +37,9 @@ const PurchaseOrder = () => {
 
   const columns: AppGridColDef<PurchaseOrderBase>[] = [
     { field: "orderNo", headerName: "Order No", width: 150 },
-    { field: "supplierId", headerName: "Supplier", width: 250, valueGetter: (_, row: PurchaseOrderBase) => (row?.supplierId ? `${row.supplierId.firstName || ""} ${row.supplierId.lastName || ""}`.trim() || row.supplierId.companyName || "" : "") },
+    { field: "supplierId", headerName: "Supplier", width: 150, valueGetter: (_, row: PurchaseOrderBase) => (row?.supplierId ? `${row.supplierId.firstName || ""} ${row.supplierId.lastName || ""}`.trim() || row.supplierId.companyName || "" : "") },
     { field: "date", headerName: "Order Date", width: 150, renderCell: (params) => FormatDate(params.row.date || params.row.orderDate) },
-    { field: "netAmount", headerName: "Amount", width: 170, type: "number" },
+    { field: "netAmount", headerName: "Amount", width: 110, type: "number" },
     { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
     { field: "notes", headerName: "Notes", flex: 1, minWidth: 150 },
     CommonActionColumn({
