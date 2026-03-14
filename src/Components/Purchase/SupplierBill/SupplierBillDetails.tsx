@@ -1,7 +1,7 @@
 import { Box, Grid, IconButton, Typography } from "@mui/material";
 import { useFormikContext } from "formik";
 import { Queries } from "../../../Api";
-import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
+import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
 import { PAYMENT_TERMS, REVERSE_CHARGE, TAX_TYPE } from "../../../Data";
 import { DateConfig, GenerateOptions } from "../../../Utils";
 import { AddressSelectionModal } from "../../Common";
