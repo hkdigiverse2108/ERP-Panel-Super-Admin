@@ -45,6 +45,7 @@ export interface EstimateFormValues {
   shippingDetails?: ShippingDetails;
   transactionSummary?: TransactionSummary;
   isActive?: boolean;
+  notes?: string;
   _submitAction?: string;
 }
 

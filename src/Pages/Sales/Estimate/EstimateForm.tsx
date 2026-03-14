@@ -25,26 +25,36 @@ const EstimateForm = () => {
   const emptyRow = { productId: "", qty: 1, freeQty: 0, uomId: "", price: 0, discount1: 0, taxId: "", taxableAmount: 0, totalAmount: 0 };
 
   const initialValues: EstimateFormValues = {
-    companyId: data?.companyId || "",
+    companyId: typeof data?.companyId === "object" ? data.companyId?._id : data?.companyId || "",
     date: data?.date || DateConfig.utc().toISOString(),
     dueDate: data?.dueDate || "",
-    customerId: data?.customerId || "",
+    customerId: typeof data?.customerId === "object" ? data.customerId?._id : data?.customerId || "",
     placeOfSupply: data?.placeOfSupply || "",
-    billingAddress: data?.billingAddress?._id || "",
-    shippingAddress: data?.shippingAddress?._id || "",
+    billingAddress: typeof data?.billingAddress === "object" ? data.billingAddress?._id : data?.billingAddress || "",
+    shippingAddress: typeof data?.shippingAddress === "object" ? data.shippingAddress?._id : data?.shippingAddress || "",
     paymentTerms: data?.paymentTerms || "",
     taxType: data?.taxType || "default",
     reverseCharge: data?.reverseCharge !== undefined ? String(data.reverseCharge) : "false",
     termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
-    items: data?.items || [emptyRow],
-    additionalCharges: [],
+    items: data?.items?.length ? data.items.map((i: any) => ({
+      ...emptyRow,
+      ...i,
+      productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
+      uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
+      taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
+    })) : [emptyRow],
+    additionalCharges: data?.additionalCharges?.length ? data.additionalCharges.map((r: any) => ({
+      ...r,
+      chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
+      taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
+    })) : [],
     shippingDetails: {
       shippingType: data?.shippingDetails?.shippingType || "delivery",
       shippingDate: data?.shippingDetails?.shippingDate || "",
       referenceNo: data?.shippingDetails?.referenceNo || "",
       transportDate: data?.shippingDetails?.transportDate || "",
       modeOfTransport: data?.shippingDetails?.modeOfTransport || "",
-      transporterId: data?.shippingDetails?.transporterId || "",
+      transporterId: typeof data?.shippingDetails?.transporterId === "object" ? data.shippingDetails.transporterId?._id : data?.shippingDetails?.transporterId || "",
       vehicleNo: data?.shippingDetails?.vehicleNo || "",
       weight: data?.shippingDetails?.weight || 0,
     },
@@ -57,6 +67,7 @@ const EstimateForm = () => {
       roundOff: data?.transactionSummary?.roundOff || 0,
       netAmount: data?.transactionSummary?.netAmount || 0,
     },
+    notes: data?.notes || "",
   };
 
   const { mutate: addEstimate, isPending: isAddLoading } = Mutations.useAddEstimate();
@@ -123,6 +134,16 @@ const EstimateForm = () => {
     const { _submitAction, ...rest } = values;
     const payload: any = {
       ...rest,
+      items: values.items?.filter((i: any) => i.productId).map((i: any) => ({
+        ...i,
+        qty: Number(i.qty || 0),
+        freeQty: Number(i.freeQty || 0),
+        price: Number(i.price || 0),
+        discount1: Number(i.discount1 || 0),
+        taxableAmount: Number(i.taxableAmount || 0),
+        tax: Number(i.tax || 0),
+        totalAmount: Number(i.totalAmount || 0),
+      })),
       additionalCharges: values.additionalCharges?.filter((r) => r.chargeId).map((r) => ({ chargeId: r.chargeId, taxId: r.taxId, amount: Number(r.amount), totalAmount: Number(r.totalAmount) })),
       transactionSummary: getCalculatedSummary(values, taxData),
     };
@@ -152,17 +173,19 @@ const EstimateForm = () => {
             <Form noValidate>
               <CommonSummaryWatcher summaryKey="transactionSummary" priceKey="price" hasAdditionalCharges />
               <Grid container spacing={2}>
-                <CommonCard title="Estimate Details" grid={{ xs: 12 }}>
-                  <EstimateDetails />
-                </CommonCard>
+                <Box sx={{ display: "grid", gap: 2, width: "100%" }}>
+                  <CommonCard title="Estimate Details" grid={{ xs: 12 }}>
+                    <EstimateDetails />
+                  </CommonCard>
 
-                <CommonCard hideDivider grid={{ xs: 12 }}>
-                  <EstimateTabs emptyRow={emptyRow} />
-                </CommonCard>
+                  <CommonCard hideDivider grid={{ xs: 12 }}>
+                    <EstimateTabs emptyRow={emptyRow} />
+                  </CommonCard>
 
-                <CommonCard grid={{ xs: 12 }} hideDivider>
-                  <CommonAdditionalChargeSection />
-                </CommonCard>
+                  <CommonCard grid={{ xs: 12 }} hideDivider>
+                    <CommonAdditionalChargeSection />
+                  </CommonCard>
+                </Box>
 
                 <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty || !isValid} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>

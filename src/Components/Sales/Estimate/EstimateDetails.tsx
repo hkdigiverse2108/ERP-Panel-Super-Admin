@@ -36,14 +36,20 @@ const EstimateDetails = () => {
   // Set default addresses when customer is selected
   useEffect(() => {
     if (selectedCustomer && selectedCustomer.address && selectedCustomer.address.length > 0) {
-      if (!values.billingAddress) {
+      const isBillingValid = selectedCustomer.address.some((a: any) => a._id === values.billingAddress);
+      const isShippingValid = selectedCustomer.address.some((a: any) => a._id === values.shippingAddress);
+
+      if (!values.billingAddress || !isBillingValid) {
         setFieldValue("billingAddress", selectedCustomer.address[0]._id);
       }
-      if (!values.shippingAddress) {
+      if (!values.shippingAddress || !isShippingValid) {
         setFieldValue("shippingAddress", selectedCustomer.address[0]._id);
       }
+    } else if (!selectedCustomer || !selectedCustomer.address || selectedCustomer.address.length === 0) {
+      if (values.billingAddress) setFieldValue("billingAddress", "");
+      if (values.shippingAddress) setFieldValue("shippingAddress", "");
     }
-  }, [selectedCustomer, values.customerId, setFieldValue]);
+  }, [selectedCustomer, values.billingAddress, values.shippingAddress, setFieldValue]);
 
   // Sync place of supply with billing address
   useEffect(() => {
