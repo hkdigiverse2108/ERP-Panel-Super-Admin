@@ -163,4 +163,9 @@ export const ROUTES = {
     BASE: "/estimate",
     ADD_EDIT: "/estimate/add-edit",
   },
+
+  SALES_ORDER: {
+    BASE: "/sales-order",
+    ADD_EDIT: "/sales-order/add-edit",
+  },
 } as const;

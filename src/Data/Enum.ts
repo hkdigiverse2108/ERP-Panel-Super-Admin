@@ -313,3 +313,14 @@ export const ESTIMATE_STATUS = [
   { label: "Order Created", value: "order-created" },
   { label: "Invoice Created", value: "invoice-created" },
 ];
+
+export const SALES_ORDER_STATUS_OPTIONS = [
+  { label: "All", value: "all" },
+  { label: "Pending", value: "pending" },
+  { label: "Invoice Created", value: "invoice_created" },
+  { label: "Partial Invoice Created", value: "partial_invoice_created" },
+  { label: "Delivery Challan Created", value: "delivery_challan_created" },
+  { label: "Partial Delivery Challan Created", value: "partial_delivery_challan_created" },
+  { label: "Partially Cancelled", value: "partially_cancelled" },
+  { label: "Cancelled", value: "cancelled" },
+];

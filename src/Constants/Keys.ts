@@ -293,4 +293,13 @@ export const KEYS = {
     DELETE: "estimate-delete",
     DROPDOWN: "estimate-dropdown",
   },
+
+  //*************** Sales Order **************** */
+  SALES_ORDER: {
+    BASE: "sales-order",
+    ADD: "sales-order-add",
+    EDIT: "sales-order-edit",
+    DELETE: "sales-order-delete",
+    DROPDOWN: "sales-order-dropdown",
+  },
 };

@@ -312,4 +312,14 @@ export const URL_KEYS = {
     DROPDOWN: "/estimate/dropdown",
   },
 
+  //*************** Sales Order **************** */
+  SALES_ORDER: {
+    BASE: "/sales-order",
+    ALL: "/sales-order/all",
+    ADD: "/sales-order/add",
+    EDIT: "/sales-order/edit",
+    DELETE: "/sales-order/delete",
+    DROPDOWN: "/sales-order/dropdown",
+  },
+
 } as const;

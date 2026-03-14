@@ -80,7 +80,10 @@ export const NavItems: NavItem[] = [
   {
     name: PAGE_TITLE.SALES.BASE,
     icon: <ShoppingCart />,
-    children: [{ name: PAGE_TITLE.ESTIMATE.BASE, path: ROUTES.ESTIMATE.BASE }],
+    children: [
+      { name: PAGE_TITLE.ESTIMATE.BASE, path: ROUTES.ESTIMATE.BASE },
+      { name: PAGE_TITLE.SALES_ORDER.BASE, path: ROUTES.SALES_ORDER.BASE },
+    ],
   },
   {
     name: PAGE_TITLE.SETTINGS.BASE,
