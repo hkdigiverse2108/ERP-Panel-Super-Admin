@@ -5,7 +5,7 @@ import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwi
 import { PAYMENT_TERMS, REVERSE_CHARGE, TAX_TYPE } from "../../../Data";
 import { DateConfig, GenerateOptions } from "../../../Utils";
 import { AddressSelectionModal } from "../../Common";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 
 const SupplierBillDetails = () => {
@@ -16,20 +16,63 @@ const SupplierBillDetails = () => {
   const companyOptions = GenerateOptions(companyData?.data || []);
 
   const { data: supplierData, isLoading: supplierDataLoading, isFetching: supplierDataFetching } = Queries.useGetContactDropdown({ activeFilter: true, typeFilter: "supplier", companyFilter: values.companyId }, !!values.companyId);
-  const suppliers = (supplierData?.data || []).map((s: any) => ({ ...s, name: s.companyName || `${s.firstName} ${s.lastName}` }));
-  const supplierOptions = GenerateOptions(suppliers);
+  // Use useMemo to avoid re-calculating (and creating new references) on every render
+  const suppliers = useMemo(() => {
+    return (supplierData?.data || []).map((s: any) => ({
+      ...s,
+      name: s.companyName || `${s.firstName} ${s.lastName}`
+    }));
+  }, [supplierData?.data]);
 
-  const selectedSupplier = suppliers.find((s: any) => s._id === values.supplierId);
-  const billingAddressObj = selectedSupplier?.address?.find((addr: any) => addr._id === values.billingAddress);
+  const supplierOptions = useMemo(() => GenerateOptions(suppliers), [suppliers]);
+
+  const selectedSupplier = useMemo(() => suppliers.find((s: any) => s._id === values.supplierId), [suppliers, values.supplierId]);
+  const billingAddressObj = useMemo(() => selectedSupplier?.address?.find((addr: any) => addr._id === values.billingAddress), [selectedSupplier, values.billingAddress]);
 
   const displayBilling = billingAddressObj || selectedSupplier?.address?.[0];
 
   const handleAddressSelect = (addressId: string) => {
-    setFieldValue("billingAddress", addressId);
+    if (values.billingAddress !== addressId) {
+      setFieldValue("billingAddress", addressId);
+    }
   };
 
   const prevDateRef = useRef(values.supplierBillDate);
   const prevPaymentTermsRef = useRef(values.paymentTerm);
+
+  // Set default addresses when supplier is selected
+  useEffect(() => {
+    if (selectedSupplier && selectedSupplier.address && selectedSupplier.address.length > 0) {
+      const currentBilling = values.billingAddress;
+      const isBillingValid = selectedSupplier.address.some((a: any) => a._id === currentBilling);
+
+      if (!currentBilling || !isBillingValid) {
+        const firstAddressId = selectedSupplier.address[0]._id;
+        if (currentBilling !== firstAddressId) {
+          setFieldValue("billingAddress", firstAddressId);
+        }
+      }
+    } else if (!selectedSupplier || !selectedSupplier.address || selectedSupplier.address.length === 0) {
+      if (values.billingAddress) {
+        setFieldValue("billingAddress", "");
+      }
+    }
+  }, [selectedSupplier, values.billingAddress, setFieldValue]);
+
+  // Sync place of supply with billing address
+  useEffect(() => {
+    const activeBilling = selectedSupplier?.address?.find((a: any) => a._id === values.billingAddress) || selectedSupplier?.address?.[0];
+    if (activeBilling?.state?.name) {
+      if (values.placeOfSupply !== activeBilling.state.name) {
+        setFieldValue("placeOfSupply", activeBilling.state.name);
+      }
+    }
+    if (activeBilling?.gstIn) {
+      if (values.gstIn !== activeBilling.gstIn) {
+        setFieldValue("gstIn", activeBilling.gstIn);
+      }
+    }
+  }, [values.billingAddress, selectedSupplier, values.placeOfSupply, values.gstIn, setFieldValue]);
 
   useEffect(() => {
     const dateChanged = values.supplierBillDate !== prevDateRef.current;
@@ -112,7 +155,7 @@ const SupplierBillDetails = () => {
           <CommonValidationDatePicker name="shippingDate" label="Shipping Date" required grid={{ xs: 12, md: 4, xl: 3 }} />
           <CommonValidationSelect name="taxType" label="Tax Type" options={TAX_TYPE} grid={{ xs: 12, md: 4, xl: 3 }} />
           <CommonValidationTextField name="invoiceAmount" label="Invoice Amount" required grid={{ xs: 12, md: 4, xl: 3 }} />
-          <CommonValidationSwitch name="exportSez" label="Export / SEZ" grid={{ xs: 12, md: 4, xl: 3 }} />
+          {/* <CommonValidationSwitch name="exportSez" label="Export / SEZ" grid={{ xs: 12, md: 4, xl: 3 }} /> */}
         </Grid>
 
         <Grid

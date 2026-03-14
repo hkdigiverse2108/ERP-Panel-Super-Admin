@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations } from "../../../Api";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonSummaryWatcher } from "../../../Components/Common";
-import { PAGE_TITLE } from "../../../Constants";
+import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { EstimateFormValues } from "../../../Types";
 import { DateConfig, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
@@ -152,7 +152,7 @@ const EstimateForm = () => {
       if (_submitAction === "saveAndNew") {
         resetForm();
       } else {
-        navigate(-1);
+        navigate(ROUTES.ESTIMATE.BASE);
       }
     };
 
@@ -167,7 +167,7 @@ const EstimateForm = () => {
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.ESTIMATE[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.ESTIMATE[pageMode]} />
-      <Box sx={{ p: { xs: 2, md: 3 }, mb: 8, display: "grid" }}>
+      <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<EstimateFormValues> initialValues={initialValues} validationSchema={EstimateFormSchema} onSubmit={handleSubmit} enableReinitialize={isEditing} validateOnMount>
           {({ setFieldValue, dirty, isValid, resetForm }) => (
             <Form noValidate>

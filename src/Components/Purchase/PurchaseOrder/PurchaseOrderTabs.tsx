@@ -142,11 +142,11 @@ const PurchaseOrderTabs = ({ emptyRow }: { emptyRow: PurchaseOrderItem }) => {
       if (item.unit !== uomName) setFieldValue(`items.${index}.unit`, uomName);
 
       // Update calculated fields
-      if (Number(item.taxAmount) !== taxAmount) setFieldValue(`items.${index}.taxAmount`, taxAmount);
-      if (Number(item.taxableAmount) !== taxableAmount) setFieldValue(`items.${index}.taxableAmount`, taxableAmount);
-      if (Number(item.total) !== totalAmount) setFieldValue(`items.${index}.total`, totalAmount);
-      if (Number(item.landingCost) !== landingCost) setFieldValue(`items.${index}.landingCost`, String(landingCost));
-      if (Number(item.margin) !== margin) setFieldValue(`items.${index}.margin`, String(margin));
+      if (Math.abs((Number(item.taxAmount) || 0) - taxAmount) > 0.01) setFieldValue(`items.${index}.taxAmount`, taxAmount);
+      if (Math.abs((Number(item.taxableAmount) || 0) - taxableAmount) > 0.01) setFieldValue(`items.${index}.taxableAmount`, taxableAmount);
+      if (Math.abs((Number(item.total) || 0) - totalAmount) > 0.01) setFieldValue(`items.${index}.total`, totalAmount);
+      if (Math.abs((Number(item.landingCost) || 0) - landingCost) > 0.01) setFieldValue(`items.${index}.landingCost`, String(landingCost));
+      if (Math.abs((Number(item.margin) || 0) - margin) > 0.01) setFieldValue(`items.${index}.margin`, String(margin));
 
       const discount = Number(item?.discount1 || 0);
       const qty = Number(item?.qty || 0);

@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Mutations } from "../../../Api";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonSummaryWatcher, CommonAdditionalChargeSection } from "../../../Components/Common";
-import { PAGE_TITLE } from "../../../Constants";
+import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { SupplierBillFormValues } from "../../../Types";
 import { DateConfig, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
@@ -31,12 +31,12 @@ const SupplierBillForm = () => {
     if (!hasAccess) navigate(-1);
   }, [isEditing, permission, navigate]);
 
-  const emptyRow = { productId: "", qty: 1, freeQty: 0, mrp: 0, uomId: "", unit: "", sellingPrice: 0, unitCost: 0, discount1: 0, taxable: 0, taxableAmount: 0, taxId: "", tax: 0, taxAmount: 0, landingCost: 0, margin: 0, total: 0 };
-  const emptyReturnRow = { productId: "", qty: 1, uomId: "", unit: "", unitCost: 0, discount1: 0, taxable: 0, taxableAmount: 0, taxId: "", tax: 0, taxAmount: 0, landingCost: 0, margin: 0, total: 0 };
+  const emptyRow = { productId: "", _prevProductId: "", qty: 1, freeQty: 0, mrp: 0, uomId: "", unit: "", sellingPrice: 0, unitCost: 0, discount1: 0, taxable: 0, taxableAmount: 0, taxId: "", tax: 0, taxAmount: 0, landingCost: 0, margin: 0, total: 0 };
+  const emptyReturnRow = { productId: "", _prevProductId: "", qty: 1, uomId: "", unit: "", unitCost: 0, discount1: 0, taxable: 0, taxableAmount: 0, taxId: "", tax: 0, taxAmount: 0, landingCost: 0, margin: 0, total: 0 };
 
   const initialValues: SupplierBillFormValues = {
-    companyId: data?.companyId?._id || "",
-    supplierId: data?.supplierId?._id || "",
+    companyId: typeof data?.companyId === "object" ? data.companyId?._id : data?.companyId || "",
+    supplierId: typeof data?.supplierId === "object" ? data.supplierId?._id : data?.supplierId || "",
     supplierBillNo: data?.supplierBillNo || "",
     referenceBillNo: data?.referenceBillNo || "",
     supplierBillDate: data?.supplierBillDate || DateConfig.utc().toISOString(),
@@ -48,18 +48,48 @@ const SupplierBillForm = () => {
     invoiceAmount: data?.invoiceAmount || "",
     placeOfSupply: data?.placeOfSupply || "",
     gstIn: data?.gstIn || "",
-    billingAddress: data?.billingAddress?._id || data?.billingAddress || "",
+    billingAddress: typeof data?.billingAddress === "object" ? data.billingAddress?._id : data?.billingAddress || "",
 
     productDetails: {
-      item: data?.productDetails?.item?.length ? data.productDetails.item.map((i: any) => ({ ...emptyRow, ...i })) : [emptyRow],
+      item: (data?.productDetails?.item || (Array.isArray(data?.productDetails) ? data.productDetails : []))?.length
+        ? (data.productDetails.item || data.productDetails).map((i: any) => {
+            const pId = typeof i.productId === "object" ? i.productId?._id : i.productId;
+            return {
+              ...emptyRow,
+              ...i,
+              productId: pId,
+              _prevProductId: pId,
+              uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
+              taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
+            };
+          })
+        : [emptyRow],
     },
     returnProductDetails: {
-      item: data?.returnProductDetails?.item?.length ? data.returnProductDetails.item.map((i: any) => ({ ...emptyReturnRow, ...i })) : [emptyReturnRow],
+      item: (data?.returnProductDetails?.item || (Array.isArray(data?.returnProductDetails) ? data.returnProductDetails : []))?.length
+        ? (data.returnProductDetails.item || data.returnProductDetails).map((i: any) => {
+            const pId = typeof i.productId === "object" ? i.productId?._id : i.productId;
+            return {
+              ...emptyReturnRow,
+              ...i,
+              productId: pId,
+              _prevProductId: pId,
+              uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
+              taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
+            };
+          })
+        : [emptyReturnRow],
       summary: {
-        roundOff: data?.returnProductDetails?.summary?.roundOff || 0,
+        roundOff: data?.returnProductDetails?.summary?.roundOff || data?.returnProductDetails?.roundOff || 0,
       },
     },
-    additionalCharges: data?.additionalCharges?.item?.length ? data.additionalCharges.item : [],
+    additionalCharges: (data?.additionalCharges?.item || (Array.isArray(data?.additionalCharges) ? data.additionalCharges : []))?.length
+      ? (data.additionalCharges.item || data.additionalCharges).map((r: any) => ({
+          ...r,
+          chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
+          taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
+        }))
+      : [],
     termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
     notes: data?.notes || "",
 
@@ -149,7 +179,7 @@ const SupplierBillForm = () => {
 
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
-      else navigate(-1);
+      else navigate(ROUTES.SUPPLIER_BILL.BASE);
     };
     if (isEditing) {
       const changedFields = GetChangedFields(payload, data);
@@ -169,7 +199,7 @@ const SupplierBillForm = () => {
             <Form noValidate>
               <CommonSummaryWatcher itemsKey="productDetails.item" summaryKey="summary" priceKey="unitCost" taxAmountKey="taxAmount" hasAdditionalCharges />
               <Grid container spacing={2}>
-                <Box sx={{ display: "grid", gap: 2 }}>
+                <Box sx={{ display: "grid", gap: 2, width: "100%" }}>
                   <CommonCard title="Supplier Bill Details" grid={{ xs: 12 }}>
                     <SupplierBillDetails />
                   </CommonCard>

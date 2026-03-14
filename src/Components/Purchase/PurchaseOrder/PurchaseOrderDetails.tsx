@@ -36,7 +36,10 @@ const PurchaseOrderDetails = () => {
       const isBillingValid = selectedSupplier.address.some((a: any) => a._id === values.billingAddress);
 
       if (!values.billingAddress || !isBillingValid) {
-        setFieldValue("billingAddress", selectedSupplier.address[0]._id);
+        const firstAddressId = selectedSupplier.address[0]._id;
+        if (values.billingAddress !== firstAddressId) {
+          setFieldValue("billingAddress", firstAddressId);
+        }
       }
     } else if (!selectedSupplier || !selectedSupplier.address || selectedSupplier.address.length === 0) {
       if (values.billingAddress) setFieldValue("billingAddress", "");
@@ -47,12 +50,16 @@ const PurchaseOrderDetails = () => {
   useEffect(() => {
     const activeBilling = selectedSupplier?.address?.find((a: any) => a._id === values.billingAddress) || selectedSupplier?.address?.[0];
     if (activeBilling?.state?.name) {
-      setFieldValue("placeOfSupply", activeBilling.state.name);
+      if (values.placeOfSupply !== activeBilling.state.name) {
+        setFieldValue("placeOfSupply", activeBilling.state.name);
+      }
     }
     if (activeBilling?.gstIn) {
-      setFieldValue("gstIn", activeBilling.gstIn);
+      if (values.gstIn !== activeBilling.gstIn) {
+        setFieldValue("gstIn", activeBilling.gstIn);
+      }
     }
-  }, [values.billingAddress, selectedSupplier, setFieldValue]);
+  }, [values.billingAddress, selectedSupplier, values.placeOfSupply, values.gstIn, setFieldValue]);
 
   return (
     <Grid container spacing={2} sx={{ p: 2 }}>

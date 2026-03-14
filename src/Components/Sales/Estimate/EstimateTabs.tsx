@@ -97,9 +97,9 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
       if (item.uomId !== product?.uomId?._id) setFieldValue(`items.${index}.uomId`, product?.uomId?._id || "");
       if (item.unit !== uomName) setFieldValue(`items.${index}.unit`, uomName);
       if (item.taxId !== product?.salesTaxId?._id) setFieldValue(`items.${index}.taxId`, product?.salesTaxId?._id || "");
-      if (Number(item.tax) !== taxAmount) setFieldValue(`items.${index}.tax`, taxAmount);
-      if (Number(item.taxableAmount) !== taxableAmount) setFieldValue(`items.${index}.taxableAmount`, taxableAmount);
-      if (Number(item.totalAmount) !== totalAmount) setFieldValue(`items.${index}.totalAmount`, totalAmount);
+      if (Math.abs((Number(item.tax) || 0) - taxAmount) > 0.01) setFieldValue(`items.${index}.tax`, taxAmount);
+      if (Math.abs((Number(item.taxableAmount) || 0) - taxableAmount) > 0.01) setFieldValue(`items.${index}.taxableAmount`, taxableAmount);
+      if (Math.abs((Number(item.totalAmount) || 0) - totalAmount) > 0.01) setFieldValue(`items.${index}.totalAmount`, totalAmount);
 
       const discount = Number(item?.discount1 || 0);
       const qty = Number(item?.qty || 0);

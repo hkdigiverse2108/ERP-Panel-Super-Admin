@@ -184,17 +184,20 @@ export const CommonSummaryWatcher = ({
   };
 
   useEffect(() => {
+    if (!taxData) return;
+
     const newSummary = calculateSummary();
     const currentSummary = values[summaryKey] || {};
 
-    if (
-      newSummary.grossAmount !== currentSummary.grossAmount ||
-      newSummary.discountAmount !== currentSummary.discountAmount ||
-      newSummary.taxableAmount !== currentSummary.taxableAmount ||
-      newSummary.taxAmount !== currentSummary.taxAmount ||
-      newSummary.netAmount !== currentSummary.netAmount ||
-      JSON.stringify(newSummary.taxSummary) !== JSON.stringify(currentSummary.taxSummary)
-    ) {
+    const isDifferent = 
+      Math.abs((currentSummary.grossAmount || 0) - newSummary.grossAmount) > 0.01 ||
+      Math.abs((currentSummary.discountAmount || 0) - newSummary.discountAmount) > 0.01 ||
+      Math.abs((currentSummary.taxableAmount || 0) - newSummary.taxableAmount) > 0.01 ||
+      Math.abs((currentSummary.taxAmount || 0) - newSummary.taxAmount) > 0.01 ||
+      Math.abs((currentSummary.netAmount || 0) - newSummary.netAmount) > 0.01 ||
+      JSON.stringify(newSummary.taxSummary) !== JSON.stringify(currentSummary.taxSummary);
+
+    if (isDifferent) {
       setFieldValue(summaryKey, { ...currentSummary, ...newSummary });
     }
 

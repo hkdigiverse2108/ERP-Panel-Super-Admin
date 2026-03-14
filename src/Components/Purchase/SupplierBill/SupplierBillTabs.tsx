@@ -2,7 +2,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Box, Tab, Tabs } from "@mui/material";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
 import { FieldArray, useFormikContext } from "formik";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { Queries } from "../../../Api";
 import { CommonButton, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
 import { CommonTabPanel, CommonTable, CommonTermsAndCondition } from "../../Common";
@@ -20,7 +20,8 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
 
   const isSupplierSelected = !!values?.supplierId && !!values?.companyId;
 
-  const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown({ companyFilter: values?.companyId }, !!values?.companyId);
+  const productParams = useMemo(() => ({ companyFilter: values?.companyId }), [values?.companyId]);
+  const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown(productParams, !!values?.companyId);
   const { data: taxData } = Queries.useGetTaxDropdown();
 
   const calculateRowValues = (index: number, isReturn: boolean = false) => {
@@ -76,6 +77,8 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
   const prevTaxTypeRef = useRef(values?.taxType);
 
   useEffect(() => {
+    if (isProductLoading || !productsData || !taxData) return;
+
     const taxTypeChanged = values?.taxType !== prevTaxTypeRef.current;
 
     // Regular Items
@@ -136,27 +139,28 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
         }
 
         if (isProductChanged) {
-          setFieldValue(`productDetails.item.${index}._prevProductId`, item.productId);
-          setFieldValue(`productDetails.item.${index}.mrp`, Number((product as any)?.mrp || 0));
+          if (item._prevProductId !== item.productId) setFieldValue(`productDetails.item.${index}._prevProductId`, item.productId);
+          const newMrp = Number((product as any)?.mrp || 0);
+          if (Number(item.mrp) !== newMrp) setFieldValue(`productDetails.item.${index}.mrp`, newMrp);
         }
       }
 
       // Ensure unit cost doesn't exceed product's landing cost
       const maxAllowedCost = Number((product as any)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
       if (maxAllowedCost > 0 && currentUnitCost > maxAllowedCost) {
-        setFieldValue(`productDetails.item.${index}.unitCost`, maxAllowedCost);
+        if (Number(item.unitCost) !== maxAllowedCost) setFieldValue(`productDetails.item.${index}.unitCost`, maxAllowedCost);
         currentUnitCost = maxAllowedCost;
       }
 
       if (item.uomId !== product?.uomId?._id) setFieldValue(`productDetails.item.${index}.uomId`, product?.uomId?._id || "");
       if (item.unit !== uomName) setFieldValue(`productDetails.item.${index}.unit`, uomName);
 
-      if (Number(item.taxAmount) !== taxAmount) setFieldValue(`productDetails.item.${index}.taxAmount`, taxAmount);
-      if (Number(item.taxableAmount) !== taxableAmount) setFieldValue(`productDetails.item.${index}.taxableAmount`, taxableAmount);
-      if (Number(item.total) !== totalAmount) setFieldValue(`productDetails.item.${index}.total`, totalAmount);
-      if (Number(item.landingCost) !== landingCost) setFieldValue(`productDetails.item.${index}.landingCost`, String(landingCost));
-      if (Number(item.margin) !== margin) setFieldValue(`productDetails.item.${index}.margin`, String(margin));
-      if (Number(item.sellingPrice) !== sellingPrice) setFieldValue(`productDetails.item.${index}.sellingPrice`, sellingPrice);
+      if (Math.abs((Number(item.taxAmount) || 0) - taxAmount) > 0.01) setFieldValue(`productDetails.item.${index}.taxAmount`, taxAmount);
+      if (Math.abs((Number(item.taxableAmount) || 0) - taxableAmount) > 0.01) setFieldValue(`productDetails.item.${index}.taxableAmount`, taxableAmount);
+      if (Math.abs((Number(item.total) || 0) - totalAmount) > 0.01) setFieldValue(`productDetails.item.${index}.total`, totalAmount);
+      if (Math.abs((Number(item.landingCost) || 0) - landingCost) > 0.01) setFieldValue(`productDetails.item.${index}.landingCost`, String(landingCost));
+      if (Math.abs((Number(item.margin) || 0) - margin) > 0.01) setFieldValue(`productDetails.item.${index}.margin`, String(margin));
+      if (Math.abs((Number(item.sellingPrice) || 0) - sellingPrice) > 0.01) setFieldValue(`productDetails.item.${index}.sellingPrice`, sellingPrice);
     });
 
     // Return Items
@@ -209,19 +213,21 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
           currentUnitCost = desiredCost;
         }
 
-        if (isProductChanged) setFieldValue(`returnProductDetails.item.${index}._prevProductId`, item.productId);
+        if (isProductChanged) {
+          if (item._prevProductId !== item.productId) setFieldValue(`returnProductDetails.item.${index}._prevProductId`, item.productId);
+        }
       }
 
       const maxAllowedCost = Number((product as any)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
       if (maxAllowedCost > 0 && currentUnitCost > maxAllowedCost) {
-        setFieldValue(`returnProductDetails.item.${index}.unitCost`, maxAllowedCost);
+        if (Number(item.unitCost) !== maxAllowedCost) setFieldValue(`returnProductDetails.item.${index}.unitCost`, maxAllowedCost);
         currentUnitCost = maxAllowedCost;
       }
 
-      if (Number(item.taxAmount) !== taxAmount) setFieldValue(`returnProductDetails.item.${index}.taxAmount`, taxAmount);
-      if (Number(item.taxableAmount) !== taxableAmount) setFieldValue(`returnProductDetails.item.${index}.taxableAmount`, taxableAmount);
-      if (Number(item.total) !== totalAmount) setFieldValue(`returnProductDetails.item.${index}.total`, totalAmount);
-      if (Number(item.landingCost) !== landingCost) setFieldValue(`returnProductDetails.item.${index}.landingCost`, String(landingCost));
+      if (Math.abs((Number(item.taxAmount) || 0) - taxAmount) > 0.01) setFieldValue(`returnProductDetails.item.${index}.taxAmount`, taxAmount);
+      if (Math.abs((Number(item.taxableAmount) || 0) - taxableAmount) > 0.01) setFieldValue(`returnProductDetails.item.${index}.taxableAmount`, taxableAmount);
+      if (Math.abs((Number(item.total) || 0) - totalAmount) > 0.01) setFieldValue(`returnProductDetails.item.${index}.total`, totalAmount);
+      if (Math.abs((Number(item.landingCost) || 0) - landingCost) > 0.01) setFieldValue(`returnProductDetails.item.${index}.landingCost`, String(landingCost));
 
       const uomName = product?.uomId?.name || "";
       if (item.uomId !== product?.uomId?._id) setFieldValue(`returnProductDetails.item.${index}.uomId`, product?.uomId?._id || "");
@@ -348,19 +354,28 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
                       key: "landingCost",
                       header: "Landing Price",
                       bodyClass: "min-w-28 align-middle",
-                      render: (_, index) => <span>{values?.productDetails?.item?.[index]?.landingCost || "0"}</span>,
+                      render: (_, index) => {
+                        const { landingCost } = calculateRowValues(index, false);
+                        return <span>{landingCost.toFixed(2)}</span>;
+                      },
                     },
                     {
                       key: "margin",
                       header: "Margin",
                       bodyClass: "min-w-28 align-middle",
-                      render: (_, index) => <span>{values?.productDetails?.item?.[index]?.margin || "0"}</span>,
+                      render: (_, index) => {
+                        const { margin } = calculateRowValues(index, false);
+                        return <span>{margin.toFixed(2)}</span>;
+                      },
                     },
                     {
                       key: "total",
                       header: "Total",
                       bodyClass: "min-w-28 align-middle",
-                      render: (_, index) => <span>{(Number(values?.productDetails?.item?.[index]?.total) || 0).toFixed(2)}</span>,
+                      render: (_, index) => {
+                        const { totalAmount } = calculateRowValues(index, false);
+                        return <span>{totalAmount.toFixed(2)}</span>;
+                      },
                       footer: (data) => data.reduce((a: any, b: any) => a + (+b.total || 0), 0).toFixed(2),
                     },
                   ];
@@ -463,13 +478,19 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
                       key: "landingCost",
                       header: "Landing Cost",
                       bodyClass: "min-w-28",
-                      render: (_, index) => <span>{values?.returnProductDetails?.item?.[index]?.landingCost || "0"}</span>,
+                      render: (_, index) => {
+                        const { landingCost } = calculateRowValues(index, true);
+                        return <span>{landingCost.toFixed(2)}</span>;
+                      },
                     },
                     {
                       key: "total",
                       header: "Total",
                       bodyClass: "min-w-28",
-                      render: (_, index) => <span>{(Number(values?.returnProductDetails?.item?.[index]?.total) || 0).toFixed(2)}</span>,
+                      render: (_, index) => {
+                        const { totalAmount } = calculateRowValues(index, true);
+                        return <span>{totalAmount.toFixed(2)}</span>;
+                      },
                     },
                   ];
                   return <CommonTable showFooter data={values.returnProductDetails?.item || []} columns={ReturnRowColumns} rowKey={(_row, index) => index.toString()} getRowClass={() => "align-top"} />;

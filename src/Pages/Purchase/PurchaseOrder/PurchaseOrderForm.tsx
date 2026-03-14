@@ -4,7 +4,7 @@ import { Form, Formik } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations } from "../../../Api";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonSummarySection, CommonSummaryWatcher } from "../../../Components/Common";
-import { PAGE_TITLE } from "../../../Constants";
+import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AddPurchaseOrderPayload, PurchaseOrderFormValues } from "../../../Types";
 import { GetChangedFields, PurchaseOrderFormSchema, RemoveEmptyFields } from "../../../Utils";
@@ -96,7 +96,7 @@ const PurchaseOrderForm = () => {
 
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
-      else navigate(-1);
+      else navigate(ROUTES.PURCHASE_ORDER.BASE);
     };
     if (isEditing) {
       const changedFields = GetChangedFields(payload, data);

@@ -40,10 +40,16 @@ const EstimateDetails = () => {
       const isShippingValid = selectedCustomer.address.some((a: any) => a._id === values.shippingAddress);
 
       if (!values.billingAddress || !isBillingValid) {
-        setFieldValue("billingAddress", selectedCustomer.address[0]._id);
+        const firstAddressId = selectedCustomer.address[0]._id;
+        if (values.billingAddress !== firstAddressId) {
+          setFieldValue("billingAddress", firstAddressId);
+        }
       }
       if (!values.shippingAddress || !isShippingValid) {
-        setFieldValue("shippingAddress", selectedCustomer.address[0]._id);
+        const firstAddressId = selectedCustomer.address[0]._id;
+        if (values.shippingAddress !== firstAddressId) {
+          setFieldValue("shippingAddress", firstAddressId);
+        }
       }
     } else if (!selectedCustomer || !selectedCustomer.address || selectedCustomer.address.length === 0) {
       if (values.billingAddress) setFieldValue("billingAddress", "");
@@ -55,9 +61,11 @@ const EstimateDetails = () => {
   useEffect(() => {
     const activeBilling = selectedCustomer?.address?.find((a: any) => a._id === values.billingAddress) || selectedCustomer?.address?.[0];
     if (activeBilling?.state?.name) {
-      setFieldValue("placeOfSupply", activeBilling.state.name);
+      if (values.placeOfSupply !== activeBilling.state.name) {
+        setFieldValue("placeOfSupply", activeBilling.state.name);
+      }
     }
-  }, [values.billingAddress, selectedCustomer, setFieldValue]);
+  }, [values.billingAddress, selectedCustomer, values.placeOfSupply, setFieldValue]);
 
   // Sync due date with date and payment terms
   const prevDateRef = useRef(values.date);
