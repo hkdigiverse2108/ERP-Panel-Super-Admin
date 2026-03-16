@@ -34,57 +34,33 @@ export interface DiscountFormValues {
   companyId?: string;
   title?: string;
   discountCode?: string;
-
   autoApply?: boolean;
   excludeAlreadyDiscounted?: boolean;
   discountApplicable?: string;
-
   discountMode?: string;
-
   discountType?: string;
   discountValue?: number;
-
   rangeWiseRules?: RangeWiseRule[];
-
   buyXGetY?: BuyXGetY;
-
   productAtFixAmount?: ProductAtFixAmount;
-
   appliesTo?: string;
-
   applyToEntireSelection?: boolean;
-
   categoryIds?: string[];
-
   subcategoryIds?: string[];
-
   brandIds?: string[];
-
   productIds?: string[];
-
   excludedProductIds?: string[];
-
   minimumRequirement?: string;
-
   minimumPurchaseAmount?: number;
-
   minimumQuantity?: number;
-
   usageLimitTotal?: number;
-
   usageLimitPerCustomer?: boolean;
-
   startDateTime?: string;
-
   hasEndDate?: boolean;
-
   endDateTime?: string;
-
   branchIds?: string[];
-
   status?: string;
   isActive?: boolean;
-
   _submitAction?: string;
 }
 
@@ -124,4 +100,4 @@ export interface DiscountApiResponse extends MessageStatus {
 
 export interface DiscountDropdownApiResponse extends MessageStatus {
   data: DiscountBase[];
-}
+}
