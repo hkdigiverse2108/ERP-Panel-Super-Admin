@@ -42,3 +42,4 @@ export * from "./Pos";
 export * from "./ProductType";
 export * from "./AdminSetting";
 export * from "./PosCashRegister";
+export * from "./Discount";
