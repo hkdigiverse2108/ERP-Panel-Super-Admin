@@ -6,7 +6,7 @@ import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, Comm
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, DiscountBase } from "../../../Types";
-import { FormatDate } from "../../../Utils";
+import { FormatDate, FormatValidity } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 
 const Discount = () => {
@@ -43,17 +43,8 @@ const Discount = () => {
 
   const columns: AppGridColDef<DiscountBase>[] = [
     { field: "title", headerName: "Title", width: 200 },
-    { field: "createdAt", headerName: "Created On", width: 160, renderCell: (params) => FormatDate(params.row.createdAt) },
-    {
-      field: "validity",
-      headerName: "Validity",
-      width: 250,
-      renderCell: (params) => {
-        const start = FormatDate(params.row.startDateTime);
-        const end = params.row.hasEndDate ? FormatDate(params.row.endDateTime) : "No End Date";
-        return `${start} - ${end}`;
-      },
-    },
+    { field: "createdAt", headerName: "Created On", width: 160, valueGetter: (v) => FormatDate(v) },
+    { field: "validity", headerName: "Validity", width: 250, valueGetter: (v, row) => FormatValidity(v, row) },
     { field: "orders", headerName: "Orders", width: 120 },
     { field: "revenue", headerName: "Revenue", width: 120 },
     { field: "discountValue", headerName: "Discount", width: 120, type: "number" },
