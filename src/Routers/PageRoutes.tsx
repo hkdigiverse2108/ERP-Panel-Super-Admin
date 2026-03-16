@@ -63,6 +63,8 @@ import AdminSetting from "../Pages/Settings/AdminSetting/AdminSetting";
 import Profile from "../Pages/Settings/Profile";
 import SupportDesk from "../Pages/SupportDesk/CallRequest";
 import SupportDeskForm from "../Pages/SupportDesk/CallRequest/CallRequestForm";
+import DiscountForm from "../Pages/CRM/Discount/DiscountForm";
+import Discount from "../Pages/CRM/Discount";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -138,6 +140,9 @@ export const PageRoutes = [
 
   { path: ROUTES.COUPON.BASE, name: PAGE_TITLE.CRM.COUPON.BASE, element: <Coupon /> },
   { path: ROUTES.COUPON.ADD_EDIT, name: PAGE_TITLE.CRM.COUPON.BASE, element: <CouponForm /> },
+
+  { path: ROUTES.DISCOUNT.BASE, name: PAGE_TITLE.CRM.DISCOUNT.BASE, element: <Discount /> },
+  { path: ROUTES.DISCOUNT.ADD_EDIT, name: PAGE_TITLE.CRM.DISCOUNT.BASE, element: <DiscountForm /> },
 
   { path: ROUTES.LOYALTY.BASE, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <Loyalty /> },
   { path: ROUTES.LOYALTY.ADD_EDIT, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <LoyaltyForm /> },

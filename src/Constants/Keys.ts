@@ -158,7 +158,7 @@ export const KEYS = {
     EDIT: "bill-of-live-product-edit",
     DELETE: "bill-of-live-product-delete",
   },
-  PRODUCT_TYPE:{
+  PRODUCT_TYPE: {
     BASE: "product-type",
     ADD: "product-type-add",
     EDIT: "product-type-edit",
@@ -224,6 +224,13 @@ export const KEYS = {
     DELETE: "loyalty-delete",
     POINTS: "loyalty-points",
     POINTS_ADD: "loyalty-points-add",
+  },
+
+  DISCOUNT: {
+    BASE: "discount",
+    ADD: "discount-add",
+    EDIT: "discount-edit",
+    DELETE: "discount-delete",
   },
 
   SALES_REGISTER: {

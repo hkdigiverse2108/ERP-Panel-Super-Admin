@@ -145,4 +145,9 @@ export const ROUTES = {
   POS_ORDER_LIST: {
     BASE: "/pos/order-list",
   },
+
+  DISCOUNT: {
+    BASE: "/discount",
+    ADD_EDIT: "/discount/add-edit",
+  }
 } as const;

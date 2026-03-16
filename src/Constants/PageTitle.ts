@@ -170,6 +170,11 @@ export const PAGE_TITLE = {
       ADD: "Add Loyalty",
       EDIT: "Edit Loyalty",
     },
+    DISCOUNT: {
+      BASE: "Discount",
+      ADD: "Add Discount",
+      EDIT: "Edit Discount",
+    },
   },
   POS: {
     BASE: "Pos",
