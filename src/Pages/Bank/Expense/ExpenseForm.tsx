@@ -36,7 +36,7 @@ const ExpenseForm = () => {
     fromDate: data?.fromDate || null,
     amount: data?.amount || 0,
     isActive: data?.isActive ?? true,
-    remark: data?.remark || "",
+    description: data?.description || "",
     type: data?.type || "",
   };
   const FormikImageSync = <T extends FormikValues>({ activeKey, clearActiveKey }: ImageSyncProps) => {
@@ -102,7 +102,7 @@ const ExpenseForm = () => {
                       <CommonValidationSelect name="type" label="Expense Type" grid={{ xs: 12, md: 4 }} options={EXPENSE_TYPE_OPTIONS} required />
                       <CommonValidationDatePicker name="fromDate" label="Expense Date" required grid={{ xs: 12, md: 4 }} />
                       <CommonValidationTextField name="amount" label="Amount" grid={{ xs: 12, md: 4 }} maxDigits={10} required />
-                      <CommonValidationTextField name="remark" label="Remark" multiline grid={{ xs: 12, md: 4 }} />
+                      <CommonValidationTextField name="description" label="Description" multiline grid={{ xs: 12, md: 4 }} />
                       <CommonFormImageBox name="image" label="Image" type="image" grid={{ xs: 12 }} onUpload={handleUpload} onDelete={() => setFieldValue("image", null)} />
                       {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                     </Grid>

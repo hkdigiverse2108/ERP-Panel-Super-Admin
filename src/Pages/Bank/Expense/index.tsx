@@ -6,6 +6,7 @@ import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, Comm
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, ExpenseBase } from "../../../Types";
+import type { GridRenderCellParams } from "@mui/x-data-grid";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 import { CommonButton } from "../../../Attribute";
@@ -17,10 +18,13 @@ const Expense = () => {
   const permission = usePagePermission(PAGE_TITLE.EXPENSE.BASE);
   const permissionSalary = usePagePermission(PAGE_TITLE.SALARY.BASE);
 
-  const { data, isLoading, isFetching } = Queries.useGetExpense({ ...params, avoidSalary: true });
+  const { data, isLoading, isFetching } = Queries.useGetExpense({ ...params, avoidSalary: false });
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deletePayment, isPending: isDeleteLoading } = Mutations.useDeletePosPayment();
   const { mutate: editPayment, isPending: isEditLoading } = Mutations.useEditPosPayment();
+
+  const { mutate: deleteSalary, isPending: isDeleteSalaryLoading } = Mutations.useDeleteSalary();
+  const { mutate: editSalary, isPending: isEditSalaryLoading } = Mutations.useEditSalary();
   const rows = useMemo(() => {
     return data?.data?.expense_data.map((r) => ({ ...r, id: r?._id })) || [];
   }, [data]);
@@ -33,28 +37,60 @@ const Expense = () => {
 
   const handleDelete = () => {
     if (!rowToDelete) return;
-    deletePayment(rowToDelete?._id as string, {
+    const isSalary = (rowToDelete as ExpenseBase).isSalary || (rowToDelete as any).isSalary;
+    const mutate = isSalary ? deleteSalary : deletePayment;
+    mutate(rowToDelete?._id as string, {
       onSuccess: () => setRowToDelete(null),
     });
   };
 
   const columns: AppGridColDef<ExpenseBase>[] = [
     CommonObjectNameColumn<ExpenseBase>("companyId", { headerName: "Company", width: 200 }),
-    { field: "partyId", headerName: "Party Name", width: 230, valueGetter: (_v, row: ExpenseBase) => (row?.partyId ? `${row?.partyId?.firstName} ${row?.partyId?.lastName}` : "-") },
+    { field: "salary", headerName: "Salary", width: 200, valueGetter: (_v, row: ExpenseBase) => (row?.isSalary ? row?.total : "-") },
+    {
+      field: "partyId",
+      headerName: "Party Name",
+      width: 230,
+      valueGetter: (_v, row: ExpenseBase) => {
+        const party = row?.partyId;
+        if (!party) return "-";
+        if ("fullName" in party) {
+          return party.fullName;
+        }
+        if ("firstName" in party) {
+          return `${party.firstName ?? ""} ${party.lastName ?? ""}`;
+        }
+        return "-";
+      },
+    },
     { field: "fromDate", headerName: "Expense Date", width: 190, valueGetter: (v) => FormatDate(v) },
     { field: "amount", headerName: "Amount", width: 200 },
-    { field: "remark", headerName: "Remark", minWidth: 150, flex: 1 },
-
+    { field: "description", headerName: "Description", width: 200 },
     ...(permission?.edit || permission?.delete
       ? [
-          CommonActionColumn<ExpenseBase>({
-            ...(permission?.edit && {
-              active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
-              editRoute: ROUTES.EXPENSE.ADD_EDIT,
-            }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.remark }) }),
-          }),
-        ]
+        {
+          ...CommonActionColumn<ExpenseBase>({}),
+          renderCell: (params: GridRenderCellParams<ExpenseBase>) => {
+            const row = params.row;
+            if (row?.isSalary) {
+              return CommonActionColumn<ExpenseBase>({
+                ...(permissionSalary?.edit && {
+                  active: (row) => editSalary({ salaryId: row?._id, isActive: !row.isActive }),
+                  editRoute: ROUTES.SALARY.ADD_EDIT,
+                }),
+                ...(permissionSalary?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.description ?? row?.description, isSalary: true } as unknown as ExpenseBase) }),
+              }).renderCell?.(params);
+            }
+            return CommonActionColumn<ExpenseBase>({
+              ...(permission?.edit && {
+                active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
+                editRoute: ROUTES.EXPENSE.ADD_EDIT,
+              }),
+              ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.description }) }),
+            }).renderCell?.(params);
+          },
+        },
+      ]
       : []),
   ];
 
@@ -62,7 +98,7 @@ const Expense = () => {
     columns,
     rows,
     rowCount: totalRows,
-    loading: isLoading || isFetching || isEditLoading,
+    loading: isLoading || isFetching || isEditLoading || isEditSalaryLoading,
     isActive,
     setActive,
     ...(permission?.add && { handleAdd }),
@@ -97,7 +133,7 @@ const Expense = () => {
           <CommonDataGrid {...gridOptions} />
         </CommonCard>
 
-        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={handleDelete} />
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading || isDeleteSalaryLoading} onClose={() => setRowToDelete(null)} onConfirm={handleDelete} />
       </Box>
     </>
   );

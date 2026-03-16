@@ -208,14 +208,14 @@ export const Mutations = {
   useEditPosPayment: () => useMutations<EditPosPaymentPayload, void>([KEYS.POS_PAYMENT.EDIT, KEYS.POS_PAYMENT.BASE], (input) => Put(URL_KEYS.POS_PAYMENT.EDIT, input)),
   useDeletePosPayment: () => useMutations<string, void>([KEYS.POS_PAYMENT.DELETE, KEYS.POS_PAYMENT.BASE], (id) => Delete(`${URL_KEYS.POS_PAYMENT.BASE}/${id}`)),
 
-     //*************** Expense **************** */
-  useAddExpense: () => useMutations<AddExpensePayload, void>([KEYS.EXPENSE.ADD, KEYS.EXPENSE.BASE], (input) => Post(URL_KEYS.EXPENSE.ADD, input)),
-  useEditExpense: () => useMutations<EditExpensePayload, void>([KEYS.EXPENSE.EDIT, KEYS.EXPENSE.BASE], (input) => Put(URL_KEYS.EXPENSE.EDIT, input)),
-  useDeleteExpense: () => useMutations<string, void>([KEYS.EXPENSE.DELETE, KEYS.EXPENSE.BASE], (id) => Delete(`${URL_KEYS.EXPENSE.BASE}/${id}`)),
+  //*************** Expense **************** */
+  useAddExpense: () => useMutations<AddExpensePayload, void>([KEYS.EXPENSE.ADD, KEYS.EXPENSE.BASE, KEYS.SALARY.BASE], (input) => Post(URL_KEYS.EXPENSE.ADD, input)),
+  useEditExpense: () => useMutations<EditExpensePayload, void>([KEYS.EXPENSE.EDIT, KEYS.EXPENSE.BASE, KEYS.SALARY.BASE], (input) => Put(URL_KEYS.EXPENSE.EDIT, input)),
+  useDeleteExpense: () => useMutations<string, void>([KEYS.EXPENSE.DELETE, KEYS.EXPENSE.BASE, KEYS.SALARY.BASE], (id) => Delete(`${URL_KEYS.EXPENSE.BASE}/${id}`)),
   //*************** Salary **************** */
-  useAddSalary: () => useMutations<AddSalaryPayload, void>([KEYS.SALARY.ADD, KEYS.SALARY.BASE], (input) => Post(URL_KEYS.SALARY.ADD, input)),
-  useEditSalary: () => useMutations<EditSalaryPayload, void>([KEYS.SALARY.EDIT, KEYS.SALARY.BASE], (input) => Put(URL_KEYS.SALARY.EDIT, input)),
-  useDeleteSalary: () => useMutations<string, void>([KEYS.SALARY.DELETE, KEYS.SALARY.BASE], (id) => Delete(`${URL_KEYS.SALARY.BASE}/${id}`)),
+  useAddSalary: () => useMutations<AddSalaryPayload, void>([KEYS.SALARY.ADD, KEYS.SALARY.BASE, KEYS.EXPENSE.BASE], (input) => Post(URL_KEYS.SALARY.ADD, input)),
+  useEditSalary: () => useMutations<EditSalaryPayload, void>([KEYS.SALARY.EDIT, KEYS.SALARY.BASE, KEYS.EXPENSE.BASE], (input) => Put(URL_KEYS.SALARY.EDIT, input)),
+  useDeleteSalary: () => useMutations<string, void>([KEYS.SALARY.DELETE, KEYS.SALARY.BASE, KEYS.EXPENSE.BASE], (id) => Delete(`${URL_KEYS.SALARY.BASE}/${id}`)),
 };
 
 

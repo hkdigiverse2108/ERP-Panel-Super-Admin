@@ -24,6 +24,7 @@ const SalaryForm = () => {
   const [activeImageKey, setActiveImageKey] = useState<"file" | null>(null);
   const dispatch = useAppDispatch();
   const { mutate: addSalary, isPending: isAddLoading } = Mutations.useAddSalary();
+  const { mutate: editSalary, isPending: isEditLoading } = Mutations.useEditSalary();
 
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
@@ -80,7 +81,11 @@ const SalaryForm = () => {
       if (_submitAction === "saveAndNew") resetForm();
       else navigate(-1);
     };
-    await addSalary(RemoveEmptyFields(rest), { onSuccess: handleSuccess });
+    if (isEditing) {
+      await editSalary({ ...RemoveEmptyFields(rest), salaryId: data?._id }, { onSuccess: handleSuccess });
+    } else {
+      await addSalary(RemoveEmptyFields(rest), { onSuccess: handleSuccess });
+    }
   };
 
   useEffect(() => {
@@ -123,7 +128,7 @@ const SalaryForm = () => {
                     save={isEditing}
                     clear={!isEditing}
                     disabled={!dirty}
-                    isLoading={isAddLoading}
+                    isLoading={isAddLoading || isEditLoading}
                     onClear={() => resetForm({ values: initialValues })}
                     onSave={() => {
                       setFieldValue("_submitAction", "save");

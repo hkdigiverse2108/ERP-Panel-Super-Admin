@@ -41,7 +41,8 @@ const Salary = () => {
     { field: "toDate", headerName: "To Date", width: 190, valueGetter: (v) => FormatDate(v) },
     { field: "amount", headerName: "Amount", width: 200 },
     { field: "incentive", headerName: "Incentive", width: 200 },
-    { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
+    { field: "description", headerName: "Description", width: 200 },
+    { field: "total", headerName: "Total", flex: 1, minWidth: 200 },
 
     ...(permission?.edit || permission?.delete
       ? [
