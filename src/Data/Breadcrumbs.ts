@@ -355,4 +355,15 @@ export const BREADCRUMBS = {
       { label: PAGE_TITLE.SALES_ORDER.EDIT },
     ],
   },
+  INVOICE: {
+    BASE: [{ label: PAGE_TITLE.INVOICE.BASE }],
+    ADD: [
+      { label: PAGE_TITLE.INVOICE.BASE, href: ROUTES.INVOICE.BASE },
+      { label: PAGE_TITLE.INVOICE.ADD },
+    ],
+    EDIT: [
+      { label: PAGE_TITLE.INVOICE.BASE, href: ROUTES.INVOICE.BASE },
+      { label: PAGE_TITLE.INVOICE.EDIT },
+    ],
+  },
 };

@@ -168,4 +168,9 @@ export const ROUTES = {
     BASE: "/sales-order",
     ADD_EDIT: "/sales-order/add-edit",
   },
+
+  INVOICE: {
+    BASE: "/invoice",
+    ADD_EDIT: "/invoice/add-edit",
+  },
 } as const;

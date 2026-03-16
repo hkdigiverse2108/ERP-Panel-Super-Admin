@@ -83,6 +83,7 @@ export const NavItems: NavItem[] = [
     children: [
       { name: PAGE_TITLE.ESTIMATE.BASE, path: ROUTES.ESTIMATE.BASE },
       { name: PAGE_TITLE.SALES_ORDER.BASE, path: ROUTES.SALES_ORDER.BASE },
+      { name: PAGE_TITLE.INVOICE.BASE, path: ROUTES.INVOICE.BASE },
     ],
   },
   {

@@ -302,4 +302,18 @@ export const KEYS = {
     DELETE: "sales-order-delete",
     DROPDOWN: "sales-order-dropdown",
   },
+
+  //*************** Invoice **************** */
+  INVOICE: {
+    BASE: "invoice",
+    ADD: "invoice-add",
+    EDIT: "invoice-edit",
+    DELETE: "invoice-delete",
+    DROPDOWN: "invoice-dropdown",
+  },
+  //*************** Delivery Challan **************** */
+  DELIVERY_CHALLAN: {
+    BASE: "delivery-challan",
+    DROPDOWN: "delivery-challan-dropdown",
+  },
 };

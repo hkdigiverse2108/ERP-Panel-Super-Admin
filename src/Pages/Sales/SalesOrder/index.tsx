@@ -102,7 +102,7 @@ const SalesOrder = () => {
         <>
             <CommonBreadcrumbs title={PAGE_TITLE.SALES_ORDER.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.SALES_ORDER.BASE} />
             <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-                <CommonStatsCard stats={stats} grid={{ xs: 6, md: 3 }} />
+                <CommonStatsCard stats={stats} grid={{ xs: 6, sm: 2, xl: 1.5 }} />
                 <AdvancedSearch filter={filter} />
                 <CommonCard hideDivider>
                     <CommonDataGrid {...CommonDataGridOption} />

@@ -250,6 +250,31 @@ export const ORDER_STATUS = [
   { label: "Completed", value: "completed" },
   { label: "Cancelled", value: "cancelled" },
 ];
+
+export const INVOICE_STATUS = [
+  { label: "Invoiced", value: "invoiced" },
+  { label: "Delivery Challan Created", value: "delivery_challan_created" },
+  { label: "Cancelled", value: "cancelled" },
+];
+
+export const INVOICE_PAYMENT_STATUS_OPTIONS = [
+  { label: "Paid", value: "paid" },
+  { label: "Unpaid", value: "unpaid" },
+  { label: "Partial", value: "partial" },
+];
+
+export const INVOICE_STATUS_STATS = [
+  { label: "All", value: "all" },
+  { label: "Invoiced", value: "invoiced" },
+  { label: "Delivery Challan Created", value: "delivery_challan_created" },
+  { label: "Partial Delivery Challan Created", value: "partial_delivery_challan_created" },
+  { label: "Partially Cancelled", value: "partially_cancelled" },
+  { label: "Cancelled", value: "cancelled" },
+  { label: "Total Sales", value: "total_sales" },
+  { label: "Paid", value: "paid" },
+  { label: "UnPaid", value: "unpaid" },
+];
+
 export const TAX_TYPE = [
   { label: "Default", value: "default" },
   { label: "Tax Inclusive", value: "tax_inclusive" },
@@ -324,3 +349,9 @@ export const SALES_ORDER_STATUS_OPTIONS = [
   { label: "Partially Cancelled", value: "partially_cancelled" },
   { label: "Cancelled", value: "cancelled" },
 ];
+
+export const INVOICE_CREATED_FROM_OPTIONS = [
+  { label: "Sales Order", value: "sales-order" },
+  { label: "Delivery Challan", value: "delivery-challan" },
+];
+

@@ -72,6 +72,8 @@ import Estimate from "../Pages/Sales/Estimate";
 import EstimateForm from "../Pages/Sales/Estimate/EstimateForm";
 import SalesOrder from "../Pages/Sales/SalesOrder";
 import SalesOrderForm from "../Pages/Sales/SalesOrder/SalesOrderForm";
+import Invoice from "../Pages/Sales/Invoice";
+import InvoiceForm from "../Pages/Sales/Invoice/InvoiceForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -182,6 +184,9 @@ export const PageRoutes = [
 
   { path: ROUTES.SALES_ORDER.BASE, name: PAGE_TITLE.SALES_ORDER.BASE, element: <SalesOrder /> },
   { path: ROUTES.SALES_ORDER.ADD_EDIT, name: PAGE_TITLE.SALES_ORDER.BASE, element: <SalesOrderForm /> },
+  
+  { path: ROUTES.INVOICE.BASE, name: PAGE_TITLE.INVOICE.BASE, element: <Invoice /> },
+  { path: ROUTES.INVOICE.ADD_EDIT, name: PAGE_TITLE.INVOICE.BASE, element: <InvoiceForm /> },
 ];
 
 export const AuthRoutes = [

@@ -322,4 +322,18 @@ export const URL_KEYS = {
     DROPDOWN: "/sales-order/dropdown",
   },
 
+  //*************** Invoice **************** */
+  INVOICE: {
+    BASE: "/invoice",
+    ALL: "/invoice/all",
+    ADD: "/invoice/add",
+    EDIT: "/invoice/edit",
+    DELETE: "/invoice/delete",
+    DROPDOWN: "/invoice/dropdown",
+  },
+  //*************** Delivery Challan **************** */
+  DELIVERY_CHALLAN: {
+    BASE: "/delivery-challan",
+    DROPDOWN: "/delivery-challan/dropdown",
+  },
 } as const;

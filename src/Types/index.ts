@@ -47,3 +47,5 @@ export * from "./AdminSetting";
 export * from "./PosCashRegister";
 export * from "./Estimate";
 export * from "./SalesOrder";
+export * from "./Invoice";
+export * from "./DeliveryChallan";

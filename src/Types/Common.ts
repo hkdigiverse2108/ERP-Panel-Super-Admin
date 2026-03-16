@@ -355,6 +355,7 @@ export interface CommonDataType {
   updatedBy?: string | Record<string, unknown> | null;
   createdAt: string;
   updatedAt: string;
+  isActive?: boolean;
 }
 
 export interface AddressBase {
