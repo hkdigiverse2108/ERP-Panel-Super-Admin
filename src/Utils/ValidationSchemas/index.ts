@@ -642,3 +642,24 @@ export const DeliveryChallanFormSchema = Yup.object({
     )
     .min(1, "At least one item is required"),
 });
+
+export const SalesCreditNoteFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
+  customerId: Validation("string", "Customer"),
+  creditNoteDate: Validation("string", "Credit Note Date"),
+  dueDate: Validation("string", "Due Date", { required: false }),
+  productDetails: Yup.array()
+    .of(
+      Yup.object({
+        productId: Validation("string", "Product"),
+        qty: Validation("number", "Quantity", { extraRules: (s) => s.min(0, "Quantity must be positive") }),
+        price: Validation("number", "Price", { required: false, extraRules: (s) => s.min(0, "Price must be positive") }),
+        discount1: Validation("number", "Discount", { required: false, extraRules: (s) => s.min(0) }),
+      }),
+    )
+    .min(1, "At least one item is required"),
+  summary: Yup.object({
+    flatDiscount: Validation("number", "Flat Discount", { required: false }),
+    roundOff: Validation("number", "Round Off", { required: false }),
+  }),
+});

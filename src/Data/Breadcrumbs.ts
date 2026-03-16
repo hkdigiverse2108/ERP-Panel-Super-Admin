@@ -377,4 +377,15 @@ export const BREADCRUMBS = {
       { label: PAGE_TITLE.DELIVERY_CHALLAN.EDIT },
     ],
   },
+  SALES_CREDIT_NOTE: {
+    BASE: [{ label: PAGE_TITLE.SALES_CREDIT_NOTE.BASE }],
+    ADD: [
+      { label: PAGE_TITLE.SALES_CREDIT_NOTE.BASE, href: ROUTES.SALES_CREDIT_NOTE.BASE },
+      { label: PAGE_TITLE.SALES_CREDIT_NOTE.ADD },
+    ],
+    EDIT: [
+      { label: PAGE_TITLE.SALES_CREDIT_NOTE.BASE, href: ROUTES.SALES_CREDIT_NOTE.BASE },
+      { label: PAGE_TITLE.SALES_CREDIT_NOTE.EDIT },
+    ],
+  },
 };

@@ -85,6 +85,7 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.SALES_ORDER.BASE, path: ROUTES.SALES_ORDER.BASE },
       { name: PAGE_TITLE.INVOICE.BASE, path: ROUTES.INVOICE.BASE },
       { name: PAGE_TITLE.DELIVERY_CHALLAN.BASE, path: ROUTES.DELIVERY_CHALLAN.BASE },
+      { name: PAGE_TITLE.SALES_CREDIT_NOTE.BASE, path: ROUTES.SALES_CREDIT_NOTE.BASE },
     ],
   },
   {

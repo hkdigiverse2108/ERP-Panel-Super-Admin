@@ -366,3 +366,15 @@ export const DELIVERY_CHALLAN_CREATED_FROM_OPTIONS = [
   { label: "Sales Order", value: "sales-order" },
 ];
 
+export const SALES_CREDIT_NOTE_STATUS_OPTIONS = [
+  { label: "All", value: "all" },
+  { label: "Open", value: "open" },
+  { label: "Paid", value: "paid" },
+  { label: "Due", value: "due" },
+];
+
+export const SALES_CREDIT_NOTE_PRODUCT_TYPE_OPTIONS = [
+  { label: "All", value: "all" },
+  { label: "Expiry", value: "expiry" },
+];
+

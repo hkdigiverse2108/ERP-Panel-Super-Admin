@@ -232,4 +232,9 @@ export const PAGE_TITLE = {
     ADD: "Add Delivery Challan",
     EDIT: "Edit Delivery Challan",
   },
+  SALES_CREDIT_NOTE: {
+    BASE: "Sales Credit Note",
+    ADD: "Add Sales Credit Note",
+    EDIT: "Edit Sales Credit Note",
+  },
 } as const;

@@ -340,4 +340,12 @@ export const URL_KEYS = {
     DELETE: "/delivery-challan/delete",
     DROPDOWN: "/delivery-challan/dropdown",
   },
+  SALES_CREDIT_NOTE: {
+    BASE: "/sales-credit-note",
+    ALL: "/sales-credit-note/all",
+    ADD: "/sales-credit-note/add",
+    EDIT: "/sales-credit-note/edit",
+    DELETE: "/sales-credit-note/delete",
+    DROPDOWN: "/sales-credit-note/dropdown",
+  },
 } as const;
