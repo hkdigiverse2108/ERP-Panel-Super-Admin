@@ -355,3 +355,14 @@ export const INVOICE_CREATED_FROM_OPTIONS = [
   { label: "Delivery Challan", value: "delivery-challan" },
 ];
 
+export const DELIVERY_CHALLAN_STATUS_OPTIONS = [
+  { label: "Invoice Created", value: "invoice_created" },
+  { label: "Delivered", value: "delivered" },
+  { label: "Cancelled", value: "cancelled" },
+];
+
+export const DELIVERY_CHALLAN_CREATED_FROM_OPTIONS = [
+  { label: "Invoice", value: "invoice" },
+  { label: "Sales Order", value: "sales-order" },
+];
+

@@ -74,6 +74,8 @@ import SalesOrder from "../Pages/Sales/SalesOrder";
 import SalesOrderForm from "../Pages/Sales/SalesOrder/SalesOrderForm";
 import Invoice from "../Pages/Sales/Invoice";
 import InvoiceForm from "../Pages/Sales/Invoice/InvoiceForm";
+import DeliveryChallan from "../Pages/Sales/DeliveryChallan";
+import DeliveryChallanForm from "../Pages/Sales/DeliveryChallan/DeliveryChallanForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -187,6 +189,9 @@ export const PageRoutes = [
   
   { path: ROUTES.INVOICE.BASE, name: PAGE_TITLE.INVOICE.BASE, element: <Invoice /> },
   { path: ROUTES.INVOICE.ADD_EDIT, name: PAGE_TITLE.INVOICE.BASE, element: <InvoiceForm /> },
+
+  { path: ROUTES.DELIVERY_CHALLAN.BASE, name: PAGE_TITLE.DELIVERY_CHALLAN.BASE, element: <DeliveryChallan /> },
+  { path: ROUTES.DELIVERY_CHALLAN.ADD_EDIT, name: PAGE_TITLE.DELIVERY_CHALLAN.BASE, element: <DeliveryChallanForm /> },
 ];
 
 export const AuthRoutes = [

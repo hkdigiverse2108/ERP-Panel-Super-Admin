@@ -4,5 +4,7 @@ import SalesOrderDetails from "./SalesOrder/SalesOrderDetails";
 import SalesOrderTabs from "./SalesOrder/SalesOrderTabs";
 import InvoiceDetails from "./Invoice/InvoiceDetails";
 import InvoiceTabs from "./Invoice/InvoiceTabs";
+import DeliveryChallanDetails from "./DeliveryChallan/DeliveryChallanDetails";
+import DeliveryChallanTabs from "./DeliveryChallan/DeliveryChallanTabs";
 
-export { EstimateDetails, EstimateTabs, SalesOrderDetails, SalesOrderTabs, InvoiceDetails, InvoiceTabs };
+export { EstimateDetails, EstimateTabs, SalesOrderDetails, SalesOrderTabs, InvoiceDetails, InvoiceTabs, DeliveryChallanDetails, DeliveryChallanTabs };

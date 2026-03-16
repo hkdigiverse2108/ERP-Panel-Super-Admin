@@ -314,6 +314,9 @@ export const KEYS = {
   //*************** Delivery Challan **************** */
   DELIVERY_CHALLAN: {
     BASE: "delivery-challan",
+    ADD: "delivery-challan-add",
+    EDIT: "delivery-challan-edit",
+    DELETE: "delivery-challan-delete",
     DROPDOWN: "delivery-challan-dropdown",
   },
 };

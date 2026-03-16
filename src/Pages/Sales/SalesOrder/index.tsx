@@ -42,7 +42,7 @@ const SalesOrder = () => {
         { field: "dueDate", headerName: "Due Date", width: 150, renderCell: (params) => FormatDate(params.row.dueDate) },
         { field: "customerId", headerName: "Customer Name", width: 150, valueGetter: (_, row: EstimateBase) => (row?.customerId ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || row.customerId.companyName || "" : "") },
         { field: "netAmount", headerName: "Amount", width: 110, type: "number" },
-        { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
+        { field: "status", headerName: "Status", headerAlign: "center", width: 190, renderCell: (params) => <span className={`status-${params.row.status} overflow-hidden`}>{params.row.status}</span> },
         { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 110 },
         CommonActionColumn({
             active: (row) => editSalesOrder({ salesOrderId: row?._id, isActive: !row.isActive }),

@@ -334,6 +334,10 @@ export const URL_KEYS = {
   //*************** Delivery Challan **************** */
   DELIVERY_CHALLAN: {
     BASE: "/delivery-challan",
+    ALL: "/delivery-challan/all",
+    ADD: "/delivery-challan/add",
+    EDIT: "/delivery-challan/edit",
+    DELETE: "/delivery-challan/delete",
     DROPDOWN: "/delivery-challan/dropdown",
   },
 } as const;

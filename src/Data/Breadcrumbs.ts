@@ -366,4 +366,15 @@ export const BREADCRUMBS = {
       { label: PAGE_TITLE.INVOICE.EDIT },
     ],
   },
+  DELIVERY_CHALLAN: {
+    BASE: [{ label: PAGE_TITLE.DELIVERY_CHALLAN.BASE }],
+    ADD: [
+      { label: PAGE_TITLE.DELIVERY_CHALLAN.BASE, href: ROUTES.DELIVERY_CHALLAN.BASE },
+      { label: PAGE_TITLE.DELIVERY_CHALLAN.ADD },
+    ],
+    EDIT: [
+      { label: PAGE_TITLE.DELIVERY_CHALLAN.BASE, href: ROUTES.DELIVERY_CHALLAN.BASE },
+      { label: PAGE_TITLE.DELIVERY_CHALLAN.EDIT },
+    ],
+  },
 };

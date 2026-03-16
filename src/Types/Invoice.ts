@@ -104,3 +104,7 @@ export interface InvoiceApiResponse extends MessageStatus {
 export interface SingleInvoiceApiResponse extends MessageStatus {
   data: InvoiceBase;
 }
+
+export interface InvoiceDropdownApiResponse extends MessageStatus {
+  data: InvoiceBase[];
+}

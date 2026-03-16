@@ -42,7 +42,7 @@ const Estimate = () => {
     { field: "date", headerName: "Estimate Date", width: 150, renderCell: (params) => FormatDate(params.row.date) },
     { field: "dueDate", headerName: "Due Date", width: 150, renderCell: (params) => FormatDate(params.row.dueDate) },
     { field: "netAmount", headerName: "Amount", width: 110, type: "number" },
-    { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
+    { field: "status", headerName: "Status", headerAlign: "center", width: 150, renderCell: (params) => <span className={`status-${params.row.status} overflow-hidden`}>{params.row.status}</span> },
     { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 110 },
     CommonActionColumn({
       active: (row) => editEstimate({ estimateId: row?._id, isActive: !row.isActive }),

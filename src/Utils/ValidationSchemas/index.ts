@@ -626,3 +626,19 @@ export const InvoiceFormSchema = Yup.object({
     )
     .min(1, "At least one item is required"),
 });
+
+export const DeliveryChallanFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
+  customerId: Validation("string", "Customer"),
+  date: Validation("string", "Date"),
+  dueDate: Validation("string", "Due Date"),
+  items: Yup.array()
+    .of(
+      Yup.object({
+        productId: Validation("string", "Product"),
+        qty: Validation("number", "Quantity", { extraRules: (s) => s.min(1, "Quantity must be at least 1") }),
+        price: Validation("number", "Price", { extraRules: (s) => s.min(0, "Price must be positive") }),
+      }),
+    )
+    .min(1, "At least one item is required"),
+});
