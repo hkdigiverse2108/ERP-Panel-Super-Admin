@@ -37,7 +37,7 @@ const Expense = () => {
 
   const handleDelete = () => {
     if (!rowToDelete) return;
-    const isSalary = (rowToDelete as ExpenseBase).isSalary || (rowToDelete as any).isSalary;
+    const isSalary = (rowToDelete as ExpenseBase).isSalary || (rowToDelete as ExpenseBase).isSalary;
     const mutate = isSalary ? deleteSalary : deletePayment;
     mutate(rowToDelete?._id as string, {
       onSuccess: () => setRowToDelete(null),
