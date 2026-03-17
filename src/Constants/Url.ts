@@ -384,5 +384,4 @@ export const URL_KEYS = {
     DROPDOWN: "/sales-credit-note/dropdown",
     ADD_EDIT: "/sales-credit-note/add-edit",
   },
-  }
 } as const;
