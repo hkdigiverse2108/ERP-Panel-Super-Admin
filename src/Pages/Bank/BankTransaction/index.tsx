@@ -61,7 +61,7 @@ const BankTransaction = () => {
           CommonActionColumn<BankTransactionBase>({
             ...(permission?.edit && {
               active: (row) => editBankTransaction({ bankTransactionId: row?._id, isActive: !row.isActive }),
-              onEdit: (row) => handleEdit(row),
+              onEdit: { handleEdit: (row) => handleEdit(row) },
             }),
             ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherNo || row?.transactionType }) }),
           }),

@@ -84,6 +84,6 @@ const ModalSlice = createSlice({
   },
 });
 
-export const { setRoleModal, setUploadModal, setAdditionalChargeModal, setSelectedFiles, setSelectedTermIds, setModalVideoPlay, setBrandModal, setCategoryModal, setUomModal, setTaxModal, setLocationModal, setTermsAndConditionModal, setTermsSelectionModal, setOrderRefundModal, setProductTypeModal, setTermsAndConditionFormModal, setTermsAndConditionSelectionModal } = ModalSlice.actions;
+export const {setBankTransactionModal, setRoleModal, setUploadModal, setAdditionalChargeModal, setSelectedFiles, setSelectedTermIds, setModalVideoPlay, setBrandModal, setCategoryModal, setUomModal, setTaxModal, setLocationModal, setTermsAndConditionModal, setTermsSelectionModal, setOrderRefundModal, setProductTypeModal, setTermsAndConditionFormModal, setTermsAndConditionSelectionModal } = ModalSlice.actions;
 
 export default ModalSlice.reducer;

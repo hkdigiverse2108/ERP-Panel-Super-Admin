@@ -1,4 +1,4 @@
-import type { AccountBase } from "./Account";
+import type { BankBase } from "./Bank";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { CompanyBase } from "./Company";
 
@@ -26,8 +26,8 @@ export type EditBankTransactionPayload = AddBankTransactionPayload & { bankTrans
 
 export interface BankTransactionBase extends Omit<BankTransactionFormValues, "fromAccount" | "toAccount" | "companyId">, CommonDataType {
   companyId: CompanyBase | string;
-  fromAccount: AccountBase;
-  toAccount: AccountBase;
+  fromAccount: BankBase;
+  toAccount: BankBase;
 }
 
 /* ===================== API RESPONSES ===================== */
