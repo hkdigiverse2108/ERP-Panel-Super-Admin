@@ -1,4 +1,4 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
@@ -80,6 +80,7 @@ const DiscountForm = () => {
                 <CommonCard hideDivider>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonValidationSwitch name="autoApply" label="Discount Auto Apply" grid={{ xs: 12, md: 4 }} />
+                    {values.discountApplicable === "product_wise" && <CommonValidationSwitch name="excludeAlreadyDiscounted" label="Exclude Products Which Already have Discount Applied" grid={{ xs: 12, md: 4 }} />}
                     <CommonValidationTextField name="discountCode" label="Discount Code" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="branchIds" label="Branch" multiple options={GenerateOptions(BranchData?.data)} isLoading={BranchLoading} grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationRadio name="discountApplicable" label="Discount Applicable" required options={DISCOUNT_APPLICABLE} row grid={{ xs: 12 }} />
@@ -92,7 +93,8 @@ const DiscountForm = () => {
                       grid={{ xs: 12 }}
                       onChange={(val) => {
                         if (val === "normal") setFieldValue("minimumRequirement", "");
-                        else if (val === "range_wise") setFieldValue("minimumRequirement", "MIN_PURCHASE_AMOUNT");
+                        else if (val === "range_wise") setFieldValue("minimumRequirement", "min_purchase_amount");
+                        else if (val === "product_at_fix_amount") setFieldValue("minimumRequirement", "min_purchase_amount");
                       }}
                     />
                     {["normal", "range_wise"].includes(values.discountMode || "") && (
@@ -103,13 +105,16 @@ const DiscountForm = () => {
                     )}
                     {values.discountApplicable === "product_wise" && (
                       <>
-                        <CommonValidationSwitch name="excludeAlreadyDiscounted" label="Exclude Products Which Already have Discount Applied" grid={{ xs: 12, md: 4 }} />
-                        <CommonValidationRadio name="appliesTo" label="Applies To" required options={DISCOUNT_APPLY_TO} row grid={{ xs: 12 }} />
-                        <CommonValidationCheckbox name="applyToEntireSelection" label="Applies To Entire Selection" disabled={values.discountMode !== "range_wise"} grid={{ xs: 12 }} />
-                        {values.appliesTo === "specific_category" && <CommonValidationSelect name="categoryIds" label="Category" multiple options={GenerateOptions(CategoryData?.data)} isLoading={CategoryLoading} grid={{ xs: 12, md: 4 }} required />}
-                        {values.appliesTo === "specific_brand" && <CommonValidationSelect name="brandIds" label="Brand" multiple options={GenerateOptions(BrandData?.data)} isLoading={BrandLoading} grid={{ xs: 12, md: 4 }} required />}
-                        {values.appliesTo === "specific_products" && <CommonValidationSelect name="productIds" label="Product" multiple options={GenerateOptions(ProductData?.data)} isLoading={ProductLoading} grid={{ xs: 12, md: 4 }} required />}
-                        <CommonValidationSelect name="getProductIds" label="Excluding Products" multiple options={GenerateOptions(ProductData?.data)} isLoading={ProductLoading} grid={{ xs: 12, md: 4 }} required />
+                        {values.discountMode !== "product_at_fix_amount" && (
+                          <>
+                            <CommonValidationRadio name="appliesTo" label="Applies To" required options={DISCOUNT_APPLY_TO} row grid={{ xs: 12 }} />
+                            <CommonValidationCheckbox name="applyToEntireSelection" label="Applies To Entire Selection" disabled={values.discountMode !== "range_wise"} grid={{ xs: 12 }} />
+                            {values.appliesTo === "specific_category" && <CommonValidationSelect name="categoryIds" label="Category" multiple options={GenerateOptions(CategoryData?.data)} isLoading={CategoryLoading} grid={{ xs: 12, md: 4 }} required />}
+                            {values.appliesTo === "specific_brand" && <CommonValidationSelect name="brandIds" label="Brand" multiple options={GenerateOptions(BrandData?.data)} isLoading={BrandLoading} grid={{ xs: 12, md: 4 }} required />}
+                            {values.appliesTo === "specific_products" && <CommonValidationSelect name="productIds" label="Product" multiple options={GenerateOptions(ProductData?.data)} isLoading={ProductLoading} grid={{ xs: 12, md: 4 }} required />}
+                            <CommonValidationSelect name="getProductIds" label="Excluding Products" multiple options={GenerateOptions(ProductData?.data)} isLoading={ProductLoading} grid={{ xs: 12, md: 4 }} required />
+                          </>
+                        )}
                       </>
                     )}
                     {values.discountMode === "buy_x_get_y" && (
@@ -118,6 +123,14 @@ const DiscountForm = () => {
                         <CommonValidationTextField name="buyQty" label="Select Qty" type="number" grid={{ xs: 12, md: 4 }} />
                         {values.minimumRequirement === "min_purchase_amount" && <CommonValidationTextField name="minimumPurchaseAmount" label="Purchase Amount" type="number" grid={{ xs: 12, md: 4 }} />}
                         {values.minimumRequirement === "min_quantity" && <CommonValidationTextField name="minimumQuantity" label="Select Quantity" type="number" grid={{ xs: 12, md: 4 }} />}
+                      </>
+                    )}
+                    {values.discountMode === "product_at_fix_amount" && <CommonValidationTextField name="minimumPurchaseAmount" label="Minimum Purchase Amount" type="number" grid={{ xs: 12, md: 4 }} />}
+                    {["buy_x_get_y", "product_at_fix_amount"].includes(values.discountMode || "") && (
+                      <>
+                        <Grid size={12}>
+                          <Typography component="div">Given To</Typography>
+                        </Grid>
                         <CommonValidationSelect name="productIds" label="Product" multiple options={GenerateOptions(ProductData?.data)} isLoading={ProductLoading} grid={{ xs: 12, md: 4 }} required />
                         <CommonValidationSelect name="getProductIds" label="Excluding Products" multiple options={GenerateOptions(ProductData?.data)} isLoading={ProductLoading} grid={{ xs: 12, md: 4 }} required />
                         <CommonValidationTextField name="getqty" label="Select Qty" type="number" grid={{ xs: 12, md: 4 }} />
@@ -126,9 +139,11 @@ const DiscountForm = () => {
                     <CommonValidationCheckbox name="hasUsageLimitTotal" label="Limit Number of Times This Discount can be Used in Total" grid={{ xs: 12 }} />
                     {values.hasUsageLimitTotal && <CommonValidationTextField name="usageLimitTotal" label="Usage Limit" type="number" grid={{ xs: 12, md: 4 }} />}
                     <CommonValidationCheckbox name="usageLimitPerCustomer" label="Limit to One Use Per Customer" grid={{ xs: 12 }} />
+
                     {["normal", "range_wise"].includes(values?.discountMode || "") && <CommonValidationRadio name="minimumRequirement" label="Minimum Requirement" required options={MINIMUM_REQUIRMENT} row grid={{ xs: 12 }} />}
                     {values.discountMode === "normal" && values.minimumRequirement === "min_purchase_amount" && <CommonValidationTextField name="minimumPurchaseAmount" label="Minimum Purchase Amount" type="number" grid={{ xs: 12 }} />}
                     {values.discountMode === "normal" && values.minimumRequirement === "min_quantity" && <CommonValidationTextField name="minimumQuantity" label="Minimum Quantity" type="number" grid={{ xs: 12 }} />}
+
                     <CommonValidationDatePicker name="startDateTime" label="Start Date" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTimePicker name="startDateTime" label="Start Time" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationCheckbox name="hasEndDate" label="Set End Date" grid={{ xs: 12 }} />
