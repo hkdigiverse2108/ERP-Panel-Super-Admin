@@ -10,6 +10,7 @@ import { BREADCRUMBS } from "../../../Data";
 import type { SupplierBillFormValues } from "../../../Types";
 import { DateConfig, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
+import { SupplierBillFormSchema } from "../../../Utils/ValidationSchemas";
 import SupplierBillDetails from "../../../Components/Purchase/SupplierBill/SupplierBillDetails";
 import SupplierBillTabs from "../../../Components/Purchase/SupplierBill/SupplierBillTabs";
 
@@ -50,21 +51,19 @@ const SupplierBillForm = () => {
     gstIn: data?.gstIn || "",
     billingAddress: typeof data?.billingAddress === "object" ? data.billingAddress?._id : data?.billingAddress || "",
 
-    productDetails: {
-      item: (data?.productDetails?.item || (Array.isArray(data?.productDetails) ? data.productDetails : []))?.length
-        ? (data.productDetails.item || data.productDetails).map((i: any) => {
-            const pId = typeof i.productId === "object" ? i.productId?._id : i.productId;
-            return {
-              ...emptyRow,
-              ...i,
-              productId: pId,
-              _prevProductId: pId,
-              uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
-              taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
-            };
-          })
-        : [emptyRow],
-    },
+    productDetails: (data?.productDetails?.item || (Array.isArray(data?.productDetails) ? data.productDetails : []))?.length
+      ? (data.productDetails.item || data.productDetails).map((i: any) => {
+          const pId = typeof i.productId === "object" ? i.productId?._id : i.productId;
+          return {
+            ...emptyRow,
+            ...i,
+            productId: pId,
+            _prevProductId: pId,
+            uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
+            taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
+          };
+        })
+      : [emptyRow],
     returnProductDetails: {
       item: (data?.returnProductDetails?.item || (Array.isArray(data?.returnProductDetails) ? data.returnProductDetails : []))?.length
         ? (data.returnProductDetails.item || data.returnProductDetails).map((i: any) => {
@@ -114,7 +113,7 @@ const SupplierBillForm = () => {
 
     const payload = {
       ...rest,
-      productDetails: rest.productDetails?.item?.map((item: any) => ({
+      productDetails: rest.productDetails?.map((item: any) => ({
         productId: typeof item.productId === "object" ? item.productId?._id : item.productId,
         qty: Number(item.qty || 0),
         freeQty: Number(item.freeQty || 0),
@@ -194,10 +193,10 @@ const SupplierBillForm = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.SUPPLIER_BILL[pageMode]} breadcrumbs={BREADCRUMBS.SUPPLIER_BILL[pageMode]} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 14 }}>
-        <Formik<SupplierBillFormValues> initialValues={initialValues} onSubmit={handleSubmit} enableReinitialize={isEditing} validateOnMount>
+        <Formik<SupplierBillFormValues> initialValues={initialValues} validationSchema={SupplierBillFormSchema} onSubmit={handleSubmit} enableReinitialize={isEditing} validateOnMount>
           {({ setFieldValue, dirty, isValid, resetForm }) => (
             <Form noValidate>
-              <CommonSummaryWatcher itemsKey="productDetails.item" summaryKey="summary" priceKey="unitCost" taxAmountKey="taxAmount" hasAdditionalCharges />
+              <CommonSummaryWatcher itemsKey="productDetails" summaryKey="summary" priceKey="unitCost" taxAmountKey="taxAmount" hasAdditionalCharges />
               <Grid container spacing={2}>
                 <Box sx={{ display: "grid", gap: 2, width: "100%" }}>
                   <CommonCard title="Supplier Bill Details" grid={{ xs: 12 }}>

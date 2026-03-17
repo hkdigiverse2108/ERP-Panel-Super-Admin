@@ -11,15 +11,22 @@ export type BillSupplier = ContactBase & { name?: string };
 
 export interface SupplierBillProductItem {
   productId?: ProductBase | string;
+  _prevProductId?: string;
   qty?: number;
   freeQty?: number;
   mrp?: number;
+  uomId?: string;
+  unit?: string;
   sellingPrice?: number;
   unitCost?: number;
+  discount1?: number;
+  taxable?: number;
+  taxableAmount?: number;
+  taxId?: string;
+  tax?: number | string;
+  taxAmount?: number;
   landingCost?: number;
   margin?: number;
-  discount1?: number;
-  taxAmount?: number;
   total?: number;
 }
 export interface SupplierBillProductDetails {
@@ -33,10 +40,19 @@ export interface SupplierBillProductDetails {
 
 export interface SupplierBillReturnProductItem {
   productId?: string;
+  _prevProductId?: string;
   qty?: number;
+  uomId?: string;
+  unit?: string;
+  unitCost?: number;
   discount1?: number;
+  taxable?: number;
+  taxableAmount?: number;
+  taxId?: string;
+  tax?: number | string;
   taxAmount?: number;
   landingCost?: number;
+  margin?: number;
   total?: number;
 }
 

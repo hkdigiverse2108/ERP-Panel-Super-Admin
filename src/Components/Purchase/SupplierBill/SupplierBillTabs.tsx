@@ -25,7 +25,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
   const { data: taxData } = Queries.useGetTaxDropdown();
 
   const calculateRowValues = (index: number, isReturn: boolean = false) => {
-    const row = isReturn ? values?.returnProductDetails?.item?.[index] : values?.productDetails?.item?.[index];
+    const row = isReturn ? values?.returnProductDetails?.item?.[index] : values?.productDetails?.[index];
     const product = productsData?.data?.find((p: ProductBase) => p._id === row?.productId);
 
     if (!product) return { taxableAmount: 0, totalAmount: 0, taxAmount: 0, landingCost: 0, margin: 0, sellingPrice: 0 };
@@ -82,7 +82,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
     const taxTypeChanged = values?.taxType !== prevTaxTypeRef.current;
 
     // Regular Items
-    const items = values?.productDetails?.item || [];
+    const items = values?.productDetails || [];
     items.forEach((item: any, index: number) => {
       if (!item?.productId) return;
       const product = productsData?.data?.find((p: ProductBase) => p._id === item.productId);
@@ -101,14 +101,14 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
             currentTaxRate = Number(tax.percentage) || 0;
             currentTaxId = tax._id;
 
-            if (item.tax !== String(currentTaxRate)) setFieldValue(`productDetails.item.${index}.tax`, String(currentTaxRate));
-            if (item.taxId !== currentTaxId) setFieldValue(`productDetails.item.${index}.taxId`, currentTaxId);
+            if (item.tax !== String(currentTaxRate)) setFieldValue(`productDetails.${index}.tax`, String(currentTaxRate));
+            if (item.taxId !== currentTaxId) setFieldValue(`productDetails.${index}.taxId`, currentTaxId);
           }
         } else {
           currentTaxRate = 0;
           currentTaxId = "";
-          if (item.tax !== "0") setFieldValue(`productDetails.item.${index}.tax`, "0");
-          if (item.taxId !== "") setFieldValue(`productDetails.item.${index}.taxId`, "");
+          if (item.tax !== "0") setFieldValue(`productDetails.${index}.tax`, "0");
+          if (item.taxId !== "") setFieldValue(`productDetails.${index}.taxId`, "");
         }
       }
 
@@ -134,33 +134,33 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
 
         desiredCost = Number(desiredCost.toFixed(2));
         if (currentUnitCost !== desiredCost || isProductChanged) {
-          setFieldValue(`productDetails.item.${index}.unitCost`, desiredCost);
+          setFieldValue(`productDetails.${index}.unitCost`, desiredCost);
           currentUnitCost = desiredCost;
         }
 
         if (isProductChanged) {
-          if (item._prevProductId !== item.productId) setFieldValue(`productDetails.item.${index}._prevProductId`, item.productId);
+          if (item._prevProductId !== item.productId) setFieldValue(`productDetails.${index}._prevProductId`, item.productId);
           const newMrp = Number((product as any)?.mrp || 0);
-          if (Number(item.mrp) !== newMrp) setFieldValue(`productDetails.item.${index}.mrp`, newMrp);
+          if (Number(item.mrp) !== newMrp) setFieldValue(`productDetails.${index}.mrp`, newMrp);
         }
       }
 
       // Ensure unit cost doesn't exceed product's landing cost
       const maxAllowedCost = Number((product as any)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
       if (maxAllowedCost > 0 && currentUnitCost > maxAllowedCost) {
-        if (Number(item.unitCost) !== maxAllowedCost) setFieldValue(`productDetails.item.${index}.unitCost`, maxAllowedCost);
+        if (Number(item.unitCost) !== maxAllowedCost) setFieldValue(`productDetails.${index}.unitCost`, maxAllowedCost);
         currentUnitCost = maxAllowedCost;
       }
 
-      if (item.uomId !== product?.uomId?._id) setFieldValue(`productDetails.item.${index}.uomId`, product?.uomId?._id || "");
-      if (item.unit !== uomName) setFieldValue(`productDetails.item.${index}.unit`, uomName);
+      if (item.uomId !== product?.uomId?._id) setFieldValue(`productDetails.${index}.uomId`, product?.uomId?._id || "");
+      if (item.unit !== uomName) setFieldValue(`productDetails.${index}.unit`, uomName);
 
-      if (Math.abs((Number(item.taxAmount) || 0) - taxAmount) > 0.01) setFieldValue(`productDetails.item.${index}.taxAmount`, taxAmount);
-      if (Math.abs((Number(item.taxableAmount) || 0) - taxableAmount) > 0.01) setFieldValue(`productDetails.item.${index}.taxableAmount`, taxableAmount);
-      if (Math.abs((Number(item.total) || 0) - totalAmount) > 0.01) setFieldValue(`productDetails.item.${index}.total`, totalAmount);
-      if (Math.abs((Number(item.landingCost) || 0) - landingCost) > 0.01) setFieldValue(`productDetails.item.${index}.landingCost`, String(landingCost));
-      if (Math.abs((Number(item.margin) || 0) - margin) > 0.01) setFieldValue(`productDetails.item.${index}.margin`, String(margin));
-      if (Math.abs((Number(item.sellingPrice) || 0) - sellingPrice) > 0.01) setFieldValue(`productDetails.item.${index}.sellingPrice`, sellingPrice);
+      if (Math.abs((Number(item.taxAmount) || 0) - taxAmount) > 0.01) setFieldValue(`productDetails.${index}.taxAmount`, taxAmount);
+      if (Math.abs((Number(item.taxableAmount) || 0) - taxableAmount) > 0.01) setFieldValue(`productDetails.${index}.taxableAmount`, taxableAmount);
+      if (Math.abs((Number(item.total) || 0) - totalAmount) > 0.01) setFieldValue(`productDetails.${index}.total`, totalAmount);
+      if (Math.abs((Number(item.landingCost) || 0) - landingCost) > 0.01) setFieldValue(`productDetails.${index}.landingCost`, String(landingCost));
+      if (Math.abs((Number(item.margin) || 0) - margin) > 0.01) setFieldValue(`productDetails.${index}.margin`, String(margin));
+      if (Math.abs((Number(item.sellingPrice) || 0) - sellingPrice) > 0.01) setFieldValue(`productDetails.${index}.sellingPrice`, sellingPrice);
     });
 
     // Return Items
@@ -235,7 +235,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
     });
 
     if (taxTypeChanged) prevTaxTypeRef.current = values?.taxType;
-  }, [values?.productDetails?.item, values?.returnProductDetails?.item, productsData, taxData, values?.taxType]);
+  }, [values?.productDetails, values?.returnProductDetails?.item, productsData, taxData, values?.taxType]);
 
   return (
     <>
@@ -252,7 +252,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
         <CommonTabPanel value={tabValue} index={0}>
           <Box className="custom-scrollbar" sx={{ overflowX: "auto" }}>
             <Box sx={{ minWidth: "100%" }}>
-              <FieldArray name="productDetails.item">
+              <FieldArray name="productDetails">
                 {({ push, remove }) => {
                   const ProductRowColumns: CommonTableColumn<any>[] = [
                     {
@@ -261,12 +261,12 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
                       bodyClass: "p-2 flex justify-center gap-1",
                       render: (_, index) => (
                         <>
-                          {index === ((values?.productDetails?.item || []).length || 0) - 1 && (
+                          {index === ((values?.productDetails || []).length || 0) - 1 && (
                             <CommonButton size="small" variant="outlined" onClick={() => push(emptyRow)}>
                               <AddIcon fontSize="small" />
                             </CommonButton>
                           )}
-                          {((values?.productDetails?.item || []).length || 0) > 1 && (
+                          {((values?.productDetails || []).length || 0) > 1 && (
                             <CommonButton size="small" color="error" variant="outlined" onClick={() => remove && remove(index)}>
                               <ClearIcon fontSize="small" />
                             </CommonButton>
@@ -281,51 +281,51 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
                       key: "productId",
                       header: "Product",
                       bodyClass: "min-w-[250px]",
-                      render: (_, index) => <CommonValidationSelect name={`productDetails.item.${index}.productId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isSupplierSelected} />,
+                      render: (_, index) => <CommonValidationSelect name={`productDetails.${index}.productId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isSupplierSelected} />,
                     },
                     {
                       key: "qty",
                       header: "Qty",
                       bodyClass: "min-w-28",
-                      render: (_, index) => <CommonValidationTextField name={`productDetails.item.${index}.qty`} type="number" size="small" />,
+                      render: (_, index) => <CommonValidationTextField name={`productDetails.${index}.qty`} type="number" size="small" />,
                       footer: (data) => data.reduce((a: any, b: any) => a + (+b.qty || 0), 0),
                     },
                     {
                       key: "freeQty",
                       header: "Free Qty",
                       bodyClass: "min-w-28",
-                      render: (_, index) => <CommonValidationTextField name={`productDetails.item.${index}.freeQty`} type="number" size="small" />,
+                      render: (_, index) => <CommonValidationTextField name={`productDetails.${index}.freeQty`} type="number" size="small" />,
                       footer: (data) => data.reduce((a: any, b: any) => a + (+b.freeQty || 0), 0),
                     },
                     {
                       key: "mrp",
                       header: "MRP",
                       bodyClass: "min-w-28",
-                      render: (_, index) => <CommonValidationTextField name={`productDetails.item.${index}.mrp`} type="number" size="small" />,
+                      render: (_, index) => <CommonValidationTextField name={`productDetails.${index}.mrp`} type="number" size="small" />,
                     },
                     {
                       key: "unitCost",
                       header: "Unit Cost",
                       bodyClass: "min-w-[120px]",
-                      render: (_, index) => <CommonValidationTextField name={`productDetails.item.${index}.unitCost`} type="number" size="small" />,
+                      render: (_, index) => <CommonValidationTextField name={`productDetails.${index}.unitCost`} type="number" size="small" />,
                     },
                     {
                       key: "sellingPrice",
                       header: "Selling Price",
                       bodyClass: "min-w-28",
-                      render: (_, index) => <CommonValidationTextField name={`productDetails.item.${index}.sellingPrice`} type="number" size="small" />,
+                      render: (_, index) => <CommonValidationTextField name={`productDetails.${index}.sellingPrice`} type="number" size="small" />,
                     },
                     {
                       key: "discount1",
                       header: "Disc 1",
                       bodyClass: "min-w-28",
-                      render: (_, index) => <CommonValidationTextField name={`productDetails.item.${index}.discount1`} type="number" size="small" />,
+                      render: (_, index) => <CommonValidationTextField name={`productDetails.${index}.discount1`} type="number" size="small" />,
                     },
                     {
                       key: "taxableAmount",
                       header: "Taxable",
                       bodyClass: "min-w-28",
-                      render: (_, index) => <span>{values?.productDetails?.item?.[index]?.taxableAmount || "0"}</span>,
+                      render: (_, index) => <span>{values?.productDetails?.[index]?.taxableAmount || "0"}</span>,
                       footer: (data) => data.reduce((a: any, b: any) => a + (+b.taxableAmount || 0), 0).toFixed(2),
                     },
                     {
@@ -333,7 +333,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
                       header: "Tax",
                       bodyClass: "min-w-28 align-middle text-center",
                       render: (_, index) => {
-                        const item = values?.productDetails?.item?.[index];
+                        const item = values?.productDetails?.[index];
                         if (!item?.productId) return null;
                         const isOutOfScope = values?.taxType === "out_of_scope";
                         const tax = taxData?.data?.find((t: TaxBase) => t._id === item.taxId);
@@ -379,7 +379,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
                       footer: (data) => data.reduce((a: any, b: any) => a + (+b.total || 0), 0).toFixed(2),
                     },
                   ];
-                  return <CommonTable showFooter data={values.productDetails?.item || []} columns={ProductRowColumns} rowKey={(_row, index) => index.toString()} getRowClass={() => "align-top"} />;
+                  return <CommonTable showFooter data={values.productDetails || []} columns={ProductRowColumns} rowKey={(_row, index) => index.toString()} getRowClass={() => "align-top"} />;
                 }}
               </FieldArray>
             </Box>

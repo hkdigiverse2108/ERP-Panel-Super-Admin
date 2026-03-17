@@ -2,7 +2,7 @@ import { Box, Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Mutations, Queries } from "../../../Api";
+import { Mutations } from "../../../Api";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonSummaryWatcher } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
@@ -102,9 +102,8 @@ const InvoiceForm = () => {
     if (!hasAccess) navigate(-1);
   }, [isEditing, permission, navigate]);
 
-  const { data: taxData } = Queries.useGetTaxDropdown();
 
-  const getCalculatedSummary = (values: InvoiceFormValues, taxData: any) => {
+  const getCalculatedSummary = (values: InvoiceFormValues) => {
     const itemGross = values.items?.reduce((s: number, r: any) => s + Number(r.qty || 0) * Number(r.price || 0), 0) || 0;
     const itemDiscount = values.items?.reduce((s: number, r: any) => s + Number(r.discountAmount || 0), 0) || 0;
     const itemTaxable = values.items?.reduce((s: number, r: any) => s + Number(r.taxableAmount || 0), 0) || 0;
@@ -169,7 +168,7 @@ const InvoiceForm = () => {
         weight: Number(values.shippingDetails?.weight || 0),
         transporterId: values.shippingDetails?.transporterId || null,
       },
-      transactionSummary: getCalculatedSummary(values, taxData),
+      transactionSummary: getCalculatedSummary(values),
     };
 
     const handleSuccess = () => {

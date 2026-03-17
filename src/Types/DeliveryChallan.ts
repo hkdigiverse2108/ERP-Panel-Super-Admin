@@ -10,7 +10,6 @@ import type {
 import type { ContactBase } from "./Contacts";
 import type { ProductBase } from "./Product";
 import type { TaxBase } from "./Tax";
-import type { UserBase } from "./User";
 
 export interface DeliveryChallanItem {
   productId: string | ProductBase;
@@ -50,7 +49,6 @@ export interface DeliveryChallanBase extends CommonDataType {
   additionalCharges?: AdditionalChargeItem[];
   termsAndConditionIds?: string[];
   status: string;
-  createdBy?: string | UserBase;
 }
 
 export interface DeliveryChallanFormValues extends Omit<
@@ -62,7 +60,6 @@ export interface DeliveryChallanFormValues extends Omit<
   | "billingAddress"
   | "shippingAddress"
   | "companyId"
-  | "createdBy"
 > {
   companyId: string;
   deliveryChallanNo?: string;

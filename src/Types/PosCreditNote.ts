@@ -2,10 +2,9 @@ import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { CompanyBase } from "./Company";
 import type { ContactBase } from "./Contacts";
 
-export interface PosCreditNoteFormValues {
+export interface PosCreditNoteFormValues extends CommonDataType {
   creditsRemaining: number;
   creditsUsed: number;
-  isActive: true;
   returnPosOrderId: { _id: string; returnOrderNo: string };
   status: string;
   totalAmount: number;
@@ -21,9 +20,11 @@ export interface PosCreditNoteRefundFormValues {
 
 export type AddPosCreditNotePayload = PosCreditNoteFormValues;
 
-export type EditPosCreditNotePayload = PosCreditNoteFormValues & { creditNoteId?: string };
+export type EditPosCreditNotePayload = PosCreditNoteFormValues & {
+  creditNoteId?: string;
+};
 
-export interface PosCreditNoteBase extends PosCreditNoteFormValues, CommonDataType {
+export interface PosCreditNoteBase extends PosCreditNoteFormValues {
   creditNoteNo: string;
   companyId: CompanyBase;
   customerId: ContactBase;
