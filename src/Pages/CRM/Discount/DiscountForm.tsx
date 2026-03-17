@@ -40,7 +40,6 @@ const DiscountForm = () => {
     branchIds: data?.branchIds?.length ? data.branchIds : [],
     brandIds: data?.brandIds?.length ? data.brandIds : [],
     productIds: data?.productIds?.length ? data.productIds : [],
-
     minimumRequirement: data?.minimumRequirement || "",
     minimumPurchaseAmount: data?.minimumPurchaseAmount || 0,
     minimumQuantity: data?.minimumQuantity || 0,
