@@ -138,9 +138,10 @@ export const CommonSummaryWatcher = ({
     const isReverseCharge = hasAdditionalCharges && String(values.reverseCharge) === "true";
 
     if (hasAdditionalCharges) {
-      chargeTaxable = values.additionalCharges?.reduce((s: number, r: any) => s + Number(r.amount || 0), 0) || 0;
+      const chargeList = Array.isArray(values.additionalCharges) ? values.additionalCharges : [];
+      chargeTaxable = chargeList.reduce((s: number, r: any) => s + Number(r.amount || 0), 0) || 0;
       if (!isReverseCharge) {
-        chargeTax = values.additionalCharges?.reduce((s: number, r: any) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0;
+        chargeTax = chargeList.reduce((s: number, r: any) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0;
       }
     }
 
@@ -168,7 +169,8 @@ export const CommonSummaryWatcher = ({
 
     items?.forEach((r: any) => processTax(r.taxId, getTaxAmount(r)));
     if (hasAdditionalCharges && !isReverseCharge) {
-      values.additionalCharges?.forEach((r: any) => processTax(r.taxId, Number(r.totalAmount || 0) - Number(r.amount || 0)));
+      const chargeList = Array.isArray(values.additionalCharges) ? values.additionalCharges : [];
+      chargeList.forEach((r: any) => processTax(r.taxId, Number(r.totalAmount || 0) - Number(r.amount || 0)));
     }
 
     return {

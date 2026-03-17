@@ -39,6 +39,7 @@ export const GenerateOptions = (data?: {
   salesOrderNo?: string;
   invoiceNo?: string;
   deliveryChallanNo?: string;
+  orderNo?: string | null | undefined;
 }[]) => {
   if (!data || !Array.isArray(data)) return [];
 
@@ -53,6 +54,7 @@ export const GenerateOptions = (data?: {
                  [item.firstName, item.lastName].filter(Boolean).join(" ") || 
                  item.title?.trim() || 
                  item.tabName?.trim() || 
+                 item.orderNo?.trim() ||
                  "Unnamed";
 
     return {

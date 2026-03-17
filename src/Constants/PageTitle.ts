@@ -127,6 +127,11 @@ export const PAGE_TITLE = {
     ADD: "Add Supplier Bill",
     EDIT: "Edit Supplier Bill",
   },
+  PURCHASE_DEBIT_NOTE: {
+    BASE: "Purchase Debit Note",
+    ADD: "Add Purchase Debit Note",
+    EDIT: "Edit Purchase Debit Note",
+  },
   SETTINGS: {
     BASE: "Settings",
     // GENERAL: "General Settings",

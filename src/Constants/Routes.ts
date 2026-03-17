@@ -168,4 +168,8 @@ export const ROUTES = {
     BASE: "/sales-credit-note",
     ADD_EDIT: "/sales-credit-note/add-edit",
   },
+  PURCHASE_DEBIT_NOTE: {
+    BASE: "/purchase-debit-note",
+    ADD_EDIT: "/purchase-debit-note/add-edit",
+  },
 } as const;

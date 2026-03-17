@@ -360,3 +360,10 @@ export const SALES_CREDIT_NOTE_PRODUCT_TYPE_OPTIONS = [
   { label: "Expiry", value: "expiry" },
 ];
 
+export const PURCHASE_DEBIT_NOTE_STATUS_OPTIONS = [
+  { label: "All", value: "all" },
+  { label: "Open", value: "open" },
+  { label: "Closed", value: "closed" },
+  { label: "Cancelled", value: "cancelled" },
+];
+

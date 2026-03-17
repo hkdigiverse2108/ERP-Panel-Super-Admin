@@ -16,7 +16,7 @@ interface CommonAdditionalChargeSectionProps {
 
 const CommonAdditionalChargeSection = ({ name = "additionalCharges", summaryName = "transactionSummary" }: CommonAdditionalChargeSectionProps) => {
   const { values, setFieldValue } = useFormikContext<any>();
-  const [show, setShow] = useState(values[name]?.length > 0);
+  const [show, setShow] = useState(Array.isArray(values[name]) && values[name]?.length > 0);
 
   const { data: TaxData, isLoading: isTaxLoading } = Queries.useGetTaxDropdown();
   const taxOptions = GenerateOptions(TaxData?.data || []);

@@ -44,6 +44,8 @@ import PurchaseOrder from "../Pages/Purchase/PurchaseOrder";
 import PurchaseOrderForm from "../Pages/Purchase/PurchaseOrder/PurchaseOrderForm";
 import SupplierBill from "../Pages/Purchase/SupplierBill";
 import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
+import PurchaseDebitNote from "../Pages/Purchase/PurchaseDebitNote";
+import PurchaseDebitNoteForm from "../Pages/Purchase/PurchaseDebitNote/PurchaseDebitNoteForm";
 import Role from "../Pages/Role";
 import AdditionalCharges from "../Pages/Settings/AdditionalCharges";
 import AdditionalChargesForm from "../Pages/Settings/AdditionalCharges/AdditionalChargesForm";
@@ -127,6 +129,8 @@ export const PageRoutes = [
 
   { path: ROUTES.SUPPLIER_BILL.BASE, name: PAGE_TITLE.PURCHASE.BASE, element: <SupplierBill /> },
   { path: ROUTES.SUPPLIER_BILL.ADD_EDIT, name: PAGE_TITLE.PURCHASE.BASE, element: <SupplierBillForm /> },
+  { path: ROUTES.PURCHASE_DEBIT_NOTE.BASE, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseDebitNote /> },
+  { path: ROUTES.PURCHASE_DEBIT_NOTE.ADD_EDIT, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseDebitNoteForm /> },
 
   { path: ROUTES.ADDITIONAL_CHARGES.BASE, name: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE, element: <AdditionalCharges /> },
   { path: ROUTES.ADDITIONAL_CHARGES.ADD_EDIT, name: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE, element: <AdditionalChargesForm /> },
