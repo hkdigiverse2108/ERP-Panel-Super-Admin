@@ -3,14 +3,23 @@ import { useField } from "formik";
 import type { FC } from "react";
 import type { CommonRadioProps, CommonValidationRadioProps } from "../../Types";
 
-export const CommonValidationRadio: FC<CommonValidationRadioProps> = ({ name, label, options, row = true, required, disabled, grid }) => {
+export const CommonValidationRadio: FC<CommonValidationRadioProps> = ({ name, label, options, row = true, required, disabled, grid, onChange }) => {
   const [field, meta, helpers] = useField<string>(name);
 
   const Input = (
     <FormControl error={meta.touched && Boolean(meta.error)} disabled={disabled}>
       {label && <FormLabel required={required}>{label}</FormLabel>}
 
-      <RadioGroup row={row} value={field.value ?? ""} onChange={(e) => helpers.setValue(e.target.value)} onBlur={() => helpers.setTouched(true)}>
+      <RadioGroup
+        row={row}
+        value={field.value ?? ""}
+        onChange={(e) => {
+          const val = e.target.value;
+          helpers.setValue(val);
+          onChange?.(val);
+        }}
+        onBlur={() => helpers.setTouched(true)}
+      >
         {options.map((opt) => (
           <FormControlLabel key={opt.value} value={opt.value} control={<Radio />} label={opt.label} disabled={opt.disabled}/>
         ))}

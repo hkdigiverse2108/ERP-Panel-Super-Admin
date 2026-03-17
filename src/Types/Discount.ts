@@ -74,7 +74,7 @@ export type EditDiscountPayload = AddDiscountPayload & {
 
 /* ---------------- BASE TYPE ---------------- */
 
-export interface DiscountBase extends Omit<DiscountFormValues, 
+export interface DiscountBase extends Omit<DiscountFormValues,
   "categoryIds" | "subcategoryIds" | "brandIds" | "productIds" | "excludedProductIds" | "branchIds" | "companyId" | "buyXGetY" | "productAtFixAmount"
 >, CommonDataType {
   categoryIds?: CategoryBase[];

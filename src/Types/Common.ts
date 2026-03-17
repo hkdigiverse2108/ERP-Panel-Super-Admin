@@ -116,6 +116,29 @@ export interface CommonDatePickerProps extends CommonValidationDatePickerProps {
 
 // ************ Date Range Selector End ***********
 
+// ************ Time Selector Start ***********
+
+export type TimePickerOption = {
+  minTime?: any;
+  maxTime?: any;
+};
+
+export interface CommonValidationTimePickerProps extends TimePickerOption {
+  name: string;
+  disabled?: boolean;
+  grid?: GridType;
+  required?: boolean;
+  label?: string;
+  ampm?: boolean;
+}
+
+export interface CommonTimePickerProps extends CommonValidationTimePickerProps {
+  value: any;
+  onChange: (value: any) => void;
+}
+
+// ************ Time Selector End ***********
+
 // ************ Table Start ***********
 
 export interface Params {
@@ -488,6 +511,7 @@ export interface CommonRadioProps {
 export interface CommonValidationRadioProps extends Omit<CommonRadioProps, "value" | "onChange"> {
   name: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 // ************ Radio End ***********

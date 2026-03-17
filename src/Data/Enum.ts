@@ -279,7 +279,7 @@ export const LOYALTY_REDEMPTION_TYPE = [
 ];
 
 export const DISCOUNT_APPLICABLE = [
-  { label: "Product Wise", value: "prodcut_wise" },
+  { label: "Product Wise", value: "product_wise" },
   { label: "Entire Bill", value: "entire_bill" },
 ];
 
@@ -306,3 +306,9 @@ export const  MINIMUM_REQUIRMENT = [
   { label: "Min Purchase Amount", value: "min_purchase_amount" },
   { label: "Min Quantity", value: "min_quantity" },
 ];
+
+export const CONDITION_OPTIONS = [
+  { label: "Purchase Amount", value: "min_purchase_amount" },
+  { label: "Product Quantity", value: "min_quantity" }
+];
+
