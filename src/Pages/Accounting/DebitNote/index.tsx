@@ -3,7 +3,7 @@ import type { GridColDef } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn, CommonPhoneColumns } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { DebitNoteBase } from "../../../Types";
@@ -33,11 +33,9 @@ const DebitNote = () => {
 
   const columns: GridColDef<DebitNoteBase>[] = [
     CommonObjectNameColumn<DebitNoteBase>("companyId", { headerName: "Company", width: 200 }),
-    { field: "voucherNumber", headerName: "Voucher Number", width: 150 },
-    { field: "amount", headerName: "Amount", width: 100 },
-    CommonObjectNameColumn<DebitNoteBase>("fromAccountId", { headerName: "From Account", width: 200 }),
-    CommonObjectNameColumn<DebitNoteBase>("toAccountId", { headerName: "To Account", width: 200 }),
-    { field: "date", headerName: "DN Date", width: 100, renderCell: (params) => FormatDate(params.row.date) },
+    { field: "amount", headerName: "Amount", width: 200 },
+    { field: "date", headerName: "Date", width: 200, valueGetter: (v) => FormatDate(v) },
+    CommonPhoneColumns("phoneNo", { headerName: "Phone No", width: 200 }),
     { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
@@ -46,7 +44,7 @@ const DebitNote = () => {
               active: (row) => editDebitNote({ debitNoteId: row?._id, isActive: !row.isActive }),
               editRoute: ROUTES.DEBIT_NOTE.ADD_EDIT,
             }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherNumber }) }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.amount }) }),
           }),
         ]
       : []),
@@ -72,7 +70,7 @@ const DebitNote = () => {
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.DEBIT_NOTE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.DEBIT_NOTE.BASE} />
-      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />

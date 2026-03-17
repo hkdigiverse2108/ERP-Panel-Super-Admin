@@ -6,8 +6,7 @@ import { CommonDateRangeSelector } from "../../../Attribute";
 import { AdvancedSearch, CalculateGridSummary, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { AppGridColDef } from "../../../Types";
-import type { PosCashRegisterBase } from "../../../Types/PosCashRegister";
+import type { AppGridColDef, PosCashRegisterBase } from "../../../Types";
 import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
 
@@ -47,7 +46,7 @@ const SalesRegister = () => {
       width: 180,
       renderCell: (params) => {
         const s = params.row.salesManId;
-        return typeof s === "string" || !s ? "-" : s.name || "-";
+        return typeof s === "string" || !s ? "-" : s.fullName || "-";
       },
     },
     { field: "createdAt", headerName: "From Date", width: 150, renderCell: (params) => FormatDate(params.value) },

@@ -74,6 +74,11 @@ export const PAGE_TITLE = {
       ADD: "Add Bill Of Live Product",
       EDIT: "Edit Bill Of Live Product",
     },
+    PRODUCT_TYPE: {
+      BASE: "Product Type",
+      ADD: "Add Product Type",
+      EDIT: "Edit Product Type",
+    },
   },
   CUSTOMER: {
     BASE: "Customer",
@@ -87,17 +92,6 @@ export const PAGE_TITLE = {
   },
   ACCOUNTING: {
     BASE: "Accounting",
-  },
-  ACCOUNT_GROUP: {
-    BASE: "Account Group",
-    ADD: "Add Account Group",
-    EDIT: "Edit Account Group",
-    TREE: "Account Group Tree",
-  },
-  ACCOUNT: {
-    BASE: "Account",
-    ADD: "Add Account",
-    EDIT: "Edit Account",
   },
   DEBIT_NOTE: {
     BASE: "Debit Note",
@@ -185,7 +179,7 @@ export const PAGE_TITLE = {
   POS: {
     BASE: "Pos",
     SALES_REGISTER: "Sales Register",
-    CREDIT_NOTE: "pos Credit Note",
+    CREDIT_NOTE: "Credit Note",
     ORDER_LIST: "Order List",
   },
   ANNOUNCEMENT: {
@@ -203,5 +197,33 @@ export const PAGE_TITLE = {
   },
   CHANGE_PASSWORD: {
     BASE: "Change Password",
+  },
+  SALES: {
+    BASE: "Sales",
+  },
+  ESTIMATE: {
+    BASE: "Estimate",
+    ADD: "Add Estimate",
+    EDIT: "Edit Estimate",
+  },
+  SALES_ORDER: {
+    BASE: "Sales Order",
+    ADD: "Add Sales Order",
+    EDIT: "Edit Sales Order",
+  },
+  INVOICE: {
+    BASE: "Invoice",
+    ADD: "Add Invoice",
+    EDIT: "Edit Invoice",
+  },
+  DELIVERY_CHALLAN: {
+    BASE: "Delivery Challan",
+    ADD: "Add Delivery Challan",
+    EDIT: "Edit Delivery Challan",
+  },
+  SALES_CREDIT_NOTE: {
+    BASE: "Sales Credit Note",
+    ADD: "Add Sales Credit Note",
+    EDIT: "Edit Sales Credit Note",
   },
 } as const;

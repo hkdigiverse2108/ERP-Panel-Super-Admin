@@ -3,7 +3,7 @@ import type { GridColDef } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn, CommonPhoneColumns } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { CreditNoteBase } from "../../../Types";
@@ -15,7 +15,7 @@ const CreditNote = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.CREDIT_NOTE.BASE);
   const { data: creditNoteData, isLoading: creditNoteDataLoading, isFetching: creditNoteDataFetching } = Queries.useGetCreditNote(params);
-    const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
 
   const { mutate: deleteCreditNoteMutate } = Mutations.useDeleteCreditNote();
   const { mutate: editCreditNote, isPending: isEditLoading } = Mutations.useEditCreditNote();
@@ -32,11 +32,9 @@ const CreditNote = () => {
 
   const columns: GridColDef<CreditNoteBase>[] = [
     CommonObjectNameColumn<CreditNoteBase>("companyId", { headerName: "Company", width: 200 }),
-    { field: "voucherNumber", headerName: "Voucher Number", width: 150 },
-    { field: "amount", headerName: "Amount", width: 100 },
-    CommonObjectNameColumn<CreditNoteBase>("fromAccountId", { headerName: "From Account", width: 200 }),
-    CommonObjectNameColumn<CreditNoteBase>("toAccountId", { headerName: "To Account", width: 200 }),
-    { field: "date", headerName: "DN Date", width: 100, renderCell: (params) => FormatDate(params.row.date) },
+    { field: "amount", headerName: "Amount", width: 200 },
+    { field: "date", headerName: "Date", width: 200, valueGetter: (v) => FormatDate(v) },
+    CommonPhoneColumns("phoneNo", { headerName: "Phone No", width: 200 }),
     { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
@@ -45,7 +43,7 @@ const CreditNote = () => {
               active: (row) => editCreditNote({ creditNoteId: row?._id, isActive: !row.isActive }),
               editRoute: ROUTES.CREDIT_NOTE.ADD_EDIT,
             }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherNumber }) }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.amount }) }),
           }),
         ]
       : []),
@@ -72,7 +70,7 @@ const CreditNote = () => {
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.CREDIT_NOTE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.CREDIT_NOTE.BASE} />
-      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />

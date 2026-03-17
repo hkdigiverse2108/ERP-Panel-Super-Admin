@@ -36,7 +36,7 @@ const ContactForm = () => {
 
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
-
+  
   const bank = data?.bankDetails;
 
   const emptyAddress: Address = {
@@ -166,7 +166,7 @@ const ContactForm = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.CONTACT[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.CONTACT[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
-        <Formik initialValues={initialValues} validationSchema={getContactFormSchema} onSubmit={handleSubmit}>
+        <Formik initialValues={initialValues} validationSchema={getContactFormSchema} validationContext={{ contactType: initialValues.contactType }}  onSubmit={handleSubmit}>
           {({ resetForm, setFieldValue, dirty, values }) => (
             <Form noValidate>
               <AddressDependencyHandler count={values?.address?.length || 0} />
@@ -180,9 +180,9 @@ const ContactForm = () => {
                     <CommonTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
                     {["supplier", "customer"].includes(values?.contactType || "") && <CommonPhoneNumber label="Whatsapp No." countryCodeName="whatsappNo.countryCode" numberName="whatsappNo.phoneNo" grid={{ xs: 12, md: 4 }} />}
-                    <CommonTextField name="telephoneNo" label="Telephone No" required grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="telephoneNo" label="Telephone No" grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="remarks" label="Remarks" grid={{ xs: 12, md: 4 }} />
-                    <CommonTextField name="panNo" label="PAN No" required grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="panNo" label="PAN No" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="paymentMode" label="Payment Mode" options={PAYMENT_MODE} required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="paymentTerms" label="Payment Terms" options={PAYMENT_TERMS} grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="openingBalance.debitBalance" label="Debit Balance" grid={{ xs: 12, md: 4 }} />
@@ -216,14 +216,15 @@ const ContactForm = () => {
                     {({ push, remove }) => (
                       <Box p={2}>
                         {values?.address?.map((_, index) => {
+                          const isCustomer = values?.contactType === "customer";
                           return (
                             <Box key={index} mb={2} border="1px solid #ddd" p={2} borderRadius={1}>
                               <Grid container spacing={2}>
                                 <CommonValidationSelect name={`address.${index}.gstType`} label="GST Type" options={GST_TYPE} grid={{ xs: 12, md: 4 }} />
-                                <CommonTextField name={`address.${index}.gstIn`} label="GSTIN" required disabled={values.address?.[index]?.gstType === "UnRegistered"} grid={{ xs: 12, md: 4 }} />
-                                <CommonTextField name={`address.${index}.contactFirstName`} label="Contact First Name" required grid={{ xs: 12, md: 4 }} />
-                                <CommonTextField name={`address.${index}.contactLastName`} label="Contact Last Name" grid={{ xs: 12, md: 4 }} />
-                                <CommonTextField name={`address.${index}.contactCompanyName`} label="Company Name" grid={{ xs: 12, md: 4 }} />
+                                <CommonTextField name={`address.${index}.gstIn`} label="GSTIN" required={isCustomer} disabled={values.address?.[index]?.gstType === "UnRegistered"} grid={{ xs: 12, md: 4 }} />
+                                <CommonTextField name={`address.${index}.contactFirstName`} label="Contact First Name" required={isCustomer} grid={{ xs: 12, md: 4 }} />
+                                <CommonTextField name={`address.${index}.contactLastName`} label="Contact Last Name" required={isCustomer} grid={{ xs: 12, md: 4 }} />
+                                <CommonTextField name={`address.${index}.contactCompanyName`} label="Company Name" required={isCustomer} grid={{ xs: 12, md: 4 }} />
                                 <CommonPhoneNumber label="Phone No." countryCodeName={`address.${index}.contactNo.countryCode`} numberName={`address.${index}.contactNo.phoneNo`} grid={{ xs: 12, md: 4 }} />
 
                                 <CommonTextField name={`address.${index}.contactEmail`} label="Email" grid={{ xs: 12, md: 4 }} />
@@ -231,11 +232,11 @@ const ContactForm = () => {
                                 <CommonTextField name={`address.${index}.addressLine1`} label="Address Line 1" multiline grid={{ xs: 12, md: 4 }} />
                                 <CommonTextField name={`address.${index}.addressLine2`} label="Address Line 2" multiline grid={{ xs: 12, md: 4 }} />
 
-                                <DependentSelect name={`address.${index}.country`} label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required />
+                                <DependentSelect name={`address.${index}.country`} label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required={isCustomer} />
 
-                                <DependentSelect params={values?.address?.[index]?.country} name={`address.${index}.state`} label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values?.address?.[index]?.country} required />
+                                <DependentSelect params={values?.address?.[index]?.country} name={`address.${index}.state`} label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values?.address?.[index]?.country} required={isCustomer} />
 
-                                <DependentSelect params={values?.address?.[index]?.state} name={`address.${index}.city`} label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values?.address?.[index]?.state} required />
+                                <DependentSelect params={values?.address?.[index]?.state} name={`address.${index}.city`} label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values?.address?.[index]?.state} required={isCustomer} />
 
                                 <CommonTextField name={`address.${index}.pinCode`} label="Pin Code" grid={{ xs: 12, md: 4 }} />
 
@@ -282,6 +283,6 @@ const ContactForm = () => {
       </Box>
     </>
   );
-};
+}
 
 export default ContactForm;

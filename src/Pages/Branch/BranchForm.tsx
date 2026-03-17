@@ -7,11 +7,10 @@ import { CommonPhoneNumber, CommonValidationSelect, CommonValidationTextField } 
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
 import { BANK_UI_FIELDS, BREADCRUMBS } from "../../Data";
-import type { BranchFormValues } from "../../Types";
-import type { BankBase } from "../../Types/Bank";
+import type { BankBase, BranchFormValues } from "../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
-import { BranchFormSchema } from "../../Utils/ValidationSchemas";
 import { usePagePermission } from "../../Utils/Hooks";
+import { BranchFormSchema } from "../../Utils/ValidationSchemas";
 
 const BranchForm = () => {
   const location = useLocation();
@@ -24,6 +23,7 @@ const BranchForm = () => {
 
   const { mutate: addBranch, isPending: isAddLoading } = Mutations.useAddBranch();
   const { mutate: editBranch, isPending: isEditLoading } = Mutations.useEditBranch();
+  
 
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";

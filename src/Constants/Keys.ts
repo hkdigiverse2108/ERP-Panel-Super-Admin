@@ -165,19 +165,13 @@ export const KEYS = {
     EDIT: "bill-of-live-product-edit",
     DELETE: "bill-of-live-product-delete",
   },
+  PRODUCT_TYPE: {
+    BASE: "product-type",
+    ADD: "product-type-add",
+    EDIT: "product-type-edit",
+    DELETE: "product-type-delete",
+  },
   // ----------------------------- accounts -----------------------------
-  ACCOUNT_GROUP: {
-    BASE: "account-group",
-    ADD: "account-group-add",
-    EDIT: "account-group-edit",
-    DELETE: "account-group-delete",
-  },
-  ACCOUNT: {
-    BASE: "account",
-    ADD: "account-add",
-    EDIT: "account-edit",
-    DELETE: "account-delete",
-  },
   DEBIT_NOTE: {
     BASE: "debit-note",
     ADD: "debit-note-add",
@@ -278,5 +272,47 @@ export const KEYS = {
     ADD: "pos-add",
     EDIT: "pos-edit",
     DELETE: "pos-delete",
+  },
+
+  //*************** Estimate **************** */
+  ESTIMATE: {
+    BASE: "estimate",
+    ADD: "estimate-add",
+    EDIT: "estimate-edit",
+    DELETE: "estimate-delete",
+    DROPDOWN: "estimate-dropdown",
+  },
+
+  //*************** Sales Order **************** */
+  SALES_ORDER: {
+    BASE: "sales-order",
+    ADD: "sales-order-add",
+    EDIT: "sales-order-edit",
+    DELETE: "sales-order-delete",
+    DROPDOWN: "sales-order-dropdown",
+  },
+
+  //*************** Invoice **************** */
+  INVOICE: {
+    BASE: "invoice",
+    ADD: "invoice-add",
+    EDIT: "invoice-edit",
+    DELETE: "invoice-delete",
+    DROPDOWN: "invoice-dropdown",
+  },
+  //*************** Delivery Challan **************** */
+  DELIVERY_CHALLAN: {
+    BASE: "delivery-challan",
+    ADD: "delivery-challan-add",
+    EDIT: "delivery-challan-edit",
+    DELETE: "delivery-challan-delete",
+    DROPDOWN: "delivery-challan-dropdown",
+  },
+  SALES_CREDIT_NOTE: {
+    BASE: "sales-credit-note",
+    ADD: "sales-credit-note-add",
+    EDIT: "sales-credit-note-edit",
+    DELETE: "sales-credit-note-delete",
+    DROPDOWN: "sales-credit-note-dropdown",
   },
 };

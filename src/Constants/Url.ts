@@ -170,22 +170,15 @@ export const URL_KEYS = {
     EDIT: "/bill-of-live-product/edit",
   },
 
+  PRODUCT_TYPE: {
+    BASE: "/product-type",
+    ALL: "/product-type/all",
+    DROPDOWN: "/product-type/dropdown",
+    ADD: "/product-type/add",
+    EDIT: "/product-type/edit",
+  },
+
   // ----------------------------- accounts -----------------------------
-  ACCOUNT_GROUP: {
-    BASE: "/account-group",
-    DROPDOWN: "/account-group/dropdown",
-    TREE: "/account-group/tree",
-    ALL: "/account-group/all",
-    ADD: "/account-group/add",
-    EDIT: "/account-group/edit",
-  },
-  ACCOUNT: {
-    BASE: "/account",
-    DROPDOWN: "/account/dropdown",
-    ALL: "/account/all",
-    ADD: "/account/add",
-    EDIT: "/account/edit",
-  },
   DEBIT_NOTE: {
     BASE: "/debit-note",
     ALL: "/debit-note/all",
@@ -294,5 +287,52 @@ export const URL_KEYS = {
     ADD: "/pos-order/add",
     EDIT: "/pos-order/edit",
     DELETE: "/pos-order/delete",
+  },
+
+  //*************** Estimate **************** */
+  ESTIMATE: {
+    BASE: "/estimate",
+    ALL: "/estimate/all",
+    ADD: "/estimate/add",
+    EDIT: "/estimate/edit",
+    DELETE: "/estimate/delete",
+    DROPDOWN: "/estimate/dropdown",
+  },
+
+  //*************** Sales Order **************** */
+  SALES_ORDER: {
+    BASE: "/sales-order",
+    ALL: "/sales-order/all",
+    ADD: "/sales-order/add",
+    EDIT: "/sales-order/edit",
+    DELETE: "/sales-order/delete",
+    DROPDOWN: "/sales-order/dropdown",
+  },
+
+  //*************** Invoice **************** */
+  INVOICE: {
+    BASE: "/invoice",
+    ALL: "/invoice/all",
+    ADD: "/invoice/add",
+    EDIT: "/invoice/edit",
+    DELETE: "/invoice/delete",
+    DROPDOWN: "/invoice/dropdown",
+  },
+  //*************** Delivery Challan **************** */
+  DELIVERY_CHALLAN: {
+    BASE: "/delivery-challan",
+    ALL: "/delivery-challan/all",
+    ADD: "/delivery-challan/add",
+    EDIT: "/delivery-challan/edit",
+    DELETE: "/delivery-challan/delete",
+    DROPDOWN: "/delivery-challan/dropdown",
+  },
+  SALES_CREDIT_NOTE: {
+    BASE: "/sales-credit-note",
+    ALL: "/sales-credit-note/all",
+    ADD: "/sales-credit-note/add",
+    EDIT: "/sales-credit-note/edit",
+    DELETE: "/sales-credit-note/delete",
+    DROPDOWN: "/sales-credit-note/dropdown",
   },
 } as const;

@@ -25,7 +25,7 @@ const MaterialConsumptionForm = () => {
 
   const { mutate: addMaterialConsumption, isPending: isAddLoading } = Mutations.useAddMaterialConsumption();
   const { mutate: editMaterialConsumption, isPending: isEditLoading } = Mutations.useEditMaterialConsumption();
-console.log(data);
+// console.log(data);
 
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";

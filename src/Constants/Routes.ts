@@ -22,6 +22,10 @@ export const ROUTES = {
     ADD_EDIT: "/product/add-edit",
     ITEM_ADD_EDIT: "/product/item/add-edit",
   },
+  PRODUCT_TYPE: {
+    BASE: "/product-type",
+    ADD_EDIT: "/product-type/add-edit",
+  },
   ADMIN_SETTING: {
     BASE: "/admin-setting",
     ADD_EDIT: "/admin-setting/add-edit",
@@ -49,13 +53,6 @@ export const ROUTES = {
   LOCATION: {
     BASE: "/location",
     ADD_EDIT: "/location/add-edit",
-  },
-  ACCOUNT_GROUP: {
-    BASE: "/account-group",
-    TREE: "/account-group/tree",
-  },
-  ACCOUNT: {
-    BASE: "/account",
   },
   DEBIT_NOTE: {
     BASE: "/debit-note",
@@ -132,8 +129,7 @@ export const ROUTES = {
     EDIT: "/profile/edit",
   },
   SALES_REGISTER: {
-    BASE: "/sales-register",
-    EDIT: "/sales-register/edit",
+    BASE: "/pos/sales-register",
   },
   ANNOUNCEMENT: {
     BASE: "/announcement",
@@ -148,11 +144,32 @@ export const ROUTES = {
     ADD_EDIT: "/bank-transaction/add-edit",
   },
   POS_CREDIT_NOTE: {
-    BASE: "/pos-credit-note",
-    ADD_EDIT: "/pos-credit-note/add-edit",
+    BASE: "/pos/credit-note",
   },
-  POS_ORDER_LIST:{
+  POS_ORDER_LIST: {
     BASE: "/pos-order-list",
     ADD_EDIT: "/pos-order-list/add-edit",
-  }
+  },
+  ESTIMATE: {
+    BASE: "/estimate",
+    ADD_EDIT: "/estimate/add-edit",
+  },
+
+  SALES_ORDER: {
+    BASE: "/sales-order",
+    ADD_EDIT: "/sales-order/add-edit",
+  },
+
+  INVOICE: {
+    BASE: "/invoice",
+    ADD_EDIT: "/invoice/add-edit",
+  },
+  DELIVERY_CHALLAN: {
+    BASE: "/delivery-challan",
+    ADD_EDIT: "/delivery-challan/add-edit",
+  },
+  SALES_CREDIT_NOTE: {
+    BASE: "/sales-credit-note",
+    ADD_EDIT: "/sales-credit-note/add-edit",
+  },
 } as const;

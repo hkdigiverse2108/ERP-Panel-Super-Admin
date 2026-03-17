@@ -1,232 +1,117 @@
-import { Add, Edit } from "@mui/icons-material";
-import { Box, Grid } from "@mui/material";
-import { GridDeleteIcon } from "@mui/x-data-grid";
-import { Form, Formik, type FormikHelpers } from "formik";
-import { useEffect, useState } from "react";
-import { Mutations, Queries } from "../../../Api";
-import { CommonButton, CommonCheckbox, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
-import { CommonCard, CommonModal, CommonTable } from "../index";
-import type { CommonTableColumn, CommonTermsAndConditionProps, TermsConditionApiResponse, TermsConditionBase, TermsConditionFormValues, TermsSelectionFormValues } from "../../../Types";
-
-const AddTermModal = ({ open, term, onClose, onSave, companyId }: { open: boolean; term: TermsConditionBase | null; onClose: () => void; onSave: (term: TermsConditionBase) => void; companyId?: string }) => {
-  const isEditing = Boolean(term?._id);
-  const initialValues: TermsConditionFormValues = {
-    termsCondition: term?.termsCondition || "",
-    isDefault: term?.isDefault || false,
-  };
-
-  const { mutate: addTerm, isPending: isAddLoading } = Mutations.useAddTermsCondition();
-  const { mutate: editTerm, isPending: isEditLoading } = Mutations.useEditTermsCondition();
-
-  const handleSubmit = (values: TermsConditionFormValues, { resetForm }: FormikHelpers<TermsConditionFormValues>) => {
-    const onSuccessHandler = (savedTerm: TermsConditionBase) => {
-      onSave(savedTerm);
-      resetForm();
-      onClose();
-    };
-
-    if (isEditing && term?._id) {
-      editTerm(
-        { termsConditionId: term._id, termsCondition: values.termsCondition, isDefault: values.isDefault, companyId },
-        { onSuccess: () => onSuccessHandler({ ...term, ...values, _id: term._id }) }, // Optimistic or response based
-      );
-    } else {
-      addTerm({ termsCondition: values.termsCondition, isDefault: values.isDefault, companyId }, { onSuccess: (res: any) => onSuccessHandler(res.data) });
-    }
-  };
-
-  return (
-    <CommonModal title={isEditing ? "Edit Terms & Conditions" : "Add Terms & Conditions"} isOpen={open} onClose={onClose} className="max-w-125 m-2 sm:m-5">
-      <Formik enableReinitialize initialValues={initialValues} onSubmit={handleSubmit}>
-        {({ dirty, submitForm }) => (
-          <Form noValidate>
-            <Grid container spacing={2}>
-              <CommonCard hideDivider grid={{ xs: 12 }}>
-                <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonValidationTextField name="termsCondition" label="Terms & Conditions" multiline rows={4} required grid={{ xs: 12 }} />
-                  <CommonValidationSwitch name="isDefault" label="Default" grid={{ xs: 12 }} />
-                  <Grid sx={{ display: "flex", gap: 2, ml: "auto" }}>
-                    <CommonButton type="button" variant="outlined" title="Cancel" onClick={onClose} />
-                    <CommonButton type="button" loading={isAddLoading || isEditLoading} variant="contained" title="Save" disabled={!dirty} onClick={submitForm} />
-                  </Grid>
-                </Grid>
-              </CommonCard>
-            </Grid>
-          </Form>
-        )}
-      </Formik>
-    </CommonModal>
-  );
-};
-
-const SelectTermsModal = ({ open, selectedIds, onClose, onSave, companyId }: { open: boolean; selectedIds: string[]; onClose: () => void; onSave: (ids: string[]) => void; companyId?: string }) => {
-  const { data, isLoading } = Queries.useGetTermsCondition({ companyId }, { enabled: open && !!companyId });
-  const [terms, setTerms] = useState<TermsConditionBase[]>([]);
-
-  useEffect(() => {
-    const response = data as TermsConditionApiResponse | undefined;
-    if (response?.data?.termsCondition_data) {
-      setTerms(response.data.termsCondition_data);
-    } else if (Array.isArray(response?.data)) {
-      setTerms(response.data);
-    }
-  }, [data]);
-
-  const initialValues: TermsSelectionFormValues = {
-    selected: selectedIds,
-  };
-
-  const handleSubmit = (values: TermsSelectionFormValues, { resetForm }: FormikHelpers<TermsSelectionFormValues>) => {
-    onSave(values.selected);
-    onClose();
-    resetForm();
-  };
-
-  return (
-    <CommonModal title="Edit Terms" isOpen={open} onClose={onClose} className="max-w-125 m-2 sm:m-5">
-      <Formik<TermsSelectionFormValues> enableReinitialize initialValues={initialValues} onSubmit={handleSubmit}>
-        {({ values, setFieldValue, submitForm }) => (
-          <Form noValidate>
-            <Grid container spacing={2}>
-              <CommonCard hideDivider grid={{ xs: 12 }}>
-                <Grid container spacing={2} sx={{ p: 2 }}>
-                  {isLoading ? (
-                    <Grid size={12}>Loading...</Grid>
-                  ) : (
-                    terms.map((term) => (
-                      <Grid size={12} key={term._id}>
-                        <CommonCheckbox
-                          name={`term_${term._id}`}
-                          label={term.termsCondition || ""}
-                          value={values.selected.includes(term._id)}
-                          onChange={(checked: boolean) => {
-                            if (checked) {
-                              setFieldValue("selected", [...values.selected, term._id]);
-                            } else {
-                              setFieldValue(
-                                "selected",
-                                values.selected.filter((id: string) => id !== term._id),
-                              );
-                            }
-                          }}
-                        />
-                      </Grid>
-                    ))
-                  )}
-                  <Grid sx={{ display: "flex", gap: 2, ml: "auto" }}>
-                    <CommonButton type="button" variant="outlined" title="Cancel" onClick={onClose} />
-                    <CommonButton type="button" variant="contained" title="Save" onClick={submitForm} />
-                  </Grid>
-                </Grid>
-              </CommonCard>
-            </Grid>
-          </Form>
-        )}
-      </Formik>
-    </CommonModal>
-  );
-};
+import { Add, Clear, Edit } from "@mui/icons-material";
+import { Box } from "@mui/material";
+import { useEffect, useState, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { Queries } from "../../../Api";
+import { CommonButton, CommonValidationTextField } from "../../../Attribute";
+import { useAppSelector } from "../../../Store/hooks";
+import { setSelectedTermIds, setTermsAndConditionFormModal, setTermsAndConditionSelectionModal } from "../../../Store/Slices/ModalSlice";
+import type { CommonTermsAndConditionProps, TermsConditionBase } from "../../../Types";
 
 const CommonTermsAndCondition = ({ selectedTermIds, onChange, companyId, isView }: CommonTermsAndConditionProps) => {
   const [allTerms, setAllTerms] = useState<TermsConditionBase[]>([]);
-  const { data: termsConditionData, refetch } = Queries.useGetTermsCondition({ companyId }, { enabled: !!companyId });
 
-  // Modals state
-  const [addModalOpen, setAddModalOpen] = useState(false);
-  const [selectModalOpen, setSelectModalOpen] = useState(false);
-  const [editingTerm, setEditingTerm] = useState<TermsConditionBase | null>(null);
+  const { data: termsConditionData } = Queries.useGetTermsCondition({ all: true, companyId: companyId || undefined }, { enabled: !!companyId });
+  const { selectedTermIds: globalSelectedTermIds } = useAppSelector((state) => state.modal);
+
+  const dispatch = useDispatch();
+  const isDefaultFetched = useRef(false);
+
+  useEffect(() => {
+    if (globalSelectedTermIds.length > 0) {
+      onChange(globalSelectedTermIds);
+      dispatch(setSelectedTermIds([]));
+    }
+  }, [globalSelectedTermIds, onChange, dispatch]);
 
   useEffect(() => {
     if (!termsConditionData?.data) return;
     const response = termsConditionData.data;
-    const all: TermsConditionBase[] = Array.isArray(response) ? response : (response.termsCondition_data ?? []);
+    const all: TermsConditionBase[] = response.termsCondition_data ?? [];
     setAllTerms(all);
-  }, [termsConditionData]);
+
+    if (!isView && !isDefaultFetched.current && selectedTermIds.length === 0) {
+      const defaultIds = all.filter((t) => t.isDefault).map((t) => t._id);
+      if (defaultIds.length > 0) {
+        onChange(defaultIds);
+        isDefaultFetched.current = true;
+      }
+    }
+  }, [termsConditionData, isView, onChange, selectedTermIds.length]);
+
+  // Reset default fetch flag if company changes
+  useEffect(() => {
+    isDefaultFetched.current = false;
+  }, [companyId]);
 
   const displayTerms = allTerms.filter((term) => selectedTermIds.includes(term._id)).sort((a, b) => (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0));
 
-  const handleDeleteTerm = (index: number) => {
-    const termToRemove = displayTerms[index];
-    if (termToRemove?._id) {
-      onChange(selectedTermIds.filter((id: string) => id !== termToRemove._id));
-    }
+  const handleDeleteTerm = (id: string) => {
+    onChange(selectedTermIds.filter((termId: string) => termId !== id));
   };
 
   const handleOpenAddTerm = () => {
-    setEditingTerm(null);
-    setAddModalOpen(true);
+    dispatch(setTermsAndConditionFormModal({ open: true, data: null, companyId }));
   };
 
   const handleEditSingleTerm = (term: TermsConditionBase) => {
-    setEditingTerm(term);
-    setAddModalOpen(true);
+    dispatch(setTermsAndConditionFormModal({ open: true, data: term, companyId }));
   };
 
-  const handleSaveTerm = (savedTerm: TermsConditionBase) => {
-    refetch();
-    if (savedTerm.isDefault) {
-      if (!selectedTermIds.includes(savedTerm._id)) {
-        onChange([...selectedTermIds, savedTerm._id]);
-      }
-    }
+  const handleOpenSelectModal = () => {
+    dispatch(setTermsAndConditionSelectionModal({ open: true, alreadySelectedIds: selectedTermIds, companyId }));
   };
-
-  const handleSaveSelection = (ids: string[]) => {
-    onChange(ids);
-  };
-
-  const columns: CommonTableColumn<TermsConditionBase>[] = [
-    { key: "sr", header: "#", bodyClass: "align-middle text-center w-[60px]", render: (_row: TermsConditionBase, index: number) => index + 1 },
-    { key: "termsCondition", header: "Condition", headerClass: "text-left pl-6", bodyClass: "min-w-[400px] text-left pl-6" },
-    {
-      key: "action",
-      header: "Action",
-      headerClass: "text-center",
-      bodyClass: "text-center w-[120px]",
-      render: (row: TermsConditionBase, index: number) => (
-        <Box display="flex" justifyContent="center" alignItems="center" gap={1} px={2}>
-          <CommonButton type="button" size="small" color="primary" variant="outlined" onClick={() => handleEditSingleTerm(row)}>
-            <Edit fontSize="small" />
-          </CommonButton>
-          <CommonButton type="button" size="small" color="error" variant="outlined" onClick={() => handleDeleteTerm(index)}>
-            <GridDeleteIcon fontSize="small" />
-          </CommonButton>
-        </Box>
-      ),
-    },
-  ];
 
   return (
     <Box sx={{ p: 3 }}>
       {/* HEADER */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Box fontWeight={600}>Terms & Conditions</Box>
+      <Box display="flex" justifyContent="end" alignItems="center" mb={2}>
+        {/* <Box fontWeight={600}>Terms & Conditions</Box> */}
 
         <Box display="flex" gap={1}>
-          <CommonButton type="button" size="small" startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined" disabled={isView}>
-            New Term
-          </CommonButton>
-          <CommonButton type="button" size="small" onClick={() => setSelectModalOpen(true)} variant="outlined" disabled={isView}>
-            <Edit fontSize="small" /> Edit Terms
+          <CommonButton type="button" size="small" startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined" title="Add New" disabled={isView} />
+          <CommonButton type="button" size="small" onClick={handleOpenSelectModal} variant="outlined" title="Select Terms" disabled={isView}>
+            <Edit fontSize="small" /> Select Terms
           </CommonButton>
         </Box>
       </Box>
 
       {/* TABLE */}
-      {!isView && (
-        <Box sx={{ border: "1px solid", borderColor: "divider", borderRadius: 2, overflow: "hidden" }}>
-          <CommonTable data={displayTerms} columns={columns} rowKey={(row: TermsConditionBase) => row._id || ""} />
-        </Box>
-      )}
-
+      <Box sx={{ minWidth: "max-content" }}>
+        <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden max-h-64 overflow-y-auto">
+          <table className="w-full text-sm  border border-gray-200 dark:border-gray-700 rounded-t-lg overflow-hidden ">
+            <thead className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-200 rounded-2xl! sticky top-0">
+              <tr>
+                <th className="p-2 w-10">#</th>
+                <th className="p-2 text-left">Terms & Condition</th>
+                <th className="p-2 w-20 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {displayTerms?.map((term: TermsConditionBase, index: number) => (
+                <tr key={term._id} className="text-gray-600 overflow-hidden dark:text-gray-300 bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark border-b border-gray-100 dark:border-gray-700 ">
+                  <td className="p-2">{index + 1}</td>
+                  <td className="p-2 overflow-hidden max-w-xs">{term.termsCondition}</td>
+                  <td className="p-2 text-center">
+                    <Box display="flex" justifyContent="center" gap={1}>
+                      <CommonButton size="small" color="primary" variant="text" onClick={() => handleEditSingleTerm(term)}>
+                        <Edit fontSize="small" />
+                      </CommonButton>
+                      <CommonButton size="small" color="error" variant="text" onClick={() => handleDeleteTerm(term._id)}>
+                        <Clear fontSize="small" />
+                      </CommonButton>
+                    </Box>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Box>
       {/* NOTE */}
       <Box mt={3}>
         <CommonValidationTextField name="notes" label="Note" multiline rows={4} placeholder="Enter a note (max 200 characters)" />
       </Box>
-
-      {/* MODALS */}
-      <AddTermModal open={addModalOpen} term={editingTerm} onClose={() => setAddModalOpen(false)} onSave={handleSaveTerm} companyId={companyId} />
-      <SelectTermsModal open={selectModalOpen} selectedIds={selectedTermIds} onClose={() => setSelectModalOpen(false)} onSave={handleSaveSelection} companyId={companyId} />
     </Box>
   );
 };
