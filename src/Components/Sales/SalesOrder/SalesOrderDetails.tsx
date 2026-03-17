@@ -20,7 +20,6 @@ const SalesOrderDetails = () => {
 
   const { data: estimateData, isLoading: isEstimateLoading, isFetching: isEstimateFetching } = Queries.useGetEstimateDropdown({ companyFilter: values?.companyId, customerFilter: values?.customerId }, !!values?.companyId && !!values?.customerId);
 
-  console.log(estimateData?.data)
   const { data: salesPersonData, isLoading: isSalesPersonLoading, isFetching: isSalesPersonFetching } = Queries.useGetUserDropdown({ companyFilter: values?.companyId }, !!values?.companyId);
 
   const estimateOptions = useMemo(() => {

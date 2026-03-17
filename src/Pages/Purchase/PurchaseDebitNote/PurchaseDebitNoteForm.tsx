@@ -42,7 +42,7 @@ const PurchaseDebitNoteForm = () => {
       reverseCharge: data?.reverseCharge !== undefined ? String(data.reverseCharge) : "false",
       reason: data?.reason || "",
       exportSez: data?.exportSez || "",
-      productDetails: data.productDetails.map((i: PurchaseDebitNoteProductItem) => ({
+      productDetails: (data?.productDetails || [emptyRow]).map((i: PurchaseDebitNoteProductItem) => ({
         ...emptyRow,
         ...i,
         productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
@@ -50,7 +50,7 @@ const PurchaseDebitNoteForm = () => {
         taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
       })),
 
-      additionalCharges: data.additionalCharges.map((r: AdditionalChargeItem) => ({
+      additionalCharges: (data?.additionalCharges || []).map((r: AdditionalChargeItem) => ({
         ...r,
         chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
         taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
