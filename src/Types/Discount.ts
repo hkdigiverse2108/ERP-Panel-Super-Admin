@@ -54,6 +54,7 @@ export interface DiscountFormValues {
   minimumPurchaseAmount?: number;
   minimumQuantity?: number;
   usageLimitTotal?: number;
+  hasUsageLimitTotal?: boolean;
   usageLimitPerCustomer?: boolean;
   startDateTime?: string;
   hasEndDate?: boolean;
