@@ -50,7 +50,6 @@ const Estimate = () => {
       onDelete: (row) => setRowToDelete({ _id: row?._id }),
     }),
   ];
-  ``;
   const CommonDataGridOption = {
     columns,
     rows: allEstimate,

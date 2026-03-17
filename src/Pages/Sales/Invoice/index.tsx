@@ -53,7 +53,7 @@ const Invoice = () => {
     { field: "dueAmount", headerName: "Due Amount", width: 110, type: "number" },
     { field: "status", headerName: "Status", headerAlign: "center", width: 190, renderCell: (params) => <span className={`status-${params.row.status} overflow-hidden! text-nowrap`}>{params.row.status}</span> },
     { field: "paymentStatus", headerName: "Payment Status", width: 120, renderCell: (params) => <span className={`status-${params.row.paymentStatus}`}>{params.row.paymentStatus}</span> },
-    { field: "taxAmount", headerName: "Tax Amount", width: 110 },
+    { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 110 },
     CommonActionColumn({
       active: (row) => editInvoice({ invoiceId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.INVOICE.ADD_EDIT,

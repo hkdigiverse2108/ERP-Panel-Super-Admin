@@ -51,7 +51,7 @@ const SalesCreditNote = () => {
         { field: "creditUsed", headerName: "Credit Used", width: 120, type: "number" },
         { field: "creditRemaining", headerName: "Credit Remaining", width: 150, type: "number" },
         { field: "status", headerName: "Status", headerAlign: "center", width: 120, renderCell: (params) => <span className={`status-${params.row.status} overflow-hidden`}>{params.row.status}</span> },
-        { field: "taxAmount", headerName: "Tax Amount", width: 120, type: "number" },
+        { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 120, type: "number" },
         CommonActionColumn({
             active: (row) => editSalesCreditNote({ salesCreditNoteId: row?._id, isActive: !row.isActive }),
             editRoute: ROUTES.SALES_CREDIT_NOTE.ADD_EDIT,
