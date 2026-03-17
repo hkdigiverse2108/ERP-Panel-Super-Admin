@@ -6,6 +6,7 @@ export const RECIPE_TYPE = ["assemble", "unassemble"] as const;
 
 export const PRODUCT_STATUS = ["active", "inactive"] as const;
 export const CONTACT_TYPE = ["customer", "supplier", "transporter"] as const;
+export const POS_PAYMENT_MODE = ["cash", "bank"] as const;
 export const CUSTOMER_TYPE = ["retailer", "wholesaler", "merchant", "other"] as const;
 export const SUPPLIER_TYPE = ["manufacturer", "stockiest", "trader", "other"] as const;
 export const CONTACT_STATUS = ["active", "inactive"] as const;
@@ -177,6 +178,8 @@ export const PAYMENT_TERMS = [
   { label: "90 Days", value: "90_days" },
 ];
 
+export const PAYMENT_TERMS_OPTIONS = PAYMENT_TERMS;
+
 export const SEND_REMINDER = [
   { label: "Yes", value: "yes" },
   { label: "No", value: "no" },
@@ -190,6 +193,16 @@ export const PRODUCT_EXPIRY_TYPE = [
 export const REVERSE_CHARGE = [
   { label: "Yes", value: "true" },
   { label: "No", value: "false" },
+];
+
+// export const SEZ_OPTIONS = [
+//   { label: "Yes", value: "YES" },
+//   { label: "No", value: "NO" },
+// ];
+
+export const SHIPPING_TYPE_OPTIONS = [
+  { label: "Delivery", value: "delivery" },
+  { label: "Pickup", value: "pickup" },
 ];
 
 export const COMPANY = [
@@ -232,6 +245,31 @@ export const ORDER_STATUS = [
   { label: "Completed", value: "completed" },
   { label: "Cancelled", value: "cancelled" },
 ];
+
+export const INVOICE_STATUS = [
+  { label: "Invoiced", value: "invoiced" },
+  { label: "Delivery Challan Created", value: "delivery_challan_created" },
+  { label: "Cancelled", value: "cancelled" },
+];
+
+export const INVOICE_PAYMENT_STATUS_OPTIONS = [
+  { label: "Paid", value: "paid" },
+  { label: "Unpaid", value: "unpaid" },
+  { label: "Partial", value: "partial" },
+];
+
+export const INVOICE_STATUS_STATS = [
+  { label: "All", value: "all" },
+  { label: "Invoiced", value: "invoiced" },
+  { label: "Delivery Challan Created", value: "delivery_challan_created" },
+  { label: "Partial Delivery Challan Created", value: "partial_delivery_challan_created" },
+  { label: "Partially Cancelled", value: "partially_cancelled" },
+  { label: "Cancelled", value: "cancelled" },
+  { label: "Total Sales", value: "total_sales" },
+  { label: "Paid", value: "paid" },
+  { label: "UnPaid", value: "unpaid" },
+];
+
 export const TAX_TYPE = [
   { label: "Default", value: "default" },
   { label: "Tax Inclusive", value: "tax_inclusive" },
@@ -277,3 +315,65 @@ export const LOYALTY_REDEMPTION_TYPE = [
   { label: "Single", value: "single" },
   { label: "Multiple", value: "multiple" },
 ];
+
+export const PAYMENT_MODE_OPTIONS = [
+  { label: "Online", value: "online" },
+  { label: "Cheque", value: "cheque" },
+];
+
+export const EXPENSE_TYPE_OPTIONS = [
+  { label: "Income", value: "income" },
+  { label: "Expense", value: "expense" },
+];
+
+export const TRANSACTION_TYPE = [
+  { label: "Deposit", value: "deposit" },
+  { label: "Withdrawal", value: "withdrawal" },
+  { label: "Transfer", value: "transfer" },
+];
+
+export const ESTIMATE_STATUS = [
+  { label: "Pending", value: "pending" },
+  { label: "Order Created", value: "order-created" },
+  { label: "Invoice Created", value: "invoice-created" },
+];
+
+export const SALES_ORDER_STATUS_OPTIONS = [
+  { label: "All", value: "all" },
+  { label: "Pending", value: "pending" },
+  { label: "Invoice Created", value: "invoice_created" },
+  { label: "Partial Invoice Created", value: "partial_invoice_created" },
+  { label: "Delivery Challan Created", value: "delivery_challan_created" },
+  { label: "Partial Delivery Challan Created", value: "partial_delivery_challan_created" },
+  { label: "Partially Cancelled", value: "partially_cancelled" },
+  { label: "Cancelled", value: "cancelled" },
+];
+
+export const INVOICE_CREATED_FROM_OPTIONS = [
+  { label: "Sales Order", value: "sales-order" },
+  { label: "Delivery Challan", value: "delivery-challan" },
+];
+
+export const DELIVERY_CHALLAN_STATUS_OPTIONS = [
+  { label: "Invoice Created", value: "invoice_created" },
+  { label: "Delivered", value: "delivered" },
+  { label: "Cancelled", value: "cancelled" },
+];
+
+export const DELIVERY_CHALLAN_CREATED_FROM_OPTIONS = [
+  { label: "Invoice", value: "invoice" },
+  { label: "Sales Order", value: "sales-order" },
+];
+
+export const SALES_CREDIT_NOTE_STATUS_OPTIONS = [
+  { label: "All", value: "all" },
+  { label: "Open", value: "open" },
+  { label: "Paid", value: "paid" },
+  { label: "Due", value: "due" },
+];
+
+export const SALES_CREDIT_NOTE_PRODUCT_TYPE_OPTIONS = [
+  { label: "All", value: "all" },
+  { label: "Expiry", value: "expiry" },
+];
+

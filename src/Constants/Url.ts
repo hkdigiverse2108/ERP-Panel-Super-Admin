@@ -92,6 +92,21 @@ export const URL_KEYS = {
     ADD: "/bank/add",
     EDIT: "/bank/edit",
   },
+  PAYMENT: {
+    BASE: "/payment",
+    DROPDOWN: "/payment/dropdown",
+    ALL: "/payment/all",
+    ADD: "/payment/add",
+    EDIT: "/payment/edit",
+  },
+
+  BANK_TRANSACTION: {
+    BASE: "/bank-transaction",
+    ADD: "/bank-transaction/add",
+    EDIT: "/bank-transaction/edit",
+    ALL: "/bank-transaction/all",
+    DROPDOWN: "/bank-transaction/dropdown",
+  },
 
   // ----------------------------- inventory -----------------------------
   PRODUCT: {
@@ -247,6 +262,7 @@ export const URL_KEYS = {
   POS_CASH_REGISTER: {
     BASE: "/pos-cash-register",
     ALL: "/pos-cash-register/all",
+    DROPDOWN: "/pos-cash-register/dropdown",
   },
 
   POS_CREDIT_NOTE: {
@@ -280,4 +296,82 @@ export const URL_KEYS = {
     EDIT: "/pos-order/edit",
     DELETE: "/pos-order/delete",
   },
+
+  POS_PAYMENT: {
+    BASE: "/pos-payment",
+    ADD: "/pos-payment/add",
+    EDIT: "/pos-payment/edit",
+    DELETE: "/pos-payment/delete",
+    ALL: "/pos-payment/all",
+  },
+  RECEIPT: {
+    BASE: "/receipt",
+    ALL: "/receipt/all",
+    ADD: "/receipt/add",
+    EDIT: "/receipt/edit",
+    DELETE: "/receipt/delete",
+    DROPDOWN: "/receipt/dropdown",
+  },
+  EXPENSE: {
+    BASE: "/expense",
+    ALL: "/expense/all",
+    ADD: "/expense/add",
+    EDIT: "/expense/edit",
+    DELETE: "/expense/delete",
+    DROPDOWN: "/expense/dropdown",
+  },
+  SALARY: {
+    BASE: "/salary",
+    ALL: "/salary/all",
+    ADD: "/salary/add",
+    EDIT: "/salary/edit",
+    DELETE: "/salary/delete",
+    DROPDOWN: "/salary/dropdown",
+  },
+  //*************** Estimate **************** */
+  ESTIMATE: {
+    BASE: "/estimate",
+    ALL: "/estimate/all",
+    ADD: "/estimate/add",
+    EDIT: "/estimate/edit",
+    DELETE: "/estimate/delete",
+    DROPDOWN: "/estimate/dropdown",
+  },
+
+  //*************** Sales Order **************** */
+  SALES_ORDER: {
+    BASE: "/sales-order",
+    ALL: "/sales-order/all",
+    ADD: "/sales-order/add",
+    EDIT: "/sales-order/edit",
+    DELETE: "/sales-order/delete",
+    DROPDOWN: "/sales-order/dropdown",
+  },
+
+  //*************** Invoice **************** */
+  INVOICE: {
+    BASE: "/invoice",
+    ALL: "/invoice/all",
+    ADD: "/invoice/add",
+    EDIT: "/invoice/edit",
+    DELETE: "/invoice/delete",
+    DROPDOWN: "/invoice/dropdown",
+  },
+  //*************** Delivery Challan **************** */
+  DELIVERY_CHALLAN: {
+    BASE: "/delivery-challan",
+    ALL: "/delivery-challan/all",
+    ADD: "/delivery-challan/add",
+    EDIT: "/delivery-challan/edit",
+    DELETE: "/delivery-challan/delete",
+    DROPDOWN: "/delivery-challan/dropdown",
+  },
+  SALES_CREDIT_NOTE: {
+    BASE: "/sales-credit-note",
+    ALL: "/sales-credit-note/all",
+    ADD: "/sales-credit-note/add",
+    EDIT: "/sales-credit-note/edit",
+    DELETE: "/sales-credit-note/delete",
+    DROPDOWN: "/sales-credit-note/dropdown",
+  }
 } as const;

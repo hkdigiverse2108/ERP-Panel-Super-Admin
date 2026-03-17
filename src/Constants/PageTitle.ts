@@ -158,6 +158,32 @@ export const PAGE_TITLE = {
     ADD: "Add Bank",
     EDIT: "Edit Bank",
   },
+  PAYMENT: {
+    BASE: "Payment",
+    ADD: "Add Payment",
+    EDIT: "Edit Payment",
+  },
+  RECEIPT: {
+    BASE: "Receipt",
+    ADD: "Add Receipt",
+    EDIT: "Edit Receipt",
+  },
+  EXPENSE: {
+    BASE: "Expense",
+    ADD: "Add Expense",
+    EDIT: "Edit Expense",
+  },
+  SALARY: {
+    BASE: "Salary",
+    ADD: "Add Salary",
+    EDIT: "Edit Salary",
+  },
+
+  BANK_TRANSACTION: {
+    BASE: "Bank Transaction",
+    ADD: "Add Bank Transaction",
+    EDIT: "Edit Bank Transaction",
+  },
   CRM: {
     BASE: "CRM",
     COUPON: {
@@ -192,5 +218,33 @@ export const PAGE_TITLE = {
   },
   CHANGE_PASSWORD: {
     BASE: "Change Password",
+  },
+  SALES: {
+    BASE: "Sales",
+  },
+  ESTIMATE: {
+    BASE: "Estimate",
+    ADD: "Add Estimate",
+    EDIT: "Edit Estimate",
+  },
+  SALES_ORDER: {
+    BASE: "Sales Order",
+    ADD: "Add Sales Order",
+    EDIT: "Edit Sales Order",
+  },
+  INVOICE: {
+    BASE: "Invoice",
+    ADD: "Add Invoice",
+    EDIT: "Edit Invoice",
+  },
+  DELIVERY_CHALLAN: {
+    BASE: "Delivery Challan",
+    ADD: "Add Delivery Challan",
+    EDIT: "Edit Delivery Challan",
+  },
+  SALES_CREDIT_NOTE: {
+    BASE: "Sales Credit Note",
+    ADD: "Add Sales Credit Note",
+    EDIT: "Edit Sales Credit Note",
   },
 } as const;

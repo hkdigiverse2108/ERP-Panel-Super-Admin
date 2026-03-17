@@ -26,11 +26,26 @@ export const CleanParams = (params?: Params): Params | undefined => {
   return Object.fromEntries(Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== ""));
 };
 
-export const GenerateOptions = (data?: { _id: string; name?: string; productName?: string; firstName?: string; lastName?: string; title?: string; tabName?: string; fullName?: string }[]) => {
+export const GenerateOptions = (
+  data?: {
+    _id: string;
+    name?: string;
+    productName?: string;
+    firstName?: string;
+    lastName?: string;
+    title?: string;
+    tabName?: string;
+    fullName?: string;
+    estimateNo?: string;
+    salesOrderNo?: string;
+    invoiceNo?: string;
+    deliveryChallanNo?: string;
+  }[],
+) => {
   if (!data || !Array.isArray(data)) return [];
 
   return data.map((item) => {
-    const label = item.name?.trim() || item.productName?.trim() || [item.firstName, item.lastName].filter(Boolean).join(" ") || item.title?.trim() || item.tabName?.trim() || item.fullName?.trim() || "Unnamed";
+    const label = item.name?.trim() || item.fullName?.trim() || item.productName?.trim() || item.estimateNo?.trim() || item.salesOrderNo?.trim() || item.invoiceNo?.trim() || item.deliveryChallanNo?.trim() || [item.firstName, item.lastName].filter(Boolean).join(" ") || item.title?.trim() || item.tabName?.trim() || "Unnamed";
 
     return {
       value: item._id,

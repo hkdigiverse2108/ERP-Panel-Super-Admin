@@ -112,6 +112,22 @@ export const ROUTES = {
     BASE: "/bank",
     ADD_EDIT: "/bank/add-edit",
   },
+  PAYMENT: {
+    BASE: "/payment",
+    ADD_EDIT: "/payment/add-edit",
+  },
+  RECEIPT: {
+    BASE: "/receipt",
+    ADD_EDIT: "/receipt/add-edit",
+  },
+  EXPENSE: {
+    BASE: "/expense",
+    ADD_EDIT: "/expense/add-edit",
+  },
+  SALARY: {
+    BASE: "/salary",
+    ADD_EDIT: "/salary/add-edit",
+  },
   COUPON: {
     BASE: "/coupon",
     ADD_EDIT: "/coupon/add-edit",
@@ -139,10 +155,37 @@ export const ROUTES = {
     BASE: "/call-request",
     ADD_EDIT: "/call-request/add-edit",
   },
+  BANK_TRANSACTION: {
+    BASE: "/bank-transaction",
+    ADD_EDIT: "/bank-transaction/add-edit",
+  },
   POS_CREDIT_NOTE: {
     BASE: "/pos/credit-note",
   },
   POS_ORDER_LIST: {
-    BASE: "/pos/order-list",
+    BASE: "/pos-order-list",
+    ADD_EDIT: "/pos-order-list/add-edit",
+  },
+  ESTIMATE: {
+    BASE: "/estimate",
+    ADD_EDIT: "/estimate/add-edit",
+  },
+
+  SALES_ORDER: {
+    BASE: "/sales-order",
+    ADD_EDIT: "/sales-order/add-edit",
+  },
+
+  INVOICE: {
+    BASE: "/invoice",
+    ADD_EDIT: "/invoice/add-edit",
+  },
+  DELIVERY_CHALLAN: {
+    BASE: "/delivery-challan",
+    ADD_EDIT: "/delivery-challan/add-edit",
+  },
+  SALES_CREDIT_NOTE: {
+    BASE: "/sales-credit-note",
+    ADD_EDIT: "/sales-credit-note/add-edit",
   },
 } as const;

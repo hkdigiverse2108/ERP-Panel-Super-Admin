@@ -1,4 +1,4 @@
-import type { CommonDataType, MessageStatus, PageStatus, SelectOptionType } from "./Common";
+import type { AdditionalChargeItem, CommonDataType, MessageStatus, PageStatus, SelectOptionType } from "./Common";
 import type { ProductBase } from "./Product";
 import type { ContactBase } from "./Contacts";
 import type { TermsConditionBase } from "./TermsCondition";
@@ -11,18 +11,22 @@ export type BillSupplier = ContactBase & { name?: string };
 
 export interface SupplierBillProductItem {
   productId?: ProductBase | string;
+  _prevProductId?: string;
   qty?: number;
   freeQty?: number;
   mrp?: number;
+  uomId?: string;
+  unit?: string;
   sellingPrice?: number;
   unitCost?: number;
+  discount1?: number;
+  taxable?: number;
+  taxableAmount?: number;
+  taxId?: string;
+  tax?: number | string;
+  taxAmount?: number;
   landingCost?: number;
   margin?: number;
-  discount1?: number;
-  discount2?: number;
-  taxable?: number;
-  taxId?: string;
-  tax?: string;
   total?: number;
 }
 export interface SupplierBillProductDetails {
@@ -36,11 +40,19 @@ export interface SupplierBillProductDetails {
 
 export interface SupplierBillReturnProductItem {
   productId?: string;
+  _prevProductId?: string;
   qty?: number;
+  uomId?: string;
+  unit?: string;
+  unitCost?: number;
   discount1?: number;
-  discount2?: number;
+  taxable?: number;
+  taxableAmount?: number;
+  taxId?: string;
+  tax?: number | string;
   taxAmount?: number;
   landingCost?: number;
+  margin?: number;
   total?: number;
 }
 
@@ -59,14 +71,6 @@ export interface SupplierBillReturnProductDetails {
 }
 
 /* ===================== ADDITIONAL CHARGES ===================== */
-
-export interface AdditionalChargeItem {
-  chargeId?: string;
-  amount?: number;
-  taxAmount?: number;
-  taxId?: string;
-  totalAmount?: number;
-}
 
 export interface AdditionalChargeDetails {
   item?: AdditionalChargeItem[];
@@ -97,6 +101,9 @@ export interface SupplierBillFormValues {
   supplierBillNo?: string;
   referenceBillNo?: string;
   supplierBillDate: string | Date;
+  placeOfSupply?: string;
+  gstIn?: string;
+  billingAddress?: string;
   paymentTerm?: string;
   dueDate?: string | Date;
   reverseCharge?: boolean;
@@ -149,7 +156,7 @@ export interface AdditionalChargeRow {
   chargeId: string;
   amount: string;
   taxId: string;
-  taxAmount: string;
+  taxAmount?: string;
   totalAmount: string;
 }
 

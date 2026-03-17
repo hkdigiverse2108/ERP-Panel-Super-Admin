@@ -21,7 +21,7 @@ const CallRequest = () => {
   const rows = useMemo(() => {
     return data?.data?.call_Request_data?.map((r) => ({ ...r, id: r?._id })) || [];
   }, [data]);
-  console.log("data", data);
+  // console.log("data", data);
   const totalRows = data?.data?.totalData || 0;
 
   const handleAdd = () => navigate(ROUTES.CALL_REQUEST.ADD_EDIT);

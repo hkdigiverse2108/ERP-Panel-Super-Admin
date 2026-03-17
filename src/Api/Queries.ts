@@ -1,5 +1,13 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AdditionalChargesApiResponse, AdditionalChargesDropdownApiResponse, AdminSettingApiResponse, AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BankDropdownApiResponse, BillOfLiveProductApiResponse, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CallRequestApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, CompanyDropdownApiResponse, ContactApiResponse, ContactDropdownApiResponse, CountryApiResponse, CouponApiResponse, CouponDropdownApiResponse, CreditNoteApiResponse, DebitNoteApiResponse, LocationApiResponse, LoyaltyApiResponse, LoyaltyDropdownApiResponse, LoyaltyPointsApiResponse, MaterialConsumptionApiResponse, ModuleApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, PosCashRegisterApiResponse, PosCreditNoteApiResponse, PosOrderApiResponse, PosOrderDropdownApiResponse, ProductApiResponse, ProductDropDownApiResponse, ProductTypeApiResponse, ProductTypeDropdownApiResponse, PurchaseOrderApiResponse, PurchaseOrderDropdownApiResponse, RecipeApiResponse, RecipeDropdownApiResponse, RolesApiResponse, RolesDropdownApiResponse, SingleCompanyApiResponse, SingleEmployeeApiResponse, StockApiResponse, StockVerificationApiResponse, SupplierBillApiResponse, TaxApiResponse, TaxDropdownApiResponse, TermsConditionApiResponse, TermsConditionDropdownApiResponse, UomApiResponse, UomDropdownApiResponse, UploadResponse, UserApiResponse, UserModulePermissionApiResponse } from "../Types";
+import type { AdditionalChargesApiResponse, AdditionalChargesDropdownApiResponse, AnnouncementApiResponse, AppQueryOptions, BillOfLiveProductApiResponse, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CallRequestApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, CompanyDropdownApiResponse, CountryApiResponse, CouponApiResponse, CouponDropdownApiResponse, CreditNoteApiResponse, DebitNoteApiResponse, DeliveryChallanApiResponse, DeliveryChallanDropdownApiResponse, EstimateApiResponse, EstimateDropdownApiResponse, ExpenseApiResponse, InvoiceApiResponse, InvoiceDropdownApiResponse, LocationApiResponse, LoyaltyApiResponse, LoyaltyDropdownApiResponse, LoyaltyPointsApiResponse, MaterialConsumptionApiResponse, ModuleApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, PosOrderApiResponse, PosOrderDropdownApiResponse, PosPaymentApiResponse, ProductApiResponse, ProductDropDownApiResponse, ProductTypeApiResponse, ProductTypeDropdownApiResponse, PurchaseOrderApiResponse, PurchaseOrderDropdownApiResponse, RolesApiResponse, RolesDropdownApiResponse, SalaryApiResponse, SalesCreditNoteApiResponse, SalesCreditNoteDropdownApiResponse, SalesOrderApiResponse, SalesOrderDropdownApiResponse, SingleCompanyApiResponse, SingleDeliveryChallanApiResponse, SingleEmployeeApiResponse, SingleInvoiceApiResponse, SingleSalesCreditNoteApiResponse, StockApiResponse, StockVerificationApiResponse, TaxApiResponse, TaxDropdownApiResponse, TermsConditionApiResponse, TermsConditionDropdownApiResponse, UomApiResponse, UomDropdownApiResponse, UploadResponse, UserApiResponse, UserModulePermissionApiResponse } from "../Types";
+import type { AdminSettingApiResponse } from "../Types/AdminSetting";
+import type { BankApiResponse, BankDropdownApiResponse } from "../Types/Bank";
+import type { BankTransactionApiResponse, BankTransactionDropdownApiResponse } from "../Types/BankTransaction";
+import type { ContactApiResponse, ContactDropdownApiResponse } from "../Types/Contacts";
+import type { PosCashRegisterApiResponse, PosCashRegisterDropdownApiResponse } from "../Types/PosCashRegister";
+import type { PosCreditNoteApiResponse } from "../Types/PosCreditNote";
+import type { RecipeApiResponse, RecipeDropdownApiResponse } from "../Types/Recipe";
+import type { SupplierBillApiResponse } from "../Types/SupplierBill";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 
@@ -127,8 +135,13 @@ export const Queries = {
   //************ Admin Setting ********/
   useGetAdminSetting: (params?: Params) => useQueries<AdminSettingApiResponse>([KEYS.ADMIN_SETTING.BASE, params], () => Get(URL_KEYS.ADMIN_SETTING.ALL, params)),
 
+  //***************bank transaction**************** */
+  useGetBankTransaction: (params?: Params) => useQueries<BankTransactionApiResponse>([KEYS.BANK_TRANSACTION.BASE, params], () => Get(URL_KEYS.BANK_TRANSACTION.ALL, params)),
+  useGetBankTransactionDropdown: (params?: Params, enabled?: boolean) => useQueries<BankTransactionDropdownApiResponse>([KEYS.BANK_TRANSACTION.BASE, params], () => Get(URL_KEYS.BANK_TRANSACTION.DROPDOWN, params), { enabled: enabled }),
+  
   // ************ Announcement ***********
   useGetPosCashRegister: (params?: Params) => useQueries<PosCashRegisterApiResponse>([KEYS.POS_CASH_REGISTER.BASE, params], () => Get(URL_KEYS.POS_CASH_REGISTER.ALL, params)),
+  useGetPosCashRegisterDropdown: (params?: Params, enabled?: boolean) => useQueries<PosCashRegisterDropdownApiResponse>([KEYS.POS_CASH_REGISTER.DROPDOWN, params], () => Get(URL_KEYS.POS_CASH_REGISTER.DROPDOWN, params), { enabled: enabled }),
 
   //*************** Pos Credit Note *********
   useGetPosCreditNote: (params?: Params, enabled?: boolean) => useQueries<PosCreditNoteApiResponse>([KEYS.POS_CREDIT_NOTE.BASE, params], () => Get(URL_KEYS.POS_CREDIT_NOTE.ALL, params), { enabled: enabled }),
@@ -137,4 +150,33 @@ export const Queries = {
   useGetPosOrder: (params?: Params, enabled?: boolean) => useQueries<PosOrderApiResponse>([KEYS.POS_ORDER.BASE, params], () => Get(URL_KEYS.POS_ORDER.ALL, params), { enabled: enabled }),
   useGetLastPosOrder: (params?: Params, enabled?: boolean) => useQueries<PosOrderApiResponse>([KEYS.POS_ORDER.BASE, params], () => Get(URL_KEYS.POS_ORDER.ALL, params), { enabled: enabled }),
   useGetPosOrderDropdown: (params?: Params, enabled?: boolean) => useQueries<PosOrderDropdownApiResponse>([KEYS.POS_ORDER.DROPDOWN, params], () => Get(URL_KEYS.POS_ORDER.DROPDOWN, params), { enabled: enabled }),
+
+  // ************ Pos Payment ***********
+  useGetPosPayment: (params?: Params) => useQueries<PosPaymentApiResponse>([KEYS.POS_PAYMENT.BASE, params], () => Get(URL_KEYS.POS_PAYMENT.ALL, params)),
+
+  // ************ Expense *********** */
+  useGetExpense: (params?: Params) => useQueries<ExpenseApiResponse>([KEYS.EXPENSE.BASE, params], () => Get(URL_KEYS.EXPENSE.ALL, params)),
+
+  //*************** Salary *************** */
+  useGetSalary: (params?: Params) => useQueries<SalaryApiResponse>([KEYS.SALARY.BASE, params], () => Get(URL_KEYS.SALARY.ALL, params)),
+  //*************** Estimate **************** */
+  useGetEstimate: (params?: Params, enabled?: boolean) => useQueries<EstimateApiResponse>([KEYS.ESTIMATE.BASE, params], () => Get(URL_KEYS.ESTIMATE.ALL, params), { enabled: enabled }),
+  useGetEstimateDropdown: (params?: Params, enabled?: boolean) => useQueries<EstimateDropdownApiResponse>([KEYS.ESTIMATE.BASE, params], () => Get(URL_KEYS.ESTIMATE.DROPDOWN, params), { enabled: enabled }),
+
+  //*************** Sales Order **************** */
+  useGetSalesOrder: (params?: Params, enabled?: boolean) => useQueries<SalesOrderApiResponse>([KEYS.SALES_ORDER.BASE, params], () => Get(URL_KEYS.SALES_ORDER.ALL, params), { enabled: enabled }),
+  useGetSalesOrderDropdown: (params?: Params, enabled?: boolean) => useQueries<SalesOrderDropdownApiResponse>([KEYS.SALES_ORDER.BASE, params], () => Get(URL_KEYS.SALES_ORDER.DROPDOWN, params), { enabled: enabled }),
+
+  //*************** Invoice **************** */
+  useGetInvoice: (params?: Params, enabled?: boolean) => useQueries<InvoiceApiResponse>([KEYS.INVOICE.BASE, params], () => Get(URL_KEYS.INVOICE.ALL, params), { enabled: enabled }),
+  useGetSingleInvoice: (id?: string) => useQueries<SingleInvoiceApiResponse>([KEYS.INVOICE.BASE, id], () => Get(`${URL_KEYS.INVOICE.BASE}/${id}`), { enabled: !!id }),
+  useGetInvoiceDropdown: (params?: Params, enabled?: boolean) => useQueries<InvoiceDropdownApiResponse>([KEYS.INVOICE.DROPDOWN, params], () => Get(URL_KEYS.INVOICE.DROPDOWN, params), { enabled: enabled }),
+  //*************** Delivery Challan **************** */
+  useGetDeliveryChallan: (params?: Params, enabled?: boolean) => useQueries<DeliveryChallanApiResponse>([KEYS.DELIVERY_CHALLAN.BASE, params], () => Get(URL_KEYS.DELIVERY_CHALLAN.ALL, params), { enabled: enabled }),
+  useGetSingleDeliveryChallan: (id?: string) => useQueries<SingleDeliveryChallanApiResponse>([KEYS.DELIVERY_CHALLAN.BASE, id], () => Get(`${URL_KEYS.DELIVERY_CHALLAN.BASE}/${id}`), { enabled: !!id }),
+  useGetDeliveryChallanDropdown: (params?: Params, enabled?: boolean) => useQueries<DeliveryChallanDropdownApiResponse>([KEYS.DELIVERY_CHALLAN.DROPDOWN, params], () => Get(URL_KEYS.DELIVERY_CHALLAN.DROPDOWN, params), { enabled: enabled }),
+  //*************** Sales Credit Note **************** */
+  useGetSalesCreditNote: (params?: Params, enabled?: boolean) => useQueries<SalesCreditNoteApiResponse>([KEYS.SALES_CREDIT_NOTE.BASE, params], () => Get(URL_KEYS.SALES_CREDIT_NOTE.ALL, params), { enabled: enabled }),
+  useGetSingleSalesCreditNote: (id?: string) => useQueries<SingleSalesCreditNoteApiResponse>([KEYS.SALES_CREDIT_NOTE.BASE, id], () => Get(`${URL_KEYS.SALES_CREDIT_NOTE.BASE}/${id}`), { enabled: !!id }),
+  useGetSalesCreditNoteDropdown: (params?: Params, enabled?: boolean) => useQueries<SalesCreditNoteDropdownApiResponse>([KEYS.SALES_CREDIT_NOTE.DROPDOWN, params], () => Get(URL_KEYS.SALES_CREDIT_NOTE.DROPDOWN, params), { enabled: enabled }),
 };
