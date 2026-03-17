@@ -96,6 +96,19 @@ export const KEYS = {
     DELETE: "bank-delete",
   },
 
+  POS_PAYMENT: {
+    BASE: "pos-payment",
+    ADD: "pos-payment-add",
+    EDIT: "pos-payment-edit",
+    DELETE: "pos-payment-delete",
+  },
+  BANK_TRANSACTION: {
+    BASE: "bank-transaction",
+    ADD: "bank-transaction-add",
+    EDIT: "bank-transaction-edit",
+    DELETE: "bank-transaction-delete",
+  },
+
   // ----------------------------- inventory -----------------------------
 
   PRODUCT: {
@@ -243,6 +256,7 @@ export const KEYS = {
   POS_CASH_REGISTER: {
     BASE: "pos-cash-register",
     DETAILS: "pos-cash-register-details",
+    DROPDOWN: "pos-cash-register-dropdown",
   },
 
   POS_CREDIT_NOTE: {
@@ -272,6 +286,18 @@ export const KEYS = {
     ADD: "pos-add",
     EDIT: "pos-edit",
     DELETE: "pos-delete",
+  },
+  EXPENSE: {
+    BASE: "expense",
+    ADD: "expense-add",
+    EDIT: "expense-edit",
+    DELETE: "expense-delete",
+  },
+  SALARY: {
+    BASE: "salary",
+    ADD: "salary-add",
+    EDIT: "salary-edit",
+    DELETE: "salary-delete",
   },
 
   //*************** Estimate **************** */

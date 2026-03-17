@@ -435,6 +435,17 @@ export const BankFormSchema = Yup.object().shape({
     pinCode: Validation("string", "Pin Code", { extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid Pin Code") }),
   }).nullable(),
 });
+
+export const BankTransactionFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
+  transactionDate: Validation("string", "Transaction Date"),
+  transactionType: Validation("string", "Transaction Type"),
+  fromAccount: Validation("string", "From Account"),
+  toAccount: Validation("string", "To Account"),
+  amount: Validation("number", "Amount"),
+  description: Validation("string", "Description", { required: false }),
+});
+
 export const CouponFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
   name: Validation("string", "Name"),
@@ -560,6 +571,76 @@ export const ReturnPosOrderFormSchema = Yup.object({
 
 export const ProductTypeFormSchema = Yup.object({
   name: Validation("string", "Product Type Name"),
+  isActive: Yup.boolean(),
+});
+
+export const PaymentFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
+  partyId: Validation("string", "Party"),
+  date: Yup.mixed().required("Payment Date is required"),
+  paymentType: Validation("string", "Payment Type"),
+  posOrderId: RequiredWhen("paymentType", ["against_bill"], "Sales", "string"),
+  paymentMode: Validation("string", "Payment Mode"),
+  bankId: RequiredWhen("paymentMode", ["bank", "upi", "cheque", "card"], "Bank", "string"),
+  amount: Validation("string", "Amount", { required: true, extraRules: (s) => s?.matches(/^\d+(\.\d{1,2})?$/, "The amount no can only consist of number").max(10, "The amount no must be 10 digit long") }),
+  totalAmount: Validation("number", "Total Amount", { required: false }).nullable(),
+  paidAmount: Validation("number", "Paid Amount", { required: false }).nullable(),
+  pendingAmount: Validation("number", "Pending Amount", { required: false }).nullable(),
+  kasar: Validation("number", "Kasar Amount", { required: false }).nullable(),
+  remark: Validation("string", "Description", {
+    required: false,
+    extraRules: (s) => s.trim().max(200, "Maximum 200 characters allowed"),
+  }),
+  isActive: Yup.boolean(),
+});
+
+export const ReciptFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
+  partyId: Validation("string", "Party"),
+  date: Yup.mixed().required("Receipt Date is required"),
+  paymentType: Validation("string", "Payment Type"),
+  posOrderId: RequiredWhen("paymentType", ["against_bill"], "Sales", "string"),
+  paymentMode: Validation("string", "Payment Mode"),
+  bankId: RequiredWhen("paymentMode", ["bank", "upi", "cheque", "card"], "Bank", "string"),
+  amount: Validation("string", "Amount", { required: true, extraRules: (s) => s?.matches(/^\d+(\.\d{1,2})?$/, "The amount no can only consist of number").max(10, "The amount no must be 10 digit long") }),
+  totalAmount: Validation("number", "Total Amount", { required: false }).nullable(),
+  paidAmount: Validation("number", "Paid Amount", { required: false }).nullable(),
+  pendingAmount: Validation("number", "Pending Amount", { required: false }).nullable(),
+  kasar: Validation("number", "Kasar Amount", { required: false }).nullable(),
+  remark: Validation("string", "Description", {
+    required: false,
+    extraRules: (s) => s.trim().max(200, "Maximum 200 characters allowed"),
+  }),
+  isActive: Yup.boolean(),
+});
+
+export const ExpenseFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
+  partyId: Validation("string", "Party"),
+  image: Validation("string", "Image", { required: false }),
+  fromDate: Validation("string", "Date"),
+  amount: Validation("number", "Amount"),
+  remark: Validation("string", "Description", {
+    required: false,
+    extraRules: (s) => s.trim().max(200, "Maximum 200 characters allowed"),
+  }),
+  type: Validation("string", "Type", { required: false }),
+  isActive: Yup.boolean(),
+});
+
+export const SalaryFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
+  partyId: Validation("string", "Party"),
+  image: Validation("string", "Image", { required: false }),
+  fromDate: Validation("string", "Date"),
+  toDate: Validation("string", "Date"),
+  amount: Validation("number", "Amount"),
+  incentive: Validation("number", "Incentive", { required: false }),
+  description: Validation("string", "Description", {
+    required: false,
+    extraRules: (s) => s.trim().max(200, "Maximum 200 characters allowed"),
+  }),
+  type: Validation("string", "Type", { required: false }),
   isActive: Yup.boolean(),
 });
 

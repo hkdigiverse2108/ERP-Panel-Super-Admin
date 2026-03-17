@@ -92,6 +92,21 @@ export const URL_KEYS = {
     ADD: "/bank/add",
     EDIT: "/bank/edit",
   },
+  PAYMENT: {
+    BASE: "/payment",
+    DROPDOWN: "/payment/dropdown",
+    ALL: "/payment/all",
+    ADD: "/payment/add",
+    EDIT: "/payment/edit",
+  },
+
+  BANK_TRANSACTION: {
+    BASE: "/bank-transaction",
+    ADD: "/bank-transaction/add",
+    EDIT: "/bank-transaction/edit",
+    ALL: "/bank-transaction/all",
+    DROPDOWN: "/bank-transaction/dropdown",
+  },
 
   // ----------------------------- inventory -----------------------------
   PRODUCT: {
@@ -256,6 +271,7 @@ export const URL_KEYS = {
   POS_CASH_REGISTER: {
     BASE: "/pos-cash-register",
     ALL: "/pos-cash-register/all",
+    DROPDOWN: "/pos-cash-register/dropdown",
   },
 
   POS_CREDIT_NOTE: {
@@ -290,6 +306,37 @@ export const URL_KEYS = {
     DELETE: "/pos-order/delete",
   },
 
+  POS_PAYMENT: {
+    BASE: "/pos-payment",
+    ADD: "/pos-payment/add",
+    EDIT: "/pos-payment/edit",
+    DELETE: "/pos-payment/delete",
+    ALL: "/pos-payment/all",
+  },
+  RECEIPT: {
+    BASE: "/receipt",
+    ALL: "/receipt/all",
+    ADD: "/receipt/add",
+    EDIT: "/receipt/edit",
+    DELETE: "/receipt/delete",
+    DROPDOWN: "/receipt/dropdown",
+  },
+  EXPENSE: {
+    BASE: "/expense",
+    ALL: "/expense/all",
+    ADD: "/expense/add",
+    EDIT: "/expense/edit",
+    DELETE: "/expense/delete",
+    DROPDOWN: "/expense/dropdown",
+  },
+  SALARY: {
+    BASE: "/salary",
+    ALL: "/salary/all",
+    ADD: "/salary/add",
+    EDIT: "/salary/edit",
+    DELETE: "/salary/delete",
+    DROPDOWN: "/salary/dropdown",
+  },
   //*************** Estimate **************** */
   ESTIMATE: {
     BASE: "/estimate",
@@ -337,4 +384,5 @@ export const URL_KEYS = {
     DROPDOWN: "/sales-credit-note/dropdown",
     ADD_EDIT: "/sales-credit-note/add-edit",
   },
+  }
 } as const;

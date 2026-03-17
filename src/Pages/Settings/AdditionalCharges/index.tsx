@@ -72,6 +72,14 @@ const AdditionalCharges = () => {
 
   return (
     <>
+      <CommonCard title={PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE} hideDivider>
+        <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
+          <AdvancedSearch filter={filter} />
+        </Box>
+        <CommonDataGrid {...CommonDataGridOption} />
+      </CommonCard>
+      <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
+      <AdditionalChargesForm />
       <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.SETTINGS.ADDITIONAL_CHARGES} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>

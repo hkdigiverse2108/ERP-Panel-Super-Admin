@@ -12,6 +12,7 @@ import type { TaxBase } from "./Tax";
 import type { UomBase } from "./Uom";
 import type { TermsConditionBase } from "./TermsCondition";
 import type { AdditionalChargesBase } from "./AdditionalCharges";
+import type { BankTransactionBase } from "./BankTransaction";
 import type { PosCreditNoteBase } from "./PosCreditNote";
 import type { Theme } from "@emotion/react";
 import type { ProductTypeBase } from "./ProductType";
@@ -459,6 +460,7 @@ export interface ModalStateSlice {
   isTermsAndConditionModal: { open: boolean; data: TermsConditionBase | null };
   isTermsSelectionModal: { open: boolean; data: any | null };
   isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
+  isBankTransactionModal: { open: boolean; data: BankTransactionBase | null };
   isOrderRefundModal: { open: boolean; data: PosCreditNoteBase | null };
   isProductTypeModal: { open: boolean; data: ProductTypeBase | null };
   isTermsAndConditionFormModal: { open: boolean; data: TermsConditionBase | null; companyId?: string };

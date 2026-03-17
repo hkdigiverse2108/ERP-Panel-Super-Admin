@@ -13,9 +13,10 @@ const initialState: ModalStateSlice = {
   isLocationModal: { open: false, data: null },
   isRoleModal: { open: false, data: null },
   isTermsAndConditionModal: { open: false, data: null },
-    isTermsSelectionModal: { open: false, data: null },
+  isTermsSelectionModal: { open: false, data: null },
   isAdditionalChargeModal: { open: false, data: null },
-  isOrderRefundModal: { open: false, data: null },
+  isBankTransactionModal: { open: false, data: null },
+  isOrderRefundModal : { open: false, data: null },
   isProductTypeModal: { open: false, data: null },
   isTermsAndConditionFormModal: { open: false, data: null, companyId: "" },
   isTermsAndConditionSelectionModal: { open: false, alreadySelectedIds: [], companyId: "" },
@@ -62,6 +63,9 @@ const ModalSlice = createSlice({
     setTermsSelectionModal(state, action) {
       state.isTermsSelectionModal = action.payload;
     },
+    setBankTransactionModal: (state, action) => {
+      state.isBankTransactionModal = action.payload;
+    },
     setAdditionalChargeModal: (state, action) => {
       state.isAdditionalChargeModal = action.payload;
     },
@@ -80,6 +84,6 @@ const ModalSlice = createSlice({
   },
 });
 
-export const { setRoleModal, setUploadModal, setAdditionalChargeModal, setSelectedFiles, setSelectedTermIds, setModalVideoPlay, setBrandModal, setCategoryModal, setUomModal, setTaxModal, setLocationModal, setTermsAndConditionModal, setTermsSelectionModal, setOrderRefundModal, setProductTypeModal, setTermsAndConditionFormModal, setTermsAndConditionSelectionModal } = ModalSlice.actions;
+export const {setBankTransactionModal, setRoleModal, setUploadModal, setAdditionalChargeModal, setSelectedFiles, setSelectedTermIds, setModalVideoPlay, setBrandModal, setCategoryModal, setUomModal, setTaxModal, setLocationModal, setTermsAndConditionModal, setTermsSelectionModal, setOrderRefundModal, setProductTypeModal, setTermsAndConditionFormModal, setTermsAndConditionSelectionModal } = ModalSlice.actions;
 
 export default ModalSlice.reducer;

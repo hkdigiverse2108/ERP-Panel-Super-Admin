@@ -57,7 +57,23 @@ import Announcement from "../Pages/Announcment";
 import AnnouncementForm from "../Pages/Announcment/AnnouncmentForm";
 import ChangePassword from "../Pages/Auth/ChangePassword";
 import VerifyOtp from "../Pages/Auth/VerifyOtp";
+import SupportDeskForm from "../Pages/SupportDesk/CallRequest/CallRequestForm";
+import AdminSetting from "../Pages/Settings/AdminSetting/AdminSetting";
+import BankTranscation from "../Pages/Bank/BankTransaction";
+import BankTranscationForm from "../Pages/Bank/BankTransaction/BankTransactionForm";
+import SupportDesk from "../Pages/SupportDesk/CallRequest";
+import CreditNoteList from "../Pages/Pos/CreditNote";
+import OrderList from "../Pages/Pos/OrderList";
+import PaymentForm from "../Pages/Bank/Payment/PaymentForm";
+import Payment from "../Pages/Bank/Payment";
+import PosCreditNote from "../Pages/Pos/CreditNote";
 import ProductType from "../Pages/Inventory/ProductType";
+import Receipt from "../Pages/Bank/Receipt";
+import ReceiptForm from "../Pages/Bank/Receipt/ReceiptForm";
+import Expense from "../Pages/Bank/Expense";
+import ExpenseForm from "../Pages/Bank/Expense/ExpenseForm";
+import SalaryForm from "../Pages/Bank/Expense/SalaryForm";
+import Salary from "../Pages/Bank/Salary";
 import Estimate from "../Pages/Sales/Estimate";
 import EstimateForm from "../Pages/Sales/Estimate/EstimateForm";
 import SalesOrder from "../Pages/Sales/SalesOrder";
@@ -68,13 +84,8 @@ import DeliveryChallan from "../Pages/Sales/DeliveryChallan";
 import DeliveryChallanForm from "../Pages/Sales/DeliveryChallan/DeliveryChallanForm";
 import SalesCreditNote from "../Pages/Sales/SalesCreditNote";
 import SalesCreditNoteForm from "../Pages/Sales/SalesCreditNote/SalesCreditNoteForm";
-import { default as CreditNoteList, default as PosCreditNote } from "../Pages/Pos/CreditNote";
-import OrderList from "../Pages/Pos/OrderList";
 import SalesRegister from "../Pages/Pos/SalesRegister";
-import AdminSetting from "../Pages/Settings/AdminSetting/AdminSetting";
 import Profile from "../Pages/Settings/Profile";
-import SupportDesk from "../Pages/SupportDesk/CallRequest";
-import SupportDeskForm from "../Pages/SupportDesk/CallRequest/CallRequestForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -159,6 +170,7 @@ export const PageRoutes = [
   { path: ROUTES.PROFILE.BASE, name: PAGE_TITLE.SETTINGS.PROFILE.BASE, element: <Profile /> },
 
   { path: ROUTES.POS_CREDIT_NOTE.BASE, name: PAGE_TITLE.POS.CREDIT_NOTE, element: <PosCreditNote /> },
+  { path: ROUTES.POS_CREDIT_NOTE.BASE, name: PAGE_TITLE.POS.CREDIT_NOTE, element: <CreditNoteList /> },
 
   { path: ROUTES.ANNOUNCEMENT.BASE, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <Announcement /> },
   { path: ROUTES.ANNOUNCEMENT.ADD_EDIT, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <AnnouncementForm /> },
@@ -168,11 +180,31 @@ export const PageRoutes = [
 
   { path: ROUTES.AUTH.CHANGE_PASSWORD, name: PAGE_TITLE.CHANGE_PASSWORD.BASE, element: <ChangePassword /> },
 
+  { path: ROUTES.CALL_REQUEST.BASE, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDesk /> },
+  { path: ROUTES.CALL_REQUEST.ADD_EDIT, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDeskForm /> },
+
+  { path: ROUTES.BANK_TRANSACTION.BASE, name: PAGE_TITLE.BANK_TRANSACTION.BASE, element: <BankTranscation /> },
+  { path: ROUTES.BANK_TRANSACTION.ADD_EDIT, name: PAGE_TITLE.BANK_TRANSACTION.BASE, element: <BankTranscationForm /> },
+
   { path: ROUTES.ADMIN_SETTING.BASE, name: PAGE_TITLE.SETTINGS.ADMIN_SETTING.BASE, element: <AdminSetting /> },
 
   { path: ROUTES.SALES_REGISTER.BASE, name: PAGE_TITLE.POS.SALES_REGISTER, element: <SalesRegister /> },
   { path: ROUTES.POS_CREDIT_NOTE.BASE, name: PAGE_TITLE.POS.CREDIT_NOTE, element: <CreditNoteList /> },
   { path: ROUTES.POS_ORDER_LIST.BASE, name: PAGE_TITLE.POS.ORDER_LIST, element: <OrderList /> },
+
+  { path: ROUTES.POS_ORDER_LIST.BASE, name: PAGE_TITLE.POS.ORDER_LIST, element: <OrderList /> },
+
+  { path: ROUTES.PAYMENT.BASE, name: PAGE_TITLE.PAYMENT.BASE, element: <Payment /> },
+  { path: ROUTES.PAYMENT.ADD_EDIT, name: PAGE_TITLE.PAYMENT.BASE, element: <PaymentForm /> },
+
+  { path: ROUTES.RECEIPT.BASE, name: PAGE_TITLE.RECEIPT.BASE, element: <Receipt /> },
+  { path: ROUTES.RECEIPT.ADD_EDIT, name: PAGE_TITLE.RECEIPT.BASE, element: <ReceiptForm /> },
+
+  { path: ROUTES.EXPENSE.BASE, name: PAGE_TITLE.EXPENSE.BASE, element: <Expense /> },
+  { path: ROUTES.EXPENSE.ADD_EDIT, name: PAGE_TITLE.EXPENSE.BASE, element: <ExpenseForm /> },
+
+  { path: ROUTES.SALARY.BASE, name: PAGE_TITLE.SALARY.BASE, element: <Salary /> },
+  { path: ROUTES.SALARY.ADD_EDIT, name: PAGE_TITLE.SALARY.BASE, element: <SalaryForm /> },
 
   { path: ROUTES.ESTIMATE.BASE, name: PAGE_TITLE.ESTIMATE.BASE, element: <Estimate /> },
   { path: ROUTES.ESTIMATE.ADD_EDIT, name: PAGE_TITLE.ESTIMATE.BASE, element: <EstimateForm /> },

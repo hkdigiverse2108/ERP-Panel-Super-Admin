@@ -112,6 +112,22 @@ export const ROUTES = {
     BASE: "/bank",
     ADD_EDIT: "/bank/add-edit",
   },
+  PAYMENT: {
+    BASE: "/payment",
+    ADD_EDIT: "/payment/add-edit",
+  },
+  RECEIPT: {
+    BASE: "/receipt",
+    ADD_EDIT: "/receipt/add-edit",
+  },
+  EXPENSE: {
+    BASE: "/expense",
+    ADD_EDIT: "/expense/add-edit",
+  },
+  SALARY: {
+    BASE: "/salary",
+    ADD_EDIT: "/salary/add-edit",
+  },
   COUPON: {
     BASE: "/coupon",
     ADD_EDIT: "/coupon/add-edit",
@@ -138,6 +154,10 @@ export const ROUTES = {
   CALL_REQUEST: {
     BASE: "/call-request",
     ADD_EDIT: "/call-request/add-edit",
+  },
+  BANK_TRANSACTION: {
+    BASE: "/bank-transaction",
+    ADD_EDIT: "/bank-transaction/add-edit",
   },
   POS_CREDIT_NOTE: {
     BASE: "/pos/credit-note",
