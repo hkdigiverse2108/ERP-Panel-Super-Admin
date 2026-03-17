@@ -1,10 +1,9 @@
-import type { Breakpoint, ButtonProps, DrawerProps, PaperProps as MuiPaperProps, TextFieldProps } from "@mui/material";
+import type { Breakpoint, ButtonProps, DrawerProps, PaperProps as MuiPaperProps, SxProps, TextFieldProps } from "@mui/material";
 import type { GridColDef, GridFilterModel, GridPaginationModel, GridRowsProp, GridSlotsComponentsProps, GridSortModel, GridValidRowModel } from "@mui/x-data-grid";
 import type { Dayjs } from "dayjs";
 import type { MuiTelInputProps } from "mui-tel-input";
 import type { FocusEvent, ReactNode } from "react";
 import * as Yup from "yup";
-import type { AccountGroupBase } from "./AccountGroup";
 import type { BrandBase } from "./Brand";
 import type { CategoryBase } from "./Category";
 import type { LocationBase } from "./Location";
@@ -12,9 +11,9 @@ import type { RolesBase } from "./Roles";
 import type { TaxBase } from "./Tax";
 import type { UomBase } from "./Uom";
 import type { TermsConditionBase } from "./TermsCondition";
-import type { AccountBase } from "./Account";
 import type { AdditionalChargesBase } from "./AdditionalCharges";
 import type { PosCreditNoteBase } from "./PosCreditNote";
+import type { Theme } from "@emotion/react";
 import type { ProductTypeBase } from "./ProductType";
 
 export type GridType = number | object | "auto" | "grow";
@@ -205,13 +204,12 @@ export interface CommonObjectNameColumnOptions {
 export interface CommonActionColumnProps<T> {
   editRoute?: string;
   permissionRoute?: string;
-  onEdit?: (row: T) => void;
+  onEdit?: { handleEdit: (row: T) => void; isPermission?: (row: T) => boolean };
   onDelete?: (row: T) => void;
   active?: (row: T) => void;
   onRefund?: (row: T) => void;
   onPrint?: (row: T) => void;
-  showRefund?: (row: T) => boolean;
-  showDelete?: (row: T) => boolean;
+  onSalesInvoice?: { handleSalesInvoice: (row: T) => void; isPermission?: (row: T) => boolean };
 }
 export interface CommonTableColumn<T> {
   key: string;
@@ -229,6 +227,7 @@ export interface CommonTableProps<T> {
   rowKey: (row: T, index: number) => string;
   getRowClass?: (row: T, index: number) => string;
   showFooter?: boolean;
+  isLoading?: boolean;
 }
 
 // ************ Table End ***********
@@ -456,9 +455,7 @@ export interface ModalStateSlice {
   isTaxModal: { open: boolean; data: TaxBase | null };
   isCategoryModal: { open: boolean; data: CategoryBase | null };
   isLocationModal: { open: boolean; data: LocationBase | null };
-  isAccountGroupModal: { open: boolean; data: AccountGroupBase | null };
   isRoleModal: { open: boolean; data: RolesBase | null };
-  isAccountModal: { open: boolean; data: AccountBase | null };
   isTermsAndConditionModal: { open: boolean; data: TermsConditionBase | null };
   isTermsSelectionModal: { open: boolean; data: any | null };
   isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
@@ -560,6 +557,7 @@ export type DependentSelectProps<T extends ApiOption, P = string | undefined> = 
   ) => {
     data?: { data: T[] };
     isLoading: boolean;
+    isFetching: boolean;
   };
 };
 
@@ -647,3 +645,18 @@ export interface ShippingDetails {
   weight: number;
 }
 // ************ Common Shipping Details End ***********
+export interface CommonStatsItem {
+  label: string;
+  value: number | string;
+  color?: string;
+  desc?: string;
+  selected?: boolean;
+  onClick?: () => void;
+}
+
+export interface CommonStatsCardProps {
+  stats: CommonStatsItem[];
+  grid?: GridType;
+  paperSx?: SxProps<Theme>;
+  variant?: "default" | "radio";
+}

@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link, useLocation } from "react-router";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Link, useLocation } from "react-router";
+import { ImagePath } from "../../Constants";
 import { NavItems } from "../../Data";
 import { useAppDispatch, useAppSelector } from "../../Store/hooks";
 import { setIsHovered, setToggleMobileSidebar, setToggleSidebar } from "../../Store/Slices/LayoutSlice";
 import type { ChildDetailsApiResponse, NavItem } from "../../Types";
-import { ImagePath } from "../../Constants";
 import { useWindowWidth } from "../../Utils/Hooks";
 
 const filterNavItems = (navItems: NavItem[], permissions: ChildDetailsApiResponse[]): NavItem[] => {
@@ -36,10 +36,10 @@ const filterNavItems = (navItems: NavItem[], permissions: ChildDetailsApiRespons
 
         if (allowedChildren.length === 0) return null;
 
-        return { ...item, name: parentPerm.displayName, children: allowedChildren as NavItem[] };
+        return { ...item, name: parentPerm.displayName, number: parentPerm.number, children: allowedChildren as NavItem[] };
       }
 
-      return { ...item, name: parentPerm.displayName };
+      return { ...item, name: parentPerm.displayName, number: parentPerm.number };
     })
     .filter(Boolean) as NavItem[];
 };
@@ -48,16 +48,18 @@ const Sidebar = () => {
   const { isExpanded, isMobileOpen, isHovered, permission } = useAppSelector((state) => state.layout);
   const dispatch = useAppDispatch();
   const width = useWindowWidth();
-
   const location = useLocation();
 
   const [openSubmenu, setOpenSubmenu] = useState<{ type: "main" | "others"; index: number } | null>(null);
   const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>({});
   const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const allowedNavItems = useMemo(() => filterNavItems(NavItems, permission), [permission]);
+  const allowedNavItems = useMemo(() => {
+    const items = filterNavItems(NavItems, permission);
+
+    return items.sort((a, b) => (a.number || 0) - (b.number || 0));
+  }, [permission]);
 
   const isActive = useCallback((path: string) => location.pathname === path || location.pathname.startsWith(path + "/"), [location.pathname]);
-
   useEffect(() => {
     allowedNavItems.forEach((menu, index) => {
       if (menu.children?.some((sub) => location.pathname === sub.path || location.pathname.startsWith(sub.path + "/"))) {

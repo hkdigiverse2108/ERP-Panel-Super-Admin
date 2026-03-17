@@ -61,11 +61,8 @@ export const NavItems: NavItem[] = [
     name: PAGE_TITLE.ACCOUNTING.BASE,
     icon: <ReceiptLong />,
     children: [
-      { name: PAGE_TITLE.ACCOUNT_GROUP.BASE, path: ROUTES.ACCOUNT_GROUP.BASE },
-      { name: PAGE_TITLE.ACCOUNT.BASE, path: ROUTES.ACCOUNT.BASE },
       { name: PAGE_TITLE.DEBIT_NOTE.BASE, path: ROUTES.DEBIT_NOTE.BASE },
       { name: PAGE_TITLE.CREDIT_NOTE.BASE, path: ROUTES.CREDIT_NOTE.BASE },
-      { name: PAGE_TITLE.JOURNAL_VOUCHER.BASE, path: ROUTES.JOURNAL_VOUCHER.BASE },
     ],
   },
 

@@ -44,6 +44,8 @@ const ChangePassword = () => {
                                     <Grid container spacing={2} sx={{ p: 2 }}>
                                         <CommonValidationTextField name="oldPassword" label="Old Password" type="password" showPasswordToggle required grid={{ xs: 12 }} />
                                         <CommonValidationTextField name="newPassword" label="New Password" type="password" showPasswordToggle required grid={{ xs: 12 }} />
+                                        <CommonValidationTextField name="confirmPassword" label="Confirm Password" type="password" showPasswordToggle required grid={{ xs: 12 }} />
+
                                     </Grid>
                                 </CommonCard>
 

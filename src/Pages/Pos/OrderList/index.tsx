@@ -1,13 +1,12 @@
 import { Box } from "@mui/material";
-import dayjs from "dayjs";
 import { useMemo } from "react";
-import { Queries, Mutations } from "../../../Api";
-import { CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonActionColumn, CommonDeleteModal, AdvancedSearch, CommonObjectNameColumn } from "../../../Components/Common";
+import { Mutations, Queries } from "../../../Api";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, ORDER_STATUS } from "../../../Data";
-import type { PosOrderBase, AppGridColDef } from "../../../Types";
+import type { AppGridColDef, PosOrderBase } from "../../../Types";
+import { CreateFilter, FormatDate, FormatPayment, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import { CreateFilter, GenerateOptions } from "../../../Utils";
 
 const OrderList = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter } = useDataGrid({});
@@ -33,8 +32,8 @@ const OrderList = () => {
   const columns: AppGridColDef<PosOrderBase>[] = [
     CommonObjectNameColumn<PosOrderBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "orderNo", headerName: "Invoice No", flex: 1, minWidth: 150 },
-    { field: "createdAt", headerName: "Date", flex: 1, minWidth: 120, renderCell: (params) => (params.row.createdAt ? dayjs(params.row.createdAt).format("DD/MM/YYYY") : "-") },
-    { field: "dueDate", headerName: "Due Date", flex: 1, minWidth: 120, renderCell: (params) => (params.row.payLater?.dueDate ? dayjs(params.row.payLater.dueDate).format("DD/MM/YYYY") : "-") },
+    { field: "createdAt", headerName: "Date", flex: 1, minWidth: 120, renderCell: (params) => (params.row.createdAt ? FormatDate(params.row.createdAt) : "-") },
+    { field: "dueDate", headerName: "Due Date", flex: 1, minWidth: 120, renderCell: (params) => (params.row.payLater?.dueDate ? FormatDate(params.row.payLater.dueDate) : "-") },
     {
       field: "customerName",
       headerName: "Customer Name",
@@ -47,10 +46,10 @@ const OrderList = () => {
     },
     { field: "totalAmount", headerName: "Total Amount", flex: 1, minWidth: 120 },
     { field: "dueAmount", headerName: "Due Amount", flex: 1, minWidth: 100 },
-    { field: "paymentMethod", headerName: "Payment Mode", flex: 1, minWidth: 120 },
-    { field: "paymentStatus", headerName: "Payment Status", flex: 1, minWidth: 130 },
+    { field: "paymentMethod", headerName: "Payment Mode", flex: 1, minWidth: 120, renderCell: (params) => FormatPayment(params.row.paymentMethod) },
+    { field: "paymentStatus", headerName: "Payment Status", flex: 1, minWidth: 130, renderCell: (params) => FormatPayment(params.row.paymentStatus) },
     { field: "creditAppliedAmt", headerName: "Credit Applied Amt", flex: 1, minWidth: 150, renderCell: (params) => (params.row.totalAmount && params.row.dueAmount ? params.row.totalAmount - params.row.dueAmount : 0) },
-    { field: "orderType", headerName: "Order Type", flex: 1, minWidth: 100 },
+    { field: "orderType", headerName: "Order Type", flex: 1, minWidth: 100, renderCell: (params) => FormatPayment(params.row.orderType) },
     { field: "remark", headerName: "Feedback", flex: 1, minWidth: 120 },
     {
       field: "createdBy",
@@ -63,7 +62,7 @@ const OrderList = () => {
       },
     },
     { field: "channelName", headerName: "Channel Name", flex: 1, minWidth: 130, renderCell: () => "POS" },
-    { field: "status", headerName: "Status", flex: 1, minWidth: 100 },
+    { field: "status", headerName: "Status", flex: 1, minWidth: 100, renderCell: (params) => FormatPayment(params.row.status) },
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<PosOrderBase>({

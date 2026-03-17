@@ -54,13 +54,6 @@ export const ROUTES = {
     BASE: "/location",
     ADD_EDIT: "/location/add-edit",
   },
-  ACCOUNT_GROUP: {
-    BASE: "/account-group",
-    TREE: "/account-group/tree",
-  },
-  ACCOUNT: {
-    BASE: "/account",
-  },
   DEBIT_NOTE: {
     BASE: "/debit-note",
     ADD_EDIT: "/debit-note/add-edit",
@@ -68,10 +61,6 @@ export const ROUTES = {
   CREDIT_NOTE: {
     BASE: "/credit-note",
     ADD_EDIT: "/credit-note/add-edit",
-  },
-  JOURNAL_VOUCHER: {
-    BASE: "/journal-voucher",
-    ADD_EDIT: "/journal-voucher/add-edit",
   },
   ROLE: {
     BASE: "/role",
@@ -140,8 +129,7 @@ export const ROUTES = {
     EDIT: "/profile/edit",
   },
   SALES_REGISTER: {
-    BASE: "/sales-register",
-    EDIT: "/sales-register/edit",
+    BASE: "/pos/sales-register",
   },
   ANNOUNCEMENT: {
     BASE: "/announcement",
@@ -152,10 +140,9 @@ export const ROUTES = {
     ADD_EDIT: "/call-request/add-edit",
   },
   POS_CREDIT_NOTE: {
-    BASE: "/pos-credit-note",
-    ADD_EDIT: "/pos-credit-note/add-edit",
+    BASE: "/pos/credit-note",
   },
-  POS_ORDER_LIST:{
+  POS_ORDER_LIST: {
     BASE: "/pos-order-list",
     ADD_EDIT: "/pos-order-list/add-edit",
   },

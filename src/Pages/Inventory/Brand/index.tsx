@@ -54,7 +54,7 @@ const Brand = () => {
           CommonActionColumn<BrandBase>({
             ...(permission?.edit && {
               active: (row) => editBrand({ brandId: row?._id, isActive: !row.isActive }),
-              onEdit: (row) => handleEdit(row),
+              onEdit: { handleEdit: (row) => handleEdit(row) },
             }),
             ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
           }),

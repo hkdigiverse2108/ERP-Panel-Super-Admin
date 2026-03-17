@@ -93,17 +93,6 @@ export const PAGE_TITLE = {
   ACCOUNTING: {
     BASE: "Accounting",
   },
-  ACCOUNT_GROUP: {
-    BASE: "Account Group",
-    ADD: "Add Account Group",
-    EDIT: "Edit Account Group",
-    TREE: "Account Group Tree",
-  },
-  ACCOUNT: {
-    BASE: "Account",
-    ADD: "Add Account",
-    EDIT: "Edit Account",
-  },
   DEBIT_NOTE: {
     BASE: "Debit Note",
     ADD: "Add Debit Note",
@@ -113,11 +102,6 @@ export const PAGE_TITLE = {
     BASE: "Credit Note",
     ADD: "Add Credit Note",
     EDIT: "Edit Credit Note",
-  },
-  JOURNAL_VOUCHER: {
-    BASE: "Journal Voucher",
-    ADD: "Add Journal Voucher",
-    EDIT: "Edit Journal Voucher",
   },
   ROLE: {
     BASE: "Role",
@@ -190,7 +174,7 @@ export const PAGE_TITLE = {
   POS: {
     BASE: "Pos",
     SALES_REGISTER: "Sales Register",
-    CREDIT_NOTE: "pos Credit Note",
+    CREDIT_NOTE: "Credit Note",
     ORDER_LIST: "Order List",
   },
   ANNOUNCEMENT: {

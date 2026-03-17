@@ -10,20 +10,18 @@ export type BillSupplier = ContactBase & { name?: string };
 /* ===================== PRODUCT (FORM) ===================== */
 
 export interface SupplierBillProductItem {
-  productId?: string;
+  productId?: ProductBase | string;
   qty?: number;
   freeQty?: number;
   mrp?: number;
   sellingPrice?: number;
+  unitCost?: number;
   landingCost?: number;
   margin?: number;
   discount1?: number;
   taxAmount?: number;
   total?: number;
-  mfgDate?: string;
-  expiryDate?: string;
 }
-
 export interface SupplierBillProductDetails {
   item?: SupplierBillProductItem[];
   totalQty?: number;
@@ -96,12 +94,13 @@ export interface SupplierBillFormValues {
   shippingDate?: string | Date;
   taxType?: string;
   invoiceAmount?: string;
-  productDetails?: SupplierBillProductDetails;
+  productDetails?: SupplierBillProductItem[];
   returnProductDetails?: SupplierBillReturnProductDetails;
-  additionalCharges?: AdditionalChargeDetails;
+  additionalCharges?: AdditionalChargeItem[];
   termsAndConditionIds?: string[];
   notes?: string;
   summary?: SupplierBillSummary;
+  billAmount?: number;
   paidAmount?: number;
   balanceAmount?: number;
   paymentStatus?: "paid" | "unpaid" | "partial";
@@ -206,16 +205,13 @@ export interface SupplierBillBase extends CommonDataType {
 
   returnProductDetails?: SupplierBillReturnProductDetails;
 
-  additionalCharges?: {
-    item?: (Omit<AdditionalChargeItem, "chargeId"> & {
-      chargeId?: {
-        _id: string;
-        name?: string;
-        type?: string;
-      };
-    })[];
-    total?: number;
-  };
+  additionalCharges?: (Omit<AdditionalChargeItem, "chargeId"> & {
+    chargeId?: {
+      _id: string;
+      name?: string;
+      type?: string;
+    };
+  })[];
 
   termsAndConditionIds?: TermsConditionBase[];
 

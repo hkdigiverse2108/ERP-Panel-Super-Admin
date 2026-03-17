@@ -171,21 +171,6 @@ export const URL_KEYS = {
   },
 
   // ----------------------------- accounts -----------------------------
-  ACCOUNT_GROUP: {
-    BASE: "/account-group",
-    DROPDOWN: "/account-group/dropdown",
-    TREE: "/account-group/tree",
-    ALL: "/account-group/all",
-    ADD: "/account-group/add",
-    EDIT: "/account-group/edit",
-  },
-  ACCOUNT: {
-    BASE: "/account",
-    DROPDOWN: "/account/dropdown",
-    ALL: "/account/all",
-    ADD: "/account/add",
-    EDIT: "/account/edit",
-  },
   DEBIT_NOTE: {
     BASE: "/debit-note",
     ALL: "/debit-note/all",
@@ -197,12 +182,6 @@ export const URL_KEYS = {
     ALL: "/credit-note/all",
     ADD: "/credit-note/add",
     EDIT: "/credit-note/edit",
-  },
-  JOURNAL_VOUCHER: {
-    BASE: "/journal-voucher",
-    ALL: "/journal-voucher/all",
-    ADD: "/journal-voucher/add",
-    EDIT: "/journal-voucher/edit",
   },
 
   // ----------------------------- purchase -----------------------------

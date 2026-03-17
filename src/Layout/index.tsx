@@ -1,30 +1,30 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet,     } from "react-router-dom";
 import { useAppSelector } from "../Store/hooks";
-import { setIsMobile, setPermission, setSidebarOpen } from "../Store/Slices/LayoutSlice";
+import { setIsMobile, setPermission,   } from "../Store/Slices/LayoutSlice";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { CommonTermsAndConditionFormModal, CommonTermsAndConditionSelectModal, CommonUpload } from "../Components/Common";
 import { Queries } from "../Api";
-import { setUser } from "../Store/Slices/AuthSlice";
 import CommonVideoModal from "../Components/Common/Modal/CommonVideoModal";
+import { setUser } from "../Store/Slices/AuthSlice";
 import Loader from "./Loader";
 
 const Layout = () => {
   const { isExpanded, isMobileOpen, isApplicationMenuOpen } = useAppSelector((state) => state.layout);
   const dispatch = useDispatch();
-  const location = useLocation();
+  // const location = useLocation();
 
   const { user } = useAppSelector((state) => state.auth);
   const { data: userData, isLoading: userLoading } = Queries.useGetSingleUser(user?._id);
   const { data: permissionData, isLoading: permissionLoading } = Queries.useGetPermissionChildDetails({ userId: user?._id }, Boolean(user?._id));
   const isAppLoading = userLoading || permissionLoading;
 
-  useEffect(() => {
-    if (location.pathname.startsWith("/pos")) dispatch(setSidebarOpen(false));
-    // else dispatch(setSidebarOpen(true));
-  }, [dispatch, location.pathname]);
+  // useEffect(() => {
+  //   if (location.pathname.startsWith("/pos")) dispatch(setSidebarOpen(false));
+  //   // else dispatch(setSidebarOpen(true));
+  // }, [dispatch, location.pathname]);
 
   useEffect(() => {
     if (userData?.data) {

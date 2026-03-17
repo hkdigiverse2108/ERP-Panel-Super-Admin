@@ -1,22 +1,27 @@
 import { Box, Grid } from "@mui/material";
-import { Form, Formik, type FormikHelpers } from "formik";
+import { Form, Formik, useFormikContext, type FormikHelpers, type FormikValues } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
 import { CommonPhoneNumber, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../Components/Common";
+import { CommonFormImageBox } from "../../Components/Common/CommonUploadImage/CommonImageBox";
 import { PAGE_TITLE } from "../../Constants";
 import { BREADCRUMBS, USER_TYPE } from "../../Data";
-import type { UserFormValues } from "../../Types";
+import type { ImageSyncProps, UserFormValues } from "../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { UserFormSchema } from "../../Utils/ValidationSchemas";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePagePermission } from "../../Utils/Hooks";
+import { useAppDispatch, useAppSelector } from "../../Store/hooks";
+import { setSelectedFiles, setUploadModal } from "../../Store/Slices/ModalSlice";
 
 const UserForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
   const permission = usePagePermission(PAGE_TITLE.USER.BASE);
+  const dispatch = useAppDispatch();
+  const [activeImageKey, setActiveImageKey] = useState<"profileImage" | null>(null);
 
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: addUser, isPending: isAddLoading } = Mutations.useAddUser();
@@ -34,6 +39,7 @@ const UserForm = () => {
       phoneNo: data?.phoneNo?.phoneNo || "",
     },
     email: data?.email || "",
+    profileImage: data?.profileImage || null,
     panNumber: data?.panNumber || "",
     role: data?.role?._id || "",
     branchId: data?.branchId?._id || "",
@@ -64,6 +70,27 @@ const UserForm = () => {
     isActive: data?.isActive ?? true,
   };
 
+  const FormikImageSync = <T extends FormikValues>({ activeKey, clearActiveKey }: ImageSyncProps) => {
+    const { selectedFiles } = useAppSelector((state) => state.modal);
+    const { setFieldValue } = useFormikContext<T>();
+
+    useEffect(() => {
+      if (!selectedFiles[0] || !activeKey) return;
+
+      setFieldValue(activeKey, selectedFiles[0]);
+
+      dispatch(setSelectedFiles([]));
+      clearActiveKey();
+    }, [selectedFiles, activeKey, setFieldValue, dispatch, clearActiveKey]);
+
+    return null;
+  };
+
+  const handleUpload = () => {
+    setActiveImageKey("profileImage");
+    dispatch(setUploadModal({ open: true, type: "image" }));
+  };
+  
   const handleSubmit = async (values: UserFormValues, { resetForm }: FormikHelpers<UserFormValues>) => {
     const { _submitAction, ...rest } = values;
     const payload = { ...rest };
@@ -92,6 +119,7 @@ const UserForm = () => {
         <Formik<UserFormValues> enableReinitialize initialValues={initialValues} validationSchema={UserFormSchema} onSubmit={handleSubmit}>
           {({ resetForm, setFieldValue, dirty, values }) => (
             <Form noValidate>
+              <FormikImageSync activeKey={activeImageKey} clearActiveKey={() => setActiveImageKey(null)} />
               <Grid container spacing={2}>
                 {/* BASIC DETAILS */}
                 <CommonCard title="Basic Details" grid={{ xs: 12 }}>
@@ -142,10 +170,10 @@ const UserForm = () => {
                     <CommonValidationTextField name="target" type="number" label="Target" grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>
-
+                <CommonFormImageBox name="profileImage"label="Profile Image"type="image"grid={{ xs: 12, md: 4 }}onUpload={handleUpload}onDelete={() => setFieldValue("profileImage", null)}/>
                 {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
-
                 <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+              
               </Grid>
             </Form>
           )}

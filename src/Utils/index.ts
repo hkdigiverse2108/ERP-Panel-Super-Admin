@@ -74,3 +74,12 @@ export const CreateFilter = (label: string, filterKey: string, advancedFilter: R
 });
 
 export const WithAllOption = <T extends { label: string; value: string }>(data: T[], allLabel = "All", allValue = ""): T[] => [{ label: allLabel, value: allValue } as T, ...data];
+
+export const FormatPayment = (text?: string) =>
+  text
+    ? text
+        .toLowerCase()
+        .split("_")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ")
+    : "-";

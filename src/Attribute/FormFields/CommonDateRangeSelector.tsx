@@ -1,8 +1,9 @@
 import { Box, Divider, List, ListItemButton, ListItemText, Popover, TextField } from "@mui/material";
 import { DateRangeCalendar, type DateRange } from "@mui/x-date-pickers-pro";
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 import { useEffect, useState, type FC } from "react";
 import type { CommonDateRangeSelectorProps } from "../../Types";
+import { DateConfig } from "../../Utils";
 import { CommonButton } from "./CommonButton";
 
 const ranges = ["Today", "Yesterday", "This Week", "This Month", "Last 15 Days", "Last 30 Days", "This Quarter", "Last Quarter", "This Financial Year", "Last Financial Year"] as const;
@@ -10,11 +11,14 @@ const ranges = ["Today", "Yesterday", "This Week", "This Month", "Last 15 Days",
 type RangeLabel = (typeof ranges)[number];
 
 const getRange = (label: RangeLabel): DateRange<Dayjs> => {
-  const today = dayjs();
+  const today = DateConfig.utc().startOf("day");
   const year = today.year();
   const month = today.month();
 
   switch (label) {
+    case "Today":
+      return [today.startOf("day"), today.endOf("day")];
+
     case "Yesterday":
       return [today.subtract(1, "day"), today.subtract(1, "day")];
 
@@ -31,22 +35,22 @@ const getRange = (label: RangeLabel): DateRange<Dayjs> => {
       return [today.subtract(30, "day"), today];
 
     case "This Quarter":
-      if (month < 3) return [dayjs(`${year}-01-01`), dayjs(`${year}-03-31`)];
-      if (month < 6) return [dayjs(`${year}-04-01`), dayjs(`${year}-06-30`)];
-      if (month < 9) return [dayjs(`${year}-07-01`), dayjs(`${year}-09-30`)];
-      return [dayjs(`${year}-10-01`), dayjs(`${year}-12-31`)];
+      if (month < 3) return [DateConfig.utc(`${year}-01-01`), DateConfig.utc(`${year}-03-31`)];
+      if (month < 6) return [DateConfig.utc(`${year}-04-01`), DateConfig.utc(`${year}-06-30`)];
+      if (month < 9) return [DateConfig.utc(`${year}-07-01`), DateConfig.utc(`${year}-09-30`)];
+      return [DateConfig.utc(`${year}-10-01`), DateConfig.utc(`${year}-12-31`)];
 
     case "Last Quarter":
-      if (month < 3) return [dayjs(`${year - 1}-10-01`), dayjs(`${year - 1}-12-31`)];
-      if (month < 6) return [dayjs(`${year}-01-01`), dayjs(`${year}-03-31`)];
-      if (month < 9) return [dayjs(`${year}-04-01`), dayjs(`${year}-06-30`)];
-      return [dayjs(`${year}-07-01`), dayjs(`${year}-09-30`)];
+      if (month < 3) return [DateConfig.utc(`${year - 1}-10-01`), DateConfig.utc(`${year - 1}-12-31`)];
+      if (month < 6) return [DateConfig.utc(`${year}-01-01`), DateConfig.utc(`${year}-03-31`)];
+      if (month < 9) return [DateConfig.utc(`${year}-04-01`), DateConfig.utc(`${year}-06-30`)];
+      return [DateConfig.utc(`${year}-07-01`), DateConfig.utc(`${year}-09-30`)];
 
     case "This Financial Year":
-      return [dayjs(`${year}-04-01`), dayjs(`${year + 1}-03-31`)];
+      return [DateConfig.utc(`${year}-04-01`), DateConfig.utc(`${year + 1}-03-31`)];
 
     case "Last Financial Year":
-      return [dayjs(`${year - 1}-04-01`), dayjs(`${year}-03-31`)];
+      return [DateConfig.utc(`${year - 1}-04-01`), DateConfig.utc(`${year}-03-31`)];
 
     default:
       return [today, today];
@@ -75,7 +79,7 @@ export const CommonDateRangeSelector: FC<CommonDateRangeSelectorProps> = ({ valu
 
   const applyCustom = () => {
     if (tempRange[0] && tempRange[1]) {
-      onChange({ start: tempRange[0], end: tempRange[1] });
+      onChange({ start: tempRange[0].startOf("day"), end: tempRange[1].endOf("day") });
       setAnchorEl(null);
     }
   };
@@ -91,14 +95,7 @@ export const CommonDateRangeSelector: FC<CommonDateRangeSelectorProps> = ({ valu
       <TextField value={`${value.start.format("DD/MM/YYYY")} - ${value.end.format("DD/MM/YYYY")}`} onClick={(e) => setAnchorEl(e.currentTarget)} fullWidth size="small" slotProps={{ input: { style: { cursor: "pointer" } } }} />
 
       <Popover open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => handleClose()} anchorOrigin={{ vertical: "bottom", horizontal: "left" }} sx={{ mt: 1 }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            width: { xs: "100%", md: "auto" },
-            maxWidth: { xs: "100vw", md: "none" },
-          }}
-        >
+        <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, width: { xs: "100%", md: "auto" }, maxWidth: { xs: "100vw", md: "none" } }}>
           {/* LEFT LIST */}
           {active !== "custom" && (
             <List dense sx={{ width: { xs: "100%", md: 200 }, borderRight: { md: "1px solid #ddd" }, borderBottom: { xs: "1px solid #ddd", md: "none" } }}>

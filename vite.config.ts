@@ -1,6 +1,7 @@
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, loadEnv } from "vite";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
+import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
@@ -9,7 +10,40 @@ export default defineConfig(({ mode }) => {
 
   // https://vite.dev/config/
   return {
-    plugins: [react(), tailwindcss()],
+    plugins: [
+      react(),
+      tailwindcss(),
+      VitePWA({
+        registerType: "prompt",
+        injectRegister: false,
+
+        pwaAssets: {
+          disabled: false,
+          config: true,
+        },
+
+        manifest: {
+          name: "AI Setu ERP",
+          short_name: "AISetu",
+          description: "AI Setu ERP Panel",
+          theme_color: "#0f172a",
+        },
+
+        workbox: {
+          maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
+          globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
+          cleanupOutdatedCaches: true,
+          clientsClaim: true,
+        },
+
+        devOptions: {
+          enabled: true,
+          navigateFallback: "index.html",
+          suppressWarnings: true,
+          type: "module",
+        },
+      }),
+    ],
     server: {
       host: true,
       allowedHosts: true,

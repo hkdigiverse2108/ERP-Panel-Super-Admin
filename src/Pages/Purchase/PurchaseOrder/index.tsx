@@ -48,7 +48,7 @@ const PurchaseOrder = () => {
       onDelete: (row) => setRowToDelete({ _id: row?._id }),
     }),
   ];
-  ``;
+  
   const CommonDataGridOption = {
     columns,
     rows: allPurchaseOrder,
