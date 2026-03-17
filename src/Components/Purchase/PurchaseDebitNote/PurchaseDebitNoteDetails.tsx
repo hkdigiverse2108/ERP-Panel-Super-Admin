@@ -3,7 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
 import { PAYMENT_TERMS, REVERSE_CHARGE } from "../../../Data";
 import { useFormikContext } from "formik";
-import type { PurchaseDebitNoteFormValues } from "../../../Types";
+import type { ContactAddressApi, ContactBase,  PurchaseDebitNoteFormValues } from "../../../Types";
 import { useState, useEffect, useMemo, useRef } from "react";
 import { AddressSelectionModal } from "../../Common";
 import { Queries } from "../../../Api";
@@ -23,9 +23,9 @@ const PurchaseDebitNoteDetails = () => {
   const purchaseOrderOptions = useMemo(() => GenerateOptions(purchaseOrderData?.data || []), [purchaseOrderData]);
   const suppliers = useMemo(() => supplierData?.data || [], [supplierData]);
 
-  const selectedSupplier = useMemo(() => suppliers.find((s: any) => s._id === values.supplierId), [suppliers, values.supplierId]);
-  const billingAddressObj = useMemo(() => selectedSupplier?.address?.find((addr: any) => addr._id === values.billingAddress), [selectedSupplier, values.billingAddress]);
-  const shippingAddressObj = useMemo(() => selectedSupplier?.address?.find((addr: any) => addr._id === values.shippingAddress), [selectedSupplier, values.shippingAddress]);
+  const selectedSupplier = useMemo(() => suppliers.find((s: ContactBase) => s._id === values.supplierId), [suppliers, values.supplierId]);
+  const billingAddressObj = useMemo(() => selectedSupplier?.address?.find((addr: ContactAddressApi) => addr._id === values.billingAddress), [selectedSupplier, values.billingAddress]);
+  const shippingAddressObj = useMemo(() => selectedSupplier?.address?.find((addr: ContactAddressApi) => addr._id === values.shippingAddress), [selectedSupplier, values.shippingAddress]);
 
   const displayBilling = billingAddressObj || selectedSupplier?.address?.[0];
   const displayShipping = shippingAddressObj || selectedSupplier?.address?.[0];
@@ -42,8 +42,8 @@ const PurchaseDebitNoteDetails = () => {
   // Set default addresses when supplier is selected
   useEffect(() => {
     if (selectedSupplier && selectedSupplier.address && selectedSupplier.address.length > 0) {
-      const isBillingValid = selectedSupplier.address.some((a: any) => a._id === values.billingAddress);
-      const isShippingValid = selectedSupplier.address.some((a: any) => a._id === values.shippingAddress);
+      const isBillingValid = selectedSupplier.address.some((a: ContactAddressApi) => a._id === values.billingAddress);
+      const isShippingValid = selectedSupplier.address.some((a: ContactAddressApi) => a._id === values.shippingAddress);
 
       if (!values.billingAddress || !isBillingValid) {
         const firstAddressId = selectedSupplier.address[0]._id;

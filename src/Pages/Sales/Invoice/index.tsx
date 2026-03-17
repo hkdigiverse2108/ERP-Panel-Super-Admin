@@ -93,7 +93,7 @@ const Invoice = () => {
   //   { label: "Partial", value: allInvoice.filter((item) => item.paymentStatus === "partial").length, color: "warning" },
   // ];
 
-  const STATUS_COLOR: any = {
+  const STATUS_COLOR: Record<string, string> = {
     all: "primary",
     pending: "warning",
     invoice_created: "info",

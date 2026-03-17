@@ -6,7 +6,7 @@ import { Mutations } from "../../../Api";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonSummarySection, CommonSummaryWatcher } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { AddPurchaseOrderPayload, PurchaseOrderFormValues } from "../../../Types";
+import type { AddPurchaseOrderPayload, PurchaseOrderFormValues, PurchaseOrderItem } from "../../../Types";
 import { GetChangedFields, PurchaseOrderFormSchema, RemoveEmptyFields } from "../../../Utils";
 import { PurchaseOrderDetails, PurchaseOrderTabs } from "../../../Components/Purchase";
 
@@ -37,7 +37,7 @@ const PurchaseOrderForm = () => {
     gstIn: data?.gstIn || "",
     taxType: data?.taxType || "default",
 
-    items: data?.items?.length ? data.items.map((i: any) => {
+    items: data?.items?.length ? data.items.map((i: PurchaseOrderItem) => {
       const pId = typeof i.productId === "object" ? i.productId?._id : i.productId;
       return {
         ...emptyRow,
@@ -69,7 +69,7 @@ const PurchaseOrderForm = () => {
 
     const payload = {
       ...rest,
-      items: rest.items?.map((item: any) => ({
+      items: rest.items?.map((item: PurchaseOrderItem) => ({
         productId: typeof item.productId === "object" ? item.productId?._id : item.productId,
         qty: Number(item.qty || 0),
         uomId: typeof item.uomId === "object" ? item.uomId?._id : item.uomId,

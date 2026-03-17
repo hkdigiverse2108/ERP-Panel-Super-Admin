@@ -686,39 +686,3 @@ export const PurchaseDebitNoteFormSchema = Yup.object({
     roundOff: Validation("number", "Round Off", { required: false }),
   }),
 });
-
-export const SupplierBillFormSchema = Yup.object({
-  companyId: Validation(" string\, \Company\),
- supplierId: Validation(\string\, \Supplier\),
- supplierBillDate: Validation(\string\, \Supplier Bill Date\),
- dueDate: Validation(\string\, \Due Date\),
- shippingDate: Validation(\string\, \Shipping Date\),
- invoiceAmount: Validation(\string\, \Invoice Amount\),
- productDetails: Yup.array()
- .of(
- Yup.object({
- productId: Validation(\string\, \Product\),
- qty: Validation(\number\, \Quantity\, { extraRules: (s) => s.min(1, \Quantity must be at least 1\) }),
- unitCost: Validation(\number\, \Unit Cost\, { extraRules: (s) => s.min(0, \Unit cost must be positive\) }),
- }),
- )
- .min(1, \At least one item is required\),
-});
-
-export const PurchaseDebitNoteFormSchema = Yup.object({
- supplierId: Validation(\string\, \Supplier\),
- debitNoteDate: Validation(\string\, \Debit Note Date\),
- dueDate: Validation(\string\, \Due Date\, { required: false }),
- shippingDate: Validation(\string\, \Shipping Date\, { required: false }),
- productDetails: Yup.object({
- items: Yup.array()
- .of(
- Yup.object({
- productId: Validation(\string\, \Product\),
- qty: Validation(\number\, \Quantity\, { extraRules: (s) => s.min(1, \Quantity must be at least 1\) }),
- unitCost: Validation(\number\, \Unit Cost\, { required: false, extraRules: (s) => s.min(0) }),
- }),
- )
- .min(1, \At least one item is required\),
- }),
-});

@@ -1,7 +1,15 @@
-import type { AdditionalChargeItem, CommonDataType, MessageStatus, PageStatus, SelectOptionType } from "./Common";
+import type {
+  AdditionalChargeItem,
+  CommonDataType,
+  MessageStatus,
+  PageStatus,
+  SelectOptionType,
+} from "./Common";
 import type { ProductBase } from "./Product";
 import type { ContactBase } from "./Contacts";
 import type { TermsConditionBase } from "./TermsCondition";
+import type { UomBase } from "./Uom";
+import type { TaxBase } from "./Tax";
 
 /* ===================== SUPPLIER ===================== */
 
@@ -15,14 +23,14 @@ export interface SupplierBillProductItem {
   qty?: number;
   freeQty?: number;
   mrp?: number;
-  uomId?: string;
+  uomId?: string | UomBase;
   unit?: string;
   sellingPrice?: number;
   unitCost?: number;
   discount1?: number;
   taxable?: number;
   taxableAmount?: number;
-  taxId?: string;
+  taxId?: string | TaxBase;
   tax?: number | string;
   taxAmount?: number;
   landingCost?: number;
@@ -39,16 +47,16 @@ export interface SupplierBillProductDetails {
 /* ===================== RETURN PRODUCT ===================== */
 
 export interface SupplierBillReturnProductItem {
-  productId?: string;
+  productId?: ProductBase | string;
   _prevProductId?: string;
   qty?: number;
-  uomId?: string;
+  uomId?: string | UomBase;
   unit?: string;
   unitCost?: number;
   discount1?: number;
   taxable?: number;
   taxableAmount?: number;
-  taxId?: string;
+  taxId?: string | TaxBase;
   tax?: number | string;
   taxAmount?: number;
   landingCost?: number;
@@ -166,7 +174,11 @@ export interface AdditionalChargesSectionProps {
   rows: AdditionalChargeRow[];
   onAdd: () => void;
   onRemove: (index: number) => void;
-  onChange: (index: number, field: keyof AdditionalChargeRow, value: string | number | string[]) => void;
+  onChange: (
+    index: number,
+    field: keyof AdditionalChargeRow,
+    value: string | number | string[],
+  ) => void;
   taxOptions: SelectOptionType[];
   isTaxLoading: boolean;
   flatDiscount: string | number;
@@ -279,7 +291,11 @@ export interface SupplierBillTabsProps {
   rows: ProductRow[];
   handleAdd: () => void;
   handleCut: (index: number) => void;
-  handleRowChange: (index: number, field: keyof ProductRow, value: string | number | string[]) => void;
+  handleRowChange: (
+    index: number,
+    field: keyof ProductRow,
+    value: string | number | string[],
+  ) => void;
   productOptions: SelectOptionType[];
   isProductLoading: boolean;
   selectedTermIds: string[];
@@ -287,7 +303,11 @@ export interface SupplierBillTabsProps {
   returnRows: ProductRow[];
   handleAddReturn: () => void;
   handleCutReturn: (index: number) => void;
-  handleReturnRowChange: (index: number, field: keyof ProductRow, value: string | number | string[]) => void;
+  handleReturnRowChange: (
+    index: number,
+    field: keyof ProductRow,
+    value: string | number | string[],
+  ) => void;
   returnRoundOffAmount: string | number;
   onReturnRoundOffAmountChange: (value: string | number) => void;
   isProductDisabled?: boolean;

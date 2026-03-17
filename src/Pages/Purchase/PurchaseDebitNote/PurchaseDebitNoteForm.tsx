@@ -6,7 +6,7 @@ import { Mutations, Queries } from "../../../Api";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonSummaryWatcher, CommonAdditionalChargeSection } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { PurchaseDebitNoteFormValues, PurchaseDebitNoteProductItem } from "../../../Types";
+import type { AdditionalChargeItem, PurchaseDebitNoteFormValues, PurchaseDebitNoteProductItem, TermsConditionBase } from "../../../Types";
 import { DateConfig, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 import { PurchaseDebitNoteFormSchema } from "../../../Utils/ValidationSchemas";
@@ -39,40 +39,22 @@ const PurchaseDebitNoteForm = () => {
       paymentTerm: data?.paymentTerm || "",
       billingAddress: typeof data?.billingAddress === "object" ? data.billingAddress?._id : data?.billingAddress || "",
       shippingAddress: typeof data?.shippingAddress === "object" ? data.shippingAddress?._id : data?.shippingAddress || "",
-      // @ts-ignore
       reverseCharge: data?.reverseCharge !== undefined ? String(data.reverseCharge) : "false",
       reason: data?.reason || "",
       exportSez: data?.exportSez || "",
-      productDetails: Array.isArray(data?.productDetails)
-        ? data.productDetails.map((i: any) => ({
-            ...emptyRow,
-            ...i,
-            productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
-            uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
-            taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
-          }))
-        : data?.productDetails?.items?.length
-        ? data.productDetails.items.map((i: any) => ({
-            ...emptyRow,
-            ...i,
-            productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
-            uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
-            taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
-          }))
-        : [emptyRow],
-      additionalCharges: Array.isArray(data?.additionalCharges)
-        ? data.additionalCharges.map((r: any) => ({
-            ...r,
-            chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
-            taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
-          }))
-        : data?.additionalCharges?.items?.length
-        ? data.additionalCharges.items.map((r: any) => ({
-            ...r,
-            chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
-            taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
-          }))
-        : [],
+      productDetails: data.productDetails.map((i: PurchaseDebitNoteProductItem) => ({
+        ...emptyRow,
+        ...i,
+        productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
+        uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
+        taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
+      })),
+
+      additionalCharges: data.additionalCharges.map((r: AdditionalChargeItem) => ({
+        ...r,
+        chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
+        taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
+      })),
       shippingDetails: {
         shippingType: data?.shippingDetails?.shippingType || "delivery",
         shippingDate: data?.shippingDetails?.shippingDate || "",
@@ -94,7 +76,7 @@ const PurchaseDebitNoteForm = () => {
       },
       notes: data?.notes || "",
       status: data?.status || "open",
-      termsAndConditionIds: data?.termsAndConditionIds?.map((t: any) => (typeof t === "string" ? t : t._id)) || [],
+      termsAndConditionIds: data?.termsAndConditionIds?.map((t: TermsConditionBase) => (typeof t === "string" ? t : t._id)) || [],
     };
   }, [data]);
 
@@ -109,11 +91,10 @@ const PurchaseDebitNoteForm = () => {
   const handleSubmit = async (values: PurchaseDebitNoteFormValues, { resetForm }: FormikHelpers<PurchaseDebitNoteFormValues>) => {
     const { _submitAction, ...rest } = values;
 
-    const payload: any = {
+    const payload: PurchaseDebitNoteFormValues = {
       ...rest,
-      // @ts-ignore
       reverseCharge: String(values.reverseCharge) === "true",
-      productDetails: rest.productDetails?.filter((i: any) => i.productId).map((i: any) => ({
+      productDetails: rest.productDetails?.filter((i: PurchaseDebitNoteProductItem) => i.productId).map((i: PurchaseDebitNoteProductItem) => ({
         productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
         qty: Number(i.qty || 0),
         unit: i.unit,
@@ -128,7 +109,7 @@ const PurchaseDebitNoteForm = () => {
         margin: Number(i.margin || 0),
         total: Number(i.total || 0),
       })),
-      additionalCharges: rest.additionalCharges?.filter((r: any) => r.chargeId).map((r: any) => ({
+      additionalCharges: rest.additionalCharges?.filter((r: AdditionalChargeItem) => r.chargeId).map((r: AdditionalChargeItem) => ({
         chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
         taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
         amount: Number(r.amount || 0),
@@ -154,7 +135,7 @@ const PurchaseDebitNoteForm = () => {
       const changedFields = GetChangedFields(payload, data);
       await editPurchaseDebitNote({ ...changedFields, purchaseDebitNoteId: data._id }, { onSuccess: handleSuccess });
     } else {
-      await addPurchaseDebitNote(RemoveEmptyFields(payload) as any, { onSuccess: handleSuccess });
+      await addPurchaseDebitNote(RemoveEmptyFields(payload) as PurchaseDebitNoteFormValues, { onSuccess: handleSuccess });
     }
   };
 

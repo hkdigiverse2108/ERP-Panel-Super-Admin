@@ -18,14 +18,14 @@ const AddressSelectionModal: FC<AddressSelectionModalProps> = ({ isOpen, onClose
     <CommonModal isOpen={isOpen} onClose={onClose} title={title} className="max-w-2xl">
       <Grid container spacing={2}>
         {addresses?.length > 0 ? (
-          addresses.map((addr: any, index) => {
+          addresses.map((addr: ContactAddressApi, index: number) => {
             const isSelected = addr._id === selectedAddressId;
             return (
               <Grid size={{ xs: 12 }} key={addr._id || index}>
                 <Paper
                   elevation={0}
                   onClick={() => {
-                    onSelect(addr._id);
+                    onSelect(addr._id || "");
                     onClose();
                   }}
                   className={`p-4 border-2 cursor-pointer transition-all hover:border-blue-500 dark:bg-gray-800! ${isSelected ? "border-blue-500 bg-blue-50/50 dark:bg-gray-800" : "border-gray-200 dark:border-gray-800"}`}

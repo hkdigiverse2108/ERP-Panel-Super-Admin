@@ -2,6 +2,8 @@ import type { AdditionalChargeItem, CommonDataType, MessageStatus, PageStatus } 
 import type { ProductBase } from "./Product";
 import type { ContactBase } from "./Contacts";
 import type { TermsConditionBase } from "./TermsCondition";
+import type { TaxBase } from "./Tax";
+import type { UomBase } from "./Uom";
 
 /* ===================== PRODUCT (FORM) ===================== */
 
@@ -11,13 +13,13 @@ export interface PurchaseDebitNoteProductItem {
   qty?: number;
   freeQty?: number;
   unit?: string;
-  uomId?: string;
+  uomId?: string | UomBase;
   unitCost?: number;
   mrp?: number;
   sellingPrice?: number;
   discount1?: number;
   tax?: number | string;
-  taxId?: string;
+  taxId?: string | TaxBase;
   landingCost?: number;
   margin?: number;
   total?: number;

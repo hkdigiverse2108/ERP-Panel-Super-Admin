@@ -8,7 +8,10 @@ import type {
 } from "./Common";
 import type { CompanyBase } from "./Company";
 import type { Address, ContactBase } from "./Contacts";
+import type { ProductBase } from "./Product";
+import type { TaxBase } from "./Tax";
 import type { TermsConditionBase } from "./TermsCondition";
+import type { UomBase } from "./Uom";
 
 export const SALES_CREDIT_NOTE_STATUS = {
   OPEN: "open",
@@ -26,14 +29,14 @@ export const SALES_CREDIT_NOTE_PRODUCT_TYPE = {
 export type SalesCreditNoteProductType = (typeof SALES_CREDIT_NOTE_PRODUCT_TYPE)[keyof typeof SALES_CREDIT_NOTE_PRODUCT_TYPE];
 
 export interface SalesCreditNoteItem {
-  productId: string;
+  productId: string | ProductBase;
   qty: number;
   freeQty: number;
-  uomId?: string;
+  uomId?: string | UomBase;
   unit?: string;
   price?: number;
   discount1?: number;
-  taxId?: string;
+  taxId?: string | TaxBase;
   tax?: number;
   total?: number;
 }

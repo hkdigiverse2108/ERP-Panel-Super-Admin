@@ -10,6 +10,7 @@ import type {
 import type { ContactBase } from "./Contacts";
 import type { ProductBase } from "./Product";
 import type { TaxBase } from "./Tax";
+import type { UomBase } from "./Uom";
 
 export interface DeliveryChallanItem {
   productId: string | ProductBase;
@@ -19,7 +20,7 @@ export interface DeliveryChallanItem {
   mrp?: number;
   discount1: number;
   discountAmount?: number;
-  uomId?: string | null;
+  uomId?: string | null | UomBase;
   unit?: string | null;
   taxId?: string | TaxBase | null;
   tax?: number;
@@ -41,7 +42,7 @@ export interface DeliveryChallanBase extends CommonDataType {
   billingAddress?: string | AddressApi;
   shippingAddress?: string | AddressApi;
   paymentTerms?: string;
-  createdFrom?: string;
+  createdFrom?: string | null;
   taxType?: string;
   shippingDetails?: ShippingDetails;
   items: DeliveryChallanItem[];

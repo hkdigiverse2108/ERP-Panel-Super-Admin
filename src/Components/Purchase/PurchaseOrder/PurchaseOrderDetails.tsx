@@ -3,7 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
 import { ORDER_STATUS, TAX_TYPE } from "../../../Data";
 import { useFormikContext } from "formik";
-import type { PurchaseOrderFormValues } from "../../../Types";
+import type { ContactAddressApi, PurchaseOrderFormValues } from "../../../Types";
 import { useState, useEffect } from "react";
 import { AddressSelectionModal } from "../../Common";
 import { Queries } from "../../../Api";
@@ -21,7 +21,7 @@ const PurchaseOrderDetails = () => {
 
   // console.log("values", values, customers);
   const selectedSupplier = suppliers.find((c) => c._id === values.supplierId);
-  const billingAddressObj = selectedSupplier?.address?.find((addr: any) => addr._id === values.billingAddress);
+  const billingAddressObj = selectedSupplier?.address?.find((addr: ContactAddressApi) => addr._id === values.billingAddress);
 
   // Fallback to first address if not selected yet (optional, or just show provided/not provided)
   const displayBilling = billingAddressObj || selectedSupplier?.address?.[0];
@@ -33,7 +33,7 @@ const PurchaseOrderDetails = () => {
   // Set default addresses when customer is selected
   useEffect(() => {
     if (selectedSupplier && selectedSupplier.address && selectedSupplier.address.length > 0) {
-      const isBillingValid = selectedSupplier.address.some((a: any) => a._id === values.billingAddress);
+      const isBillingValid = selectedSupplier.address.some((a: ContactAddressApi) => a._id === values.billingAddress);
 
       if (!values.billingAddress || !isBillingValid) {
         const firstAddressId = selectedSupplier.address[0]._id;
@@ -48,7 +48,7 @@ const PurchaseOrderDetails = () => {
 
   // Sync place of supply with billing address
   useEffect(() => {
-    const activeBilling = selectedSupplier?.address?.find((a: any) => a._id === values.billingAddress) || selectedSupplier?.address?.[0];
+    const activeBilling = selectedSupplier?.address?.find((a: ContactAddressApi) => a._id === values.billingAddress) || selectedSupplier?.address?.[0];
     if (activeBilling?.state?.name) {
       if (values.placeOfSupply !== activeBilling.state.name) {
         setFieldValue("placeOfSupply", activeBilling.state.name);

@@ -21,6 +21,7 @@ export interface ContactAddressApi extends Omit<Address, "country" | "state" | "
   country?: LocationBase;
   state?: LocationBase;
   city?: LocationBase;
+  _id?: string;
 }
 
 export interface ContactBankDetails {

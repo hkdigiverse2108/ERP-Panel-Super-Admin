@@ -3,7 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { CommonValidationDatePicker, CommonValidationSelect } from "../../../Attribute";
 import { PAYMENT_TERMS_OPTIONS, REVERSE_CHARGE, TAX_TYPE } from "../../../Data";
 import { useFormikContext } from "formik";
-import type { EstimateFormValues } from "../../../Types";
+import type { ContactAddressApi, EstimateFormValues } from "../../../Types";
 import { useState, useEffect, useRef } from "react";
 import { AddressSelectionModal } from "../../Common";
 import { Queries } from "../../../Api";
@@ -21,8 +21,8 @@ const EstimateDetails = () => {
 
   // console.log("values", values, customers);
   const selectedCustomer = customers.find((c) => c._id === values.customerId);
-  const billingAddressObj = selectedCustomer?.address?.find((addr: any) => addr._id === values.billingAddress);
-  const shippingAddressObj = selectedCustomer?.address?.find((addr: any) => addr._id === values.shippingAddress);
+  const billingAddressObj = selectedCustomer?.address?.find((addr: ContactAddressApi) => addr._id === values.billingAddress);
+  const shippingAddressObj = selectedCustomer?.address?.find((addr: ContactAddressApi) => addr._id === values.shippingAddress);
 
   // Fallback to first address if not selected yet (optional, or just show provided/not provided)
   const displayBilling = billingAddressObj || selectedCustomer?.address?.[0];
@@ -36,8 +36,8 @@ const EstimateDetails = () => {
   // Set default addresses when customer is selected
   useEffect(() => {
     if (selectedCustomer && selectedCustomer.address && selectedCustomer.address.length > 0) {
-      const isBillingValid = selectedCustomer.address.some((a: any) => a._id === values.billingAddress);
-      const isShippingValid = selectedCustomer.address.some((a: any) => a._id === values.shippingAddress);
+      const isBillingValid = selectedCustomer.address.some((a: ContactAddressApi) => a._id === values.billingAddress);
+      const isShippingValid = selectedCustomer.address.some((a: ContactAddressApi) => a._id === values.shippingAddress);
 
       if (!values.billingAddress || !isBillingValid) {
         const firstAddressId = selectedCustomer.address[0]._id;
@@ -59,7 +59,7 @@ const EstimateDetails = () => {
 
   // Sync place of supply with billing address
   useEffect(() => {
-    const activeBilling = selectedCustomer?.address?.find((a: any) => a._id === values.billingAddress) || selectedCustomer?.address?.[0];
+    const activeBilling = selectedCustomer?.address?.find((a: ContactAddressApi) => a._id === values.billingAddress) || selectedCustomer?.address?.[0];
     if (activeBilling?.state?.name) {
       if (values.placeOfSupply !== activeBilling.state.name) {
         setFieldValue("placeOfSupply", activeBilling.state.name);

@@ -7,7 +7,7 @@ import { Mutations } from "../../../Api";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonSummaryWatcher, CommonAdditionalChargeSection } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { SupplierBillFormValues } from "../../../Types";
+import type { AdditionalChargeItem, SupplierBillFormValues, SupplierBillProductItem, SupplierBillReturnProductItem } from "../../../Types";
 import { DateConfig, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 import { SupplierBillFormSchema } from "../../../Utils/ValidationSchemas";
@@ -52,10 +52,24 @@ const SupplierBillForm = () => {
     billingAddress: typeof data?.billingAddress === "object" ? data.billingAddress?._id : data?.billingAddress || "",
 
     productDetails: (data?.productDetails?.item || (Array.isArray(data?.productDetails) ? data.productDetails : []))?.length
-      ? (data.productDetails.item || data.productDetails).map((i: any) => {
+      ? (data.productDetails.item || data.productDetails).map((i: SupplierBillProductItem) => {
+        const pId = typeof i.productId === "object" ? i.productId?._id : i.productId;
+        return {
+          ...emptyRow,
+          ...i,
+          productId: pId,
+          _prevProductId: pId,
+          uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
+          taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
+        };
+      })
+      : [emptyRow],
+    returnProductDetails: {
+      item: (data?.returnProductDetails?.item || (Array.isArray(data?.returnProductDetails) ? data.returnProductDetails : []))?.length
+        ? (data.returnProductDetails.item || data.returnProductDetails).map((i: SupplierBillReturnProductItem) => {
           const pId = typeof i.productId === "object" ? i.productId?._id : i.productId;
           return {
-            ...emptyRow,
+            ...emptyReturnRow,
             ...i,
             productId: pId,
             _prevProductId: pId,
@@ -63,31 +77,17 @@ const SupplierBillForm = () => {
             taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
           };
         })
-      : [emptyRow],
-    returnProductDetails: {
-      item: (data?.returnProductDetails?.item || (Array.isArray(data?.returnProductDetails) ? data.returnProductDetails : []))?.length
-        ? (data.returnProductDetails.item || data.returnProductDetails).map((i: any) => {
-            const pId = typeof i.productId === "object" ? i.productId?._id : i.productId;
-            return {
-              ...emptyReturnRow,
-              ...i,
-              productId: pId,
-              _prevProductId: pId,
-              uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
-              taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
-            };
-          })
         : [emptyReturnRow],
       summary: {
         roundOff: data?.returnProductDetails?.summary?.roundOff || data?.returnProductDetails?.roundOff || 0,
       },
     },
     additionalCharges: (data?.additionalCharges?.item || (Array.isArray(data?.additionalCharges) ? data.additionalCharges : []))?.length
-      ? (data.additionalCharges.item || data.additionalCharges).map((r: any) => ({
-          ...r,
-          chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
-          taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
-        }))
+      ? (data.additionalCharges.item || data.additionalCharges).map((r: AdditionalChargeItem) => ({
+        ...r,
+        chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
+        taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
+      }))
       : [],
     termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
     notes: data?.notes || "",
@@ -113,7 +113,7 @@ const SupplierBillForm = () => {
 
     const payload = {
       ...rest,
-      productDetails: rest.productDetails?.map((item: any) => ({
+      productDetails: rest.productDetails?.map((item: SupplierBillProductItem) => ({
         productId: typeof item.productId === "object" ? item.productId?._id : item.productId,
         qty: Number(item.qty || 0),
         freeQty: Number(item.freeQty || 0),
@@ -133,7 +133,7 @@ const SupplierBillForm = () => {
       returnProductDetails: {
         item: rest.returnProductDetails?.item
           ?.filter((i) => i.productId)
-          .map((item: any) => ({
+          .map((item: SupplierBillReturnProductItem) => ({
             productId: typeof item.productId === "object" ? item.productId?._id : item.productId,
             qty: Number(item.qty || 0),
             uomId: typeof item.uomId === "object" ? item.uomId?._id : item.uomId,
@@ -148,31 +148,31 @@ const SupplierBillForm = () => {
           })),
         summary: {
           roundOff: Number(rest.returnProductDetails?.summary?.roundOff || 0),
-          grossAmount: rest.returnProductDetails?.item?.filter((i) => i.productId).reduce((a: number, b: any) => a + Number(b.taxableAmount || 0), 0) || 0,
-          taxAmount: rest.returnProductDetails?.item?.filter((i) => i.productId).reduce((a: number, b: any) => a + Number(b.taxAmount || 0), 0) || 0,
-          netAmount: (rest.returnProductDetails?.item?.filter((i) => i.productId).reduce((a: number, b: any) => a + Number(b.total || 0), 0) || 0) + Number(rest.returnProductDetails?.summary?.roundOff || 0),
+          grossAmount: rest.returnProductDetails?.item?.filter((i) => i.productId).reduce((a: number, b: SupplierBillReturnProductItem) => a + Number(b.taxableAmount || 0), 0) || 0,
+          taxAmount: rest.returnProductDetails?.item?.filter((i) => i.productId).reduce((a: number, b: SupplierBillReturnProductItem) => a + Number(b.taxAmount || 0), 0) || 0,
+          netAmount: (rest.returnProductDetails?.item?.filter((i) => i.productId).reduce((a: number, b: SupplierBillReturnProductItem) => a + Number(b.total || 0), 0) || 0) + Number(rest.returnProductDetails?.summary?.roundOff || 0),
         },
       },
       additionalCharges: Array.isArray(rest.additionalCharges)
         ? rest.additionalCharges
-            ?.filter((r: any) => r.chargeId)
-            .map((r: any) => ({
-              chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
-              taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
-              amount: Number(r.amount || 0),
-              totalAmount: Number(r.totalAmount || 0),
-            }))
+          ?.filter((r: AdditionalChargeItem) => r.chargeId)
+          .map((r: AdditionalChargeItem) => ({
+            chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
+            taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
+            amount: Number(r.amount || 0),
+            totalAmount: Number(r.totalAmount || 0),
+          }))
         : [],
       summary: rest.summary
         ? {
-            flatDiscount: Number(rest.summary.flatDiscount || 0),
-            grossAmount: Number(rest.summary.grossAmount || 0),
-            discountAmount: Number(rest.summary.discountAmount || 0),
-            taxableAmount: Number(rest.summary.taxableAmount || 0),
-            taxAmount: Number(rest.summary.taxAmount || 0),
-            roundOff: Number(rest.summary.roundOff || 0),
-            netAmount: Number(rest.summary.netAmount || 0),
-          }
+          flatDiscount: Number(rest.summary.flatDiscount || 0),
+          grossAmount: Number(rest.summary.grossAmount || 0),
+          discountAmount: Number(rest.summary.discountAmount || 0),
+          taxableAmount: Number(rest.summary.taxableAmount || 0),
+          taxAmount: Number(rest.summary.taxAmount || 0),
+          roundOff: Number(rest.summary.roundOff || 0),
+          netAmount: Number(rest.summary.netAmount || 0),
+        }
         : undefined,
     };
 
@@ -184,7 +184,7 @@ const SupplierBillForm = () => {
       const changedFields = GetChangedFields(payload, data);
       await editSupplierBill({ ...changedFields, supplierBillId: data._id }, { onSuccess: handleSuccess });
     } else {
-      await addSupplierBill(RemoveEmptyFields(payload) as any, { onSuccess: handleSuccess });
+      await addSupplierBill(RemoveEmptyFields(payload) as SupplierBillFormValues, { onSuccess: handleSuccess });
     }
   };
 

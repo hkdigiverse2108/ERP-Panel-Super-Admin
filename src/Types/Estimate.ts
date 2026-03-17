@@ -1,7 +1,10 @@
 import type { AdditionalChargeItem, CommonDataType, MessageStatus, PageStatus, ShippingDetails, TransactionSummary } from "./Common";
 import type { CompanyBase } from "./Company";
 import type { Address, ContactBase } from "./Contacts";
+import type { ProductBase } from "./Product";
+import type { TaxBase } from "./Tax";
 import type { TermsConditionBase } from "./TermsCondition";
+import type { UomBase } from "./Uom";
 
 // Local ShippingDetails removed, now using common from ./Common
 
@@ -13,14 +16,14 @@ export interface AdditionalCharge {
 }
 
 export interface EstimateItem {
-  productId: string;
+  productId: string | ProductBase;
   qty: number;
   freeQty: number;
-  uomId: string;
+  uomId: string | UomBase; 
   price: number;
   discount1: number;
   // discount2: number;
-  taxId: string;
+  taxId: string | TaxBase;
   taxableAmount: number;
   totalAmount: number;
   unit?: string;

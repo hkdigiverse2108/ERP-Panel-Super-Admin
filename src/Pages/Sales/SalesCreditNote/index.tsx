@@ -84,7 +84,7 @@ const SalesCreditNote = () => {
         CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, SALES_CREDIT_NOTE_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 })
     ];
 
-    const STATUS_COLOR: any = {
+    const STATUS_COLOR: Record<string, string> = {
         all: "primary",
         open: "info",
         paid: "success",

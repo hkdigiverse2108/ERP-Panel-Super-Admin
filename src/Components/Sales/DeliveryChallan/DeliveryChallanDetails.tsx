@@ -3,7 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { CommonValidationDatePicker, CommonValidationSelect } from "../../../Attribute";
 import { DELIVERY_CHALLAN_CREATED_FROM_OPTIONS, PAYMENT_TERMS_OPTIONS, TAX_TYPE } from "../../../Data";
 import { useFormikContext } from "formik";
-import type { DeliveryChallanFormValues } from "../../../Types";
+import type { ContactAddressApi, DeliveryChallanFormValues } from "../../../Types";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { AddressSelectionModal } from "../../Common";
 import { Queries } from "../../../Api";
@@ -36,11 +36,11 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
   const customers = useMemo(() => customerData?.data || [], [customerData]);
 
   const selectedCustomer = useMemo(() => customers.find((c) => c._id === values.customerId), [customers, values.customerId]);
-  const billingAddressObj = useMemo(() => (selectedCustomer as any)?.address?.find((addr: any) => addr._id === values.billingAddress), [selectedCustomer, values.billingAddress]);
-  const shippingAddressObj = useMemo(() => (selectedCustomer as any)?.address?.find((addr: any) => addr._id === values.shippingAddress), [selectedCustomer, values.shippingAddress]);
+  const billingAddressObj = useMemo(() => selectedCustomer?.address?.find((addr: ContactAddressApi) => addr._id === values.billingAddress), [selectedCustomer, values.billingAddress]);
+  const shippingAddressObj = useMemo(() => selectedCustomer?.address?.find((addr: ContactAddressApi) => addr._id === values.shippingAddress), [selectedCustomer, values.shippingAddress]);
 
-  const displayBilling = billingAddressObj || (selectedCustomer as any)?.address?.[0];
-  const displayShipping = shippingAddressObj || (selectedCustomer as any)?.address?.[0];
+  const displayBilling = billingAddressObj || selectedCustomer?.address?.[0];
+  const displayShipping = shippingAddressObj || selectedCustomer?.address?.[0];
 
   const handleAddressSelect = (addressId: string) => {
     if (modalType === "billing") {
@@ -52,30 +52,30 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
   };
 
   useEffect(() => {
-    if (selectedCustomer && (selectedCustomer as any).address && (selectedCustomer as any).address.length > 0) {
-      const isBillingValid = (selectedCustomer as any).address.some((a: any) => a._id === values.billingAddress);
-      const isShippingValid = (selectedCustomer as any).address.some((a: any) => a._id === values.shippingAddress);
+    if (selectedCustomer && selectedCustomer.address && selectedCustomer.address.length > 0) {
+      const isBillingValid = selectedCustomer.address.some((a: ContactAddressApi) => a._id === values.billingAddress);
+      const isShippingValid = selectedCustomer.address.some((a: ContactAddressApi) => a._id === values.shippingAddress);
 
       if (!values.billingAddress || !isBillingValid) {
-        const firstAddressId = (selectedCustomer as any).address[0]._id;
+        const firstAddressId = selectedCustomer.address[0]._id;
         if (values.billingAddress !== firstAddressId) {
           setFieldValue("billingAddress", firstAddressId);
         }
       }
       if (!values.shippingAddress || !isShippingValid) {
-        const firstAddressId = (selectedCustomer as any).address[0]._id;
+        const firstAddressId = selectedCustomer.address[0]._id;
         if (values.shippingAddress !== firstAddressId) {
           setFieldValue("shippingAddress", firstAddressId);
         }
       }
-    } else if (!selectedCustomer || !(selectedCustomer as any).address || (selectedCustomer as any).address.length === 0) {
+    } else if (!selectedCustomer || !selectedCustomer.address || selectedCustomer.address.length === 0) {
       if (values.billingAddress) setFieldValue("billingAddress", "");
       if (values.shippingAddress) setFieldValue("shippingAddress", "");
     }
   }, [selectedCustomer, values.billingAddress, values.shippingAddress, setFieldValue]);
 
   useEffect(() => {
-    const activeBilling = (selectedCustomer as any)?.address?.find((a: any) => a._id === values.billingAddress) || (selectedCustomer as any)?.address?.[0];
+    const activeBilling = selectedCustomer?.address?.find((a: ContactAddressApi) => a._id === values.billingAddress) || selectedCustomer?.address?.[0];
     if (activeBilling?.state?.name) {
       if (values.placeOfSupply !== activeBilling.state.name) {
         setFieldValue("placeOfSupply", activeBilling.state.name);
@@ -146,7 +146,7 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
               </Box>
               {displayBilling ? (
                 <Typography variant="body2" color="text.secondary">
-                  {displayBilling.addressLine1}, {displayBilling.city?.name || displayBilling.city}, {displayBilling.state?.name || displayBilling.state}, {displayBilling.pinCode}
+                  {displayBilling.addressLine1}, {displayBilling.city?.name || ""}, {displayBilling.state?.name || ""}, {displayBilling.pinCode}
                 </Typography>
               ) : (
                 <Typography variant="body2" color="text.secondary">
@@ -170,7 +170,7 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
               </Box>
               {displayShipping ? (
                 <Typography variant="body2" color="text.secondary">
-                  {displayShipping.addressLine1}, {displayShipping.city?.name || displayShipping.city}, {displayShipping.state?.name || displayShipping.state}, {displayShipping.pinCode}
+                  {displayShipping.addressLine1}, {displayShipping.city?.name || ""}, {displayShipping.state?.name || ""}, {displayShipping.pinCode}
                 </Typography>
               ) : (
                 <Typography variant="body2" color="text.secondary">
@@ -234,7 +234,7 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
             </Box>
             {displayBilling ? (
               <Typography variant="body2" color="text.secondary">
-                {displayBilling.addressLine1}, {displayBilling.city?.name || displayBilling.city}, {displayBilling.state?.name || displayBilling.state}, {displayBilling.pinCode}
+                {displayBilling.addressLine1}, {displayBilling.city?.name || ""}, {displayBilling.state?.name || ""}, {displayBilling.pinCode}
               </Typography>
             ) : (
               <Typography variant="body2" color="text.secondary">
@@ -258,7 +258,7 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
             </Box>
             {displayShipping ? (
               <Typography variant="body2" color="text.secondary">
-                {displayShipping.addressLine1}, {displayShipping.city?.name || displayShipping.city}, {displayShipping.state?.name || displayShipping.state}, {displayShipping.pinCode}
+                {displayShipping.addressLine1}, {displayShipping.city?.name || ""}, {displayShipping.state?.name || ""}, {displayShipping.pinCode}
               </Typography>
             ) : (
               <Typography variant="body2" color="text.secondary">
@@ -269,7 +269,7 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
         </Grid>
       </Grid>
 
-      <AddressSelectionModal isOpen={Boolean(modalType)} onClose={() => setModalType(null)} addresses={(selectedCustomer as any)?.address || []} onSelect={handleAddressSelect} selectedAddressId={modalType === "billing" ? values.billingAddress : values.shippingAddress} title={modalType === "billing" ? "Select Billing Address" : "Select Shipping Address"} />
+      <AddressSelectionModal isOpen={Boolean(modalType)} onClose={() => setModalType(null)} addresses={selectedCustomer?.address || []} onSelect={handleAddressSelect} selectedAddressId={modalType === "billing" ? values.billingAddress : values.shippingAddress} title={modalType === "billing" ? "Select Billing Address" : "Select Shipping Address"} />
     </Grid>
   );
 };

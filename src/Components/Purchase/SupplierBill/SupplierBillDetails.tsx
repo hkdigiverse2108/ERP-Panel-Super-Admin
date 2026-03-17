@@ -7,6 +7,7 @@ import { DateConfig, GenerateOptions } from "../../../Utils";
 import { AddressSelectionModal } from "../../Common";
 import { useState, useEffect, useRef, useMemo } from "react";
 import EditIcon from "@mui/icons-material/Edit";
+import type { ContactAddressApi, ContactBase } from "../../../Types";
 
 const SupplierBillDetails = () => {
   const { values, setFieldValue } = useFormikContext<any>();
@@ -18,7 +19,7 @@ const SupplierBillDetails = () => {
   const { data: supplierData, isLoading: supplierDataLoading, isFetching: supplierDataFetching } = Queries.useGetContactDropdown({ activeFilter: true, typeFilter: "supplier", companyFilter: values.companyId }, !!values.companyId);
   // Use useMemo to avoid re-calculating (and creating new references) on every render
   const suppliers = useMemo(() => {
-    return (supplierData?.data || []).map((s: any) => ({
+    return (supplierData?.data || []).map((s: ContactBase) => ({
       ...s,
       name: s.companyName || `${s.firstName} ${s.lastName}`
     }));
@@ -26,8 +27,8 @@ const SupplierBillDetails = () => {
 
   const supplierOptions = useMemo(() => GenerateOptions(suppliers), [suppliers]);
 
-  const selectedSupplier = useMemo(() => suppliers.find((s: any) => s._id === values.supplierId), [suppliers, values.supplierId]);
-  const billingAddressObj = useMemo(() => selectedSupplier?.address?.find((addr: any) => addr._id === values.billingAddress), [selectedSupplier, values.billingAddress]);
+  const selectedSupplier = useMemo(() => suppliers.find((s: ContactBase) => s._id === values.supplierId), [suppliers, values.supplierId]);
+  const billingAddressObj = useMemo(() => selectedSupplier?.address?.find((addr: ContactAddressApi) => addr._id === values.billingAddress), [selectedSupplier, values.billingAddress]);
 
   const displayBilling = billingAddressObj || selectedSupplier?.address?.[0];
 
@@ -44,7 +45,7 @@ const SupplierBillDetails = () => {
   useEffect(() => {
     if (selectedSupplier && selectedSupplier.address && selectedSupplier.address.length > 0) {
       const currentBilling = values.billingAddress;
-      const isBillingValid = selectedSupplier.address.some((a: any) => a._id === currentBilling);
+      const isBillingValid = selectedSupplier.address.some((a: ContactAddressApi) => a._id === currentBilling);
 
       if (!currentBilling || !isBillingValid) {
         const firstAddressId = selectedSupplier.address[0]._id;
@@ -61,7 +62,7 @@ const SupplierBillDetails = () => {
 
   // Sync place of supply with billing address
   useEffect(() => {
-    const activeBilling = selectedSupplier?.address?.find((a: any) => a._id === values.billingAddress) || selectedSupplier?.address?.[0];
+    const activeBilling = selectedSupplier?.address?.find((a: ContactAddressApi) => a._id === values.billingAddress) || selectedSupplier?.address?.[0];
     if (activeBilling?.state?.name) {
       if (values.placeOfSupply !== activeBilling.state.name) {
         setFieldValue("placeOfSupply", activeBilling.state.name);

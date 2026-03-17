@@ -46,7 +46,7 @@ export const CommonObjectPropertyColumn = <T extends GridValidRowModel>(field: s
   flex: options?.flex,
   minWidth: options?.minWidth,
 
-  valueGetter: (_value, row: any): string | number => {
+  valueGetter: (_value, row: T): string | number => {
     const obj = row?.[sourceField];
     const val = typeof obj === "object" && obj !== null ? obj?.[property] : "-";
     return typeof val === "string" || typeof val === "number" ? val : "-";
@@ -55,7 +55,7 @@ export const CommonObjectPropertyColumn = <T extends GridValidRowModel>(field: s
   renderCell: ({ value }) => String(value ?? "-"),
 
   // ✅ THIS IS THE IMPORTANT PART
-  exportFormatter: (_value, row: any) => {
+  exportFormatter: (_value, row: T) => {
     const obj = row?.[sourceField];
     const val = typeof obj === "object" && obj !== null ? obj?.[property] : "-";
     return typeof val === "string" || typeof val === "number" ? val : "-";

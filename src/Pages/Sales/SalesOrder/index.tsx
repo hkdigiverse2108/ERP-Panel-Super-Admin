@@ -78,7 +78,7 @@ const SalesOrder = () => {
     //     { label: "Order Created", value: allEstimate.filter((item) => item.status === "order-created").length, color: "error" },
     //     { label: "Invoice Created", value: allEstimate.filter((item) => item.status === "invoice-created").length, color: "info" },
     // ];
-    const STATUS_COLOR: any = {
+    const STATUS_COLOR: Record<string, string> = {
         all: "primary",
         pending: "warning",
         invoice_created: "info",

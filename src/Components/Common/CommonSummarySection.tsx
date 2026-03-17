@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { useFormikContext } from "formik";
 import { useState, useEffect } from "react";
 import { CommonValidationTextField } from "../../Attribute";
-import type { CommonTableColumn } from "../../Types";
+import type { CommonTableColumn, TaxBase } from "../../Types";
 import CommonTable from "./CommonTable";
 import { Queries } from "../../Api";
 
@@ -20,10 +20,10 @@ const CommonSummarySection = ({ name = "transactionSummary" }: CommonSummarySect
     rate: number;
     amount: number;
   }>[] = [
-    { key: "name", header: "Tax", headerClass: "text-left px-4 w-52", bodyClass: "text-left px-4 w-52", render: (row) => row.name },
-    { key: "rate", header: "Tax Rate", headerClass: "text-center px-4 w-32", bodyClass: "text-center px-4 w-32 whitespace-nowrap", render: (row) => `${row.rate}%` },
-    { key: "amount", header: "Tax Amount", headerClass: "text-right px-4 w-36", bodyClass: "text-right px-4 w-36 whitespace-nowrap font-medium", render: (row) => (row.amount || 0).toFixed(2) },
-  ];
+      { key: "name", header: "Tax", headerClass: "text-left px-4 w-52", bodyClass: "text-left px-4 w-52", render: (row) => row.name },
+      { key: "rate", header: "Tax Rate", headerClass: "text-center px-4 w-32", bodyClass: "text-center px-4 w-32 whitespace-nowrap", render: (row) => `${row.rate}%` },
+      { key: "amount", header: "Tax Amount", headerClass: "text-right px-4 w-36", bodyClass: "text-right px-4 w-36 whitespace-nowrap font-medium", render: (row) => (row.amount || 0).toFixed(2) },
+    ];
 
   const taxBreakdownData = summary?.taxSummary || [];
 
@@ -159,7 +159,7 @@ export const CommonSummaryWatcher = ({
     const taxMap: Record<string, { name: string; rate: number; amount: number }> = {};
     const processTax = (taxId: string | undefined, amount: number) => {
       if (!taxId) return;
-      const tax = taxData?.data?.find((t: any) => t._id === taxId);
+      const tax = taxData?.data?.find((t: TaxBase) => t._id === taxId);
       if (!tax) return;
       if (!taxMap[taxId]) {
         taxMap[taxId] = { name: tax.name || "Tax", rate: tax.percentage || 0, amount: 0 };
@@ -191,7 +191,7 @@ export const CommonSummaryWatcher = ({
     const newSummary = calculateSummary();
     const currentSummary = values[summaryKey] || {};
 
-    const isDifferent = 
+    const isDifferent =
       Math.abs((currentSummary.grossAmount || 0) - newSummary.grossAmount) > 0.01 ||
       Math.abs((currentSummary.discountAmount || 0) - newSummary.discountAmount) > 0.01 ||
       Math.abs((currentSummary.taxableAmount || 0) - newSummary.taxableAmount) > 0.01 ||

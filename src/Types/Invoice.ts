@@ -8,7 +8,9 @@ import type {
   TransactionSummary,
 } from "./Common";
 import type { ContactBase } from "./Contacts";
+import type { DeliveryChallanBase } from "./DeliveryChallan";
 import type { ProductBase } from "./Product";
+import type { SalesOrderBase } from "./SalesOrder";
 import type { TaxBase } from "./Tax";
 import type { UserBase } from "./User";
 
@@ -79,8 +81,8 @@ export interface InvoiceFormValues extends Omit<
   items: InvoiceItem[];
   billingAddress?: string;
   shippingAddress?: string;
-  selectedSalesOrderId?: string;
-  selectedDeliveryChallanId?: string;
+  selectedSalesOrderId?: string | SalesOrderBase;
+  selectedDeliveryChallanId?: string | DeliveryChallanBase;
   reverseCharge?: string;
   _submitAction?: string;
 }

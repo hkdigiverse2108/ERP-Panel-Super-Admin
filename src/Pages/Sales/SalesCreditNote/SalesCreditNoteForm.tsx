@@ -6,7 +6,7 @@ import { Mutations, Queries } from "../../../Api";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonSummaryWatcher, CommonAdditionalChargeSection } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { SalesCreditNoteFormValues, SalesCreditNoteItem } from "../../../Types";
+import type { AdditionalChargeItem, SalesCreditNoteFormValues, SalesCreditNoteItem } from "../../../Types";
 import { DateConfig, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 import { SalesCreditNoteFormSchema } from "../../../Utils/ValidationSchemas";
@@ -49,14 +49,14 @@ const SalesCreditNoteForm = () => {
       salesManId: typeof salesManIdValue === "object" ? salesManIdValue?._id : salesManIdValue || "",
       salesId: typeof data?.salesId === "object" ? data.salesId?._id : data?.salesId || "",
       termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
-      productDetails: data?.productDetails?.length ? data.productDetails.map((i: any) => ({
+      productDetails: data?.productDetails?.length ? data.productDetails.map((i: SalesCreditNoteItem) => ({
         ...emptyRow,
         ...i,
         productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
         uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
         taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
       })) : [emptyRow],
-      additionalCharges: data?.additionalCharges?.length ? data.additionalCharges.map((r: any) => ({
+      additionalCharges: data?.additionalCharges?.length ? data.additionalCharges.map((r: AdditionalChargeItem) => ({
         ...r,
         chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
         taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
@@ -94,17 +94,17 @@ const SalesCreditNoteForm = () => {
   }, [isEditing, permission, navigate]);
 
   const getCalculatedSummary = (values: SalesCreditNoteFormValues) => {
-    const itemGross = values.productDetails?.reduce((s: number, r: any) => s + (Number(r.qty) || 0) * (Number(r.price) || 0), 0) || 0;
-    const itemDiscount = values.productDetails?.reduce((s: number, r: any) => s + (Number(r.discount1) || 0), 0) || 0;
+    const itemGross = values.productDetails?.reduce((s: number, r: SalesCreditNoteItem) => s + (Number(r.qty) || 0) * (Number(r.price) || 0), 0) || 0;
+    const itemDiscount = values.productDetails?.reduce((s: number, r: SalesCreditNoteItem) => s + (Number(r.discount1) || 0), 0) || 0;
     
     // items taxable = items total - items tax
-    const itemTax = values.productDetails?.reduce((s: number, r: any) => s + (Number(r.tax) || 0), 0) || 0;
-    const itemTotal = values.productDetails?.reduce((s: number, r: any) => s + (Number(r.total) || 0), 0) || 0;
+    const itemTax = values.productDetails?.reduce((s: number, r: SalesCreditNoteItem) => s + (Number(r.tax) || 0), 0) || 0;
+    const itemTotal = values.productDetails?.reduce((s: number, r: SalesCreditNoteItem) => s + (Number(r.total) || 0), 0) || 0;
     const itemTaxable = itemTotal - itemTax;
 
     const isReverseCharge = String(values.reverseCharge) === "true";
-    const chargeTaxable = values.additionalCharges?.reduce((s: number, r: any) => s + (Number(r.amount) || 0), 0) || 0;
-    const chargeTax = isReverseCharge ? 0 : values.additionalCharges?.reduce((s: number, r: any) => s + ((Number(r.totalAmount) || 0) - (Number(r.amount) || 0)), 0) || 0;
+    const chargeTaxable = values.additionalCharges?.reduce((s: number, r: AdditionalChargeItem) => s + (Number(r.amount) || 0), 0) || 0;
+    const chargeTax = isReverseCharge ? 0 : values.additionalCharges?.reduce((s: number, r: AdditionalChargeItem) => s + ((Number(r.totalAmount) || 0) - (Number(r.amount) || 0)), 0) || 0;
 
     const totalTaxable = itemTaxable + chargeTaxable;
     const totalTax = itemTax + chargeTax;
@@ -130,11 +130,11 @@ const SalesCreditNoteForm = () => {
     const { _submitAction, ...rest } = values;
     const summary = getCalculatedSummary(values);
 
-    const payload: any = {
+    const payload: SalesCreditNoteFormValues = {
       ...rest,
       // Convert reverseCharge to boolean for the API
       reverseCharge: String(values.reverseCharge) === "true",
-      productDetails: values.productDetails?.filter((i: any) => i.productId).map((i: any) => ({
+      productDetails: values.productDetails?.filter((i: SalesCreditNoteItem) => i.productId).map((i: SalesCreditNoteItem) => ({
         productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
         qty: Number(i.qty || 0),
         freeQty: Number(i.freeQty || 0),
@@ -146,7 +146,7 @@ const SalesCreditNoteForm = () => {
         taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
         unit: i.unit,
       })),
-      additionalCharges: values.additionalCharges?.filter((r: any) => r.chargeId).map((r: any) => ({
+      additionalCharges: values.additionalCharges?.filter((r: AdditionalChargeItem) => r.chargeId).map((r: AdditionalChargeItem) => ({
         chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
         taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
         amount: Number(r.amount || 0),
