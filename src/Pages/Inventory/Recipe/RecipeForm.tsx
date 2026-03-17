@@ -73,7 +73,6 @@ const RecipeForm = () => {
                   <Box p={2} display="flex" flexWrap="wrap" gap={2}>
                     <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="name" label="Recipe Name" required grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="number" label="Recipe No" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationDatePicker name="date" label="Recipe Date" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="type" label="Recipe Type" options={RECIPE_TYPE_OPTIONS} required grid={{ xs: 12, md: 4 }} />
                   </Box>
@@ -116,7 +115,7 @@ const RecipeForm = () => {
                 {/* FINAL PRODUCTS */}
                 <CommonCard title="Final Products">
                   <Box p={2} display="flex" flexWrap="wrap" gap={2}>
-                    <DependentSelect name="finalProducts.productId" label="Product" query={Queries.useGetProductDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} required grid={{ xs: 12, md: 4 }} />
+                    <DependentSelect name="finalProducts.productId" label="Product" query={Queries.useGetProductDropdown} params={{ companyFilter: values.companyId, isNewProduct: true }} enabled={Boolean(values.companyId)} disabled={!values.companyId} required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="finalProducts.qtyGenerate" label="Qty Generate" type="number" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="finalProducts.mrp" label="MRP" type="number" grid={{ xs: 12, md: 4 }} />
                   </Box>

@@ -37,11 +37,10 @@ const AdditionalCharges = () => {
   };
 
   const columns: AppGridColDef<AdditionalChargesBase>[] = [
-    { field: "name", headerName: "Additional Charge", width: 170 },
-    { field: "defaultValue", headerName: "Default Value", width: 150 },
     CommonObjectNameColumn<AdditionalChargesBase>("companyId", { headerName: "Company", width: 200 }),
-    { field: "hsnSac", headerName: "HSN Code", width: 150 },
-    { field: "accountGroupId", headerName: "Account Group", width: 140, valueGetter: (_v, row) => (typeof row.accountGroupId === "object" ? row.accountGroupId?.name : row.accountGroupId) },
+    { field: "name", headerName: "Additional Charge", width: 250 },
+    { field: "defaultValue", headerName: "Default Value", width: 250 },
+    { field: "hsnSac", headerName: "HSN Code", width: 250 },
     { field: "taxId", headerName: "Tax", flex: 1, valueGetter: (_v, row) => (typeof row.taxId === "object" ? row.taxId?.name : row.taxId) },
     CommonActionColumn<AdditionalChargesBase>({
       active: (row) =>
@@ -49,7 +48,7 @@ const AdditionalCharges = () => {
           additionalChargeId: row._id,
           isActive: !row.isActive,
         }),
-      onEdit: (row) => handleEdit(row),
+      onEdit: { handleEdit: (row) => handleEdit(row) },
       onDelete: (row) => setRowToDelete({ _id: row._id, title: row.name }),
     }),
   ];

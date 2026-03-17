@@ -39,7 +39,7 @@ const Uom = () => {
           CommonActionColumn<UomBase>({
             ...(permission?.edit && {
               active: (row) => editUom({ uomId: row?._id, isActive: !row.isActive }),
-              onEdit: (row) => handleEdit(row),
+              onEdit: { handleEdit: (row) => handleEdit(row) },
             }),
             ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
           }),

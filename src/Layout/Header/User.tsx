@@ -13,7 +13,6 @@ const User = () => {
   const firstInitial = nameWords?.[0]?.split("")[0];
   const lastInitial = nameWords?.length > 1 ? nameWords[nameWords?.length - 1]?.split("")[0] : "";
   const profileInitials = (firstInitial + lastInitial).toLocaleUpperCase();
-
   return (
     <Box className="relative group">
       <div className="flex items-center bg-brand-500 text-white rounded-full border border-gray-200 dropdown-toggle dark:border-gray-800">
@@ -23,7 +22,6 @@ const User = () => {
         <div className="p-3">
           <div className="flex items-center gap-3">
             <div className="flex items-center bg-brand-500 text-white rounded-full border border-gray-200 dropdown-toggle dark:border-gray-800">
-              <span className="overflow-hidden rounded-full flex h-11 w-11 justify-center items-center">{profileInitials}</span>
             </div>
             <div>
               <span className="block font-semibold text-gray-700 text-theme-lg dark:text-gray-400"> {user?.fullName ?? "User"} </span>

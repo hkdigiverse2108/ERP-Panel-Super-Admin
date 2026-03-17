@@ -4,7 +4,6 @@ import type { Dayjs } from "dayjs";
 import type { MuiTelInputProps } from "mui-tel-input";
 import type { FocusEvent, ReactNode } from "react";
 import * as Yup from "yup";
-import type { AccountGroupBase } from "./AccountGroup";
 import type { BrandBase } from "./Brand";
 import type { CategoryBase } from "./Category";
 import type { LocationBase } from "./Location";
@@ -12,8 +11,8 @@ import type { RolesBase } from "./Roles";
 import type { TaxBase } from "./Tax";
 import type { UomBase } from "./Uom";
 import type { TermsConditionBase } from "./TermsCondition";
-import type { AccountBase } from "./Account";
 import type { AdditionalChargesBase } from "./AdditionalCharges";
+import type { BankTransactionBase } from "./BankTransaction";
 import type { PosCreditNoteBase } from "./PosCreditNote";
 import type { Theme } from "@emotion/react";
 import type { ProductTypeBase } from "./ProductType";
@@ -206,13 +205,12 @@ export interface CommonObjectNameColumnOptions {
 export interface CommonActionColumnProps<T> {
   editRoute?: string;
   permissionRoute?: string;
-  onEdit?: (row: T) => void;
+  onEdit?: { handleEdit: (row: T) => void; isPermission?: (row: T) => boolean };
   onDelete?: (row: T) => void;
   active?: (row: T) => void;
   onRefund?: (row: T) => void;
   onPrint?: (row: T) => void;
-  showRefund?: (row: T) => boolean;
-  showDelete?: (row: T) => boolean;
+  onSalesInvoice?: { handleSalesInvoice: (row: T) => void; isPermission?: (row: T) => boolean };
 }
 export interface CommonTableColumn<T> {
   key: string;
@@ -230,6 +228,7 @@ export interface CommonTableProps<T> {
   rowKey: (row: T, index: number) => string;
   getRowClass?: (row: T, index: number) => string;
   showFooter?: boolean;
+  isLoading?: boolean;
 }
 
 // ************ Table End ***********
@@ -356,6 +355,7 @@ export interface CommonDataType {
   updatedBy?: string | Record<string, unknown> | null;
   createdAt: string;
   updatedAt: string;
+  isActive?: boolean;
 }
 
 export interface AddressBase {
@@ -449,19 +449,22 @@ type UploadType = "image" | "pdf";
 export interface ModalStateSlice {
   isUploadModal: { open: boolean; type: UploadType; multiple?: boolean };
   selectedFiles: string[];
+  selectedTermIds: string[];
   isModalVideoPlay: { open: boolean; link: string };
   isBrandModal: { open: boolean; data: BrandBase | null };
   isUomModal: { open: boolean; data: UomBase | null };
   isTaxModal: { open: boolean; data: TaxBase | null };
   isCategoryModal: { open: boolean; data: CategoryBase | null };
   isLocationModal: { open: boolean; data: LocationBase | null };
-  isAccountGroupModal: { open: boolean; data: AccountGroupBase | null };
   isRoleModal: { open: boolean; data: RolesBase | null };
-  isAccountModal: { open: boolean; data: AccountBase | null };
   isTermsAndConditionModal: { open: boolean; data: TermsConditionBase | null };
   isTermsSelectionModal: { open: boolean; data: any | null };
   isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
+  isBankTransactionModal: { open: boolean; data: BankTransactionBase | null };
   isOrderRefundModal: { open: boolean; data: PosCreditNoteBase | null };
+  isProductTypeModal: { open: boolean; data: ProductTypeBase | null };
+  isTermsAndConditionFormModal: { open: boolean; data: TermsConditionBase | null; companyId?: string };
+  isTermsAndConditionSelectionModal: { open: boolean; alreadySelectedIds: string[]; companyId: string };
 }
 
 // ************ Modal End ***********
@@ -556,6 +559,7 @@ export type DependentSelectProps<T extends ApiOption, P = string | undefined> = 
   ) => {
     data?: { data: T[] };
     isLoading: boolean;
+    isFetching: boolean;
   };
 };
 
@@ -604,6 +608,45 @@ export interface CommonValidationCreatableSelectProps {
   grid?: GridType;
 }
 
+// ************ Common Additional Charge Start ***********
+export interface AdditionalChargeItem {
+  chargeId?: string;
+  amount?: number;
+  taxAmount?: number;
+  taxId?: string;
+  totalAmount?: number;
+}
+// ************ Common Additional Charge End ***********
+// ************ Common Transaction Summary Start ***********
+export interface TaxSummaryItem {
+  name: string;
+  rate: number;
+  amount: number;
+}
+
+export interface TransactionSummary {
+  flatDiscount: number;
+  grossAmount: number;
+  discountAmount: number;
+  taxableAmount: number;
+  taxAmount: number;
+  roundOff: number;
+  netAmount: number;
+  taxSummary?: TaxSummaryItem[];
+}
+// ************ Common Transaction Summary End ***********
+// ************ Common Shipping Details Start ***********
+export interface ShippingDetails {
+  shippingType: "delivery" | "pickup";
+  shippingDate: string;
+  referenceNo: string;
+  transportDate: string;
+  modeOfTransport: string;
+  transporterId: string;
+  vehicleNo: string;
+  weight: number;
+}
+// ************ Common Shipping Details End ***********
 export interface CommonStatsItem {
   label: string;
   value: number | string;

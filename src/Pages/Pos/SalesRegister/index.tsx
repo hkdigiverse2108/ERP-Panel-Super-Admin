@@ -46,7 +46,7 @@ const SalesRegister = () => {
       width: 180,
       renderCell: (params) => {
         const s = params.row.salesManId;
-        return typeof s === "string" || !s ? "-" : s.name || "-";
+        return typeof s === "string" || !s ? "-" : s.fullName || "-";
       },
     },
     { field: "createdAt", headerName: "From Date", width: 150, renderCell: (params) => FormatDate(params.value) },

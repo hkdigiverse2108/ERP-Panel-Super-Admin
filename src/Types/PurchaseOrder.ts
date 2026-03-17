@@ -15,6 +15,7 @@ export interface PurchaseOrderSummary {
   taxAmount?: number;
   roundOff?: number;
   netAmount?: number;
+  taxSummary?: { name: string; rate: number; amount: number }[];
 }
 
 export interface PurchaseOrderBase extends Omit<PurchaseOrderFormValues, "supplierId">, CommonDataType {
@@ -42,6 +43,7 @@ export interface PurchaseOrderItem {
   total?: number | string;
   taxAmount?: number | string;
   taxName?: string;
+  taxId?: string;
 }
 export interface PurchaseOrderFormValues {
   supplierId?: string;
@@ -54,7 +56,9 @@ export interface PurchaseOrderFormValues {
 
   shippingDate?: string | Date | null;
   shippingNote?: string | null;
-
+  placeOfSupply?: string | null;
+  billingAddress?: string | null;
+  gstIn?: string | null;
   // taxType?: TAX_TYPE;
 
   items?: PurchaseOrderItem[];
@@ -63,9 +67,9 @@ export interface PurchaseOrderFormValues {
 
   notes?: string | null;
 
-  totalQty?: string | null;
-  totalTax?: string | null;
-  total?: string | null;
+  // totalQty?: string | null;
+  // totalTax?: string | null;
+  // total?: string | null;
 
   summary?: PurchaseOrderSummary;
 

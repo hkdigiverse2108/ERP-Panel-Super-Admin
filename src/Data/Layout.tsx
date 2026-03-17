@@ -1,6 +1,6 @@
 import { PAGE_TITLE, ROUTES } from "../Constants";
 import type { NavItem } from "../Types";
-import { AdminPanelSettings, Apartment, GridViewRounded, MyLocation, People, ReceiptLong, Settings, AccountTree, ViewModule, Work, PersonRounded, AccountBalance, Redeem, PointOfSale, Announcement, SupportAgent } from "@mui/icons-material";
+import { AdminPanelSettings, Apartment, GridViewRounded, MyLocation, People, ReceiptLong, Settings, AccountTree, ViewModule, Work, PersonRounded, AccountBalance, Redeem, PointOfSale, Announcement, SupportAgent, ShoppingCart } from "@mui/icons-material";
 
 export const NavItems: NavItem[] = [
   { icon: <GridViewRounded />, name: PAGE_TITLE.DASHBOARD, path: ROUTES.DASHBOARD },
@@ -39,6 +39,7 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.RECEIPT.BASE, path: ROUTES.RECEIPT.BASE },
       { name: PAGE_TITLE.EXPENSE.BASE, path: ROUTES.EXPENSE.BASE },
       { name: PAGE_TITLE.SALARY.BASE, path: ROUTES.SALARY.BASE },
+      { name: PAGE_TITLE.BANK_TRANSACTION.BASE, path: ROUTES.BANK_TRANSACTION.BASE },
     ],
   },
   {
@@ -67,11 +68,8 @@ export const NavItems: NavItem[] = [
     name: PAGE_TITLE.ACCOUNTING.BASE,
     icon: <ReceiptLong />,
     children: [
-      { name: PAGE_TITLE.ACCOUNT_GROUP.BASE, path: ROUTES.ACCOUNT_GROUP.BASE },
-      { name: PAGE_TITLE.ACCOUNT.BASE, path: ROUTES.ACCOUNT.BASE },
       { name: PAGE_TITLE.DEBIT_NOTE.BASE, path: ROUTES.DEBIT_NOTE.BASE },
       { name: PAGE_TITLE.CREDIT_NOTE.BASE, path: ROUTES.CREDIT_NOTE.BASE },
-      { name: PAGE_TITLE.JOURNAL_VOUCHER.BASE, path: ROUTES.JOURNAL_VOUCHER.BASE },
     ],
   },
 
@@ -81,6 +79,17 @@ export const NavItems: NavItem[] = [
     children: [
       { name: PAGE_TITLE.PURCHASE_ORDER.BASE, path: ROUTES.PURCHASE_ORDER.BASE },
       { name: PAGE_TITLE.SUPPLIER_BILL.BASE, path: ROUTES.SUPPLIER_BILL.BASE },
+    ],
+  },
+  {
+    name: PAGE_TITLE.SALES.BASE,
+    icon: <ShoppingCart />,
+    children: [
+      { name: PAGE_TITLE.ESTIMATE.BASE, path: ROUTES.ESTIMATE.BASE },
+      { name: PAGE_TITLE.SALES_ORDER.BASE, path: ROUTES.SALES_ORDER.BASE },
+      { name: PAGE_TITLE.INVOICE.BASE, path: ROUTES.INVOICE.BASE },
+      { name: PAGE_TITLE.DELIVERY_CHALLAN.BASE, path: ROUTES.DELIVERY_CHALLAN.BASE },
+      { name: PAGE_TITLE.SALES_CREDIT_NOTE.BASE, path: ROUTES.SALES_CREDIT_NOTE.BASE },
     ],
   },
   {

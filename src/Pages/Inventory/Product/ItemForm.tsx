@@ -57,7 +57,7 @@ const ItemForm = () => {
 
   const { data, companyId } = location.state || {};
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
-  const { data: ProductData, isLoading: ProductDataLoading } = Queries.useGetProduct();
+  const { data: ProductData, isLoading: ProductDataLoading } = Queries.useGetProductDropdown();
   const { data: UOMData, isLoading: UOMDataLoading } = Queries.useGetUomDropdown();
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
 
@@ -112,7 +112,7 @@ const ItemForm = () => {
                   <CommonCard hideDivider>
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       <CommonValidationSelect name="companyId" label="Select company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, sm: 6, xl: 4 }} required />
-                      <CommonValidationSelect name="productId" label="Select Product" options={GenerateOptions(ProductData?.data?.product_data)} isLoading={ProductDataLoading} grid={{ xs: 12, sm: 6, xl: 4 }} required />
+                      <CommonValidationSelect name="productId" label="Select Product" options={GenerateOptions(ProductData?.data)} isLoading={ProductDataLoading} grid={{ xs: 12, sm: 6, xl: 4 }} required />
                       <CommonValidationSelect name="uomId" label="Select UOM" options={GenerateOptions(UOMData?.data)} isLoading={UOMDataLoading} grid={{ xs: 12, sm: 6, xl: 4 }} required />
                       <CommonValidationSelect name="purchaseTaxId" label="Purchase Tax" isLoading={TaxDataLoading} syncFieldName="salesTaxId" options={GenerateOptions(TaxData?.data)} grid={{ xs: 12, sm: 6, xl: 4 }} required />
                       <CommonValidationSwitch name="isPurchaseTaxIncluding" label="Purchase Tax Including" grid={{ xs: 12, sm: 6, xl: 2 }} />

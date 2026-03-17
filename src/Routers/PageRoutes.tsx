@@ -1,69 +1,64 @@
 import { Navigate } from "react-router-dom";
 import { PAGE_TITLE, ROUTES } from "../Constants";
-import AccountGroup from "../Pages/Accounting/AccountGroup";
-import AccountGroupTree from "../Pages/Accounting/AccountGroup/AccountGroupTree";
-import Account from "../Pages/Accounting/Account";
+import AccessDenied from "../Pages/AccessDenied";
+import CreditNote from "../Pages/Accounting/CreditNote";
+import CreditNoteForm from "../Pages/Accounting/CreditNote/CreditNoteForm";
+import DebitNote from "../Pages/Accounting/DebitNote";
+import DebitNoteForm from "../Pages/Accounting/DebitNote/DebitNoteForm";
 import SignInForm from "../Pages/Auth/SignInForm";
+import Bank from "../Pages/Bank/Bank";
+import BankForm from "../Pages/Bank/Bank/BankForm";
 import Branch from "../Pages/Branch";
 import BranchForm from "../Pages/Branch/BranchForm";
 import Company from "../Pages/Company";
 import CompanyForm from "../Pages/Company/CompanyForm";
+import Contact from "../Pages/Contacts";
+import ContactForm from "../Pages/Contacts/ContactForm";
+import Coupon from "../Pages/CRM/Coupon";
+import CouponForm from "../Pages/CRM/Coupon/CouponForm";
+import Loyalty from "../Pages/CRM/Loyalty";
+import LoyaltyForm from "../Pages/CRM/Loyalty/LoyaltyForm";
 import Dashboard from "../Pages/Dashboard";
+import BillOfLiveProduct from "../Pages/Inventory/BillOfLiveProduct";
+import BillOfLiveProductForm from "../Pages/Inventory/BillOfLiveProduct/BillOfLiveProductForm";
 import Brand from "../Pages/Inventory/Brand";
 import Category from "../Pages/Inventory/Category";
+import MaterialConsumption from "../Pages/Inventory/MaterialConsumption";
+import MaterialConsumptionForm from "../Pages/Inventory/MaterialConsumption/MaterialConsumptionForm";
 import Product from "../Pages/Inventory/Product";
 import ItemForm from "../Pages/Inventory/Product/ItemForm";
 import ProductForm from "../Pages/Inventory/Product/ProductForm";
-import Tax from "../Pages/Inventory/Tax";
-import Uom from "../Pages/Inventory/Uom";
-import Location from "../Pages/Location";
-import LocationForm from "../Pages/Location/LocationForm";
-import Users from "../Pages/User";
-import UserForm from "../Pages/User/UserForm";
-import Role from "../Pages/Role";
-import Module from "../Pages/Module";
-import ModuleForm from "../Pages/Module/ModuleForm";
-import Permission from "../Pages/User/Permission";
-import NotFound from "../Pages/NotFound";
-import AccessDenied from "../Pages/AccessDenied";
-import PurchaseOrder from "../Pages/Purchase/PurchaseOrder";
-import PurchaseOrderForm from "../Pages/Purchase/PurchaseOrder/PurchaseOrderForm";
-import DebitNote from "../Pages/Accounting/DebitNote";
-import DebitNoteForm from "../Pages/Accounting/DebitNote/DebitNoteForm";
-import CreditNote from "../Pages/Accounting/CreditNote";
-import CreditNoteForm from "../Pages/Accounting/CreditNote/CreditNoteForm";
-import JournalVoucher from "../Pages/Accounting/JournalVoucher";
-import JournalVoucherForm from "../Pages/Accounting/JournalVoucher/JournalVoucherForm";
-import MaterialConsumption from "../Pages/Inventory/MaterialConsumption";
-import MaterialConsumptionForm from "../Pages/Inventory/MaterialConsumption/MaterialConsumptionForm";
-import SupplierBill from "../Pages/Purchase/SupplierBill";
-import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
-import AdditionalCharges from "../Pages/Settings/AdditionalCharges";
-import AdditionalChargesForm from "../Pages/Settings/AdditionalCharges/AdditionalChargesForm";
 import Recipe from "../Pages/Inventory/Recipe";
 import RecipeForm from "../Pages/Inventory/Recipe/RecipeForm";
 import Stock from "../Pages/Inventory/Stock";
 import StockVerification from "../Pages/Inventory/StockVerification";
 import StockVerificationForm from "../Pages/Inventory/StockVerification/StockVerificationForm";
-import ContactForm from "../Pages/Contacts/ContactForm";
-import Contact from "../Pages/Contacts";
-import BillOfLiveProductForm from "../Pages/Inventory/BillOfLiveProduct/BillOfLiveProductForm";
-import BillOfLiveProduct from "../Pages/Inventory/BillOfLiveProduct";
-import Bank from "../Pages/Bank/Bank";
-import BankForm from "../Pages/Bank/Bank/BankForm";
-import Coupon from "../Pages/CRM/Coupon";
-import CouponForm from "../Pages/CRM/Coupon/CouponForm";
-import Loyalty from "../Pages/CRM/Loyalty";
-import LoyaltyForm from "../Pages/CRM/Loyalty/LoyaltyForm";
+import Tax from "../Pages/Inventory/Tax";
+import Uom from "../Pages/Inventory/Uom";
+import Location from "../Pages/Location";
+import LocationForm from "../Pages/Location/LocationForm";
+import Module from "../Pages/Module";
+import ModuleForm from "../Pages/Module/ModuleForm";
+import NotFound from "../Pages/NotFound";
+import PurchaseOrder from "../Pages/Purchase/PurchaseOrder";
+import PurchaseOrderForm from "../Pages/Purchase/PurchaseOrder/PurchaseOrderForm";
+import SupplierBill from "../Pages/Purchase/SupplierBill";
+import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
+import Role from "../Pages/Role";
+import AdditionalCharges from "../Pages/Settings/AdditionalCharges";
+import AdditionalChargesForm from "../Pages/Settings/AdditionalCharges/AdditionalChargesForm";
+import Users from "../Pages/User";
+import Permission from "../Pages/User/Permission";
+import UserForm from "../Pages/User/UserForm";
 // import User from "../Pages/User";
-import Profile from "../Pages/Settings/Profile";
-import SalesRegister from "../Pages/Pos/SalesRegister";
+import Announcement from "../Pages/Announcment";
 import AnnouncementForm from "../Pages/Announcment/AnnouncmentForm";
 import ChangePassword from "../Pages/Auth/ChangePassword";
-import Announcement from "../Pages/Announcment";
 import VerifyOtp from "../Pages/Auth/VerifyOtp";
 import SupportDeskForm from "../Pages/SupportDesk/CallRequest/CallRequestForm";
 import AdminSetting from "../Pages/Settings/AdminSetting/AdminSetting";
+import BankTranscation from "../Pages/Bank/BankTransaction";
+import BankTranscationForm from "../Pages/Bank/BankTransaction/BankTransactionForm";
 import SupportDesk from "../Pages/SupportDesk/CallRequest";
 import CreditNoteList from "../Pages/Pos/CreditNote";
 import OrderList from "../Pages/Pos/OrderList";
@@ -77,6 +72,18 @@ import Expense from "../Pages/Bank/Expense";
 import ExpenseForm from "../Pages/Bank/Expense/ExpenseForm";
 import SalaryForm from "../Pages/Bank/Expense/SalaryForm";
 import Salary from "../Pages/Bank/Salary";
+import Estimate from "../Pages/Sales/Estimate";
+import EstimateForm from "../Pages/Sales/Estimate/EstimateForm";
+import SalesOrder from "../Pages/Sales/SalesOrder";
+import SalesOrderForm from "../Pages/Sales/SalesOrder/SalesOrderForm";
+import Invoice from "../Pages/Sales/Invoice";
+import InvoiceForm from "../Pages/Sales/Invoice/InvoiceForm";
+import DeliveryChallan from "../Pages/Sales/DeliveryChallan";
+import DeliveryChallanForm from "../Pages/Sales/DeliveryChallan/DeliveryChallanForm";
+import SalesCreditNote from "../Pages/Sales/SalesCreditNote";
+import SalesCreditNoteForm from "../Pages/Sales/SalesCreditNote/SalesCreditNoteForm";
+import SalesRegister from "../Pages/Pos/SalesRegister";
+import Profile from "../Pages/Settings/Profile";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -113,19 +120,11 @@ export const PageRoutes = [
 
   { path: ROUTES.CATEGORY.BASE, name: PAGE_TITLE.INVENTORY.CATEGORY.BASE, element: <Category /> },
 
-  { path: ROUTES.ACCOUNT_GROUP.BASE, name: PAGE_TITLE.ACCOUNT_GROUP.BASE, element: <AccountGroup /> },
-  { path: ROUTES.ACCOUNT_GROUP.TREE, name: PAGE_TITLE.ACCOUNT_GROUP.BASE, element: <AccountGroupTree /> },
-
-  { path: ROUTES.ACCOUNT.BASE, name: PAGE_TITLE.ACCOUNT.BASE, element: <Account /> },
-
   { path: ROUTES.DEBIT_NOTE.BASE, name: PAGE_TITLE.DEBIT_NOTE.BASE, element: <DebitNote /> },
   { path: ROUTES.DEBIT_NOTE.ADD_EDIT, name: PAGE_TITLE.DEBIT_NOTE.BASE, element: <DebitNoteForm /> },
 
   { path: ROUTES.CREDIT_NOTE.BASE, name: PAGE_TITLE.CREDIT_NOTE.BASE, element: <CreditNote /> },
   { path: ROUTES.CREDIT_NOTE.ADD_EDIT, name: PAGE_TITLE.CREDIT_NOTE.BASE, element: <CreditNoteForm /> },
-
-  { path: ROUTES.JOURNAL_VOUCHER.BASE, name: PAGE_TITLE.JOURNAL_VOUCHER.BASE, element: <JournalVoucher /> },
-  { path: ROUTES.JOURNAL_VOUCHER.ADD_EDIT, name: PAGE_TITLE.JOURNAL_VOUCHER.BASE, element: <JournalVoucherForm /> },
 
   { path: ROUTES.ROLE.BASE, name: PAGE_TITLE.ROLE.BASE, element: <Role /> },
 
@@ -167,6 +166,7 @@ export const PageRoutes = [
   { path: ROUTES.PROFILE.BASE, name: PAGE_TITLE.SETTINGS.PROFILE.BASE, element: <Profile /> },
 
   { path: ROUTES.POS_CREDIT_NOTE.BASE, name: PAGE_TITLE.POS.CREDIT_NOTE, element: <PosCreditNote /> },
+  { path: ROUTES.POS_CREDIT_NOTE.BASE, name: PAGE_TITLE.POS.CREDIT_NOTE, element: <CreditNoteList /> },
 
   { path: ROUTES.ANNOUNCEMENT.BASE, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <Announcement /> },
   { path: ROUTES.ANNOUNCEMENT.ADD_EDIT, name: PAGE_TITLE.ANNOUNCEMENT.BASE, element: <AnnouncementForm /> },
@@ -175,6 +175,12 @@ export const PageRoutes = [
   { path: ROUTES.CALL_REQUEST.ADD_EDIT, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDeskForm /> },
 
   { path: ROUTES.AUTH.CHANGE_PASSWORD, name: PAGE_TITLE.CHANGE_PASSWORD.BASE, element: <ChangePassword /> },
+
+  { path: ROUTES.CALL_REQUEST.BASE, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDesk /> },
+  { path: ROUTES.CALL_REQUEST.ADD_EDIT, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDeskForm /> },
+
+  { path: ROUTES.BANK_TRANSACTION.BASE, name: PAGE_TITLE.BANK_TRANSACTION.BASE, element: <BankTranscation /> },
+  { path: ROUTES.BANK_TRANSACTION.ADD_EDIT, name: PAGE_TITLE.BANK_TRANSACTION.BASE, element: <BankTranscationForm /> },
 
   { path: ROUTES.ADMIN_SETTING.BASE, name: PAGE_TITLE.SETTINGS.ADMIN_SETTING.BASE, element: <AdminSetting /> },
 
@@ -195,6 +201,21 @@ export const PageRoutes = [
 
   { path: ROUTES.SALARY.BASE, name: PAGE_TITLE.SALARY.BASE, element: <Salary /> },
   { path: ROUTES.SALARY.ADD_EDIT, name: PAGE_TITLE.SALARY.BASE, element: <SalaryForm /> },
+
+  { path: ROUTES.ESTIMATE.BASE, name: PAGE_TITLE.ESTIMATE.BASE, element: <Estimate /> },
+  { path: ROUTES.ESTIMATE.ADD_EDIT, name: PAGE_TITLE.ESTIMATE.BASE, element: <EstimateForm /> },
+
+  { path: ROUTES.SALES_ORDER.BASE, name: PAGE_TITLE.SALES_ORDER.BASE, element: <SalesOrder /> },
+  { path: ROUTES.SALES_ORDER.ADD_EDIT, name: PAGE_TITLE.SALES_ORDER.BASE, element: <SalesOrderForm /> },
+  
+  { path: ROUTES.INVOICE.BASE, name: PAGE_TITLE.INVOICE.BASE, element: <Invoice /> },
+  { path: ROUTES.INVOICE.ADD_EDIT, name: PAGE_TITLE.INVOICE.BASE, element: <InvoiceForm /> },
+
+  { path: ROUTES.DELIVERY_CHALLAN.BASE, name: PAGE_TITLE.DELIVERY_CHALLAN.BASE, element: <DeliveryChallan /> },
+  { path: ROUTES.DELIVERY_CHALLAN.ADD_EDIT, name: PAGE_TITLE.DELIVERY_CHALLAN.BASE, element: <DeliveryChallanForm /> },
+
+  { path: ROUTES.SALES_CREDIT_NOTE.BASE, name: PAGE_TITLE.SALES_CREDIT_NOTE.BASE, element: <SalesCreditNote /> },
+  { path: ROUTES.SALES_CREDIT_NOTE.ADD_EDIT, name: PAGE_TITLE.SALES_CREDIT_NOTE.BASE, element: <SalesCreditNoteForm /> },
 ];
 
 export const AuthRoutes = [

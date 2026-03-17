@@ -77,7 +77,6 @@ export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ 
       type={inputType}
       disabled={disabled}
       placeholder={placeholder}
-      
       autoComplete={autoComplete}
       required={required}
       size="small"
@@ -155,7 +154,7 @@ export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ 
   );
 };
 
-export const CommonTextField: FC<CommonTextFieldProps> = ({ currencyDisabled, label, value, onChange, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, isCurrency, onCurrencyLog, ...props }) => {
+export const CommonTextField: FC<CommonTextFieldProps> = ({ maxDigits, currencyDisabled, label, value, onChange, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, isCurrency, onCurrencyLog, ...props }) => {
   const [focused, setFocused] = useState(false);
   const isPassword = type === "password";
   const [show, setShow] = useState(false);
@@ -213,7 +212,6 @@ export const CommonTextField: FC<CommonTextFieldProps> = ({ currencyDisabled, la
       {...props}
       className="capitalize"
       value={value}
-      onChange={(e) => onChange?.(e.target.value)}
       disabled={disabled}
       label={isFormLabel ? undefined : label}
       type={inputType}
@@ -223,6 +221,11 @@ export const CommonTextField: FC<CommonTextFieldProps> = ({ currencyDisabled, la
       size="small"
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
+      onChange={(e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.value;
+        if (maxDigits && value.length > maxDigits) return;
+        onChange?.(value);
+      }}
       slotProps={{
         input: {
           startAdornment,
