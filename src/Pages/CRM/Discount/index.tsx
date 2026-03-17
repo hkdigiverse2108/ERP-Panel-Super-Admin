@@ -49,6 +49,7 @@ const Discount = () => {
     { field: "revenue", headerName: "Revenue", width: 120 },
     { field: "discountValue", headerName: "Discount", width: 120, type: "number" },
     { field: "discountType", headerName: "Discount Type", flex: 1, minWidth: 140 },
+    { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
 
     ...(permission?.edit || permission?.delete
       ? [
