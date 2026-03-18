@@ -577,6 +577,7 @@ export const ProductTypeFormSchema = Yup.object({
 });
 
 export const PaymentFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
   partyId: Validation("string", "Party"),
   date: Yup.mixed().required("Payment Date is required"),
   paymentType: Validation("string", "Payment Type"),
@@ -596,6 +597,7 @@ export const PaymentFormSchema = Yup.object({
 });
 
 export const ReciptFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
   partyId: Validation("string", "Party"),
   date: Yup.mixed().required("Receipt Date is required"),
   paymentType: Validation("string", "Payment Type"),
@@ -615,6 +617,7 @@ export const ReciptFormSchema = Yup.object({
 });
 
 export const ExpenseFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
   partyId: Validation("string", "Party"),
   image: Validation("string", "Image", { required: false }),
   fromDate: Validation("string", "Date"),
@@ -628,6 +631,7 @@ export const ExpenseFormSchema = Yup.object({
 });
 
 export const SalaryFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
   partyId: Validation("string", "Party"),
   image: Validation("string", "Image", { required: false }),
   fromDate: Validation("string", "Date"),
