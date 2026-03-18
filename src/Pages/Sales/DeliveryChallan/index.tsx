@@ -43,12 +43,12 @@ const DeliveryChallan = () => {
     const handleAdd = () => navigate(ROUTES.DELIVERY_CHALLAN.ADD_EDIT);
 
     const columns: AppGridColDef<DeliveryChallanBase>[] = [
-        { field: "deliveryChallanNo", headerName: "Delivery Challan No.", width: 200 },
-        { field: "date", headerName: "Delivery Challan Date", width: 200, renderCell: (params) => FormatDate(params.row.date) },
-        { field: "dueDate", headerName: "Due Date", width: 200, renderCell: (params) => FormatDate(params.row.dueDate) },
-        { field: "customerId", headerName: "Customer Name", width: 200, valueGetter: (_, row: DeliveryChallanBase) => (row?.customerId ? (typeof row.customerId === 'object' ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || row.customerId.companyName || "" : "") : "") },
-        { field: "netAmount", headerName: "Net Amount", width: 200, type: "number" },
-        { field: "status", headerName: "Status", headerAlign: "center", width: 200, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
+        { field: "deliveryChallanNo", headerName: "Delivery Challan No.", flex: 1, minWidth: 200 },
+        { field: "date", headerName: "Delivery Challan Date", flex: 1, minWidth: 200, renderCell: (params) => FormatDate(params.row.date) },
+        { field: "dueDate", headerName: "Due Date", flex: 1, minWidth: 200, renderCell: (params) => FormatDate(params.row.dueDate) },
+        { field: "customerId", headerName: "Customer Name", flex: 1, minWidth: 200, valueGetter: (_, row: DeliveryChallanBase) => (row?.customerId ? (typeof row.customerId === 'object' ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || row.customerId.companyName || "" : "") : "") },
+        { field: "netAmount", headerName: "Net Amount", flex: 1, minWidth: 200, type: "number" },
+        { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 200, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
         { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 110, type: "number" },
 
         CommonActionColumn({

@@ -46,22 +46,22 @@ const PurchaseDebitNoteIndex = () => {
   };
 
   const columns: AppGridColDef<PurchaseDebitNoteBase>[] = [
-    { field: "debitNoteNo", headerName: "Debit Note No", width: 150 },
-    { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
+    { field: "debitNoteNo", headerName: "Debit Note No",flex: 1, minWidth: 150 },
+    { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
     {
       field: "supplierId",
       headerName: "Supplier",
-      width: 200,
+      flex: 1, minWidth: 200,
       valueGetter: (_, row) => row.supplierId?.firstName + " " + row.supplierId?.lastName || "-",
     },
     {
       field: "debitNoteDate",
       headerName: "Debit Note Date",
-      width: 150,
+      flex: 1, minWidth: 150,
       renderCell: (params) => FormatDate(params.row.debitNoteDate),
     },
-    { field: "netAmount", headerName: "Debit Note Amount", width: 150, type: "number" },
-    { field: "taxAmount", headerName: "Tax Amount", width: 120, type: "number" },
+    { field: "netAmount", headerName: "Debit Note Amount", flex: 1, minWidth: 150, type: "number" },
+    { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 120, type: "number" },
     { field: "notes", headerName: "Notes", flex: 1, minWidth: 200 },
     CommonActionColumn({
       active: (row) => editPurchaseDebitNote({ purchaseDebitNoteId: row?._id, isActive: !row.isActive }),

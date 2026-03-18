@@ -37,12 +37,12 @@ const Estimate = () => {
   const handleAdd = () => navigate(ROUTES.ESTIMATE.ADD_EDIT);
 
   const columns: AppGridColDef<EstimateBase>[] = [
-    { field: "estimateNo", headerName: "Estimate No", width: 120 },
-    { field: "customerId", headerName: "Customer Name", width: 150, valueGetter: (_, row: EstimateBase) => (row?.customerId ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || row.customerId.companyName || "" : "") },
-    { field: "date", headerName: "Estimate Date", width: 150, renderCell: (params) => FormatDate(params.row.date) },
-    { field: "dueDate", headerName: "Due Date", width: 150, renderCell: (params) => FormatDate(params.row.dueDate) },
-    { field: "netAmount", headerName: "Amount", width: 110, type: "number" },
-    { field: "status", headerName: "Status", headerAlign: "center", width: 150, renderCell: (params) => <span className={`status-${params.row.status} overflow-hidden`}>{params.row.status}</span> },
+    { field: "estimateNo", headerName: "Estimate No", flex: 1, minWidth: 120 },
+    { field: "customerId", headerName: "Customer Name", flex: 1, minWidth: 150, valueGetter: (_, row: EstimateBase) => (row?.customerId ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || row.customerId.companyName || "" : "") },
+    { field: "date", headerName: "Estimate Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDate(params.row.date) },
+    { field: "dueDate", headerName: "Due Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDate(params.row.dueDate) },
+    { field: "netAmount", headerName: "Amount", flex: 1, minWidth: 110, type: "number" },
+    { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 150, renderCell: (params) => <span className={`status-${params.row.status} overflow-hidden`}>{params.row.status}</span> },
     { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 110 },
     CommonActionColumn({
       active: (row) => editEstimate({ estimateId: row?._id, isActive: !row.isActive }),

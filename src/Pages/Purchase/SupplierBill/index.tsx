@@ -54,25 +54,25 @@ const SupplierBill = () => {
   const filter = [CreateFilter("Payment Status", "statusFilter", advancedFilter, updateAdvancedFilter, PAYMENT_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 
   const columns: AppGridColDef<SupplierBillBase>[] = [
-      { field: "paymentStatus", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.paymentStatus}`}>{params.row.paymentStatus}</span> },
-    CommonObjectNameColumn<SupplierBillBase>("companyId", { headerName: "Company", width: 150 }),
-    { field: "supplierBillNo", headerName: "Bill No", width: 110 },
+      { field: "paymentStatus", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 110, renderCell: (params) => <span className={`status-${params.row.paymentStatus}`}>{params.row.paymentStatus}</span> },
+    CommonObjectNameColumn<SupplierBillBase>("companyId", { headerName: "Company", flex: 1, minWidth: 150 }),
+    { field: "supplierBillNo", headerName: "Bill No", flex: 1, minWidth: 110 },
 
-    { field: "supplierId", headerName: "Supplier", width: 150, valueGetter: (_, row: SupplierBillBase) => (row?.supplierId ? row.supplierId.name || `${row.supplierId.firstName || ""} ${row.supplierId.lastName || ""}`.trim() || row.supplierId.companyName || "" : "") },
+    { field: "supplierId", headerName: "Supplier", flex: 1, minWidth: 150, valueGetter: (_, row: SupplierBillBase) => (row?.supplierId ? row.supplierId.name || `${row.supplierId.firstName || ""} ${row.supplierId.lastName || ""}`.trim() || row.supplierId.companyName || "" : "") },
 
-    { field: "supplierBillDate", headerName: "Bill Date", width: 130, valueGetter: (v) => FormatDate(v) },
+    { field: "supplierBillDate", headerName: "Bill Date", flex: 1, minWidth: 130, valueGetter: (v) => FormatDate(v) },
 
-    { field: "billAmount", headerName: "Bill Amount", width: 130, valueGetter: (_, row: SupplierBillBase) => row?.summary?.netAmount ?? Number(row?.invoiceAmount ?? 0) },
+    { field: "billAmount", headerName: "Bill Amount", flex: 1, minWidth: 130, valueGetter: (_, row: SupplierBillBase) => row?.summary?.netAmount ?? Number(row?.invoiceAmount ?? 0) },
 
-    { field: "paidAmount", headerName: "Paid Amount", width: 130, valueGetter: (v) => Number(v ?? 0) },
+    { field: "paidAmount", headerName: "Paid Amount", flex: 1, minWidth: 130, valueGetter: (v) => Number(v ?? 0) },
 
-    { field: "balanceAmount", headerName: "Due Amount", width: 130, valueGetter: (v) => Number(v ?? 0) },
+    { field: "balanceAmount", headerName: "Due Amount", flex: 1, minWidth: 130, valueGetter: (v) => Number(v ?? 0) },
 
-    { field: "taxAmount", headerName: "Tax Amount", width: 140, type: "number" },
+    { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 140, type: "number" },
 
-    { field: "dueDate", headerName: "Due Date", width: 140, valueGetter: (v) => FormatDate(v) },
+    { field: "dueDate", headerName: "Due Date", flex: 1, minWidth: 140, valueGetter: (v) => FormatDate(v) },
 
-    { field: "notes", headerName: "Notes", width: 280 },
+    { field: "notes", headerName: "Notes", flex: 1, minWidth: 280 },
 
     ...(permission?.edit || permission?.delete
       ? [

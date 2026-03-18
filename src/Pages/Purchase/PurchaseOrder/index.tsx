@@ -36,11 +36,11 @@ const PurchaseOrder = () => {
   const handleAdd = () => navigate(ROUTES.PURCHASE_ORDER.ADD_EDIT);
 
   const columns: AppGridColDef<PurchaseOrderBase>[] = [
-    { field: "orderNo", headerName: "Order No", width: 150 },
-    { field: "supplierId", headerName: "Supplier", width: 150, valueGetter: (_, row: PurchaseOrderBase) => (row?.supplierId ? `${row.supplierId.firstName || ""} ${row.supplierId.lastName || ""}`.trim() || row.supplierId.companyName || "" : "") },
-    { field: "date", headerName: "Order Date", width: 150, renderCell: (params) => FormatDate(params.row.date || params.row.orderDate) },
-    { field: "netAmount", headerName: "Amount", width: 110, type: "number" },
-    { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
+    { field: "orderNo", headerName: "Order No", flex: 1, minWidth: 150 },
+    { field: "supplierId", headerName: "Supplier", flex: 1, minWidth: 150, valueGetter: (_, row: PurchaseOrderBase) => (row?.supplierId ? `${row.supplierId.firstName || ""} ${row.supplierId.lastName || ""}`.trim() || row.supplierId.companyName || "" : "") },
+    { field: "date", headerName: "Order Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDate(params.row.date || params.row.orderDate) },
+    { field: "netAmount", headerName: "Amount", flex: 1, minWidth: 110, type: "number" },
+    { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
     { field: "notes", headerName: "Notes", flex: 1, minWidth: 150 },
     CommonActionColumn({
       active: (row) => editPurchaseOrder({ purchaseOrderId: row?._id, isActive: !row.isActive }),
