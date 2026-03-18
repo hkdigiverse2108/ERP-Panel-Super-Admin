@@ -105,7 +105,7 @@ const SupplierBill = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.SUPPLIER_BILL.BASE} breadcrumbs={BREADCRUMBS.SUPPLIER_BILL.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <CommonStatsCard stats={stats} />
+        <CommonStatsCard stats={stats} grid={{ xs: 12, sm: 6, md: 4 }} />
         <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...gridOptions} />

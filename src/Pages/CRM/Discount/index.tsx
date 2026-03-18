@@ -6,7 +6,7 @@ import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, Comm
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, DiscountBase } from "../../../Types";
-import { FormatDate, FormatValidity } from "../../../Utils";
+import { FormatDate, FormatPayment, FormatValidity } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 
 const Discount = () => {
@@ -24,9 +24,7 @@ const Discount = () => {
     });
   };
 
-  const rows = useMemo(() => {
-    return data?.data?.discount_data.map((r: DiscountBase) => ({ ...r, id: r?._id })) || [];
-  }, [data]);
+  const rows = useMemo(() => data?.data?.discount_data.map((r: DiscountBase) => ({ ...r, id: r?._id })) || [], [data]);
 
   const stats = useMemo(() => {
     const total = data?.data?.totalData || rows.length;
@@ -47,10 +45,9 @@ const Discount = () => {
     { field: "validity", headerName: "Validity", width: 250, valueGetter: (v, row) => FormatValidity(v, row) },
     { field: "orders", headerName: "Orders", width: 120 },
     { field: "revenue", headerName: "Revenue", width: 120 },
-    { field: "discountValue", headerName: "Discount", width: 120, type: "number" },
-    { field: "discountType", headerName: "Discount Type", flex: 1, minWidth: 140 },
-    { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
-
+    { field: "discountValue", headerName: "Discount", width: 120 },
+    { field: "discountType", headerName: "Discount Type", width: 150, valueGetter: (v) => FormatPayment(v) },
+    { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 100, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<DiscountBase>({
@@ -75,13 +72,14 @@ const Discount = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    isExport: false,
   };
 
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.CRM.DISCOUNT.BASE} breadcrumbs={BREADCRUMBS.DISCOUNT.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 1.5 }}>
-        <CommonStatsCard stats={stats} grid={2} />
+        <CommonStatsCard stats={stats} grid={{ xs: 6, sm: 4, md: 2 }} />
         <CommonCard hideDivider>
           <CommonDataGrid {...gridOptions} />
         </CommonCard>

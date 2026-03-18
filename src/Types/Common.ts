@@ -578,6 +578,7 @@ export type DependentSelectProps<T extends ApiOption, P = string | undefined> = 
   enabled?: boolean;
   value?: string[];
   onChange?: (values: string[]) => void;
+  multiple?: boolean;
   query: (
     params?: P,
     enabled?: boolean,

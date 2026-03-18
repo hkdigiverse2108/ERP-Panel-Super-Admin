@@ -3,7 +3,7 @@ import { Form, Formik, type FormikHelpers } from "formik";
 import { useDispatch } from "react-redux";
 import { Mutations, Queries } from "../../../Api";
 import { CommonButton, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField, CommonValidationDatePicker } from "../../../Attribute";
-import { CommonModal } from "../../../Components/Common";
+import { CommonModal, DependentSelect } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { useAppSelector } from "../../../Store/hooks";
 import { setBankTransactionModal } from "../../../Store/Slices/ModalSlice";
@@ -15,7 +15,6 @@ const BankTransactionForm = () => {
   const { mutate: addBankTransaction, isPending: isAddLoading } = Mutations.useAddBankTransaction();
   const { mutate: editBankTransaction, isPending: isEditLoading } = Mutations.useEditBankTransaction();
 
-  const { data: BankData, isLoading: BankDataLoading } = Queries.useGetBankDropdown();
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
 
   const { isBankTransactionModal } = useAppSelector((state) => state.modal);
@@ -58,12 +57,12 @@ const BankTransactionForm = () => {
   return (
     <CommonModal title={PAGE_TITLE.BANK_TRANSACTION[pageMode]} isOpen={openModal} onClose={closeModal} className="max-w-125">
       <Formik<BankTransactionFormValues> enableReinitialize={isEditing} initialValues={initialValues} validationSchema={BankTransactionFormSchema} onSubmit={handleSubmit}>
-        {({ dirty }) => (
+        {({ dirty, values }) => (
           <Form noValidate>
             <Grid container spacing={2} sx={{ p: 1 }}>
               <CommonValidationSelect name="companyId" label="Company" required isLoading={CompanyDataLoading} options={GenerateOptions(CompanyData?.data)} grid={{ xs: 12 }} />
-              <CommonValidationSelect name="toAccount" label="To Account" required isLoading={BankDataLoading} options={GenerateOptions(BankData?.data)} grid={{ xs: 12 }} />
-              <CommonValidationSelect name="fromAccount" label="From Account" required isLoading={BankDataLoading} options={GenerateOptions(BankData?.data)} grid={{ xs: 12 }} />
+              <DependentSelect params={{ companyFilter: values?.companyId }} name="toAccount" label="To Account" required query={Queries.useGetBankDropdown} grid={{ xs: 12 }} disabled={!values?.companyId} />
+              <DependentSelect params={{ companyFilter: values?.companyId }} name="fromAccount" label="From Account" required query={Queries.useGetBankDropdown} grid={{ xs: 12 }} disabled={!values?.companyId} />
               <CommonValidationTextField name="amount" label="Amount" type="number" required grid={{ xs: 12 }} />
               <CommonValidationDatePicker name="transactionDate" label="Transaction Date" required grid={{ xs: 12 }} />
               <CommonValidationTextField name="description" label="Description" grid={{ xs: 12 }} />

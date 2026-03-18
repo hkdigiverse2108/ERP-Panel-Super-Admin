@@ -44,7 +44,6 @@ export interface DiscountFormValues {
   buyXGetY?: BuyXGetY;
   productAtFixAmount?: ProductAtFixAmount;
   appliesTo?: string;
-  applyToEntireSelection?: boolean;
   categoryIds?: string[];
   subcategoryIds?: string[];
   brandIds?: string[];

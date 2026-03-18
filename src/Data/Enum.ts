@@ -321,12 +321,29 @@ export const DISCOUNT_APPLICABLE = [
   { label: "Entire Bill", value: "entire_bill" },
 ];
 
+export const DISCOUNT_APPLICABLE_ENUM = {
+  PRODUCT_WISE: "product_wise",
+  ENTIRE_BILL: "entire_bill",
+};
+
+export const BOOLEAN_OPTIONS = [
+  { label: "Yes", value: "true" },
+  { label: "No", value: "false" },
+];
+
 export const DISCOUNT_MODE = [
   { label: "Normal", value: "normal" },
   { label: "Range Wise", value: "range_wise" },
   { label: "Buy X Get Y", value: "buy_x_get_y" },
   { label: "Product at Fix Amount", value: "product_at_fix_amount" },
 ];
+
+export const DISCOUNT_MODE_ENUM = {
+  NORMAL: "normal",
+  RANGE_WISE: "range_wise",
+  BUY_X_GET_Y: "buy_x_get_y",
+  PRODUCT_AT_FIX_AMOUNT: "product_at_fix_amount",
+};
 
 export const DISCOUNT_VALUE_TYPE = [
   { label: "Percentage", value: "percentage" },
@@ -339,16 +356,24 @@ export const DISCOUNT_APPLY_TO = [
   { label: "Specific Products", value: "specific_products" },
 ];
 
-export const  MINIMUM_REQUIRMENT = [
+export const DISCOUNT_APPLY_TO_ENUM = {
+  SPECIFIC_CATEGORY: "specific_category",
+  SPECIFIC_BRAND: "specific_brand",
+  SPECIFIC_PRODUCTS: "specific_products",
+};
+
+export const MINIMUM_REQUIREMENT = [
   { label: "None", value: "none" },
   { label: "Min Purchase Amount", value: "min_purchase_amount" },
   { label: "Min Quantity", value: "min_quantity" },
 ];
 
-export const CONDITION_OPTIONS = [
-  { label: "Purchase Amount", value: "min_purchase_amount" },
-  { label: "Product Quantity", value: "min_quantity" }
-];
+export const MINIMUM_REQUIREMENT_ENUM = {
+  NONE: "none",
+  MIN_PURCHASE_AMOUNT: "min_purchase_amount",
+  MIN_QUANTITY: "min_quantity",
+};
+
 export const PAYMENT_MODE_OPTIONS = [
   { label: "Online", value: "online" },
   { label: "Cheque", value: "cheque" },
@@ -416,4 +441,3 @@ export const PURCHASE_DEBIT_NOTE_STATUS_OPTIONS = [
   { label: "Closed", value: "closed" },
   { label: "Cancelled", value: "cancelled" },
 ];
-
