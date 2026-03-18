@@ -40,7 +40,6 @@ const PaymentForm = () => {
     kasar: data?.kasar || 0,
     isNonGST: data?.isNonGST || false,
     isActive: data?.isActive ?? true,
-    posCashRegisterId: data?.posCashRegisterId?._id || "",
     remark: data?.remark || "",
   };
 
