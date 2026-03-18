@@ -1,6 +1,6 @@
 import { Box, Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { CommonSelect, CommonTextField, CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
@@ -12,11 +12,11 @@ import { GenerateOptions, GetChangedFields, PaymentFormSchema, RemoveEmptyFields
 import { usePagePermission } from "../../../Utils/Hooks";
 
 const PaymentForm = () => {
-  const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
   const permission = usePagePermission(PAGE_TITLE.PAYMENT.BASE);
+  const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
 
   const { mutate: addPayment, isPending: isAddLoading } = Mutations.useAddPosPayment();
   const { mutate: editPayment, isPending: isEditLoading } = Mutations.useEditPosPayment();
@@ -42,6 +42,8 @@ const PaymentForm = () => {
     isActive: data?.isActive ?? true,
     remark: data?.remark || "",
   };
+  const [partyId, setPartyId] = useState(initialValues.partyId);
+  const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: partyId, duePaymentFilter: true }, Boolean(partyId));
 
   const handleSubmit = async (values: PosPaymentFormValues, { resetForm }: FormikHelpers<PosPaymentFormValues>) => {
     const { _submitAction, voucherDetails, ...rest } = values;
@@ -77,9 +79,6 @@ const PaymentForm = () => {
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={PaymentFormSchema} enableReinitialize>
           {({ resetForm, setFieldValue, dirty, values }) => {
-            const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: values.partyId, duePaymentFilter: true }, Boolean(values.partyId));
-            const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown({ companyId: values?.companyId }, Boolean(values?.companyId));
-
             const handleTableChange = (key: string, value: string | number | undefined) => {
               let newValues = { ...values, [key]: value };
               if (key === "posOrderId") {
@@ -128,13 +127,13 @@ const PaymentForm = () => {
               { key: "paymentMode", header: "Payment Mode", bodyClass: "min-w-40", render: (r) => <CommonSelect options={PAYMENT_MODE} placeholder="Payment Mode" value={r.paymentMode ? [r.paymentMode] : []} onChange={(v) => handleTableChange("paymentMode", v[0] || "")} /> },
               ...(values.paymentMode?.toLowerCase() !== "cash"
                 ? [
-                  {
-                    key: "bankId",
-                    header: "Bank",
-                    bodyClass: "min-w-40",
-                    render: (r) => <CommonSelect options={GenerateOptions(bankDropdown?.data)} isLoading={bankDropdownLoading} placeholder="Select Bank" value={r.bankId ? [r.bankId] : []} onChange={(v) => handleTableChange("bankId", v[0] || "")} />,
-                  } as CommonTableColumn<PosPaymentFormValues>,
-                ]
+                    {
+                      key: "bankId",
+                      header: "Bank",
+                      bodyClass: "min-w-40",
+                      render: () => <DependentSelect params={{ companyFilter: values?.companyId }} name="bankId" label="Bank" query={Queries.useGetBankDropdown} grid={{ xs: 12 }} disabled={!values?.companyId} />,
+                    } as CommonTableColumn<PosPaymentFormValues>,
+                  ]
                 : []),
               { key: "totalAmount", header: "Total Payment", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.totalAmount || 0} disabled /> },
               { key: "paidAmount", header: "Paid Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.paidAmount || 0} disabled /> },
@@ -149,7 +148,21 @@ const PaymentForm = () => {
                   <CommonCard title="Payment Details" grid={{ xs: 12 }}>
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
-                      <DependentSelect params={{ companyFilter: values?.companyId }} name="partyId" label="Party" required query={Queries.useGetContactDropdown} grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} />
+                      <DependentSelect
+                        params={{ companyFilter: values?.companyId }}
+                        value={values.partyId ? [values.partyId] : []}
+                        name="partyId"
+                        label="Party"
+                        required
+                        query={Queries.useGetContactDropdown}
+                        grid={{ xs: 12, md: 4 }}
+                        onChange={(val) => {
+                          const selected = val?.[0] || "";
+                          setFieldValue("partyId", selected);
+                          setPartyId(selected);
+                        }}
+                        disabled={!values?.companyId}
+                      />
                       <CommonValidationDatePicker name="date" label="Payment Date" required grid={{ xs: 12, md: 4 }} />
                       <Grid size={{ xs: 12 }}>
                         <CommonStatsCard
@@ -172,7 +185,7 @@ const PaymentForm = () => {
                           </CommonCard>
                         </Grid>
                       )}
-                    {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
+                      {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                     </Grid>
                   </CommonCard>
 
