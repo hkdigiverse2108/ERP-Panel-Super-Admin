@@ -32,7 +32,7 @@ const SignInForm = () => {
   return (
     <div className="flex flex-col lg:flex-row w-full h-screen relative">
       {/* LEFT PANEL (form) */}
-      <div className="flex flex-col flex-1 w-full h-full px-5 pt-10 lg:px-10 ">
+      <div className="flex flex-col flex-1 w-full h-full px-5 lg:px-10 ">
         <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto mt-10 lg:mt-0 gap-10">
           <div>
             <div className="mb-4 sm:mb-5">

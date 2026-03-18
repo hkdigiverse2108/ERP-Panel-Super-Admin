@@ -1,7 +1,15 @@
-import type { CommonDataType, MessageStatus, PageStatus, SelectOptionType } from "./Common";
+import type {
+  AdditionalChargeItem,
+  CommonDataType,
+  MessageStatus,
+  PageStatus,
+  SelectOptionType,
+} from "./Common";
 import type { ProductBase } from "./Product";
 import type { ContactBase } from "./Contacts";
 import type { TermsConditionBase } from "./TermsCondition";
+import type { UomBase } from "./Uom";
+import type { TaxBase } from "./Tax";
 
 /* ===================== SUPPLIER ===================== */
 
@@ -11,18 +19,22 @@ export type BillSupplier = ContactBase & { name?: string };
 
 export interface SupplierBillProductItem {
   productId?: ProductBase | string;
+  _prevProductId?: string;
   qty?: number;
   freeQty?: number;
   mrp?: number;
+  uomId?: string | UomBase;
+  unit?: string;
   sellingPrice?: number;
   unitCost?: number;
+  discount1?: number;
+  taxable?: number;
+  taxableAmount?: number;
+  taxId?: string | TaxBase;
+  tax?: number | string;
+  taxAmount?: number;
   landingCost?: number;
   margin?: number;
-  discount1?: number;
-  discount2?: number;
-  taxable?: number;
-  taxId?: string;
-  tax?: string;
   total?: number;
 }
 export interface SupplierBillProductDetails {
@@ -35,12 +47,20 @@ export interface SupplierBillProductDetails {
 /* ===================== RETURN PRODUCT ===================== */
 
 export interface SupplierBillReturnProductItem {
-  productId?: string;
+  productId?: ProductBase | string;
+  _prevProductId?: string;
   qty?: number;
+  uomId?: string | UomBase;
+  unit?: string;
+  unitCost?: number;
   discount1?: number;
-  discount2?: number;
+  taxable?: number;
+  taxableAmount?: number;
+  taxId?: string | TaxBase;
+  tax?: number | string;
   taxAmount?: number;
   landingCost?: number;
+  margin?: number;
   total?: number;
 }
 
@@ -59,14 +79,6 @@ export interface SupplierBillReturnProductDetails {
 }
 
 /* ===================== ADDITIONAL CHARGES ===================== */
-
-export interface AdditionalChargeItem {
-  chargeId?: string;
-  amount?: number;
-  taxAmount?: number;
-  taxId?: string;
-  totalAmount?: number;
-}
 
 export interface AdditionalChargeDetails {
   item?: AdditionalChargeItem[];
@@ -97,6 +109,9 @@ export interface SupplierBillFormValues {
   supplierBillNo?: string;
   referenceBillNo?: string;
   supplierBillDate: string | Date;
+  placeOfSupply?: string;
+  gstIn?: string;
+  billingAddress?: string;
   paymentTerm?: string;
   dueDate?: string | Date;
   reverseCharge?: boolean;
@@ -149,7 +164,7 @@ export interface AdditionalChargeRow {
   chargeId: string;
   amount: string;
   taxId: string;
-  taxAmount: string;
+  taxAmount?: string;
   totalAmount: string;
 }
 
@@ -159,7 +174,11 @@ export interface AdditionalChargesSectionProps {
   rows: AdditionalChargeRow[];
   onAdd: () => void;
   onRemove: (index: number) => void;
-  onChange: (index: number, field: keyof AdditionalChargeRow, value: string | number | string[]) => void;
+  onChange: (
+    index: number,
+    field: keyof AdditionalChargeRow,
+    value: string | number | string[],
+  ) => void;
   taxOptions: SelectOptionType[];
   isTaxLoading: boolean;
   flatDiscount: string | number;
@@ -272,7 +291,11 @@ export interface SupplierBillTabsProps {
   rows: ProductRow[];
   handleAdd: () => void;
   handleCut: (index: number) => void;
-  handleRowChange: (index: number, field: keyof ProductRow, value: string | number | string[]) => void;
+  handleRowChange: (
+    index: number,
+    field: keyof ProductRow,
+    value: string | number | string[],
+  ) => void;
   productOptions: SelectOptionType[];
   isProductLoading: boolean;
   selectedTermIds: string[];
@@ -280,7 +303,11 @@ export interface SupplierBillTabsProps {
   returnRows: ProductRow[];
   handleAddReturn: () => void;
   handleCutReturn: (index: number) => void;
-  handleReturnRowChange: (index: number, field: keyof ProductRow, value: string | number | string[]) => void;
+  handleReturnRowChange: (
+    index: number,
+    field: keyof ProductRow,
+    value: string | number | string[],
+  ) => void;
   returnRoundOffAmount: string | number;
   onReturnRoundOffAmountChange: (value: string | number) => void;
   isProductDisabled?: boolean;

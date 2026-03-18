@@ -1,15 +1,15 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Outlet } from "react-router-dom";
-import { Queries } from "../Api";
-import { CommonUpload } from "../Components/Common";
-import CommonVideoModal from "../Components/Common/Modal/CommonVideoModal";
+import { Outlet,     } from "react-router-dom";
 import { useAppSelector } from "../Store/hooks";
-import { setUser } from "../Store/Slices/AuthSlice";
-import { setIsMobile, setPermission } from "../Store/Slices/LayoutSlice";
+import { setIsMobile, setPermission,   } from "../Store/Slices/LayoutSlice";
 import Header from "./Header";
-import Loader from "./Loader";
 import Sidebar from "./Sidebar";
+import { CommonTermsAndConditionFormModal, CommonTermsAndConditionSelectModal, CommonUpload } from "../Components/Common";
+import { Queries } from "../Api";
+import CommonVideoModal from "../Components/Common/Modal/CommonVideoModal";
+import { setUser } from "../Store/Slices/AuthSlice";
+import Loader from "./Loader";
 
 const Layout = () => {
   const { isExpanded, isMobileOpen, isApplicationMenuOpen } = useAppSelector((state) => state.layout);
@@ -69,6 +69,8 @@ const Layout = () => {
       </div>
       <CommonUpload />
       <CommonVideoModal />
+      <CommonTermsAndConditionFormModal />
+      <CommonTermsAndConditionSelectModal />
     </>
   );
 };

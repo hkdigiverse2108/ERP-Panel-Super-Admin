@@ -14,12 +14,14 @@ export interface Address {
   city?: string;
   pinCode?: string;
   contactCompanyName?: string;
+  _id?: string;
 }
 
 export interface ContactAddressApi extends Omit<Address, "country" | "state" | "city"> {
   country?: LocationBase;
   state?: LocationBase;
   city?: LocationBase;
+  _id?: string;
 }
 
 export interface ContactBankDetails {

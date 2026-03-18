@@ -9,7 +9,7 @@ export const CommonDataGridSummaryFooter = ({ summary, label = "Total" }: { summ
       <Box sx={{ display: "flex", minWidth: "max-content" }}>
         {visibleColumns.map((col, index) => (
           <Box key={col.field} sx={{ width: col.computedWidth, px: 1, py: 1, fontWeight: 600, whiteSpace: "nowrap", textAlign: col.type === "number" ? "right" : "left" }}>
-            {index === 0 ? label : (summary[col.field] ?? "")}
+            {index === 0 ? label : (typeof summary[col.field] === "number" ? Number(summary[col.field]).toFixed(2) : (summary[col.field] ?? ""))}
           </Box>
         ))}
       </Box>

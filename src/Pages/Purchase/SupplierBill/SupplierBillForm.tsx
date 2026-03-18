@@ -1,433 +1,225 @@
-import { Box } from "@mui/material";
-import { Form, Formik, useFormikContext, type FormikHelpers, type FormikProps } from "formik";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Box, Grid } from "@mui/material";
+import type { FormikHelpers } from "formik";
+import { Form, Formik } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Mutations, Queries } from "../../../Api";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
-import AdditionalChargesSection from "../../../Components/Purchase/SupplierBill/AdditionalChargeSection";
-import SupplierBillDetails from "../../../Components/Purchase/SupplierBill/SupplierBillDetails/SupplierBillDetails";
-import SupplierBillTabs from "../../../Components/Purchase/SupplierBill/SupplierBillDetails/SupplierBillTab";
-import { PAGE_TITLE } from "../../../Constants";
+import { useEffect } from "react";
+import { Mutations } from "../../../Api";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonSummaryWatcher, CommonAdditionalChargeSection } from "../../../Components/Common";
+import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { AdditionalChargeRow, ProductRow, BillSupplier as Supplier, SupplierBillFormValues, TermsConditionBase } from "../../../Types";
-import { DateConfig, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
+import type { AdditionalChargeItem, SupplierBillFormValues, SupplierBillProductItem, SupplierBillReturnProductItem } from "../../../Types";
+import { DateConfig, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
-
-const TaxTypeWatcher = ({ onChange }: { onChange: (taxType: string) => void }) => {
-  const { values } = useFormikContext<SupplierBillFormValues>();
-  const prev = useRef("");
-
-  useEffect(() => {
-    const current = values.taxType || "default";
-
-    if (prev.current === current) return;
-
-    prev.current = current;
-    onChange(current);
-  }, [values.taxType]);
-
-  return null;
-};
-const CompanyWatcher = ({ selectedCompanyId, onChange }: { selectedCompanyId: string; onChange: (companyId: string) => void }) => {
-  const { values, setFieldValue } = useFormikContext<SupplierBillFormValues>();
-  useEffect(() => {
-    const newCompanyId = values.companyId || "";
-    if (newCompanyId !== selectedCompanyId) {
-      onChange(newCompanyId);
-      if (selectedCompanyId) {
-        setFieldValue("supplierId", "");
-        setFieldValue("termsAndConditionIds", []);
-      }
-    }
-  }, [values.companyId, selectedCompanyId, onChange, setFieldValue]);
-  return null;
-};
-const SupplierWatcher = ({ suppliers, onChange }: { suppliers: Supplier[]; onChange: (supplier: Supplier | null) => void }) => {
-  const { values } = useFormikContext<SupplierBillFormValues>();
-  useEffect(() => {
-    const supplierId = values.supplierId;
-    if (!supplierId) {
-      onChange(null);
-      return;
-    }
-    const supplier = suppliers.find((s) => String(s._id) === String(supplierId));
-    onChange(supplier ?? null);
-  }, [values.supplierId, suppliers]);
-  return null;
-};
-const emptyRow: ProductRow = { productId: "", itemCode: "", qty: "", freeQty: "", uomId: "", unit: "", unitCost: "", mrp: "", sellingPrice: "", disc1: "", disc2: "", taxableAmount: "", taxId: "", itemTax: "", landingCost: "", margin: "", totalAmount: "", mfgDate: "", expiryDate: "", taxRate: "", taxName: "" };
-const additionalChargeEmptyRow: AdditionalChargeRow = { chargeId: "", amount: "", taxId: "", taxAmount: "", totalAmount: "" };
+import { SupplierBillFormSchema } from "../../../Utils/ValidationSchemas";
+import SupplierBillDetails from "../../../Components/Purchase/SupplierBill/SupplierBillDetails";
+import SupplierBillTabs from "../../../Components/Purchase/SupplierBill/SupplierBillTabs";
 
 const SupplierBillForm = () => {
-  const location = useLocation();
   const navigate = useNavigate();
+  const location = useLocation();
   const permission = usePagePermission(PAGE_TITLE.SUPPLIER_BILL.BASE);
-  const data = location.state?.data;
+  const { data } = location.state || {};
 
-  const { cleanData, cleanTermsAndConditionIds } = useMemo(() => {
-    const { _id, createdAt, updatedAt, isDeleted, createdBy, updatedBy, __v, ...rest } = data || {};
-    return { cleanData: rest, cleanTermsAndConditionIds: data?.termsAndConditionIds?.map((t: { _id: string }) => t._id) || [] };
-  }, [data]);
-
-  const defaultValues: SupplierBillFormValues = useMemo(() => ({ supplierId: "", supplierBillNo: "", supplierBillDate: DateConfig.utc().toISOString(), taxType: "exclusive", paymentTerm: "", dueDate: "", reverseCharge: false, shippingDate: "", invoiceAmount: "", termsAndConditionIds: [], notes: "", paidAmount: 0, balanceAmount: 0, paymentStatus: "unpaid", status: "active", isActive: true }), []);
-  const initialValues: SupplierBillFormValues = useMemo(() => ({ ...defaultValues, ...cleanData, supplierId: cleanData?.supplierId?._id || cleanData?.supplierId || defaultValues.supplierId, companyId: cleanData?.companyId?._id || cleanData?.companyId || "", branchId: cleanData?.branchId?._id || cleanData?.branchId || "", reverseCharge: Boolean(cleanData?.reverseCharge), termsAndConditionIds: cleanTermsAndConditionIds }), [cleanData, cleanTermsAndConditionIds, defaultValues]);
-
-  const [selectedCompanyId, setSelectedCompanyId] = useState<string>(initialValues.companyId || "");
-
-  const { data: companyData, isLoading: isCompanyLoading } = Queries.useGetCompanyDropdown();
-  const companyOptions = useMemo(() => GenerateOptions(companyData?.data || []), [companyData]);
-  const { data: supplierData } = Queries.useGetContactDropdown({ activeFilter: true, typeFilter: "supplier", companyId: selectedCompanyId }, !!selectedCompanyId);
-  const suppliers: Supplier[] = useMemo(() => (supplierData?.data || []).map((s) => ({ ...s, name: s.companyName || `${s.firstName} ${s.lastName}` })), [supplierData]);
-  const supplierOptions = useMemo(() => GenerateOptions(suppliers), [suppliers]);
   const isEditing = Boolean(data?._id);
+
+  const { mutate: addSupplierBill, isPending: addLoading } = Mutations.useAddSupplierBill();
+  const { mutate: editSupplierBill, isPending: editLoading } = Mutations.useEditSupplierBill();
+
   const pageMode = isEditing ? "EDIT" : "ADD";
+
   useEffect(() => {
     const hasAccess = isEditing ? permission.edit : permission.add;
-    if (!hasAccess) {
-      navigate(-1);
-    }
+    if (!hasAccess) navigate(-1);
   }, [isEditing, permission, navigate]);
-  const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
 
-  const handleCompanyChange = useCallback((newCompanyId: string) => {
-    setSelectedCompanyId(newCompanyId);
-    if (newCompanyId) {
-      setRows([emptyRow]);
-      setReturnRows([emptyRow]);
-      setSelectedTermIds([]);
-    }
-  }, []);
+  const emptyRow = { productId: "", _prevProductId: "", qty: 1, freeQty: 0, mrp: 0, uomId: "", unit: "", sellingPrice: 0, unitCost: 0, discount1: 0, taxable: 0, taxableAmount: 0, taxId: "", tax: 0, taxAmount: 0, landingCost: 0, margin: 0, total: 0 };
+  const emptyReturnRow = { productId: "", _prevProductId: "", qty: 1, uomId: "", unit: "", unitCost: 0, discount1: 0, taxable: 0, taxableAmount: 0, taxId: "", tax: 0, taxAmount: 0, landingCost: 0, margin: 0, total: 0 };
 
-  const [rows, setRows] = useState<ProductRow[]>([emptyRow]);
-  const [returnRows, setReturnRows] = useState<ProductRow[]>([emptyRow]);
-  const [additionalChargeRows, setAdditionalChargeRows] = useState<AdditionalChargeRow[]>([additionalChargeEmptyRow]);
-  const { mutate: addSupplierBill, isPending: isAddLoading } = Mutations.useAddSupplierBill();
-  const { mutate: editSupplierBill, isPending: isEditLoading } = Mutations.useEditSupplierBill();
-  const formikRef = useRef<FormikProps<SupplierBillFormValues> | null>(null);
-  const [tabValue, setTabValue] = useState(0);
-  const [selectedTermIds, setSelectedTermIds] = useState<string[]>([]);
-  const [showAdditionalCharge, setShowAdditionalCharge] = useState(false);
-  const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
-  const taxOptions = useMemo(() => GenerateOptions(TaxData?.data || []), [TaxData]);
-  const { data: ProductsData, isLoading: ProductsDataLoading } = Queries.useGetProductDropdown({ companyFilter: selectedCompanyId }, !!selectedCompanyId);
-  const productOptions = useMemo(() => GenerateOptions(ProductsData?.data || []), [ProductsData]);
-  const [flatDiscount, setFlatDiscount] = useState<string | number>(0);
-  const { data: additionalchargedata, isLoading: additionalchargeLoading } = Queries.useGetAdditionalChargesDropdown();
-  const { data: termsConditionData } = Queries.useGetTermsCondition({ companyId: selectedCompanyId }, { enabled: !!selectedCompanyId });
-  const additionalChargeOptions = useMemo(() => GenerateOptions(additionalchargedata?.data), [additionalchargedata]);
-  const [roundOffAmount, setRoundOffAmount] = useState<string | number>(0);
-  const [returnRoundOffAmount, setReturnRoundOffAmount] = useState<string | number>(0);
+  const initialValues: SupplierBillFormValues = {
+    companyId: typeof data?.companyId === "object" ? data.companyId?._id : data?.companyId || "",
+    supplierId: typeof data?.supplierId === "object" ? data.supplierId?._id : data?.supplierId || "",
+    supplierBillNo: data?.supplierBillNo || "",
+    referenceBillNo: data?.referenceBillNo || "",
+    supplierBillDate: data?.supplierBillDate || DateConfig.utc().toISOString(),
+    paymentTerm: data?.paymentTerm || "",
+    dueDate: data?.dueDate || "",
+    shippingDate: data?.shippingDate || data?.date || data?.orderDate || "",
+    reverseCharge: Boolean(data?.reverseCharge),
+    taxType: data?.taxType || "tax_exclusive",
+    invoiceAmount: data?.invoiceAmount || "",
+    placeOfSupply: data?.placeOfSupply || "",
+    gstIn: data?.gstIn || "",
+    billingAddress: typeof data?.billingAddress === "object" ? data.billingAddress?._id : data?.billingAddress || "",
 
-  const summary = useMemo(() => {
-    const discountAmount = rows.reduce((s, r) => s + (Number(r.disc1) || 0) + (Number(r.disc2) || 0), 0);
-    const itemTaxable = rows.reduce((s, r) => s + (Number(r.taxableAmount) || 0), 0);
-    const itemTax = rows.reduce((s, r) => s + (Number(r.itemTax) || 0), 0);
-    const itemGross = rows.reduce((s, r) => s + (Number(r.qty) || 0) * (Number(r.sellingPrice) || 0), 0);
-    const additionalTaxable = additionalChargeRows.reduce((s, r) => s + (Number(r.amount) || 0), 0);
-    const additionalTax = additionalChargeRows.reduce((s, r) => s + (Number(r.taxAmount) || 0), 0);
-    const grossAmount = itemGross + additionalTaxable;
-    const totalTaxableBeforeDiscount = itemTaxable + additionalTaxable;
-    const flatDisc = Number(flatDiscount) || 0;
-    const taxableAfterDiscount = Math.max(0, totalTaxableBeforeDiscount - flatDisc);
-    const effectiveTaxRate = totalTaxableBeforeDiscount > 0 ? (itemTax + additionalTax) / totalTaxableBeforeDiscount : 0;
-    const taxAmount = taxableAfterDiscount * effectiveTaxRate;
-    const roundOff = Number(roundOffAmount) || 0;
-    const netAmount = taxableAfterDiscount + taxAmount + roundOff;
-    const taxBreakdown: Record<string, { rate: number; amount: number }> = {};
-    rows.forEach((r) => {
-      const amount = Number(r.itemTax) || 0;
-      if (r.taxName && amount > 0) {
-        if (!taxBreakdown[r.taxName]) {
-          taxBreakdown[r.taxName] = { rate: Number(r.taxRate) || 0, amount: 0 };
-        }
-        taxBreakdown[r.taxName].amount += amount;
-      }
-    });
-    additionalChargeRows.forEach((r) => {
-      const amount = Number(r.taxAmount) || 0;
-      if (r.taxId && amount > 0) {
-        const taxObj = TaxData?.data?.find((t) => String(t._id) === String(r.taxId));
-        const name = taxObj?.name || "Tax";
-        const rate = taxObj?.percentage || 0;
-        if (!taxBreakdown[name]) {
-          taxBreakdown[name] = { rate, amount: 0 };
-        }
-        taxBreakdown[name].amount += amount;
-      }
-    });
-    const taxSummary = Object.entries(taxBreakdown).map(([name, data]) => ({ name, rate: data.rate, amount: Number(data.amount.toFixed(2)) }));
-    const summaryGrossAmount = grossAmount - flatDisc;
-    return { flatDiscount: flatDisc, discountAmount: Number(discountAmount.toFixed(2)), grossAmount: summaryGrossAmount, taxableAmount: taxableAfterDiscount, taxAmount: Number(taxAmount.toFixed(2)), roundOff, netAmount: Number(netAmount.toFixed(2)), taxSummary };
-  }, [rows, additionalChargeRows, flatDiscount, roundOffAmount, TaxData]);
-  useEffect(() => {
-    if (!termsConditionData?.data) return;
-    const response = termsConditionData.data;
-    const all: TermsConditionBase[] = Array.isArray(response) ? response : (response.termsCondition_data ?? []);
-    if (isEditing && data?.termsAndConditionIds && data.companyId?._id === selectedCompanyId) {
-      setSelectedTermIds(data.termsAndConditionIds.map((t: TermsConditionBase) => t._id));
-    } else {
-      const defaultTerms = all.filter((t) => t.isDefault);
-      setSelectedTermIds(defaultTerms.map((t) => t._id));
-    }
-  }, [termsConditionData, isEditing, data, selectedCompanyId]);
-  useEffect(() => {
-    if (isEditing && data) {
-      if (data.productDetails?.item) {
-        setRows(
-          data.productDetails.item.map((item: any) => {
-            const product = item.productId;
-            return { productId: product?._id || "", itemCode: product?.itemCode || "", qty: item.qty || "", freeQty: item.freeQty || "", mrp: item.mrp || "", sellingPrice: item.sellingPrice || "", disc1: item.discount1 || "", disc2: item.discount2 || "", taxableAmount: item.taxable || "", itemTax: "", landingCost: item.landingCost || "", margin: item.margin || "", totalAmount: item.total || "", unitCost: item.unitCost || "", uomId: product?.uomId?._id || "", unit: product?.uomId?.name || item.unit || "", mfgDate: "", expiryDate: "", taxRate: product?.purchaseTaxId?.percentage || 0, taxName: product?.purchaseTaxId?.name || "", taxId: item.taxId || product?.purchaseTaxId?._id || "" };
-          }),
-        );
-      }
-      if (data.additionalCharges && data.additionalCharges.length > 0) {
-        setAdditionalChargeRows(
-          data.additionalCharges.map((item: any) => ({
-            chargeId: item.chargeId?._id || "",
-            amount: item.amount?.toString() || "",
-            taxId: item.taxId?._id || item.taxId || "",
-            taxAmount: item.taxAmount?.toString() || (item.totalAmount && item.amount ? (item.totalAmount - item.amount).toFixed(2) : ""),
-            totalAmount: item.totalAmount?.toString() || "",
-          })),
-        );
-        setShowAdditionalCharge(true);
-      } else {
-        setAdditionalChargeRows([additionalChargeEmptyRow]);
-      }
-      if (data.summary?.flatDiscount) {
-        setFlatDiscount(data.summary.flatDiscount);
-      }
-      if (data.summary?.roundOff) {
-        setRoundOffAmount(data.summary.roundOff);
-      }
-      if (data.returnProductDetails?.summary?.roundOff) {
-        setReturnRoundOffAmount(data.returnProductDetails.summary.roundOff);
-      }
-    }
-  }, [data, isEditing, ProductsData]);
+    productDetails: (data?.productDetails?.item || (Array.isArray(data?.productDetails) ? data.productDetails : []))?.length
+      ? (data.productDetails.item || data.productDetails).map((i: SupplierBillProductItem) => {
+        const pId = typeof i.productId === "object" ? i.productId?._id : i.productId;
+        return {
+          ...emptyRow,
+          ...i,
+          productId: pId,
+          _prevProductId: pId,
+          uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
+          taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
+        };
+      })
+      : [emptyRow],
+    returnProductDetails: {
+      item: (data?.returnProductDetails?.item || (Array.isArray(data?.returnProductDetails) ? data.returnProductDetails : []))?.length
+        ? (data.returnProductDetails.item || data.returnProductDetails).map((i: SupplierBillReturnProductItem) => {
+          const pId = typeof i.productId === "object" ? i.productId?._id : i.productId;
+          return {
+            ...emptyReturnRow,
+            ...i,
+            productId: pId,
+            _prevProductId: pId,
+            uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
+            taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
+          };
+        })
+        : [emptyReturnRow],
+      summary: {
+        roundOff: data?.returnProductDetails?.summary?.roundOff || data?.returnProductDetails?.roundOff || 0,
+      },
+    },
+    additionalCharges: (data?.additionalCharges?.item || (Array.isArray(data?.additionalCharges) ? data.additionalCharges : []))?.length
+      ? (data.additionalCharges.item || data.additionalCharges).map((r: AdditionalChargeItem) => ({
+        ...r,
+        chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
+        taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
+      }))
+      : [],
+    termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
+    notes: data?.notes || "",
 
-  const mapProductRows = () => {
-    return rows
-      .filter((r) => r.productId)
-      .map((r) => ({
-        productId: r.productId,
-        qty: Number(r.qty) || 0,
-        freeQty: Number(r.freeQty) || 0,
-        uomId: r.uomId,
-        unit: r.unit,
-        mrp: Number(r.mrp) || 0,
-        sellingPrice: Number(r.sellingPrice) || 0,
-        unitCost: Number(r.unitCost) || 0,
-        discount1: Number(r.disc1) || 0,
-        discount2: Number(r.disc2) || 0,
-        taxable: Number(r.taxableAmount) || 0,
-        taxId: r.taxId || "",
-        landingCost: Number(r.landingCost) || 0,
-        margin: Number(r.margin) || 0,
-        total: Number(r.totalAmount) || 0,
-      }));
-  };
-  const mapAdditionalCharges = () => {
-    const validRows = additionalChargeRows.filter((row) => row.chargeId && row.taxId);
-    return validRows.map((row) => ({ chargeId: row.chargeId, taxId: row.taxId, amount: Number(row.amount) || 0, taxAmount: Number(row.taxAmount) || 0, totalAmount: Number(row.totalAmount) || 0 }));
-  };
-  const handleAdd = () => {
-    setRows((prev) => [...prev, { ...emptyRow }]);
-  };
-  const handleCut = (index: number) => {
-    setRows((prev) => (prev.length === 1 ? prev : prev.filter((_, i) => i !== index)));
-  };
-  const calculateRow = (row: ProductRow, taxType: string): ProductRow => {
-    const qty = Number(row.qty) || 0;
-    const unitCost = Number(row.unitCost) || 0;
-    const taxRate = taxType === "outOfScope" ? 0 : Number(row.taxRate) || 0;
-    const disc1 = Number(row.disc1) || 0;
-    const disc2 = Number(row.disc2) || 0;
-    const discountPerUnit = disc1 + disc2;
-    const mrp = Number(row.mrp) || 0;
-    const discountedCost = Math.max(0, unitCost - discountPerUnit);
-    let landingCost = 0;
-    let taxAmount = 0;
-    if (taxType === "taxInclusive") {
-      landingCost = discountedCost;
-      const totalCtx = qty * discountedCost;
-      taxAmount = totalCtx - totalCtx / (1 + taxRate / 100);
-    } else {
-      landingCost = discountedCost + (discountedCost * taxRate) / 100;
-      taxAmount = qty * discountedCost * (taxRate / 100);
-    }
-    const totalAmount = landingCost * qty;
-    const taxableAmount = totalAmount - taxAmount;
-    const sellingPrice = mrp;
-    const margin = sellingPrice - landingCost;
-    return { ...row, taxableAmount: taxableAmount.toFixed(2), itemTax: taxAmount.toFixed(2), landingCost: landingCost.toFixed(2), sellingPrice: sellingPrice.toFixed(2), margin: margin.toFixed(2), totalAmount: totalAmount.toFixed(2) };
-  };
-
-  const calculateReturnRow = (row: ProductRow, taxType: string): ProductRow => {
-    const qty = Number(row.qty) || 0;
-    const unitCost = Number(row.unitCost) || 0;
-    const taxRate = taxType === "outOfScope" ? 0 : Number(row.taxRate) || 0;
-    const disc1 = Number(row.disc1) || 0;
-    const disc2 = Number(row.disc2) || 0;
-    const discountPerUnit = disc1 + disc2;
-    const discountedCost = Math.max(0, unitCost - discountPerUnit);
-    let landingCost = 0;
-    let taxAmount = 0;
-    if (taxType === "taxInclusive") {
-      landingCost = discountedCost;
-      const totalCtx = qty * discountedCost;
-      taxAmount = totalCtx - totalCtx / (1 + taxRate / 100);
-    } else {
-      landingCost = discountedCost + (discountedCost * taxRate) / 100;
-      taxAmount = qty * discountedCost * (taxRate / 100);
-    }
-    const totalAmount = landingCost * qty;
-    const taxableAmount = totalAmount - taxAmount;
-    return { ...row, taxableAmount: taxableAmount.toFixed(2), itemTax: taxAmount.toFixed(2), landingCost: landingCost.toFixed(2), totalAmount: totalAmount.toFixed(2) };
-  };
-
-  const handleRowChange = (index: number, field: keyof ProductRow, value: string | number | string[]) => {
-    const taxType = formikRef.current?.values.taxType || "default";
-    setRows((prev) => {
-      const newRows = [...prev];
-      const finalValue = Array.isArray(value) ? value[0] : value;
-      let updatedRow = { ...newRows[index], [field]: finalValue };
-      if (field === "productId") {
-        if (!finalValue) {
-          updatedRow = { ...emptyRow };
-          newRows[index] = updatedRow;
-          return newRows;
-        }
-        const product = (ProductsData?.data || []).find((p) => String(p._id) === String(finalValue));
-        if (product) {
-          updatedRow = { ...updatedRow, itemCode: product.itemCode || "", qty: 1, uomId: product.uomId?._id || "", unit: product.uomId?.name || "", unitCost: product.purchasePrice || 0, mrp: product.mrp || 0, sellingPrice: product.purchasePrice || product.sellingPrice || 0, landingCost: product.landingCost || 0, taxRate: product.purchaseTaxId?.percentage || 0, taxName: product.purchaseTaxId?.name || "", taxId: product.purchaseTaxId?._id || "" };
-        }
-      }
-      newRows[index] = calculateRow(updatedRow, taxType);
-      return newRows;
-    });
-  };
-  const handleReturnRowChange = (index: number, field: keyof ProductRow, value: string | number | string[]) => {
-    const taxType = formikRef.current?.values.taxType || "default";
-    setReturnRows((prev) => {
-      const newRows = [...prev];
-      const finalValue = Array.isArray(value) ? value[0] : value;
-      let updatedRow = { ...newRows[index], [field]: finalValue };
-      if (field === "productId") {
-        if (!finalValue) {
-          updatedRow = { ...emptyRow };
-          newRows[index] = updatedRow;
-          return newRows;
-        }
-        const product = (ProductsData?.data || []).find((p) => String(p._id) === String(finalValue));
-        if (product) {
-          updatedRow = { ...updatedRow, itemCode: product.itemCode || "", qty: 1, unit: product.unit || "", unitCost: product.purchasePrice || 0, sellingPrice: product.purchasePrice || product.sellingPrice || 0, landingCost: product.landingCost || 0, taxId: product.purchaseTaxId?._id || "", taxRate: product.purchaseTaxId?.percentage || 0, taxName: product.purchaseTaxId?.name || "" };
-        }
-      }
-      newRows[index] = calculateReturnRow(updatedRow, taxType);
-      return newRows;
-    });
-  };
-
-  const handleAddReturn = () => {
-    setReturnRows((prev) => [...prev, { ...emptyRow }]);
-  };
-  const handleCutReturn = (index: number) => {
-    setReturnRows((prev) => (prev.length === 1 ? prev : prev.filter((_, i) => i !== index)));
-  };
-  const handleAddAdditionalCharge = () => {
-    setAdditionalChargeRows((prev) => [...prev, { ...additionalChargeEmptyRow }]);
-  };
-  const handleCutAdditionalCharge = (index: number) => {
-    setAdditionalChargeRows((prev) => (prev.length === 1 ? prev : prev.filter((_, i) => i !== index)));
-  };
-  const handleAdditionalChargeRowChange = (index: number, field: keyof AdditionalChargeRow, value: string | number | string[]) => {
-    setAdditionalChargeRows((prev) => {
-      const newRows = [...prev];
-      const finalValue = Array.isArray(value) ? value[0] : value;
-      newRows[index] = { ...newRows[index], [field]: finalValue };
-      const recalculate = (rowIndex: number) => {
-        const amount = Number(newRows[rowIndex].amount) || 0;
-        const taxId = newRows[rowIndex].taxId;
-        const taxObj = TaxData?.data?.find((t) => String(t._id) === String(taxId));
-        const taxRate = taxObj?.percentage || 0;
-        const taxAmt = (amount * taxRate) / 100;
-        const total = amount + taxAmt;
-        newRows[rowIndex].taxAmount = taxAmt.toFixed(2);
-        newRows[rowIndex].totalAmount = total.toFixed(2);
-      };
-      if (field === "amount" || field === "taxId") {
-        recalculate(index);
-      }
-      if (field === "chargeId") {
-        if (!finalValue) {
-          newRows[index] = { ...additionalChargeEmptyRow };
-          return newRows;
-        }
-        const selectedCharge = additionalchargedata?.data?.find((c: any) => c._id === finalValue);
-        if (selectedCharge) {
-          if (typeof selectedCharge.defaultValue === "number") {
-            newRows[index].amount = selectedCharge.defaultValue.toFixed(2);
-          }
-          if (selectedCharge.taxId?._id) {
-            newRows[index].taxId = selectedCharge.taxId._id;
-          }
-          recalculate(index);
-        }
-      }
-      return newRows;
-    });
+    summary: {
+      flatDiscount: data?.summary?.flatDiscount || 0,
+      grossAmount: data?.summary?.grossAmount || 0,
+      discountAmount: data?.summary?.discountAmount || 0,
+      taxableAmount: data?.summary?.taxableAmount || 0,
+      taxAmount: data?.summary?.taxAmount || 0,
+      roundOff: data?.summary?.roundOff || 0,
+      netAmount: data?.summary?.netAmount || 0,
+    },
+    paidAmount: data?.paidAmount || 0,
+    balanceAmount: data?.balanceAmount || 0,
+    paymentStatus: data?.paymentStatus || "unpaid",
+    status: ["active", "cancelled"].includes(data?.status) ? data.status : "active",
+    isActive: true,
   };
 
   const handleSubmit = async (values: SupplierBillFormValues, { resetForm }: FormikHelpers<SupplierBillFormValues>) => {
-    const { taxSummary, ...restSummary } = summary;
-    const payload: SupplierBillFormValues = { ...values, productDetails: mapProductRows(), additionalCharges: mapAdditionalCharges(), termsAndConditionIds: selectedTermIds, summary: restSummary };
+    const { _submitAction, ...rest } = values;
 
-    const handleSuccess = () => {
-      resetForm();
-      navigate(-1);
+    const payload = {
+      ...rest,
+      productDetails: rest.productDetails?.map((item: SupplierBillProductItem) => ({
+        productId: typeof item.productId === "object" ? item.productId?._id : item.productId,
+        qty: Number(item.qty || 0),
+        freeQty: Number(item.freeQty || 0),
+        mrp: Number(item.mrp || 0),
+        uomId: typeof item.uomId === "object" ? item.uomId?._id : item.uomId,
+        unit: String(item.unit || ""),
+        sellingPrice: Number(item.sellingPrice || 0),
+        unitCost: Number(item.unitCost || 0),
+        discount1: Number(item.discount1 || 0),
+        taxable: Number(item.taxable || item.taxableAmount || 0),
+        taxId: typeof item.taxId === "object" ? item.taxId?._id : item.taxId,
+        tax: String(item.tax || ""),
+        landingCost: Number(item.landingCost || 0),
+        margin: Number(item.margin || 0),
+        total: Number(item.total || 0),
+      })),
+      returnProductDetails: {
+        item: rest.returnProductDetails?.item
+          ?.filter((i) => i.productId)
+          .map((item: SupplierBillReturnProductItem) => ({
+            productId: typeof item.productId === "object" ? item.productId?._id : item.productId,
+            qty: Number(item.qty || 0),
+            uomId: typeof item.uomId === "object" ? item.uomId?._id : item.uomId,
+            unit: String(item.unit || ""),
+            unitCost: Number(item.unitCost || 0),
+            discount1: Number(item.discount1 || 0),
+            taxable: Number(item.taxable || item.taxableAmount || 0),
+            taxId: typeof item.taxId === "object" ? item.taxId?._id : item.taxId,
+            tax: String(item.tax || ""),
+            landingCost: Number(item.landingCost || 0),
+            total: Number(item.total || 0),
+          })),
+        summary: {
+          roundOff: Number(rest.returnProductDetails?.summary?.roundOff || 0),
+          grossAmount: rest.returnProductDetails?.item?.filter((i) => i.productId).reduce((a: number, b: SupplierBillReturnProductItem) => a + Number(b.taxableAmount || 0), 0) || 0,
+          taxAmount: rest.returnProductDetails?.item?.filter((i) => i.productId).reduce((a: number, b: SupplierBillReturnProductItem) => a + Number(b.taxAmount || 0), 0) || 0,
+          netAmount: (rest.returnProductDetails?.item?.filter((i) => i.productId).reduce((a: number, b: SupplierBillReturnProductItem) => a + Number(b.total || 0), 0) || 0) + Number(rest.returnProductDetails?.summary?.roundOff || 0),
+        },
+      },
+      additionalCharges: Array.isArray(rest.additionalCharges)
+        ? rest.additionalCharges
+          ?.filter((r: AdditionalChargeItem) => r.chargeId)
+          .map((r: AdditionalChargeItem) => ({
+            chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
+            taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
+            amount: Number(r.amount || 0),
+            totalAmount: Number(r.totalAmount || 0),
+          }))
+        : [],
+      summary: rest.summary
+        ? {
+          flatDiscount: Number(rest.summary.flatDiscount || 0),
+          grossAmount: Number(rest.summary.grossAmount || 0),
+          discountAmount: Number(rest.summary.discountAmount || 0),
+          taxableAmount: Number(rest.summary.taxableAmount || 0),
+          taxAmount: Number(rest.summary.taxAmount || 0),
+          roundOff: Number(rest.summary.roundOff || 0),
+          netAmount: Number(rest.summary.netAmount || 0),
+        }
+        : undefined,
     };
 
+    const handleSuccess = () => {
+      if (_submitAction === "saveAndNew") resetForm();
+      else navigate(ROUTES.SUPPLIER_BILL.BASE);
+    };
     if (isEditing) {
       const changedFields = GetChangedFields(payload, data);
-      editSupplierBill({ ...changedFields, supplierBillId: data._id }, { onSuccess: handleSuccess });
+      await editSupplierBill({ ...changedFields, supplierBillId: data._id }, { onSuccess: handleSuccess });
     } else {
-      addSupplierBill(RemoveEmptyFields(payload) as SupplierBillFormValues, { onSuccess: handleSuccess });
+      await addSupplierBill(RemoveEmptyFields(payload) as SupplierBillFormValues, { onSuccess: handleSuccess });
     }
   };
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.SUPPLIER_BILL[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.SUPPLIER_BILL[pageMode]} />
-      <Box sx={{ p: { xs: 2, md: 3 }, mb: 8, display: "grid", gap: 2 }}>
-        <Formik innerRef={formikRef} initialValues={initialValues} onSubmit={handleSubmit} enableReinitialize={isEditing}>
-          {() => (
-            <>
-              <Form noValidate>
-                <CompanyWatcher selectedCompanyId={selectedCompanyId} onChange={handleCompanyChange} />
-                <SupplierWatcher suppliers={suppliers} onChange={setSelectedSupplier} />
-                <TaxTypeWatcher
-                  onChange={(type) => {
-                    setRows((prev) => prev.map((r) => calculateRow(r, type)));
-                    setReturnRows((prev) => prev.map((r) => calculateReturnRow(r, type)));
-                  }}
-                />
-                <CommonCard title="Supplier Bill Details">
-                  <SupplierBillDetails supplierOptions={supplierOptions} selectedSupplier={selectedSupplier} isEditing={isEditing} companyOptions={companyOptions} isCompanyLoading={isCompanyLoading} isSupplierDisabled={!selectedCompanyId} />
-                </CommonCard>
-              </Form>
-              <CommonCard hideDivider>
-                <SupplierBillTabs tabValue={tabValue} setTabValue={setTabValue} rows={rows} handleAdd={handleAdd} handleCut={handleCut} handleRowChange={handleRowChange} returnRows={returnRows} handleAddReturn={handleAddReturn} handleCutReturn={handleCutReturn} handleReturnRowChange={handleReturnRowChange} productOptions={productOptions} isProductLoading={ProductsDataLoading} returnRoundOffAmount={returnRoundOffAmount} onReturnRoundOffAmountChange={setReturnRoundOffAmount} isProductDisabled={!selectedCompanyId} isTermsDisabled={!selectedCompanyId} selectedTermIds={selectedTermIds} onTermsChange={setSelectedTermIds} companyId={selectedCompanyId} />
-              </CommonCard>
-              <CommonCard grid={{ xs: 12 }} hideDivider>
-                <AdditionalChargesSection show={showAdditionalCharge} onToggle={setShowAdditionalCharge} rows={additionalChargeRows} onAdd={handleAddAdditionalCharge} onRemove={handleCutAdditionalCharge} onChange={handleAdditionalChargeRowChange} taxOptions={taxOptions} isTaxLoading={TaxDataLoading} flatDiscount={flatDiscount} onFlatDiscountChange={setFlatDiscount} summary={summary} isAdditionalChargeLoading={additionalchargeLoading} additionalChargeOptions={additionalChargeOptions} roundOffAmount={roundOffAmount} onRoundOffAmountChange={setRoundOffAmount} />
-              </CommonCard>
-              <CommonBottomActionBar save isLoading={isAddLoading || isEditLoading} onSave={() => formikRef.current?.submitForm()} />
-            </>
+      <CommonBreadcrumbs title={PAGE_TITLE.SUPPLIER_BILL[pageMode]} breadcrumbs={BREADCRUMBS.SUPPLIER_BILL[pageMode]} />
+
+      <Box sx={{ p: { xs: 2, md: 3 }, mb: 14 }}>
+        <Formik<SupplierBillFormValues> initialValues={initialValues} validationSchema={SupplierBillFormSchema} onSubmit={handleSubmit} enableReinitialize={isEditing} validateOnMount>
+          {({ setFieldValue, dirty, isValid, resetForm }) => (
+            <Form noValidate>
+              <CommonSummaryWatcher itemsKey="productDetails" summaryKey="summary" priceKey="unitCost" taxAmountKey="taxAmount" hasAdditionalCharges />
+              <Grid container spacing={2}>
+                <Box sx={{ display: "grid", gap: 2, width: "100%" }}>
+                  <CommonCard title="Supplier Bill Details" grid={{ xs: 12 }}>
+                    <SupplierBillDetails />
+                  </CommonCard>
+
+                  <CommonCard hideDivider grid={{ xs: 12 }}>
+                    <SupplierBillTabs emptyRow={emptyRow} emptyReturnRow={emptyReturnRow} />
+                  </CommonCard>
+
+                  <CommonCard hideDivider grid={{ xs: 12 }}>
+                    <CommonAdditionalChargeSection summaryName="summary" />
+                  </CommonCard>
+                </Box>
+
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty || !isValid} isLoading={addLoading || editLoading} onClear={() => (isEditing ? navigate(-1) : resetForm())} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+              </Grid>
+            </Form>
           )}
         </Formik>
       </Box>
     </>
   );
 };
+
 export default SupplierBillForm;
