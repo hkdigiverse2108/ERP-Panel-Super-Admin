@@ -159,6 +159,23 @@ export const BREADCRUMBS = {
       { label: PAGE_TITLE.SUPPLIER_BILL.EDIT },
     ],
   },
+  PURCHASE_DEBIT_NOTE: {
+    BASE: [{ label: PAGE_TITLE.PURCHASE_DEBIT_NOTE.BASE }],
+    ADD: [
+      {
+        label: PAGE_TITLE.PURCHASE_DEBIT_NOTE.BASE,
+        href: ROUTES.PURCHASE_DEBIT_NOTE.BASE,
+      },
+      { label: PAGE_TITLE.PURCHASE_DEBIT_NOTE.ADD },
+    ],
+    EDIT: [
+      {
+        label: PAGE_TITLE.PURCHASE_DEBIT_NOTE.BASE,
+        href: ROUTES.PURCHASE_DEBIT_NOTE.BASE,
+      },
+      { label: PAGE_TITLE.PURCHASE_DEBIT_NOTE.EDIT },
+    ],
+  },
   CONTACT: {
     BASE: [{ label: PAGE_TITLE.CONTACT.BASE }],
     ADD: [

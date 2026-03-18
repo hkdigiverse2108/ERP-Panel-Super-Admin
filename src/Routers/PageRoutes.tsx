@@ -44,21 +44,22 @@ import PurchaseOrder from "../Pages/Purchase/PurchaseOrder";
 import PurchaseOrderForm from "../Pages/Purchase/PurchaseOrder/PurchaseOrderForm";
 import SupplierBill from "../Pages/Purchase/SupplierBill";
 import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
+import PurchaseDebitNote from "../Pages/Purchase/PurchaseDebitNote";
+import PurchaseDebitNoteForm from "../Pages/Purchase/PurchaseDebitNote/PurchaseDebitNoteForm";
 import Role from "../Pages/Role";
 import AdditionalCharges from "../Pages/Settings/AdditionalCharges";
 import AdditionalChargesForm from "../Pages/Settings/AdditionalCharges/AdditionalChargesForm";
 import Users from "../Pages/User";
 import Permission from "../Pages/User/Permission";
 import UserForm from "../Pages/User/UserForm";
-// import User from "../Pages/User";
-import Announcement from "../Pages/Announcment";
-import AnnouncementForm from "../Pages/Announcment/AnnouncmentForm";
+import Announcement from "../Pages/Announcement";
+import AnnouncementForm from "../Pages/Announcement/AnnouncementForm";
 import ChangePassword from "../Pages/Auth/ChangePassword";
 import VerifyOtp from "../Pages/Auth/VerifyOtp";
 import SupportDeskForm from "../Pages/SupportDesk/CallRequest/CallRequestForm";
 import AdminSetting from "../Pages/Settings/AdminSetting/AdminSetting";
-import BankTranscation from "../Pages/Bank/BankTransaction";
-import BankTranscationForm from "../Pages/Bank/BankTransaction/BankTransactionForm";
+import BankTransaction from "../Pages/Bank/BankTransaction";
+import BankTransactionForm from "../Pages/Bank/BankTransaction/BankTransactionForm";
 import SupportDesk from "../Pages/SupportDesk/CallRequest";
 import CreditNoteList from "../Pages/Pos/CreditNote";
 import OrderList from "../Pages/Pos/OrderList";
@@ -138,6 +139,8 @@ export const PageRoutes = [
 
   { path: ROUTES.SUPPLIER_BILL.BASE, name: PAGE_TITLE.PURCHASE.BASE, element: <SupplierBill /> },
   { path: ROUTES.SUPPLIER_BILL.ADD_EDIT, name: PAGE_TITLE.PURCHASE.BASE, element: <SupplierBillForm /> },
+  { path: ROUTES.PURCHASE_DEBIT_NOTE.BASE, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseDebitNote /> },
+  { path: ROUTES.PURCHASE_DEBIT_NOTE.ADD_EDIT, name: PAGE_TITLE.PURCHASE.BASE, element: <PurchaseDebitNoteForm /> },
 
   { path: ROUTES.ADDITIONAL_CHARGES.BASE, name: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE, element: <AdditionalCharges /> },
   { path: ROUTES.ADDITIONAL_CHARGES.ADD_EDIT, name: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE, element: <AdditionalChargesForm /> },
@@ -179,8 +182,8 @@ export const PageRoutes = [
   { path: ROUTES.CALL_REQUEST.BASE, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDesk /> },
   { path: ROUTES.CALL_REQUEST.ADD_EDIT, name: PAGE_TITLE.CALL_REQUEST.BASE, element: <SupportDeskForm /> },
 
-  { path: ROUTES.BANK_TRANSACTION.BASE, name: PAGE_TITLE.BANK_TRANSACTION.BASE, element: <BankTranscation /> },
-  { path: ROUTES.BANK_TRANSACTION.ADD_EDIT, name: PAGE_TITLE.BANK_TRANSACTION.BASE, element: <BankTranscationForm /> },
+  { path: ROUTES.BANK_TRANSACTION.BASE, name: PAGE_TITLE.BANK_TRANSACTION.BASE, element: <BankTransaction /> },
+  { path: ROUTES.BANK_TRANSACTION.ADD_EDIT, name: PAGE_TITLE.BANK_TRANSACTION.BASE, element: <BankTransactionForm /> },
 
   { path: ROUTES.ADMIN_SETTING.BASE, name: PAGE_TITLE.SETTINGS.ADMIN_SETTING.BASE, element: <AdminSetting /> },
 

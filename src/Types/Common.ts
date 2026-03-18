@@ -610,10 +610,10 @@ export interface CommonValidationCreatableSelectProps {
 
 // ************ Common Additional Charge Start ***********
 export interface AdditionalChargeItem {
-  chargeId?: string;
+  chargeId?: string | AdditionalChargesBase;
   amount?: number;
   taxAmount?: number;
-  taxId?: string;
+  taxId?: string | TaxBase;
   totalAmount?: number;
 }
 // ************ Common Additional Charge End ***********
@@ -642,7 +642,7 @@ export interface ShippingDetails {
   referenceNo: string;
   transportDate: string;
   modeOfTransport: string;
-  transporterId: string;
+  transporterId?: string | null;
   vehicleNo: string;
   weight: number;
 }

@@ -43,13 +43,13 @@ const DeliveryChallan = () => {
     const handleAdd = () => navigate(ROUTES.DELIVERY_CHALLAN.ADD_EDIT);
 
     const columns: AppGridColDef<DeliveryChallanBase>[] = [
-        { field: "deliveryChallanNo", headerName: "Delivery Challan No.", width: 140 },
-        { field: "date", headerName: "Delivery Challan Date", width: 150, renderCell: (params) => FormatDate(params.row.date) },
-        { field: "dueDate", headerName: "Due Date", width: 130, renderCell: (params) => FormatDate(params.row.dueDate) },
-        { field: "customerId", headerName: "Customer Name", width: 150, valueGetter: (_, row: DeliveryChallanBase) => (row?.customerId ? (typeof row.customerId === 'object' ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || row.customerId.companyName || "" : "") : "") },
-        { field: "netAmount", headerName: "Net Amount", width: 110, type: "number" },
-        { field: "status", headerName: "Status", headerAlign: "center", width: 130, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
-        { field: "taxAmount", headerName: "Tax Amount", width: 110, type: "number" },
+        { field: "deliveryChallanNo", headerName: "Delivery Challan No.", width: 200 },
+        { field: "date", headerName: "Delivery Challan Date", width: 200, renderCell: (params) => FormatDate(params.row.date) },
+        { field: "dueDate", headerName: "Due Date", width: 200, renderCell: (params) => FormatDate(params.row.dueDate) },
+        { field: "customerId", headerName: "Customer Name", width: 200, valueGetter: (_, row: DeliveryChallanBase) => (row?.customerId ? (typeof row.customerId === 'object' ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || row.customerId.companyName || "" : "") : "") },
+        { field: "netAmount", headerName: "Net Amount", width: 200, type: "number" },
+        { field: "status", headerName: "Status", headerAlign: "center", width: 200, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
+        { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 110, type: "number" },
 
         CommonActionColumn({
             active: (row) => editChallan({ deliveryChallanId: row?._id as string, isActive: !row.isActive }),

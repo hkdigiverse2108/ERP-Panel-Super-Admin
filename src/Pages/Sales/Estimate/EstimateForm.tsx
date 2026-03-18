@@ -6,7 +6,7 @@ import { Mutations } from "../../../Api";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonSummaryWatcher } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { EstimateFormValues } from "../../../Types";
+import type { AddEstimatePayload, AdditionalChargeItem, EstimateFormValues, EstimateItem, TaxBase, TaxDropdownApiResponse } from "../../../Types";
 import { DateConfig, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 import { EstimateFormSchema } from "../../../Utils/ValidationSchemas";
@@ -36,14 +36,14 @@ const EstimateForm = () => {
     taxType: data?.taxType || "default",
     reverseCharge: data?.reverseCharge !== undefined ? String(data.reverseCharge) : "false",
     termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
-    items: data?.items?.length ? data.items.map((i: any) => ({
+    items: data?.items?.length ? data.items.map((i: EstimateItem) => ({
       ...emptyRow,
       ...i,
       productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
       uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
       taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
     })) : [emptyRow],
-    additionalCharges: data?.additionalCharges?.length ? data.additionalCharges.map((r: any) => ({
+    additionalCharges: data?.additionalCharges?.length ? data.additionalCharges.map((r: AdditionalChargeItem) => ({
       ...r,
       chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
       taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
@@ -81,15 +81,15 @@ const EstimateForm = () => {
     if (!hasAccess) navigate(-1);
   }, [isEditing, permission, navigate]);
 
-  const getCalculatedSummary = (values: EstimateFormValues, taxData: any) => {
-    const itemGross = values.items?.reduce((s: number, r: any) => s + Number(r.qty || 0) * Number(r.price || 0), 0) || 0;
-    const itemDiscount = values.items?.reduce((s: number, r: any) => s + Number(r.discount1 || 0), 0) || 0;
-    const itemTaxable = values.items?.reduce((s: number, r: any) => s + Number(r.taxableAmount || 0), 0) || 0;
-    const itemTax = values.items?.reduce((s: number, r: any) => s + Number(r.totalAmount || 0) - Number(r.taxableAmount || 0), 0) || 0;
+  const getCalculatedSummary = (values: EstimateFormValues, taxData: TaxDropdownApiResponse | undefined) => {
+    const itemGross = values.items?.reduce((s: number, r: EstimateItem) => s + Number(r.qty || 0) * Number(r.price || 0), 0) || 0;
+    const itemDiscount = values.items?.reduce((s: number, r: EstimateItem) => s + Number(r.discount1 || 0), 0) || 0;
+    const itemTaxable = values.items?.reduce((s: number, r: EstimateItem) => s + Number(r.taxableAmount || 0), 0) || 0;
+    const itemTax = values.items?.reduce((s: number, r: EstimateItem) => s + Number(r.totalAmount || 0) - Number(r.taxableAmount || 0), 0) || 0;
 
     const isReverseCharge = String(values.reverseCharge) === "true";
-    const chargeTaxable = isReverseCharge ? 0 : values.additionalCharges?.reduce((s: number, r: any) => s + Number(r.amount || 0), 0) || 0;
-    const chargeTax = isReverseCharge ? 0 : values.additionalCharges?.reduce((s: number, r: any) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0;
+    const chargeTaxable = isReverseCharge ? 0 : values.additionalCharges?.reduce((s: number, r: AdditionalChargeItem) => s + Number(r.amount || 0), 0) || 0;
+    const chargeTax = isReverseCharge ? 0 : values.additionalCharges?.reduce((s: number, r: AdditionalChargeItem) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0;
 
     const totalTaxable = itemTaxable + chargeTaxable;
     const totalTax = itemTax + chargeTax;
@@ -102,19 +102,20 @@ const EstimateForm = () => {
 
     // Calculate Tax Summary
     const taxMap: Record<string, { name: string; rate: number; amount: number }> = {};
-    const processTax = (taxId: string | undefined, amount: number) => {
+    const processTax = (taxId: string | TaxBase | undefined, amount: number) => {
       if (!taxId) return;
-      const tax = taxData?.data?.find((t: any) => t._id === taxId);
+      const id = typeof taxId === "object" ? taxId._id : taxId;
+      const tax = taxData?.data?.find((t: TaxBase) => t._id === id);
       if (!tax) return;
-      if (!taxMap[taxId]) {
-        taxMap[taxId] = { name: tax.name || "Tax", rate: tax.percentage || 0, amount: 0 };
+      if (!taxMap[id]) {
+        taxMap[id] = { name: tax.name || "Tax", rate: tax.percentage || 0, amount: 0 };
       }
-      taxMap[taxId].amount += amount;
+      taxMap[id].amount += amount;
     };
 
-    values.items?.forEach((r: any) => processTax(r.taxId, Number(r.totalAmount || 0) - Number(r.taxableAmount || 0)));
+    values.items?.forEach((r: EstimateItem) => processTax(r.taxId, Number(r.totalAmount || 0) - Number(r.taxableAmount || 0)));
     if (!isReverseCharge) {
-      values.additionalCharges?.forEach((r: any) => processTax(r.taxId, Number(r.totalAmount || 0) - Number(r.amount || 0)));
+      values.additionalCharges?.forEach((r: AdditionalChargeItem) => processTax(r.taxId, Number(r.totalAmount || 0) - Number(r.amount || 0)));
     }
 
     return {
@@ -132,9 +133,9 @@ const EstimateForm = () => {
 
   const handleSubmit = async (values: EstimateFormValues, { resetForm }: FormikHelpers<EstimateFormValues>) => {
     const { _submitAction, ...rest } = values;
-    const payload: any = {
+    const payload: AddEstimatePayload = {
       ...rest,
-      items: values.items?.filter((i: any) => i.productId).map((i: any) => ({
+      items: values.items?.filter((i: EstimateItem) => i.productId).map((i: EstimateItem) => ({
         ...i,
         qty: Number(i.qty || 0),
         freeQty: Number(i.freeQty || 0),

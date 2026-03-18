@@ -6,7 +6,7 @@ import { Mutations } from "../../../Api";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonSummaryWatcher, CommonAdditionalChargeSection } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { SalesOrderFormValues, SalesOrderItem } from "../../../Types";
+import type { AdditionalChargeItem, SalesOrderFormValues, SalesOrderItem } from "../../../Types";
 import { DateConfig, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 import { SalesOrderFormSchema } from "../../../Utils/ValidationSchemas";
@@ -32,14 +32,14 @@ const SalesOrderForm = () => {
     taxType: data?.taxType || "default",
     reverseCharge: data?.reverseCharge !== undefined ? String(data.reverseCharge) : "false",
     termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
-    items: data?.items?.length ? data.items.map((i: any) => ({
+    items: data?.items?.length ? data.items.map((i: SalesOrderItem) => ({
       ...emptyRow,
       ...i,
       productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
       uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
       taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
     })) : [emptyRow],
-    additionalCharges: data?.additionalCharges?.length ? data.additionalCharges.map((r: any) => ({
+    additionalCharges: data?.additionalCharges?.length ? data.additionalCharges.map((r: AdditionalChargeItem) => ({
       ...r,
       chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
       taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
@@ -84,14 +84,14 @@ const SalesOrderForm = () => {
 //   const { data: taxData } = Queries.useGetTaxDropdown();
 
   const getCalculatedSummary = (values: SalesOrderFormValues) => {
-    const itemGross = values.items?.reduce((s: number, r: any) => s + Number(r.qty || 0) * Number(r.price || 0), 0) || 0;
-    const itemDiscount = values.items?.reduce((s: number, r: any) => s + Number(r.discount1 || 0), 0) || 0;
-    const itemTaxable = values.items?.reduce((s: number, r: any) => s + Number(r.taxableAmount || 0), 0) || 0;
-    const itemTax = values.items?.reduce((s: number, r: any) => s + Number(r.totalAmount || 0) - Number(r.taxableAmount || 0), 0) || 0;
+    const itemGross = values.items?.reduce((s: number, r: SalesOrderItem) => s + Number(r.qty || 0) * Number(r.price || 0), 0) || 0;
+    const itemDiscount = values.items?.reduce((s: number, r: SalesOrderItem) => s + Number(r.discount1 || 0), 0) || 0;
+    const itemTaxable = values.items?.reduce((s: number, r: SalesOrderItem) => s + Number(r.taxableAmount || 0), 0) || 0;
+    const itemTax = values.items?.reduce((s: number, r: SalesOrderItem) => s + Number(r.totalAmount || 0) - Number(r.taxableAmount || 0), 0) || 0;
 
     const isReverseCharge = String(values.reverseCharge) === "true";
-    const chargeTaxable = isReverseCharge ? 0 : values.additionalCharges?.reduce((s: number, r: any) => s + Number(r.amount || 0), 0) || 0;
-    const chargeTax = isReverseCharge ? 0 : values.additionalCharges?.reduce((s: number, r: any) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0;
+    const chargeTaxable = isReverseCharge ? 0 : values.additionalCharges?.reduce((s: number, r: AdditionalChargeItem) => s + Number(r.amount || 0), 0) || 0;
+    const chargeTax = isReverseCharge ? 0 : values.additionalCharges?.reduce((s: number, r: AdditionalChargeItem) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0;
 
     const totalTaxable = itemTaxable + chargeTaxable;
     const totalTax = itemTax + chargeTax;
@@ -115,9 +115,9 @@ const SalesOrderForm = () => {
 
   const handleSubmit = async (values: SalesOrderFormValues, { resetForm }: FormikHelpers<SalesOrderFormValues>) => {
     const { _submitAction, estimateNo, ...rest } = values;
-    const payload: any = {
+    const payload: SalesOrderFormValues = {
       ...rest,
-      items: values.items?.filter((i: any) => i.productId).map((i: any) => ({
+      items: values.items?.filter((i: SalesOrderItem) => i.productId).map((i: SalesOrderItem) => ({
         productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
         qty: Number(i.qty || 0),
         freeQty: Number(i.freeQty || 0),
@@ -128,7 +128,7 @@ const SalesOrderForm = () => {
         uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
         taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
       })),
-      additionalCharges: values.additionalCharges?.filter((r) => r.chargeId).map((r: any) => ({
+      additionalCharges: values.additionalCharges?.filter((r) => r.chargeId).map((r: AdditionalChargeItem) => ({
         chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
         taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
         amount: Number(r.amount || 0),

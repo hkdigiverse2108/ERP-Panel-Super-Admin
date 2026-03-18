@@ -3,8 +3,9 @@ import type { NavigateFunction } from "react-router-dom";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { ContactBase } from "./Contacts";
 import type { ProductBase, ProductDropDownApiResponse } from "./Product";
-import type { TaxDropdownApiResponse } from "./Tax";
+import type { TaxBase, TaxDropdownApiResponse } from "./Tax";
 import type { TermsConditionBase } from "./TermsCondition";
+import type { UomBase } from "./Uom";
 // import { TAX_TYPE, ORDER_STATUS } from "../../Data";
 
 export interface PurchaseOrderSummary {
@@ -25,7 +26,7 @@ export interface PurchaseOrderBase extends Omit<PurchaseOrderFormValues, "suppli
 export type Supplier = ContactBase;
 
 export interface PurchaseOrderItem {
-  productId: string;
+  productId: string | ProductBase;
   qty: number;
   freeQty?: number;
   mrp?: number | string;
@@ -35,7 +36,7 @@ export interface PurchaseOrderItem {
   taxableAmount?: number | string;
   itemCode?: string;
   unit?: string;
-  uomId?: string;
+  uomId?: string | UomBase;
   unitCost?: number | string;
   tax?: string | null;
   landingCost?: string | null;
@@ -43,7 +44,7 @@ export interface PurchaseOrderItem {
   total?: number | string;
   taxAmount?: number | string;
   taxName?: string;
-  taxId?: string;
+  taxId?: string | TaxBase;
 }
 export interface PurchaseOrderFormValues {
   supplierId?: string;

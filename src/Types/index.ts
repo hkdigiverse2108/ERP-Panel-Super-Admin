@@ -41,6 +41,7 @@ export * from "./Recipe";
 export * from "./ReturnPosOrder";
 export * from "./Roles";
 export * from "./SalesCreditNote";
+export * from "./PurchaseDebitNote";
 export * from "./SalesOrder";
 export * from "./Stock";
 export * from "./StockVerification";

@@ -84,7 +84,7 @@ const AdminSetting = () => {
     try {
       // Use GetChangedFields to omit unchanged empty fields or data that shouldn't be overridden
       const adminData: AdminSettingBase | undefined = Array.isArray(adminSettingData?.data) ? adminSettingData?.data[0] : (adminSettingData?.data as AdminSettingBase | undefined);
-      const payload: any = GetChangedFields(values, adminData || {});
+      const payload = GetChangedFields(values, adminData || {});
 
       // Clean up empty strings for images if backend strictly expects URL or null
       if (payload.logo === "") payload.logo = null;

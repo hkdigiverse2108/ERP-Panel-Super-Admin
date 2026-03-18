@@ -6,7 +6,7 @@ import { Mutations } from "../../../Api";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonSummaryWatcher } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { DeliveryChallanFormValues, DeliveryChallanItem } from "../../../Types";
+import type { AdditionalChargeItem, DeliveryChallanFormValues, DeliveryChallanItem, ShippingDetails } from "../../../Types";
 import { DateConfig, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 import { DeliveryChallanFormSchema } from "../../../Utils/ValidationSchemas";
@@ -46,18 +46,18 @@ const DeliveryChallanForm = () => {
     paymentTerms: data?.paymentTerms || "",
     taxType: data?.taxType || "default",
     createdFrom: data?.createdFrom || "",
-    selectedSalesOrderId: data?.salesOrderIds?.map((so: any) => (typeof so === "object" ? so?._id : so)) || [],
-    selectedInvoiceId: data?.invoiceIds?.map((inv: any) => (typeof inv === "object" ? inv?._id : inv)) || [],
+    selectedSalesOrderId: data?.salesOrderIds?.map((so: string | { _id: string }) => (typeof so === "object" ? so?._id : so)) || [],
+    selectedInvoiceId: data?.invoiceIds?.map((inv: string | { _id: string }) => (typeof inv === "object" ? inv?._id : inv)) || [],
     termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
-    items: data?.items?.length ? data.items.map((i: any) => ({
+    items: data?.items?.length ? data.items.map((i: DeliveryChallanItem) => ({
       ...emptyRow,
       ...i,
       productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
       taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
-      price: i.price || i.unitPrice || 0,
-      discount1: i.discount1 || i.discount || 0,
+      price: i.price || 0,
+      discount1: i.discount1 || 0,
     })) : [emptyRow],
-    additionalCharges: data?.additionalCharges?.length ? data.additionalCharges.map((r: any) => ({
+    additionalCharges: data?.additionalCharges?.length ? data.additionalCharges.map((r: AdditionalChargeItem) => ({
       ...r,
       chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
       taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
@@ -98,13 +98,13 @@ const DeliveryChallanForm = () => {
   // const { data: taxData } = Queries.useGetTaxDropdown();
 
   const getCalculatedSummary = (values: DeliveryChallanFormValues) => {
-    const itemGross = values.items?.reduce((s: number, r: any) => s + Number(r.qty || 0) * Number(r.price || 0), 0) || 0;
-    const itemDiscount = values.items?.reduce((s: number, r: any) => s + Number(r.discountAmount || 0), 0) || 0;
-    const itemTaxable = values.items?.reduce((s: number, r: any) => s + Number(r.taxableAmount || 0), 0) || 0;
-    const itemTax = values.items?.reduce((s: number, r: any) => s + Number(r.taxAmount || 0), 0) || 0;
+    const itemGross = values.items?.reduce((s: number, r: DeliveryChallanItem) => s + Number(r.qty || 0) * Number(r.price || 0), 0) || 0;
+    const itemDiscount = values.items?.reduce((s: number, r: DeliveryChallanItem) => s + Number(r.discountAmount || 0), 0) || 0;
+    const itemTaxable = values.items?.reduce((s: number, r: DeliveryChallanItem) => s + Number(r.taxableAmount || 0), 0) || 0;
+    const itemTax = values.items?.reduce((s: number, r: DeliveryChallanItem) => s + Number(r.taxAmount || 0), 0) || 0;
 
-    const chargeTaxable = values.additionalCharges?.reduce((s: number, r: any) => s + Number(r.amount || 0), 0) || 0;
-    const chargeTax = values.additionalCharges?.reduce((s: number, r: any) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0;
+    const chargeTaxable = values.additionalCharges?.reduce((s: number, r: AdditionalChargeItem) => s + Number(r.amount || 0), 0) || 0;
+    const chargeTax = values.additionalCharges?.reduce((s: number, r: AdditionalChargeItem) => s + (Number(r.totalAmount || 0) - Number(r.amount || 0)), 0) || 0;
 
     const totalTaxable = itemTaxable + chargeTaxable;
     const totalTax = itemTax + chargeTax;
@@ -128,12 +128,12 @@ const DeliveryChallanForm = () => {
 
   const handleSubmit = async (values: DeliveryChallanFormValues, { resetForm }: FormikHelpers<DeliveryChallanFormValues>) => {
     const { _submitAction, selectedSalesOrderId, selectedInvoiceId, createdFrom, ...rest } = values;
-    const payload: any = {
+    const payload: DeliveryChallanFormValues = {
       ...rest,
-      createdFrom: createdFrom || null,
+      createdFrom: createdFrom || "",
       salesOrderIds: Array.isArray(selectedSalesOrderId) ? selectedSalesOrderId : [],
       invoiceIds: Array.isArray(selectedInvoiceId) ? selectedInvoiceId : [],
-      items: values.items?.filter((i: any) => i.productId).map((i: any) => ({
+      items: values.items?.filter((i: DeliveryChallanItem) => i.productId).map((i: DeliveryChallanItem) => ({
         productId: i.productId,
         qty: Number(i.qty || 0),
         freeQty: Number(i.freeQty || 0),
@@ -152,11 +152,11 @@ const DeliveryChallanForm = () => {
         amount: Number(r.amount), 
         totalAmount: Number(r.totalAmount) 
       })),
-      shippingDetails: {
+      shippingDetails: values.shippingDetails ? {
         ...values.shippingDetails,
-        weight: Number(values.shippingDetails?.weight || 0),
-        transporterId: values.shippingDetails?.transporterId || null,
-      },
+        weight: Number(values.shippingDetails.weight || 0),
+        transporterId: values.shippingDetails.transporterId || null,
+      } as ShippingDetails : undefined,
       transactionSummary: getCalculatedSummary(values),
     };
 

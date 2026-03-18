@@ -40,7 +40,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
     let taxIncluded = false;
     if (values?.taxType === "tax_inclusive") taxIncluded = true;
     else if (values?.taxType === "tax_exclusive") taxIncluded = false;
-    else taxIncluded = typeof (product as any)?.isPurchaseTaxIncluding === "boolean" ? (product as any).isPurchaseTaxIncluding : false;
+    else taxIncluded = typeof (product)?.isPurchaseTaxIncluding === "boolean" ? (product).isPurchaseTaxIncluding : false;
 
     let landingCost = 0;
     let taxAmount = 0;
@@ -58,7 +58,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
       landingCost = discountedCost;
     }
 
-    const mrp = Number(row?.mrp || (product as any)?.mrp || 0);
+    const mrp = Number(row?.mrp || product?.mrp || 0);
     const sellingPrice = mrp - discount;
     const margin = sellingPrice > 0 ? sellingPrice - landingCost : 0;
     const totalAmount = qty * landingCost;
@@ -83,19 +83,19 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
 
     // Regular Items
     const items = values?.productDetails || [];
-    items.forEach((item: any, index: number) => {
+    items.forEach((item: SupplierBillProductItem, index: number) => {
       if (!item?.productId) return;
       const product = productsData?.data?.find((p: ProductBase) => p._id === item.productId);
       if (!product) return;
 
-      const isProductChanged = (item as any)._prevProductId !== item.productId;
+      const isProductChanged = (item)._prevProductId !== item.productId;
 
       let currentTaxRate = Number(item.tax || 0);
       let currentTaxId = item.taxId || "";
 
       if (isProductChanged || !item.taxId) {
         if (product.purchaseTaxId) {
-          const pTaxId = typeof product.purchaseTaxId === "object" ? (product.purchaseTaxId as any)?._id : product.purchaseTaxId;
+          const pTaxId = typeof product.purchaseTaxId === "object" ? (product.purchaseTaxId)?._id : product.purchaseTaxId;
           const tax = taxData?.data?.find((t: TaxBase) => t._id === pTaxId);
           if (tax && tax.percentage !== undefined) {
             currentTaxRate = Number(tax.percentage) || 0;
@@ -118,18 +118,18 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
       let currentUnitCost = Number(item?.unitCost || 0);
 
       if (isProductChanged || taxTypeChanged) {
-        let desiredCost = Number((product as any)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
+        let desiredCost = Number((product)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
         const taxRate = Number(currentTaxRate) || 0;
-        const isProductInclusive = typeof (product as any)?.isPurchaseTaxIncluding === "boolean" ? (product as any).isPurchaseTaxIncluding : false;
+        const isProductInclusive = typeof (product)?.isPurchaseTaxIncluding === "boolean" ? (product).isPurchaseTaxIncluding : false;
 
         if (values?.taxType === "tax_exclusive") {
           desiredCost = isProductInclusive ? desiredCost / (1 + taxRate / 100) : desiredCost;
         } else if (values?.taxType === "tax_inclusive") {
           desiredCost = !isProductInclusive ? desiredCost * (1 + taxRate / 100) : desiredCost;
         } else if (values?.taxType === "out_of_scope") {
-          desiredCost = Number((product as any)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
+          desiredCost = Number((product)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
         } else {
-          desiredCost = Number((product as any)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
+          desiredCost = Number((product)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
         }
 
         desiredCost = Number(desiredCost.toFixed(2));
@@ -140,13 +140,13 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
 
         if (isProductChanged) {
           if (item._prevProductId !== item.productId) setFieldValue(`productDetails.${index}._prevProductId`, item.productId);
-          const newMrp = Number((product as any)?.mrp || 0);
+          const newMrp = Number((product)?.mrp || 0);
           if (Number(item.mrp) !== newMrp) setFieldValue(`productDetails.${index}.mrp`, newMrp);
         }
       }
 
       // Ensure unit cost doesn't exceed product's landing cost
-      const maxAllowedCost = Number((product as any)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
+      const maxAllowedCost = Number((product)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
       if (maxAllowedCost > 0 && currentUnitCost > maxAllowedCost) {
         if (Number(item.unitCost) !== maxAllowedCost) setFieldValue(`productDetails.${index}.unitCost`, maxAllowedCost);
         currentUnitCost = maxAllowedCost;
@@ -165,19 +165,19 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
 
     // Return Items
     const returnItems = values?.returnProductDetails?.item || [];
-    returnItems.forEach((item: any, index: number) => {
+    returnItems.forEach((item: SupplierBillReturnProductItem, index: number) => {
       if (!item?.productId) return;
       const product = productsData?.data?.find((p: ProductBase) => p._id === item.productId);
       if (!product) return;
 
-      const isProductChanged = (item as any)._prevProductId !== item.productId;
+      const isProductChanged = (item)._prevProductId !== item.productId;
 
       let currentTaxRate = Number(item.tax || 0);
       let currentTaxId = item.taxId || "";
 
       if (isProductChanged || !item.taxId) {
         if (product.purchaseTaxId) {
-          const pTaxId = typeof product.purchaseTaxId === "object" ? (product.purchaseTaxId as any)?._id : product.purchaseTaxId;
+          const pTaxId = typeof product.purchaseTaxId === "object" ? (product.purchaseTaxId)?._id : product.purchaseTaxId;
           const tax = taxData?.data?.find((t: TaxBase) => t._id === pTaxId);
           if (tax && tax.percentage !== undefined) {
             currentTaxRate = Number(tax.percentage) || 0;
@@ -199,13 +199,13 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
       let currentUnitCost = Number(item?.unitCost || 0);
 
       if (isProductChanged || taxTypeChanged) {
-        let desiredCost = Number((product as any)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
+        let desiredCost = Number((product)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
         const taxRate = Number(currentTaxRate) || 0;
-        const isProductInclusive = typeof (product as any)?.isPurchaseTaxIncluding === "boolean" ? (product as any).isPurchaseTaxIncluding : false;
+        const isProductInclusive = typeof (product)?.isPurchaseTaxIncluding === "boolean" ? (product).isPurchaseTaxIncluding : false;
 
         if (values?.taxType === "tax_exclusive") desiredCost = isProductInclusive ? desiredCost / (1 + taxRate / 100) : desiredCost;
         else if (values?.taxType === "tax_inclusive") desiredCost = !isProductInclusive ? desiredCost * (1 + taxRate / 100) : desiredCost;
-        else desiredCost = Number((product as any)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
+        else desiredCost = Number((product)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
 
         desiredCost = Number(desiredCost.toFixed(2));
         if (currentUnitCost !== desiredCost || isProductChanged) {
@@ -218,7 +218,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
         }
       }
 
-      const maxAllowedCost = Number((product as any)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
+      const maxAllowedCost = Number((product)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
       if (maxAllowedCost > 0 && currentUnitCost > maxAllowedCost) {
         if (Number(item.unitCost) !== maxAllowedCost) setFieldValue(`returnProductDetails.item.${index}.unitCost`, maxAllowedCost);
         currentUnitCost = maxAllowedCost;
@@ -288,14 +288,14 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
                       header: "Qty",
                       bodyClass: "min-w-28",
                       render: (_, index) => <CommonValidationTextField name={`productDetails.${index}.qty`} type="number" size="small" />,
-                      footer: (data) => data.reduce((a: any, b: any) => a + (+b.qty || 0), 0),
+                      footer: (data) => data.reduce((a: number, b: SupplierBillProductItem) => a + (Number(b?.qty) || 0), 0),
                     },
                     {
                       key: "freeQty",
                       header: "Free Qty",
                       bodyClass: "min-w-28",
                       render: (_, index) => <CommonValidationTextField name={`productDetails.${index}.freeQty`} type="number" size="small" />,
-                      footer: (data) => data.reduce((a: any, b: any) => a + (+b.freeQty || 0), 0),
+                      footer: (data) => data.reduce((a: number, b: SupplierBillProductItem) => a + (Number(b?.freeQty) || 0), 0),
                     },
                     {
                       key: "mrp",
@@ -326,7 +326,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
                       header: "Taxable",
                       bodyClass: "min-w-28",
                       render: (_, index) => <span>{values?.productDetails?.[index]?.taxableAmount || "0"}</span>,
-                      footer: (data) => data.reduce((a: any, b: any) => a + (+b.taxableAmount || 0), 0).toFixed(2),
+                      footer: (data) => data.reduce((a: number, b: SupplierBillProductItem) => a + (Number(b?.taxableAmount) || 0), 0).toFixed(2),
                     },
                     {
                       key: "taxId",
@@ -348,7 +348,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
                           </div>
                         );
                       },
-                      footer: (data) => data.reduce((a: any, b: any) => a + (+b.taxAmount || 0), 0).toFixed(2),
+                      footer: (data) => data.reduce((a: number, b: SupplierBillProductItem) => a + (Number(b?.taxAmount) || 0), 0).toFixed(2),
                     },
                     {
                       key: "landingCost",
@@ -376,7 +376,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
                         const { totalAmount } = calculateRowValues(index, false);
                         return <span>{totalAmount.toFixed(2)}</span>;
                       },
-                      footer: (data) => data.reduce((a: any, b: any) => a + (+b.total || 0), 0).toFixed(2),
+                      footer: (data) => data.reduce((a: number, b: SupplierBillProductItem) => a + (Number(b?.total) || 0), 0).toFixed(2),
                     },
                   ];
                   return <CommonTable showFooter data={values.productDetails || []} columns={ProductRowColumns} rowKey={(_row, index) => index.toString()} getRowClass={() => "align-top"} />;
@@ -433,7 +433,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
                       header: "Qty",
                       bodyClass: "min-w-28",
                       render: (_, index) => <CommonValidationTextField name={`returnProductDetails.item.${index}.qty`} type="number" size="small" />,
-                      footer: (data) => data.reduce((a: any, b: any) => a + (+b.qty || 0), 0),
+                      footer: (data) => data.reduce((a: number, b: SupplierBillReturnProductItem) => a + (Number(b?.qty) || 0), 0),
                     },
                     {
                       key: "unitCost",
@@ -503,11 +503,11 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
             <Box className="border dark:border-gray-700 text-sm w-full md:w-[350px]" sx={{ borderRadius: "8px", overflow: "hidden" }}>
               <Box className="grid grid-cols-[130px_1fr] border-b border-gray-200 dark:border-gray-700">
                 <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium">Gross</Box>
-                <Box className="p-2 text-right font-medium">{(values?.returnProductDetails?.item || []).reduce((a: number, b: any) => a + (Number(b.taxableAmount) || 0), 0).toFixed(2)}</Box>
+                <Box className="p-2 text-right font-medium">{(values?.returnProductDetails?.item || []).reduce((a: number, b: SupplierBillReturnProductItem) => a + (Number(b?.taxableAmount) || 0), 0).toFixed(2)}</Box>
               </Box>
               <Box className="grid grid-cols-[130px_1fr] border-b border-gray-200 dark:border-gray-700">
                 <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium">Tax Amount</Box>
-                <Box className="p-2 text-right font-medium">{(values?.returnProductDetails?.item || []).reduce((a: number, b: any) => a + (Number(b.taxAmount) || 0), 0).toFixed(2)}</Box>
+                <Box className="p-2 text-right font-medium">{(values?.returnProductDetails?.item || []).reduce((a: number, b: SupplierBillReturnProductItem) => a + (Number(b?.taxAmount) || 0), 0).toFixed(2)}</Box>
               </Box>
               <Box className="grid grid-cols-[130px_1fr] border-b border-gray-200 dark:border-gray-700">
                 <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium text-blue-500">Roundoff</Box>
@@ -519,7 +519,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
               </Box>
               <Box className="grid grid-cols-[130px_1fr]">
                 <Box className="bg-gray-50 dark:bg-gray-800 p-3 flex justify-end font-bold text-lg">Net Amount</Box>
-                <Box className="p-3 text-right font-bold text-lg">{((values?.returnProductDetails?.item || []).reduce((a: number, b: any) => a + (Number(b.total) || 0), 0) + (Number(values?.returnProductDetails?.summary?.roundOff) || 0)).toFixed(2)}</Box>
+                <Box className="p-3 text-right font-bold text-lg">{((values?.returnProductDetails?.item || []).reduce((a: number, b: SupplierBillReturnProductItem) => a + (Number(b?.total) || 0), 0) + (Number(values?.returnProductDetails?.summary?.roundOff) || 0)).toFixed(2)}</Box>
               </Box>
             </Box>
           </Box>

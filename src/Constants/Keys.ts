@@ -210,6 +210,13 @@ export const KEYS = {
     EDIT: "supplier-bill-edit",
     DELETE: "supplier-bill-delete",
   },
+  PURCHASE_DEBIT_NOTE: {
+    BASE: "purchase-debit-note",
+    ADD: "purchase-debit-note-add",
+    EDIT: "purchase-debit-note-edit",
+    DELETE: "purchase-debit-note-delete",
+    DROPDOWN: "purchase-debit-note-dropdown",
+  },
   ADDITIONAL_CHARGE: {
     BASE: "additional-charge",
     DROPDOWN: "additional-charge-dropdown",

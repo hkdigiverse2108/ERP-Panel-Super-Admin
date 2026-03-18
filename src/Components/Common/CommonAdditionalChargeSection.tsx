@@ -3,7 +3,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
 import { CommonButton, CommonSelect, CommonTextField } from "../../Attribute";
 import { CommonSummarySection, CommonTable, CommonCard } from ".";
-import type { AdditionalChargeItem, CommonTableColumn } from "../../Types";
+import type { AdditionalChargeItem, AdditionalChargesBase, CommonTableColumn, TaxBase } from "../../Types";
 import { Queries } from "../../Api";
 import { GenerateOptions } from "../../Utils";
 import { FieldArray, useFormikContext } from "formik";
@@ -16,7 +16,7 @@ interface CommonAdditionalChargeSectionProps {
 
 const CommonAdditionalChargeSection = ({ name = "additionalCharges", summaryName = "transactionSummary" }: CommonAdditionalChargeSectionProps) => {
   const { values, setFieldValue } = useFormikContext<any>();
-  const [show, setShow] = useState(values[name]?.length > 0);
+  const [show, setShow] = useState(Array.isArray(values[name]) && values[name]?.length > 0);
 
   const { data: TaxData, isLoading: isTaxLoading } = Queries.useGetTaxDropdown();
   const taxOptions = GenerateOptions(TaxData?.data || []);
@@ -26,12 +26,12 @@ const CommonAdditionalChargeSection = ({ name = "additionalCharges", summaryName
 
   const emptyRow: AdditionalChargeItem = { chargeId: "", amount: 0, taxId: "", taxAmount: 0, totalAmount: 0 };
 
-  const handleRowChange = (index: number, field: keyof AdditionalChargeItem, value: any, rows: AdditionalChargeItem[]) => {
+  const handleRowChange = (index: number, field: keyof AdditionalChargeItem, value: string, rows: AdditionalChargeItem[]) => {
     const newRows = [...rows];
     let row = { ...newRows[index], [field]: value };
 
     if (field === "chargeId") {
-      const charge = additionalchargedata?.data?.find((c: any) => c._id === value);
+      const charge = additionalchargedata?.data?.find((c: AdditionalChargesBase) => c._id === value);
       if (charge) {
         row.amount = charge.defaultValue || 0;
         row.taxId = charge.taxId?._id || "";
@@ -39,7 +39,7 @@ const CommonAdditionalChargeSection = ({ name = "additionalCharges", summaryName
     }
 
     const amount = Number(row.amount) || 0;
-    const tax = TaxData?.data?.find((t: any) => t._id === row.taxId);
+    const tax = TaxData?.data?.find((t: TaxBase) => t._id === row.taxId);
     const taxRate = tax?.percentage || 0;
     const taxAmount = (amount * taxRate) / 100;
 
@@ -82,15 +82,21 @@ const CommonAdditionalChargeSection = ({ name = "additionalCharges", summaryName
       header: "Additional Charge",
       headerClass: "text-start",
       bodyClass: "min-w-60 text-start",
-      render: (row, index) => <CommonSelect label="Select Additional Charge" value={row.chargeId ? [row.chargeId] : []} options={additionalChargeOptions} isLoading={isAdditionalChargeLoading} onChange={(v) => handleRowChange(index, "chargeId", v[0], rows)} />,
+      render: (row, index) => {
+        const value = row.chargeId ? [typeof row.chargeId === "object" ? row.chargeId._id : row.chargeId] : [];
+        return <CommonSelect label="Select Additional Charge" value={value} options={additionalChargeOptions} isLoading={isAdditionalChargeLoading} onChange={(v) => handleRowChange(index, "chargeId", v[0], rows)} />;
+      },
       footer: "",
     },
-    { key: "amount", header: "Amount", bodyClass: "min-w-32", render: (row, index) => <CommonTextField type="number" value={row.amount || ""} onChange={(v: any) => handleRowChange(index, "amount", v, rows)} />, footer: "" },
+    { key: "amount", header: "Amount", bodyClass: "min-w-32", render: (row, index) => <CommonTextField type="number" value={row.amount || ""} onChange={(v) => handleRowChange(index, "amount", v, rows)} />, footer: "" },
     {
       key: "taxId",
       header: "Tax",
       bodyClass: "min-w-52",
-      render: (row, index) => <CommonSelect value={row.taxId ? [row.taxId] : []} options={taxOptions} label="Select Tax" isLoading={isTaxLoading} onChange={(v) => handleRowChange(index, "taxId", v[0], rows)} />,
+      render: (row, index) => {
+        const value = row.taxId ? [typeof row.taxId === "object" ? row.taxId?._id : row.taxId] : [];
+        return <CommonSelect value={value} options={taxOptions} label="Select Tax" isLoading={isTaxLoading} onChange={(v) => handleRowChange(index, "taxId", v[0], rows)} />;
+      },
       footer: "",
     },
     { key: "totalAmount", header: "Total", headerClass: "text-right", bodyClass: "min-w-28 p-2 text-right", render: (row) => row.totalAmount || 0, footer: () => calculateTotal(rows), footerClass: "text-right" },
@@ -137,7 +143,7 @@ const CommonAdditionalChargeSection = ({ name = "additionalCharges", summaryName
               return (
                 <Box className="custom-scrollbar" sx={{ flex: 1, overflowX: "auto" }}>
                   <Box sx={{ minWidth: 800 }}>
-                    <CommonTable data={rows} columns={getColumns(push, remove, rows)} rowKey={(_: any, i: number) => String(i)} showFooter />
+                    <CommonTable data={rows} columns={getColumns(push, remove, rows)} rowKey={(_, i: number) => String(i)} showFooter />
                   </Box>
                 </Box>
               );

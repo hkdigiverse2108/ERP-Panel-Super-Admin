@@ -220,6 +220,15 @@ export const URL_KEYS = {
     EDIT: "/supplier-bill/edit",
     ALL: "/supplier-bill/all",
   },
+  PURCHASE_DEBIT_NOTE: {
+    BASE: "/purchase-debit-note",
+    ALL: "/purchase-debit-note/all",
+    ADD: "/purchase-debit-note/add",
+    EDIT: "/purchase-debit-note/edit",
+    DELETE: "/purchase-debit-note/delete",
+    DROPDOWN: "/purchase-debit-note/dropdown",
+    ADD_EDIT: "/purchase-debit-note/add-edit",
+  },
   ADDITIONAL_CHARGE: {
     BASE: "/additional-charge",
     DROPDOWN: "/additional-charge/dropdown",
@@ -373,5 +382,6 @@ export const URL_KEYS = {
     EDIT: "/sales-credit-note/edit",
     DELETE: "/sales-credit-note/delete",
     DROPDOWN: "/sales-credit-note/dropdown",
-  }
+    ADD_EDIT: "/sales-credit-note/add-edit",
+  },
 } as const;

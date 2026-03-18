@@ -79,6 +79,7 @@ export const NavItems: NavItem[] = [
     children: [
       { name: PAGE_TITLE.PURCHASE_ORDER.BASE, path: ROUTES.PURCHASE_ORDER.BASE },
       { name: PAGE_TITLE.SUPPLIER_BILL.BASE, path: ROUTES.SUPPLIER_BILL.BASE },
+      { name: PAGE_TITLE.PURCHASE_DEBIT_NOTE.BASE, path: ROUTES.PURCHASE_DEBIT_NOTE.BASE },
     ],
   },
   {
