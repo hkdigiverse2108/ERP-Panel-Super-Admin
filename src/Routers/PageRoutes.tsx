@@ -71,7 +71,7 @@ import Receipt from "../Pages/Bank/Receipt";
 import ReceiptForm from "../Pages/Bank/Receipt/ReceiptForm";
 import Expense from "../Pages/Bank/Expense";
 import ExpenseForm from "../Pages/Bank/Expense/ExpenseForm";
-import SalaryForm from "../Pages/Bank/Expense/SalaryForm";
+import SalaryForm from "../Pages/Bank/Salary/SalaryForm";
 import Salary from "../Pages/Bank/Salary";
 import Estimate from "../Pages/Sales/Estimate";
 import EstimateForm from "../Pages/Sales/Estimate/EstimateForm";

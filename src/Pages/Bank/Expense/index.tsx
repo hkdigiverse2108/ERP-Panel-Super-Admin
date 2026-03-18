@@ -20,8 +20,8 @@ const Expense = () => {
 
   const { data, isLoading, isFetching } = Queries.useGetExpense({ ...params, avoidSalary: false });
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
-  const { mutate: deletePayment, isPending: isDeleteLoading } = Mutations.useDeletePosPayment();
-  const { mutate: editPayment, isPending: isEditLoading } = Mutations.useEditPosPayment();
+  const { mutate: deleteExpense, isPending: isDeleteLoading } = Mutations.useDeleteExpense();
+  const { mutate: editExpense, isPending: isEditLoading } = Mutations.useEditExpense();
 
   const { mutate: deleteSalary, isPending: isDeleteSalaryLoading } = Mutations.useDeleteSalary();
   const { mutate: editSalary, isPending: isEditSalaryLoading } = Mutations.useEditSalary();
@@ -38,7 +38,7 @@ const Expense = () => {
   const handleDelete = () => {
     if (!rowToDelete) return;
     const isSalary = (rowToDelete as ExpenseBase).isSalary || (rowToDelete as ExpenseBase).isSalary;
-    const mutate = isSalary ? deleteSalary : deletePayment;
+    const mutate = isSalary ? deleteSalary : deleteExpense;
     mutate(rowToDelete?._id as string, {
       onSuccess: () => setRowToDelete(null),
     });
@@ -83,7 +83,7 @@ const Expense = () => {
             }
             return CommonActionColumn<ExpenseBase>({
               ...(permission?.edit && {
-                active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
+                active: (row) => editExpense({ expenseId: row?._id, isActive: !row.isActive }),
                 editRoute: ROUTES.EXPENSE.ADD_EDIT,
               }),
               ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.description }) }),
