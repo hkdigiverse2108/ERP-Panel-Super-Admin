@@ -1,6 +1,6 @@
 import { Box, Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { CommonSelect, CommonTextField, CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
@@ -43,6 +43,8 @@ const ReceiptForm = () => {
     posCashRegisterId: data?.posCashRegisterId?._id || undefined,
     remark: data?.remark || "",
   };
+  const [partyId, setPartyId] = useState(initialValues.partyId);
+  const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: partyId, duePaymentFilter: true }, Boolean(partyId));
 
   const handleSubmit = async (values: PosPaymentFormValues, { resetForm }: FormikHelpers<PosPaymentFormValues>) => {
     const { _submitAction, voucherDetails, ...rest } = values;
@@ -78,8 +80,8 @@ const ReceiptForm = () => {
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={ReciptFormSchema} enableReinitialize>
           {({ resetForm, setFieldValue, dirty, values }) => {
-            const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: values.partyId, duePaymentFilter: true }, Boolean(values.partyId));
-            const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown({ companyId: values?.companyId }, Boolean(values?.companyId));
+            // const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: values.partyId, duePaymentFilter: true }, Boolean(values.partyId));
+            // const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown({ companyId: values?.companyId }, Boolean(values?.companyId));
 
             const handleTableChange = (key: string, value: string | number | undefined) => {
               let newValues = { ...values, [key]: value };
@@ -133,7 +135,7 @@ const ReceiptForm = () => {
                       key: "bankId",
                       header: "Bank",
                       bodyClass: "min-w-40",
-                      render: (r) => <CommonSelect options={GenerateOptions(bankDropdown?.data)} isLoading={bankDropdownLoading} placeholder="Select Bank" value={r.bankId ? [r.bankId] : []} onChange={(v) => handleTableChange("bankId", v[0] || "")} />,
+                      render: () => <DependentSelect params={{ companyFilter: values?.companyId }} name="bankId" label="Bank" query={Queries.useGetBankDropdown} grid={{ xs: 12 }} disabled={!values?.companyId} />,
                     } as CommonTableColumn<PosPaymentFormValues>,
                   ]
                 : []),
@@ -150,7 +152,21 @@ const ReceiptForm = () => {
                   <CommonCard title="Receipt Details" grid={{ xs: 12 }}>
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
-                      <DependentSelect params={{ companyFilter: values?.companyId }} name="partyId" label="Party" required query={Queries.useGetContactDropdown} grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} />
+                      <DependentSelect
+                        params={{ companyFilter: values?.companyId }}
+                        value={values.partyId ? [values.partyId] : []}
+                        name="partyId"
+                        label="Party"
+                        required
+                        query={Queries.useGetContactDropdown}
+                        grid={{ xs: 12, md: 4 }}
+                        onChange={(val) => {
+                          const selected = val?.[0] || "";
+                          setFieldValue("partyId", selected);
+                          setPartyId(selected);
+                        }}
+                        disabled={!values?.companyId}
+                      />
                       <CommonValidationDatePicker name="date" label="Receipt Date" required grid={{ xs: 12, md: 4 }} />
                       <Grid size={{ xs: 12 }}>
                         <CommonStatsCard
