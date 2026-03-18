@@ -20,7 +20,7 @@ const CommonStatsCard: FC<CommonStatsCardProps> = ({ stats, grid = { xs: 10, sm:
                 </Box>
               </Box>
             ) : (
-              <Box textAlign="center">
+              <Box textAlign="center" justifyItems="center">
                 <Paper elevation={0} className={item.color} sx={{ borderRadius: 3, width: 100, height: 70, display: "flex", alignItems: "center", justifyContent: "center", mb: 1, backgroundColor: theme.palette.mode === "dark" ? "#1e293b" : "#edf3ff", color: theme.palette.mode === "dark" ? "#ffffff" : "#1e293b", transition: "0.2s ease", ...paperSx }}>
                   <Typography sx={{ fontSize: 22, fontWeight: 700, lineHeight: 1 }}>{item.value}</Typography>
                 </Paper>

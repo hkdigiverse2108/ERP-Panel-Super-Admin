@@ -143,13 +143,11 @@ const DiscountForm = () => {
                     {values.discountMode === "normal" && values.minimumRequirement === "min_purchase_amount" && <CommonValidationTextField name="minimumPurchaseAmount" label="Minimum Purchase Amount" type="number" grid={{ xs: 12 }} />}
                     {values.discountMode === "normal" && values.minimumRequirement === "min_quantity" && <CommonValidationTextField name="minimumQuantity" label="Minimum Quantity" type="number" grid={{ xs: 12 }} />}
 
-                    <CommonValidationDatePicker name="startDateTime" label="Start Date" grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTimePicker name="startDateTime" label="Start Time" grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationDatePicker name="startDateTime" label="Start Date" pickerType="datetime" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationCheckbox name="hasEndDate" label="Set End Date" grid={{ xs: 12 }} />
                     {values.hasEndDate && (
                       <>
-                        <CommonValidationDatePicker name="endDateTime" label="End Date" grid={{ xs: 12, md: 4 }} />
-                        <CommonValidationTimePicker name="endDateTime" label="End Time" grid={{ xs: 12, md: 4 }} />
+                        <CommonValidationDatePicker name="endDateTime" label="End Date" pickerType="datetime" grid={{ xs: 12, md: 4 }} />
                       </>
                     )}
 

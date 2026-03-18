@@ -108,6 +108,7 @@ export interface CommonValidationDatePickerProps extends DatePickerOption {
   grid?: GridType;
   required?: boolean;
   label?: string;
+  pickerType?: "date" | "datetime";
 }
 
 export interface CommonDatePickerProps extends CommonValidationDatePickerProps {
