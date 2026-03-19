@@ -75,7 +75,7 @@ const PurchaseDebitNoteForm = () => {
         netAmount: data?.summary?.netAmount || 0,
       },
       notes: data?.notes || "",
-      status: data?.status || "open",
+      // status: data?.status || "open",
       termsAndConditionIds: data?.termsAndConditionIds?.map((t: TermsConditionBase) => (typeof t === "string" ? t : t._id)) || [],
     };
   }, [data]);

@@ -44,12 +44,12 @@ const Invoice = () => {
   const handleAdd = () => navigate(ROUTES.INVOICE.ADD_EDIT);
 
   const columns: AppGridColDef<InvoiceBase>[] = [
-    { field: "invoiceNo", headerName: "Invoice No", width: 120 },
-    { field: "date", headerName: "Invoice Date", width: 130, renderCell: (params) => FormatDate(params.row.date) },
-    { field: "dueDate", headerName: "Due Date", width: 130, renderCell: (params) => FormatDate(params.row.dueDate) },
-    { field: "customerId", headerName: "Customer Name", width: 150, valueGetter: (_, row: InvoiceBase) => (row?.customerId ? (typeof row.customerId === 'object' ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || row.customerId.companyName || "" : "") : "") },
-    { field: "netAmount", headerName: "Net Amount", width: 110, type: "number" },
-    { field: "paidAmount", headerName: "Paid Amount", width: 110, type: "number" },
+    { field: "invoiceNo", headerName: "Invoice No", flex: 1, minWidth: 120 },
+    { field: "date", headerName: "Invoice Date", flex: 1, minWidth: 130, renderCell: (params) => FormatDate(params.row.date) },
+    { field: "dueDate", headerName: "Due Date", flex: 1, minWidth: 130, renderCell: (params) => FormatDate(params.row.dueDate) },
+    { field: "customerId", headerName: "Customer Name", flex: 1, minWidth: 150, valueGetter: (_, row: InvoiceBase) => (row?.customerId ? (typeof row.customerId === 'object' ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || row.customerId.companyName || "" : "") : "") },
+    { field: "netAmount", headerName: "Net Amount", flex: 1, minWidth: 110, type: "number" },
+    { field: "paidAmount", headerName: "Paid Amount", flex: 1, minWidth: 110, type: "number" },
     { field: "dueAmount", headerName: "Due Amount", width: 110, type: "number" },
     { field: "status", headerName: "Status", headerAlign: "center", width: 190, renderCell: (params) => <span className={`status-${params.row.status} overflow-hidden! text-nowrap`}>{params.row.status}</span> },
     { field: "paymentStatus", headerName: "Payment Status", width: 120, renderCell: (params) => <span className={`status-${params.row.paymentStatus}`}>{params.row.paymentStatus}</span> },

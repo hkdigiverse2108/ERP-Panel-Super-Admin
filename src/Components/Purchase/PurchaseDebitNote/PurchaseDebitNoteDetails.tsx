@@ -168,7 +168,7 @@ const PurchaseDebitNoteDetails = () => {
 
         <CommonValidationTextField name="exportSez" label="Export SEZ" placeholder="Enter Export SEZ" grid={{ xs: 12, md: 4 }} />
 
-        <CommonValidationSelect name="status" label="Status" options={[{ label: "Open", value: "open" }, { label: "Closed", value: "closed" }, { label: "Cancelled", value: "cancelled" }]} grid={{ xs: 12, md: 4 }} />
+        {/* <CommonValidationSelect name="status" label="Status" options={[{ label: "Open", value: "open" }, { label: "Closed", value: "closed" }, { label: "Cancelled", value: "cancelled" }]} grid={{ xs: 12, md: 4 }} /> */}
       </Grid>
 
       <Grid size={{ xs: 12 }} container spacing={2} sx={{ display: { xs: "flex", md: "none" } }}>
