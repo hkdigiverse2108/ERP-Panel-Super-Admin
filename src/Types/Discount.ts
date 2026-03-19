@@ -87,6 +87,10 @@ export interface DiscountBase extends Omit<DiscountFormValues, "categoryIds" | "
 
 export interface DiscountDataResponse extends PageStatus {
   discount_data: DiscountBase[];
+  activeDiscounts: number;
+  discountGiven: number;
+  orderWithDiscounts: number;
+  revenue: number;
 }
 
 export interface DiscountApiResponse extends MessageStatus {

@@ -28,12 +28,11 @@ const Discount = () => {
 
   const stats = useMemo(() => {
     return [
-      { label: "Total Coupons", value: data?.data?.totalData || 0 },
-      { label: "Active Coupons", value: 0 },
-      { label: "Order with Coupons", value: 0 },
-      { label: "Order without Coupons", value: 0 },
-      { label: "Revenue from Coupons", value: 0 },
-      { label: "Discount Given", value: 0 },
+      { label: "Total Discounts", value: data?.data?.totalData || 0 },
+      { label: "Active Discounts", value: data?.data?.activeDiscounts || 0 },
+      { label: "Order with Discounts", value: data?.data?.orderWithDiscounts || 0 },
+      { label: "Revenue from Discounts", value: data?.data?.revenue || 0 },
+      { label: "Discount Given", value: data?.data?.discountGiven || 0 },
     ];
   }, [data]);
 
@@ -41,9 +40,9 @@ const Discount = () => {
     { field: "title", headerName: "Title", width: 200 },
     { field: "createdAt", headerName: "Created On", width: 160, valueGetter: (v) => FormatDate(v) },
     { field: "validity", headerName: "Validity", width: 250, valueGetter: (v, row) => FormatValidity(v, row) },
-    { field: "orders", headerName: "Orders", width: 120 },
-    { field: "revenue", headerName: "Revenue", width: 120 },
-    { field: "discountValue", headerName: "Discount", width: 120 },
+    { field: "orders", headerName: "Orders", width: 150 },
+    { field: "revenue", headerName: "Revenue", width: 150 },
+    { field: "discountValue", headerName: "Discount", width: 150 },
     { field: "discountType", headerName: "Discount Type", width: 150, valueGetter: (v) => FormatPayment(v) },
     { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 100, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
     ...(permission?.edit || permission?.delete
@@ -77,7 +76,7 @@ const Discount = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.CRM.DISCOUNT.BASE} breadcrumbs={BREADCRUMBS.DISCOUNT.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 1.5 }}>
-        <CommonStatsCard stats={stats} grid={{ xs: 6, sm: 4, md: 2 }} />
+        <CommonStatsCard stats={stats} grid={{ xs: 6, sm: 4, md: 2.3 }} />
         <CommonCard hideDivider>
           <CommonDataGrid {...gridOptions} />
         </CommonCard>
