@@ -10,7 +10,7 @@ import type { AdditionalChargeItem, SalesCreditNoteFormValues, SalesCreditNoteIt
 import { DateConfig, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 import { SalesCreditNoteFormSchema } from "../../../Utils/ValidationSchemas";
-import { SalesCreditNoteDetails, SalesCreditNoteTabs } from "../../../Components/Sales/SalesCreditNote";
+import { SalesCreditNoteDetails, SalesCreditNoteTabs } from "../../../Components/Sales";
 
 const SalesCreditNoteForm = () => {
   const location = useLocation();

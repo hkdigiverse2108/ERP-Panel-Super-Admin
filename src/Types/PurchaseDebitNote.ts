@@ -1,4 +1,4 @@
-import type { AdditionalChargeItem, CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { AdditionalChargeItem, CommonDataType, MessageStatus, PageStatus, ShippingDetails } from "./Common";
 import type { ProductBase } from "./Product";
 import type { ContactBase } from "./Contacts";
 import type { TermsConditionBase } from "./TermsCondition";
@@ -30,19 +30,6 @@ export interface PurchaseDebitNoteProductDetails {
   totalQty?: number;
   totalTax?: number;
   totalAmount?: number;
-}
-
-/* ===================== SHIPPING ===================== */
-
-export interface PurchaseDebitNoteShippingDetails {
-  shippingType?: "delivery" | "pickup";
-  shippingDate?: string | Date;
-  referenceNo?: string;
-  transportDate?: string | Date;
-  modeOfTransport?: string;
-  transporterId?: string | null;
-  vehicleNo?: string;
-  weight?: number;
 }
 
 /* ===================== SUMMARY ===================== */
@@ -77,7 +64,7 @@ export interface PurchaseDebitNoteFormValues {
   productDetails?: PurchaseDebitNoteProductItem[];
   additionalCharges?: AdditionalChargeItem[];
   termsAndConditionIds?: string[];
-  shippingDetails?: PurchaseDebitNoteShippingDetails;
+  shippingDetails?: ShippingDetails;
   summary?: PurchaseDebitNoteSummary;
 
   notes?: string;
@@ -118,7 +105,7 @@ export interface PurchaseDebitNoteBase extends CommonDataType {
   })[];
 
   termsAndConditionIds?: TermsConditionBase[];
-  shippingDetails?: PurchaseDebitNoteShippingDetails;
+  shippingDetails?: ShippingDetails;
   summary?: PurchaseDebitNoteSummary;
 
   notes?: string;

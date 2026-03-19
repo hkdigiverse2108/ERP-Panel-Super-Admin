@@ -219,6 +219,9 @@ export const PageRoutes = [
 
   { path: ROUTES.SALES_CREDIT_NOTE.BASE, name: PAGE_TITLE.SALES_CREDIT_NOTE.BASE, element: <SalesCreditNote /> },
   { path: ROUTES.SALES_CREDIT_NOTE.ADD_EDIT, name: PAGE_TITLE.SALES_CREDIT_NOTE.BASE, element: <SalesCreditNoteForm /> },
+
+
+  
 ];
 
 export const AuthRoutes = [
