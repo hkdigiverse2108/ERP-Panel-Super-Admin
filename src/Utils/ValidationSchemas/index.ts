@@ -284,6 +284,7 @@ export const AccountFormSchema = Yup.object({
 
 export const DebitNoteFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
+  personName: Validation("string", "Person Name", { required: false }),
   date: Validation("string", "Date"),
   bankAccountId: Validation("string", "Bank Account"),
   phoneNo: PhoneValidation(),
@@ -293,6 +294,7 @@ export const DebitNoteFormSchema = Yup.object({
 
 export const CreditNoteFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
+  personName: Validation("string", "Person Name", { required: false }),
   date: Validation("string", "Date"),
   bankAccountId: Validation("string", "Bank Account"),
   phoneNo: PhoneValidation(),

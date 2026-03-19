@@ -9,14 +9,14 @@ import { useDataGrid } from "../../../Utils/Hooks";
 import type { AppGridColDef, PurchaseDebitNoteBase } from "../../../Types";
 import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 
-const PurchaseDebitNoteIndex = () => {
+const PurchaseDebitNote = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const navigate = useNavigate();
   // const permission = usePagePermission(PAGE_TITLE.PURCHASE_DEBIT_NOTE.BASE);
 
   const { data: purchaseDebitNote, isLoading, isFetching } = Queries.useGetPurchaseDebitNote(params);
   const { mutate: editPurchaseDebitNote, isPending: isEditLoading } = Mutations.useEditPurchaseDebitNote();
-  const { mutate: deletePurchaseDebitNote } = Mutations.useDeletePurchaseDebitNote();
+  const { mutate: deletePurchaseDebitNote, isPending: deletePurchaseDebitNoteLoading } = Mutations.useDeletePurchaseDebitNote();
 
   // Filter Data Queries
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
@@ -46,22 +46,22 @@ const PurchaseDebitNoteIndex = () => {
   };
 
   const columns: AppGridColDef<PurchaseDebitNoteBase>[] = [
-    { field: "debitNoteNo", headerName: "Debit Note No", width: 150 },
-    { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
+    { field: "debitNoteNo", headerName: "Debit Note No",flex: 1, minWidth: 150 },
+    { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
     {
       field: "supplierId",
       headerName: "Supplier",
-      width: 200,
+      flex: 1, minWidth: 200,
       valueGetter: (_, row) => row.supplierId?.firstName + " " + row.supplierId?.lastName || "-",
     },
     {
       field: "debitNoteDate",
       headerName: "Debit Note Date",
-      width: 150,
+      flex: 1, minWidth: 150,
       renderCell: (params) => FormatDate(params.row.debitNoteDate),
     },
-    { field: "netAmount", headerName: "Debit Note Amount", width: 150, type: "number" },
-    { field: "taxAmount", headerName: "Tax Amount", width: 120, type: "number" },
+    { field: "netAmount", headerName: "Debit Note Amount", flex: 1, minWidth: 150, type: "number" },
+    { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 120, type: "number" },
     { field: "notes", headerName: "Notes", flex: 1, minWidth: 200 },
     CommonActionColumn({
       active: (row) => editPurchaseDebitNote({ purchaseDebitNoteId: row?._id, isActive: !row.isActive }),
@@ -112,10 +112,10 @@ const PurchaseDebitNoteIndex = () => {
           </Box>
         </CommonCard>
 
-        <CommonDeleteModal open={Boolean(rowToDelete)} itemName="Purchase Debit Note" onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName="Purchase Debit Note" onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} loading={deletePurchaseDebitNoteLoading} />
       </Box>
     </>
   );
 };
 
-export default PurchaseDebitNoteIndex;
+export default PurchaseDebitNote;

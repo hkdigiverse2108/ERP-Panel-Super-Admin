@@ -33,6 +33,7 @@ const DebitNote = () => {
 
   const columns: GridColDef<DebitNoteBase>[] = [
     CommonObjectNameColumn<DebitNoteBase>("companyId", { headerName: "Company", width: 200 }),
+    { field: "personName", headerName: "Person Name", width: 200 },
     { field: "amount", headerName: "Amount", width: 200 },
     { field: "date", headerName: "Date", width: 200, valueGetter: (v) => FormatDate(v) },
     CommonPhoneColumns("phoneNo", { headerName: "Phone No", width: 200 }),

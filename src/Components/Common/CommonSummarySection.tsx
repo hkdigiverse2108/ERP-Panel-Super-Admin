@@ -38,7 +38,7 @@ const CommonSummarySection = ({ name = "transactionSummary" }: CommonSummarySect
           )}
         </Box>
 
-        <Box className="border dark:border-gray-700 text-sm w-full md:w-fit overflow-auto" sx={{ borderRadius: "8px", overflow: "hidden" }}>
+        <Box className="border dark:border-gray-700 text-sm w-full md:w-fit overflow-auto!" sx={{ borderRadius: "8px", overflow: "hidden" }}>
           {/* Row 1: Flat Discount */}
           <Box className="grid grid-cols-[130px_1fr] border-b border-gray-200 dark:border-gray-700">
             <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex items-center justify-end font-medium">Flat Discount</Box>

@@ -37,12 +37,12 @@ const SalesOrder = () => {
     const handleAdd = () => navigate(ROUTES.SALES_ORDER.ADD_EDIT);
 
     const columns: AppGridColDef<EstimateBase>[] = [
-        { field: "salesOrderNo", headerName: "Sales Order No", width: 150 },
-        { field: "date", headerName: "Sales Order Date", width: 150, renderCell: (params) => FormatDate(params.row.date) },
-        { field: "dueDate", headerName: "Due Date", width: 150, renderCell: (params) => FormatDate(params.row.dueDate) },
-        { field: "customerId", headerName: "Customer Name", width: 150, valueGetter: (_, row: EstimateBase) => (row?.customerId ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || row.customerId.companyName || "" : "") },
-        { field: "netAmount", headerName: "Amount", width: 110, type: "number" },
-        { field: "status", headerName: "Status", headerAlign: "center", width: 190, renderCell: (params) => <span className={`status-${params.row.status} overflow-hidden`}>{params.row.status}</span> },
+        { field: "salesOrderNo", headerName: "Sales Order No", flex: 1, minWidth: 150 },
+        { field: "date", headerName: "Sales Order Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDate(params.row.date) },
+        { field: "dueDate", headerName: "Due Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDate(params.row.dueDate) },
+        { field: "customerId", headerName: "Customer Name", flex: 1, minWidth: 150, valueGetter: (_, row: EstimateBase) => (row?.customerId ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || row.customerId.companyName || "" : "") },
+        { field: "netAmount", headerName: "Amount", flex: 1, minWidth: 110, type: "number" },
+        { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 190, renderCell: (params) => <span className={`status-${params.row.status} overflow-hidden`}>{params.row.status}</span> },
         { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 110 },
         CommonActionColumn({
             active: (row) => editSalesOrder({ salesOrderId: row?._id, isActive: !row.isActive }),

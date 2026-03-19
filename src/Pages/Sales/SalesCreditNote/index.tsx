@@ -43,14 +43,14 @@ const SalesCreditNote = () => {
     const handleAdd = () => navigate(ROUTES.SALES_CREDIT_NOTE.ADD_EDIT);
 
     const columns: AppGridColDef<SalesCreditNoteBase>[] = [
-        { field: "creditNoteNo", headerName: "Credit Note No.", width: 150 },
-        { field: "creditNoteDate", headerName: "Credit Note Date", width: 150, renderCell: (params) => FormatDate(params.row.creditNoteDate) },
-        { field: "dueDate", headerName: "Due Date", width: 150, renderCell: (params) => FormatDate(params.row.dueDate) },
-        { field: "customerId", headerName: "Customer Name", width: 200, valueGetter: (_, row: SalesCreditNoteBase) => (row?.customerId ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || row.customerId.companyName || "" : "") },
-        { field: "netAmount", headerName: "Net Amount", width: 120, type: "number" },
-        { field: "creditUsed", headerName: "Credit Used", width: 120, type: "number" },
-        { field: "creditRemaining", headerName: "Credit Remaining", width: 150, type: "number" },
-        { field: "status", headerName: "Status", headerAlign: "center", width: 120, renderCell: (params) => <span className={`status-${params.row.status} overflow-hidden`}>{params.row.status}</span> },
+        { field: "creditNoteNo", headerName: "Credit Note No.", flex: 1, minWidth: 150 },
+        { field: "creditNoteDate", headerName: "Credit Note Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDate(params.row.creditNoteDate) },
+        { field: "dueDate", headerName: "Due Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDate(params.row.dueDate) },
+        { field: "customerId", headerName: "Customer Name", flex: 1, minWidth: 200, valueGetter: (_, row: SalesCreditNoteBase) => (row?.customerId ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || row.customerId.companyName || "" : "") },
+        { field: "netAmount", headerName: "Net Amount", flex: 1, minWidth: 120, type: "number" },
+        { field: "creditUsed", headerName: "Credit Used", flex: 1, minWidth: 120, type: "number" },
+        { field: "creditRemaining", headerName: "Credit Remaining", flex: 1, minWidth: 150, type: "number" },
+        { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 120, renderCell: (params) => <span className={`status-${params.row.status} overflow-hidden`}>{params.row.status}</span> },
         { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 120, type: "number" },
         CommonActionColumn({
             active: (row) => editSalesCreditNote({ salesCreditNoteId: row?._id, isActive: !row.isActive }),

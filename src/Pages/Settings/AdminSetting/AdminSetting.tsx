@@ -120,13 +120,13 @@ const AdminSetting = () => {
                 </CommonCard>
 
                 {/* WORKING HOURS */}
-                {/* <CommonCard title="Working Hours" grid={{ xs: 12 }}>
+                <CommonCard title="Working Hours" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonValidationTextField name="workingHours.startTime" label="Start Time" type="time" grid={{ xs: 12, md: 4 }} InputLabelProps={{ shrink: true }} />
                     <CommonValidationTextField name="workingHours.endTime" label="End Time" type="time" grid={{ xs: 12, md: 4 }} InputLabelProps={{ shrink: true }} />
                     <CommonValidationTextField name="workingHours.timezone" label="Timezone" grid={{ xs: 12, md: 4 }} />
                   </Grid>
-                </CommonCard> */}
+                </CommonCard>
 
                 {/* SOCIAL LINKS */}
                 <CommonCard title="Social Links" grid={{ xs: 12 }}>

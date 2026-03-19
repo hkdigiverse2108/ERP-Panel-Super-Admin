@@ -32,18 +32,19 @@ const Tax = () => {
   const handleEdit = (row: TaxBase) => dispatch(setTaxModal({ open: true, data: row }));
 
   const columns: AppGridColDef<TaxBase>[] = [
+    { field: "companyId", headerName: "Company", flex: 1, minWidth: 200, valueGetter: (_value, row) => (typeof row.companyId === "object" ? row.companyId?.name : "") },
     { field: "name", headerName: "Name", flex: 1, minWidth: 200 },
     { field: "percentage", headerName: "Percentage", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
-          CommonActionColumn<TaxBase>({
-            ...(permission?.edit && {
-              active: (row) => editTax({ taxId: row?._id, isActive: !row.isActive }),
-              onEdit: { handleEdit: (row) => handleEdit(row) },
-            }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+        CommonActionColumn<TaxBase>({
+          ...(permission?.edit && {
+            active: (row) => editTax({ taxId: row?._id, isActive: !row.isActive }),
+            onEdit: { handleEdit: (row) => handleEdit(row) },
           }),
-        ]
+          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+        }),
+      ]
       : []),
   ];
 

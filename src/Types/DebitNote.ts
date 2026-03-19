@@ -11,6 +11,7 @@ export interface DebitNoteFormValues {
   description?: string;
   isActive?: boolean;
   image?: string | File | null;
+  personName?: string;
   _submitAction?: string;
 }
 
