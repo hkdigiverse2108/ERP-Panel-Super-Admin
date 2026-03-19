@@ -114,7 +114,7 @@ export interface SupplierBillFormValues {
   billingAddress?: string;
   paymentTerm?: string;
   dueDate?: string | Date;
-  reverseCharge?: boolean;
+  reverseCharge?: boolean | string;
   shippingDate?: string | Date;
   taxType?: string;
   invoiceAmount?: string;

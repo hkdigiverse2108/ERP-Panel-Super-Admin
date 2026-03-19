@@ -457,12 +457,11 @@ export interface ModalStateSlice {
   isCategoryModal: { open: boolean; data: CategoryBase | null };
   isLocationModal: { open: boolean; data: LocationBase | null };
   isRoleModal: { open: boolean; data: RolesBase | null };
-  isTermsAndConditionModal: { open: boolean; data: TermsConditionBase | null };
-  isTermsSelectionModal: { open: boolean; data: any | null };
   isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
   isBankTransactionModal: { open: boolean; data: BankTransactionBase | null };
   isOrderRefundModal: { open: boolean; data: PosCreditNoteBase | null };
   isProductTypeModal: { open: boolean; data: ProductTypeBase | null };
+  isTermsSelectionModal: { open: boolean; data: any | null };
   isTermsAndConditionFormModal: { open: boolean; data: TermsConditionBase | null; companyId?: string };
   isTermsAndConditionSelectionModal: { open: boolean; alreadySelectedIds: string[]; companyId: string };
 }

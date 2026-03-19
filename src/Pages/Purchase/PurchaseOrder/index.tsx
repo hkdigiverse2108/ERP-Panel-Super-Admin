@@ -14,7 +14,7 @@ const PurchaseOrder = () => {
   const navigate = useNavigate();
 
   const { data: purchaseOrderData, isLoading: purchaseOrderDataLoading, isFetching: purchaseOrderDataFetching } = Queries.useGetPurchaseOrder(params);
-  const { mutate: deletePurchaseOrderMutate } = Mutations.useDeletePurchaseOrder();
+  const { mutate: deletePurchaseOrderMutate, isPending: deletePurchaseOrderLoading } = Mutations.useDeletePurchaseOrder();
   const { mutate: editPurchaseOrder, isPending: isEditLoading } = Mutations.useEditPurchaseOrder();
 
   // Filter Data Queries
@@ -48,7 +48,7 @@ const PurchaseOrder = () => {
       onDelete: (row) => setRowToDelete({ _id: row?._id }),
     }),
   ];
-  
+
   const CommonDataGridOption = {
     columns,
     rows: allPurchaseOrder,
@@ -72,6 +72,7 @@ const PurchaseOrder = () => {
 
   const stats = [
     { label: "All Orders", value: totalRows || 0, color: "primary" },
+    { label: "In Progress", value: allPurchaseOrder.filter((item) => item.status === "in_progress").length, color: "secondary" },
     { label: "Delivered", value: allPurchaseOrder.filter((item) => item.status === "delivered").length, color: "success" },
     { label: "Exceed", value: allPurchaseOrder.filter((item) => item.status === "exceed").length, color: "error" },
     { label: "Completed", value: allPurchaseOrder.filter((item) => item.status === "completed").length, color: "info" },
@@ -82,12 +83,12 @@ const PurchaseOrder = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE_ORDER.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.PURCHASE_ORDER.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <CommonStatsCard stats={stats} grid={{ xs: 6, sm: 4, md: 2.4 }} />
+        <CommonStatsCard stats={stats} grid={{ xs: 6, sm: 4, md: 2 }} />
         <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
-        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} loading={deletePurchaseOrderLoading} />
       </Box>
     </>
   );

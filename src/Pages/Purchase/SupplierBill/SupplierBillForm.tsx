@@ -44,15 +44,15 @@ const SupplierBillForm = () => {
     paymentTerm: data?.paymentTerm || "",
     dueDate: data?.dueDate || "",
     shippingDate: data?.shippingDate || data?.date || data?.orderDate || "",
-    reverseCharge: Boolean(data?.reverseCharge),
+    reverseCharge: data?.reverseCharge !== undefined ? String(data.reverseCharge) : "false",
     taxType: data?.taxType || "tax_exclusive",
     invoiceAmount: data?.invoiceAmount || "",
     placeOfSupply: data?.placeOfSupply || "",
     gstIn: data?.gstIn || "",
     billingAddress: typeof data?.billingAddress === "object" ? data.billingAddress?._id : data?.billingAddress || "",
 
-    productDetails: (data?.productDetails?.item || (Array.isArray(data?.productDetails) ? data.productDetails : []))?.length
-      ? (data.productDetails.item || data.productDetails).map((i: SupplierBillProductItem) => {
+    productDetails: (data?.productDetails || [])?.length
+      ? (data?.productDetails || []).map((i: SupplierBillProductItem) => {
         const pId = typeof i.productId === "object" ? i.productId?._id : i.productId;
         return {
           ...emptyRow,
@@ -65,8 +65,8 @@ const SupplierBillForm = () => {
       })
       : [emptyRow],
     returnProductDetails: {
-      item: (data?.returnProductDetails?.item || (Array.isArray(data?.returnProductDetails) ? data.returnProductDetails : []))?.length
-        ? (data.returnProductDetails.item || data.returnProductDetails).map((i: SupplierBillReturnProductItem) => {
+      item: (data?.returnProductDetails?.item || [])?.length
+        ? (data?.returnProductDetails?.item || []).map((i: SupplierBillReturnProductItem) => {
           const pId = typeof i.productId === "object" ? i.productId?._id : i.productId;
           return {
             ...emptyReturnRow,
@@ -82,8 +82,8 @@ const SupplierBillForm = () => {
         roundOff: data?.returnProductDetails?.summary?.roundOff || data?.returnProductDetails?.roundOff || 0,
       },
     },
-    additionalCharges: (data?.additionalCharges?.item || (Array.isArray(data?.additionalCharges) ? data.additionalCharges : []))?.length
-      ? (data.additionalCharges.item || data.additionalCharges).map((r: AdditionalChargeItem) => ({
+    additionalCharges: (data?.additionalCharges || [])?.length
+      ? (data?.additionalCharges || []).map((r: AdditionalChargeItem) => ({
         ...r,
         chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
         taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,

@@ -9,14 +9,14 @@ import { useDataGrid } from "../../../Utils/Hooks";
 import type { AppGridColDef, PurchaseDebitNoteBase } from "../../../Types";
 import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 
-const PurchaseDebitNoteIndex = () => {
+const PurchaseDebitNote = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const navigate = useNavigate();
   // const permission = usePagePermission(PAGE_TITLE.PURCHASE_DEBIT_NOTE.BASE);
 
   const { data: purchaseDebitNote, isLoading, isFetching } = Queries.useGetPurchaseDebitNote(params);
   const { mutate: editPurchaseDebitNote, isPending: isEditLoading } = Mutations.useEditPurchaseDebitNote();
-  const { mutate: deletePurchaseDebitNote } = Mutations.useDeletePurchaseDebitNote();
+  const { mutate: deletePurchaseDebitNote, isPending: deletePurchaseDebitNoteLoading } = Mutations.useDeletePurchaseDebitNote();
 
   // Filter Data Queries
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
@@ -112,10 +112,10 @@ const PurchaseDebitNoteIndex = () => {
           </Box>
         </CommonCard>
 
-        <CommonDeleteModal open={Boolean(rowToDelete)} itemName="Purchase Debit Note" onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName="Purchase Debit Note" onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} loading={deletePurchaseDebitNoteLoading} />
       </Box>
     </>
   );
 };
 
-export default PurchaseDebitNoteIndex;
+export default PurchaseDebitNote;
