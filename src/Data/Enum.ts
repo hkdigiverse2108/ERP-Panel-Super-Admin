@@ -384,3 +384,7 @@ export const PURCHASE_DEBIT_NOTE_STATUS_OPTIONS = [
   { label: "Cancelled", value: "cancelled" },
 ];
 
+export const SALES_REGISTER_STATUS = [
+  { label: "Open", value: "open" },
+  { label: "Closed", value: "closed" },
+];
