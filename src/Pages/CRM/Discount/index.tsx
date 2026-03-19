@@ -27,17 +27,15 @@ const Discount = () => {
   const rows = useMemo(() => data?.data?.discount_data.map((r: DiscountBase) => ({ ...r, id: r?._id })) || [], [data]);
 
   const stats = useMemo(() => {
-    const total = data?.data?.totalData || rows.length;
-    const active = rows.filter((r) => r.isActive).length;
     return [
-      { label: "Total Coupons", value: total },
-      { label: "Active Coupons", value: active },
+      { label: "Total Coupons", value: data?.data?.totalData || 0 },
+      { label: "Active Coupons", value: 0 },
       { label: "Order with Coupons", value: 0 },
       { label: "Order without Coupons", value: 0 },
       { label: "Revenue from Coupons", value: 0 },
       { label: "Discount Given", value: 0 },
     ];
-  }, [data, rows]);
+  }, [data]);
 
   const columns: AppGridColDef<DiscountBase>[] = [
     { field: "title", headerName: "Title", width: 200 },

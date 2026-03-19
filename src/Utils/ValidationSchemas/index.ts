@@ -23,9 +23,18 @@ const RequiredWhenTrue = (dependentField: string, message: string, baseSchema: Y
 //   });
 // };
 
-export const RequiredWhen = (dependentField: string, requiredValues: Primitive[], label: string, type: "string" | "number" | "array" = "string") => {
-  return Yup.mixed().test("required-when", `${label} is required`, (value, { from }) => {
-    // 🔥 get root object (Formik values)
+export const RequiredWhen = (dependentField: string, requiredValues: Primitive[], label: string, type: "string" | "number" | "array" = "string", options?: { extraRules?: (schema: Yup.AnySchema) => Yup.AnySchema }) => {
+  let schema: Yup.AnySchema;
+
+  // Base schema by type
+  if (type === "number") schema = Yup.number();
+  else if (type === "array") schema = Yup.array();
+  else schema = Yup.string();
+
+  // Apply extra rules if provided
+  if (options?.extraRules) schema = options.extraRules(schema);
+
+  return schema.test("required-when", `${label} is required`, (value, { from }) => {
     const root = from?.[from.length - 1]?.value;
     const dependentValue = root?.[dependentField];
     const match = requiredValues.includes(dependentValue);
@@ -35,6 +44,7 @@ export const RequiredWhen = (dependentField: string, requiredValues: Primitive[]
       if (type === "number") return value !== undefined && value !== null;
       return !!value;
     }
+
     return true;
   });
 };
@@ -798,12 +808,12 @@ export const DiscountFormSchema = Yup.object({
   discountMode: Validation("string", "Discount Mode"),
 
   discountType: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.NORMAL], "Discount Type", "string"),
-  discountValue: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.NORMAL], "Discount Value", "number"),
+  discountValue: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.NORMAL], "Discount Value", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Discount value must be at least 1") }),
   rangeWiseRules: Yup.array().of(
     Yup.object({
-      minQty: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.RANGE_WISE], "Minimum Quantity", "number"),
-      maxQty: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.RANGE_WISE], "Maximum Quantity", "number"),
-      discountValue: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.RANGE_WISE], "Discount Value", "number"),
+      minQty: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.RANGE_WISE], "Minimum Quantity", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Minimum quantity must be at least 1") }),
+      maxQty: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.RANGE_WISE], "Maximum Quantity", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Maximum quantity must be at least 1") }),
+      discountValue: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.RANGE_WISE], "Discount Value", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Discount value must be at least 1") }),
       discountType: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.RANGE_WISE], "Discount Type", "string"),
     }),
   ),
@@ -815,20 +825,23 @@ export const DiscountFormSchema = Yup.object({
   excludedProductIds: RequiredWhen("appliesTo", [DISCOUNT_APPLY_TO_ENUM.SPECIFIC_BRAND, DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY, DISCOUNT_APPLY_TO_ENUM.SPECIFIC_PRODUCTS], "Brand", "array"),
 
   buyXGetY: Yup.object({
-    buyQty: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.BUY_X_GET_Y], "Select Quantity", "number"),
+    buyQty: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.BUY_X_GET_Y], "Select Quantity", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Select Quantity must be at least 1") }),
     getProductIds: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.BUY_X_GET_Y], "Select Products", "array"),
-    getQty: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.BUY_X_GET_Y], "Select Qty", "number"),
+    getQty: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.BUY_X_GET_Y], "Select Qty", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Select Qty must be at least 1") }),
   }),
 
   productAtFixAmount: Yup.object({
-    minimumAmount: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT], "Minimum Purchase Amount", "number"),
+    minimumAmount: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT], "Minimum Purchase Amount", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Minimum Purchase Amount must be at least 1") }),
     freeProductIds: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT], "Select Products", "array"),
-    freeQty: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT], "Select Qty", "number"),
+    freeQty: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT], "Select Qty", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Select Qty must be at least 1") }),
   }),
 
   minimumRequirement: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.NORMAL], "Minimum Requirement", "string"),
-  minimumPurchaseAmount: RequiredWhen("minimumRequirement", [MINIMUM_REQUIREMENT_ENUM.MIN_PURCHASE_AMOUNT], "Minimum Purchase Amount", "number"),
-  minimumQuantity: RequiredWhen("minimumRequirement", [MINIMUM_REQUIREMENT_ENUM.MIN_QUANTITY], "Minimum Quantity", "number"),
+  minimumPurchaseAmount: RequiredWhen("minimumRequirement", [MINIMUM_REQUIREMENT_ENUM.MIN_PURCHASE_AMOUNT], "Minimum Purchase Amount", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Minimum Purchase Amount must be at least 1") }),
+  minimumQuantity: RequiredWhen("minimumRequirement", [MINIMUM_REQUIREMENT_ENUM.MIN_QUANTITY], "Minimum Quantity", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Minimum Quantity must be at least 1") }),
+
+  usageLimitTotal: Validation("number", "Usage Limit Total", { required: false, extraRules: (s) => (s as Yup.NumberSchema).min(1, "Usage Limit Total must be at least 1") }),
+  usageLimitPerCustomer: Validation("boolean", "Usage Limit Per Customer", { required: false }),
 
   startDateTime: Validation("string", "Start Date Time"),
   endDateTime: RequiredWhenTrue("hasEndDate", "End Date Time", Yup.string()),

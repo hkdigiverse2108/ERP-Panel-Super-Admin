@@ -38,20 +38,20 @@ export interface DiscountFormValues {
   excludeAlreadyDiscounted?: boolean;
   discountApplicable?: string;
   discountMode?: string;
-  discountType?: string;
-  discountValue?: number;
-  rangeWiseRules?: RangeWiseRule[];
-  buyXGetY?: BuyXGetY;
-  productAtFixAmount?: ProductAtFixAmount;
-  appliesTo?: string;
-  categoryIds?: string[];
-  subcategoryIds?: string[];
-  brandIds?: string[];
-  productIds?: string[];
+  discountType?: string | null;
+  discountValue?: number | null;
+  rangeWiseRules?: RangeWiseRule[] | [];
+  buyXGetY?: BuyXGetY | null;
+  productAtFixAmount?: ProductAtFixAmount | null;
+  appliesTo?: string | null;
+  categoryIds?: string[] | [];
+  subcategoryIds?: string[] | [];
+  brandIds?: string[] | [];
+  productIds?: string[] | [];
   excludedProductIds?: string[];
-  minimumRequirement?: string;
-  minimumPurchaseAmount?: number;
-  minimumQuantity?: number;
+  minimumRequirement?: string | null;
+  minimumPurchaseAmount?: number | null;
+  minimumQuantity?: number | null;
   usageLimitTotal?: number;
   hasUsageLimitTotal?: boolean;
   usageLimitPerCustomer?: boolean;
@@ -68,22 +68,17 @@ export interface DiscountFormValues {
 
 export type AddDiscountPayload = DiscountFormValues;
 
-export type EditDiscountPayload = AddDiscountPayload & {
-  discountId: string;
-};
+export type EditDiscountPayload = AddDiscountPayload & { discountId: string };
 
 /* ---------------- BASE TYPE ---------------- */
 
-export interface DiscountBase extends Omit<DiscountFormValues,
-  "categoryIds" | "subcategoryIds" | "brandIds" | "productIds" | "excludedProductIds" | "branchIds" | "companyId" | "buyXGetY" | "productAtFixAmount"
->, CommonDataType {
+export interface DiscountBase extends Omit<DiscountFormValues, "categoryIds" | "brandIds" | "productIds" | "excludedProductIds" | "branchIds" | "companyId" | "buyXGetY" | "productAtFixAmount">, CommonDataType {
+  companyId?: CompanyBase;
+  branchIds?: BranchBase[];
   categoryIds?: CategoryBase[];
-  subcategoryIds?: CategoryBase[];
   brandIds?: BrandBase[];
   productIds?: ProductBase[];
   excludedProductIds?: ProductBase[];
-  branchIds?: BranchBase[];
-  companyId?: CompanyBase;
   buyXGetY?: Omit<BuyXGetY, "getProductIds"> & { getProductIds?: ProductBase[] };
   productAtFixAmount?: Omit<ProductAtFixAmount, "freeProductIds"> & { freeProductIds?: ProductBase[] };
 }

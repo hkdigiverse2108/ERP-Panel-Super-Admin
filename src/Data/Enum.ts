@@ -441,3 +441,8 @@ export const PURCHASE_DEBIT_NOTE_STATUS_OPTIONS = [
   { label: "Closed", value: "closed" },
   { label: "Cancelled", value: "cancelled" },
 ];
+
+export const STATUS = {
+  ACTIVE: "active",
+  INACTIVE: "inactive",
+};

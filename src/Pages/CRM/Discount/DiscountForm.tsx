@@ -1,4 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
+import { ClearIcon } from "@mui/x-date-pickers-pro";
 import { FieldArray, Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
@@ -6,9 +7,8 @@ import { CommonButton, CommonValidationCheckbox, CommonValidationDatePicker, Com
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BOOLEAN_OPTIONS, BREADCRUMBS, DISCOUNT_APPLICABLE, DISCOUNT_APPLICABLE_ENUM, DISCOUNT_APPLY_TO, DISCOUNT_APPLY_TO_ENUM, DISCOUNT_MODE, DISCOUNT_MODE_ENUM, DISCOUNT_VALUE_TYPE, MINIMUM_REQUIREMENT, MINIMUM_REQUIREMENT_ENUM } from "../../../Data";
-import type { AddDiscountPayload, DiscountFormValues, EditDiscountPayload } from "../../../Types";
+import type { BranchBase, BrandBase, CategoryBase, DiscountFormValues, ProductBase } from "../../../Types";
 import { DiscountFormSchema, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
-import { ClearIcon } from "@mui/x-date-pickers-pro";
 
 const DiscountForm = () => {
   const location = useLocation();
@@ -25,10 +25,20 @@ const DiscountForm = () => {
   const { data: CategoryData, isLoading: CategoryLoading } = Queries.useGetCategoryDropdown();
   const { data: BrandData, isLoading: BrandLoading } = Queries.useGetBrandDropdown();
 
+  const branchIds = data?.branchIds?.map((branch: BranchBase) => branch?._id) || [];
+  const categoryIds = data?.categoryIds?.map((category: CategoryBase) => category?._id) || [];
+  const brandIds = data?.brandIds?.map((brand: BrandBase) => brand?._id) || [];
+  const productIds = data?.productIds?.map((product: ProductBase) => product?._id) || [];
+  const excludedProductIds = data?.excludedProductIds?.map((product: ProductBase) => product?._id) || [];
+  const getProductIds = data?.buyXGetY?.getProductIds?.map((product: ProductBase) => product?._id) || [];
+  const freeProductIds = data?.productAtFixAmount?.freeProductIds?.map((product: ProductBase) => product?._id) || [];
+
+  const appliesTo = data?.discountApplicable === DISCOUNT_APPLICABLE_ENUM.PRODUCT_WISE ? DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY : null;
+
   // ✅ INITIAL VALUES
   const initialValues: DiscountFormValues = {
-    companyId: data?.companyId || "",
-    branchIds: data?.branchIds?.length ? data.branchIds : [],
+    companyId: data?.companyId?._id || "",
+    branchIds: data?.branchIds?.length ? branchIds : [],
     title: data?.title || "",
     discountCode: data?.discountCode || "",
     autoApply: data?.autoApply ?? false,
@@ -37,33 +47,33 @@ const DiscountForm = () => {
 
     discountMode: data?.discountMode || DISCOUNT_MODE_ENUM.NORMAL,
     discountType: data?.discountType || "",
-    discountValue: data?.discountValue,
+    discountValue: data?.discountValue || "",
 
-    appliesTo: data?.appliesTo || DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY,
-    categoryIds: data?.categoryIds?.length ? data.categoryIds : [],
-    brandIds: data?.brandIds?.length ? data.brandIds : [],
-    productIds: data?.productIds?.length ? data.productIds : [],
-    excludedProductIds: data?.excludedProductIds?.length ? data.excludedProductIds : [],
+    appliesTo: data?.appliesTo || appliesTo,
+    categoryIds: data?.categoryIds?.length ? categoryIds : [],
+    brandIds: data?.brandIds?.length ? brandIds : [],
+    productIds: data?.productIds?.length ? productIds : [],
+    excludedProductIds: data?.excludedProductIds?.length ? excludedProductIds : [],
 
     rangeWiseRules: data?.rangeWiseRules?.length ? data.rangeWiseRules : [{ minQty: "", maxQty: "", discountValue: "", discountType: "" }],
 
     buyXGetY: {
-      buyQty: data?.buyXGetY?.buyQty,
-      getProductIds: data?.buyXGetY?.getProductIds?.length ? data.buyXGetY.getProductIds : [],
-      getQty: data?.buyXGetY?.getQty,
+      buyQty: data?.buyXGetY?.buyQty || "",
+      getProductIds: data?.buyXGetY?.getProductIds?.length ? getProductIds : [],
+      getQty: data?.buyXGetY?.getQty || "",
     },
 
     productAtFixAmount: {
-      minimumAmount: data?.productAtFixAmount?.minimumAmount,
-      freeProductIds: data?.productAtFixAmount?.freeProductIds?.length ? data.productAtFixAmount.freeProductIds : [],
-      freeQty: data?.productAtFixAmount?.freeQty,
+      minimumAmount: data?.productAtFixAmount?.minimumAmount || "",
+      freeProductIds: data?.productAtFixAmount?.freeProductIds?.length ? freeProductIds : [],
+      freeQty: data?.productAtFixAmount?.freeQty || "",
     },
 
     minimumRequirement: data?.minimumRequirement || "",
-    minimumPurchaseAmount: data?.minimumPurchaseAmount,
-    minimumQuantity: data?.minimumQuantity,
+    minimumPurchaseAmount: data?.minimumPurchaseAmount || "",
+    minimumQuantity: data?.minimumQuantity || "",
 
-    usageLimitTotal: data?.usageLimitTotal,
+    usageLimitTotal: data?.usageLimitTotal || "",
     usageLimitPerCustomer: data?.usageLimitPerCustomer ?? false,
 
     startDateTime: data?.startDateTime || "",
@@ -81,64 +91,97 @@ const DiscountForm = () => {
     };
 
     const payload = {
-      companyId: values?.companyId || "",
-      branchIds: values?.branchIds?.length ? values.branchIds : [],
-      title: values?.title || "",
-      discountCode: values?.discountCode || "",
-      autoApply: values?.autoApply ?? false,
-      discountApplicable: values?.discountApplicable || DISCOUNT_APPLICABLE_ENUM.PRODUCT_WISE,
-      excludeAlreadyDiscounted: rest?.excludeAlreadyDiscounted ?? false,
+      companyId: rest?.companyId,
+      branchIds: rest.branchIds,
+      title: rest?.title,
+      discountCode: rest?.discountCode,
+      autoApply: rest?.autoApply,
+      discountApplicable: rest?.discountApplicable,
 
-      discountMode: rest?.discountMode || DISCOUNT_MODE_ENUM.NORMAL,
+      discountMode: rest?.discountMode,
 
-      ...(rest?.discountMode === DISCOUNT_MODE_ENUM.NORMAL && {
-        discountType: rest?.discountType || "",
-        discountValue: rest?.discountValue,
-      }),
+      ...(rest?.discountMode === DISCOUNT_MODE_ENUM.NORMAL
+        ? {
+            discountType: rest?.discountType,
+            discountValue: rest?.discountValue,
+            minimumRequirement: rest?.minimumRequirement,
+            minimumPurchaseAmount: rest?.minimumPurchaseAmount,
+            minimumQuantity: rest?.minimumQuantity,
+          }
+        : {
+            discountType: null,
+            discountValue: null,
+            minimumRequirement: null,
+            minimumPurchaseAmount: null,
+            minimumQuantity: null,
+          }),
 
-      appliesTo: rest?.appliesTo || DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY,
-      categoryIds: rest?.categoryIds?.length ? rest.categoryIds : [],
-      brandIds: rest?.brandIds?.length ? rest.brandIds : [],
-      productIds: rest?.productIds?.length ? rest.productIds : [],
-      excludedProductIds: rest?.excludedProductIds?.length ? rest.excludedProductIds : [],
-
-      rangeWiseRules: rest?.rangeWiseRules?.length ? rest.rangeWiseRules : [{ minQty: "", maxQty: "", discountValue: "", discountType: "" }],
-
-      buyXGetY: {
-        buyQty: rest?.buyXGetY?.buyQty,
-        getProductIds: rest?.buyXGetY?.getProductIds?.length ? rest.buyXGetY.getProductIds : [],
-        getQty: rest?.buyXGetY?.getQty,
-      },
-
-      productAtFixAmount: {
-        minimumAmount: rest?.productAtFixAmount?.minimumAmount,
-        freeProductIds: rest?.productAtFixAmount?.freeProductIds?.length ? rest.productAtFixAmount.freeProductIds : [],
-        freeQty: rest?.productAtFixAmount?.freeQty,
-      },
-
-      minimumRequirement: rest?.minimumRequirement || "",
-      minimumPurchaseAmount: rest?.minimumPurchaseAmount,
-      minimumQuantity: rest?.minimumQuantity,
+      ...(rest?.discountApplicable === DISCOUNT_APPLICABLE_ENUM.PRODUCT_WISE
+        ? {
+            excludeAlreadyDiscounted: rest?.excludeAlreadyDiscounted,
+            ...(rest?.discountMode === DISCOUNT_MODE_ENUM.NORMAL
+              ? {
+                  appliesTo: rest?.appliesTo,
+                  categoryIds: rest?.categoryIds,
+                  brandIds: rest?.brandIds,
+                  productIds: rest?.productIds,
+                  excludedProductIds: rest?.excludedProductIds,
+                }
+              : {
+                  appliesTo: null,
+                  categoryIds: [],
+                  brandIds: [],
+                  productIds: [],
+                  excludedProductIds: [],
+                }),
+            ...(rest?.discountMode === DISCOUNT_MODE_ENUM.RANGE_WISE ? { rangeWiseRules: rest?.rangeWiseRules } : { rangeWiseRules: [] }),
+            ...(rest?.discountMode === DISCOUNT_MODE_ENUM.BUY_X_GET_Y
+              ? {
+                  buyXGetY: {
+                    buyQty: rest?.buyXGetY?.buyQty,
+                    getProductIds: rest?.buyXGetY?.getProductIds,
+                    getQty: rest?.buyXGetY?.getQty,
+                  },
+                }
+              : { buyXGetY: null }),
+            ...(rest?.discountMode === DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT
+              ? {
+                  productAtFixAmount: {
+                    minimumAmount: rest?.productAtFixAmount?.minimumAmount,
+                    freeProductIds: rest?.productAtFixAmount?.freeProductIds,
+                    freeQty: rest?.productAtFixAmount?.freeQty,
+                  },
+                }
+              : { productAtFixAmount: null }),
+          }
+        : {
+            excludeAlreadyDiscounted: false,
+            appliesTo: null,
+            categoryIds: [],
+            brandIds: [],
+            productIds: [],
+            excludedProductIds: [],
+            rangeWiseRules: [],
+            buyXGetY: null,
+            productAtFixAmount: null,
+          }),
 
       usageLimitTotal: rest?.usageLimitTotal,
-      usageLimitPerCustomer: rest?.usageLimitPerCustomer ?? false,
+      usageLimitPerCustomer: rest?.usageLimitPerCustomer,
 
-      startDateTime: rest?.startDateTime || "",
-      hasEndDate: rest?.hasEndDate ?? false,
-      endDateTime: rest?.endDateTime || "",
-      isActive: rest?.isActive ?? true,
+      startDateTime: rest?.startDateTime,
+      hasEndDate: rest?.hasEndDate,
+      endDateTime: rest?.endDateTime,
+      isActive: rest?.isActive,
     };
+    console.log("payload", payload);
 
-    console.log("payload", RemoveEmptyFields(payload));
-    console.log("rest", rest);
-    console.log("RemoveEmptyFields", RemoveEmptyFields(rest));
-
-    // if (isEditing) {
-    //   const changedFields = GetChangedFields(payload, data);
-    //   editDiscount({ ...changedFields, discountId: data._id }, { onSuccess: handleSuccess });
-    // } else {
-    //   addDiscount(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
-    // }
+    if (isEditing) {
+      const changedFields = GetChangedFields(payload, data);
+      editDiscount({ ...changedFields, discountId: data._id }, { onSuccess: handleSuccess });
+    } else {
+      addDiscount(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
+    }
   };
 
   return (
@@ -154,15 +197,21 @@ const DiscountForm = () => {
               disabled: values.discountApplicable === DISCOUNT_APPLICABLE_ENUM.ENTIRE_BILL && [DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT, DISCOUNT_MODE_ENUM.BUY_X_GET_Y, DISCOUNT_MODE_ENUM.RANGE_WISE].includes(opt.value),
             }));
 
+            console.log("values", values);
+
+            const resetDiscountModeFields = () => {
+              setFieldValue("appliesTo", "");
+            };
+
             const handleDiscountApplicableChange = (selectedValue: string) => {
               setFieldValue("discountMode", DISCOUNT_MODE_ENUM.NORMAL);
-              if (selectedValue === DISCOUNT_APPLICABLE_ENUM.ENTIRE_BILL) setFieldValue("appliesTo", "");
+              if (selectedValue === DISCOUNT_APPLICABLE_ENUM.ENTIRE_BILL) resetDiscountModeFields();
               else setFieldValue("appliesTo", DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY);
             };
 
             const handleDiscountModeChange = (selectedValue: string) => {
               setFieldValue("minimumRequirement", "");
-              if (DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT === selectedValue) setFieldValue("appliesTo", "");
+              if (DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT === selectedValue) resetDiscountModeFields();
               else setFieldValue("appliesTo", DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY);
             };
 
