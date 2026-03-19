@@ -1,9 +1,11 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { CompanyBase } from "./Company";
 
 export interface TaxFormValues {
   name?: string;
   percentage?: number | "";
   isActive?: boolean;
+  companyId?: string | CompanyBase;
 }
 
 export type AddTaxPayload = TaxFormValues;
