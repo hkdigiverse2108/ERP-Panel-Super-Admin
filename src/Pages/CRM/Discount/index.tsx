@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonStatsCard } from "../../../Components/Common";
+import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn, CommonStatsCard } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, DiscountBase } from "../../../Types";
@@ -37,12 +37,13 @@ const Discount = () => {
   }, [data]);
 
   const columns: AppGridColDef<DiscountBase>[] = [
+    CommonObjectNameColumn<DiscountBase>("companyId", { headerName: "Company", width: 150 }),
     { field: "title", headerName: "Title", width: 200 },
-    { field: "createdAt", headerName: "Created On", width: 160, valueGetter: (v) => FormatDate(v) },
+    { field: "createdAt", headerName: "Created On", width: 120, valueGetter: (v) => FormatDate(v) },
     { field: "validity", headerName: "Validity", width: 250, valueGetter: (v, row) => FormatValidity(v, row) },
-    { field: "orders", headerName: "Orders", width: 150 },
-    { field: "revenue", headerName: "Revenue", width: 150 },
-    { field: "discountValue", headerName: "Discount", width: 150 },
+    { field: "orders", headerName: "Orders", width: 100 },
+    { field: "revenue", headerName: "Revenue", width: 100 },
+    { field: "discountValue", headerName: "Discount", width: 100 },
     { field: "discountType", headerName: "Discount Type", width: 150, valueGetter: (v) => FormatPayment(v) },
     { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 100, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
     ...(permission?.edit || permission?.delete
