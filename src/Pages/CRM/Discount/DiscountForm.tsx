@@ -104,14 +104,14 @@ const DiscountForm = () => {
         ? {
             discountType: rest?.discountType,
             discountValue: rest?.discountValue,
-            minimumRequirement: rest?.minimumRequirement,
+            minimumRequirement: rest?.minimumRequirement || MINIMUM_REQUIREMENT_ENUM.NONE,
             minimumPurchaseAmount: rest?.minimumPurchaseAmount,
             minimumQuantity: rest?.minimumQuantity,
           }
         : {
             discountType: null,
             discountValue: null,
-            minimumRequirement: null,
+            minimumRequirement: MINIMUM_REQUIREMENT_ENUM.NONE,
             minimumPurchaseAmount: null,
             minimumQuantity: null,
           }),
@@ -119,12 +119,12 @@ const DiscountForm = () => {
       ...(rest?.discountApplicable === DISCOUNT_APPLICABLE_ENUM.PRODUCT_WISE
         ? {
             excludeAlreadyDiscounted: rest?.excludeAlreadyDiscounted,
-            ...(rest?.discountMode === DISCOUNT_MODE_ENUM.NORMAL
+            ...([DISCOUNT_MODE_ENUM.NORMAL, DISCOUNT_MODE_ENUM.RANGE_WISE, DISCOUNT_MODE_ENUM.BUY_X_GET_Y].includes(rest?.discountMode || "")
               ? {
                   appliesTo: rest?.appliesTo,
-                  categoryIds: rest?.categoryIds,
-                  brandIds: rest?.brandIds,
-                  productIds: rest?.productIds,
+                  categoryIds: rest?.appliesTo === DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY ? rest?.categoryIds : [],
+                  brandIds: rest?.appliesTo === DISCOUNT_APPLY_TO_ENUM.SPECIFIC_BRAND ? rest?.brandIds : [],
+                  productIds: rest?.appliesTo === DISCOUNT_APPLY_TO_ENUM.SPECIFIC_PRODUCTS ? rest?.productIds : [],
                   excludedProductIds: rest?.excludedProductIds,
                 }
               : {
