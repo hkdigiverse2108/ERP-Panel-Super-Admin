@@ -2,18 +2,21 @@ import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn, CommonStatsCard } from "../../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn, CommonStatsCard } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, DiscountBase } from "../../../Types";
-import { FormatDate, FormatPayment, FormatValidity } from "../../../Utils";
+import { CreateFilter, FormatDate, FormatPayment, FormatValidity, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 
 const Discount = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.CRM.DISCOUNT.BASE);
+
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { data, isLoading, isFetching } = Queries.useGetDiscount(params);
+
   const { mutate: deleteDiscount } = Mutations.useDeleteDiscount();
   const { mutate: editDiscount } = Mutations.useEditDiscount();
 
@@ -73,11 +76,14 @@ const Discount = () => {
     isExport: false,
   };
 
+  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
+
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.CRM.DISCOUNT.BASE} breadcrumbs={BREADCRUMBS.DISCOUNT.BASE} />
-      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 1.5 }}>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <CommonStatsCard stats={stats} grid={{ xs: 6, sm: 4, md: 2.3 }} />
+        <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...gridOptions} />
         </CommonCard>
