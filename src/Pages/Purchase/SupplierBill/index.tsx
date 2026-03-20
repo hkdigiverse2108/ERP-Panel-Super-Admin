@@ -17,6 +17,7 @@ const SupplierBill = () => {
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deleteSupplierBill, isPending: deleteSupplierBillLoading } = Mutations.useDeleteSupplierBill();
   const { mutate: editSupplierBill, isPending: editSupplierBillLoading } = Mutations.useEditSupplierBill();
+   const summaryData = data?.data?.summary;
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
     deleteSupplierBill(rowToDelete?._id as string, {
@@ -41,16 +42,12 @@ const SupplierBill = () => {
     return CalculateGridSummary(rows, ["billAmount", "taxAmount", "paidAmount", "balanceAmount"]);
   }, [rows]);
 
-  const stats = useMemo(() => {
-    const totalAmount = rows.reduce((acc, r) => acc + Number(r?.billAmount || 0), 0);
-    const paidAmount = rows.reduce((acc, r) => acc + Number(r.paidAmount || 0), 0);
-    const unpaidAmount = rows.reduce((acc, r) => acc + Number(r.balanceAmount || 0), 0);
-    return [
-      { label: "Total Expense", value: Math.round(totalAmount) },
-      { label: "Paid", value: Math.round(paidAmount) },
-      { label: "Unpaid", value: Math.round(unpaidAmount) },
-    ];
-  }, [rows]);
+  const stats = [
+    { label: "Total Expense", value: summaryData?.totalPurchase || 0 },
+    { label: "Paid", value: summaryData?.paidAmount || 0 },
+    { label: "Unpaid", value: summaryData?.unpaidAmount || 0 },
+  ];
+
   const filter = [CreateFilter("Payment Status", "statusFilter", advancedFilter, updateAdvancedFilter, PAYMENT_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 
   const columns: AppGridColDef<SupplierBillBase>[] = [
@@ -105,7 +102,7 @@ const SupplierBill = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.SUPPLIER_BILL.BASE} breadcrumbs={BREADCRUMBS.SUPPLIER_BILL.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <CommonStatsCard stats={stats} grid={{ xs: 12, sm: 6, md: 4 }} />
+        <CommonStatsCard stats={stats} grid={{ sm: 6, md: 4 }} />
         <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...gridOptions} />

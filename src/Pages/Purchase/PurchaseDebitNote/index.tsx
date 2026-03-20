@@ -76,7 +76,7 @@ const PurchaseDebitNote = () => {
   const stats = [
     {
       label: "Total Amount",
-      value: `${summary?.netAmount?.toLocaleString() || "0"}`,
+      value: `${purchaseDebitNote?.data?.totalAmount || "0"}`,      
       color: "secondary",
     },
   ];

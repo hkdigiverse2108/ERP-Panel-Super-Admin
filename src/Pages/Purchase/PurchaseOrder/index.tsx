@@ -23,7 +23,8 @@ const PurchaseOrder = () => {
 
   const allPurchaseOrder = useMemo(() => purchaseOrderData?.data?.purchaseOrder_data?.map((purchaseOrder) => ({ ...purchaseOrder, id: purchaseOrder._id, netAmount: purchaseOrder.summary?.netAmount || 0 })) || [], [purchaseOrderData]);
   const totalRows = purchaseOrderData?.data?.totalData || 0;
-
+ const summaryData = purchaseOrderData?.data?.summary;
+ 
   const summary = useMemo(() => {
     return CalculateGridSummary(allPurchaseOrder, ["netAmount"]);
   }, [allPurchaseOrder]);
@@ -71,12 +72,12 @@ const PurchaseOrder = () => {
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(companyData?.data), companyDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Supplier", "supplier", advancedFilter, updateAdvancedFilter, GenerateOptions(supplierData?.data), supplierDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ORDER_STATUS, false, { xs: 12, sm: 6, md: 3 })];
 
   const stats = [
-    { label: "All Orders", value: totalRows || 0, color: "primary" },
-    { label: "In Progress", value: allPurchaseOrder.filter((item) => item.status === "in_progress").length, color: "secondary" },
-    { label: "Delivered", value: allPurchaseOrder.filter((item) => item.status === "delivered").length, color: "success" },
-    { label: "Exceed", value: allPurchaseOrder.filter((item) => item.status === "exceed").length, color: "error" },
-    { label: "Completed", value: allPurchaseOrder.filter((item) => item.status === "completed").length, color: "info" },
-    { label: "Cancelled", value: allPurchaseOrder.filter((item) => item.status === "cancelled").length, color: "warning" },
+    { label: "All Orders", value: summaryData?.allOrders || 0, color: "primary" },
+    { label: "In Progress", value: summaryData?.inProgress || 0, color: "secondary" },
+    { label: "Delivered", value: summaryData?.delivered || 0, color: "success" },
+    { label: "Exceed", value: summaryData?.exceed || 0, color: "error" },
+    { label: "Completed", value: summaryData?.completed || 0, color: "info" },
+    { label: "Cancelled", value: summaryData?.cancelled || 0, color: "warning" },
   ];
 
   return (

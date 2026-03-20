@@ -87,8 +87,17 @@ export interface AddPurchaseOrderPayload extends Omit<PurchaseOrderFormValues, "
 export interface EditPurchaseOrderPayload extends PurchaseOrderFormValues {
   purchaseOrderId: string;
 }
+interface PurchaseOrderSummaryResponse {
+  allOrders: number;
+  cancelled: number;
+  completed: number;
+  delivered: number;
+  exceed: number;
+  inProgress: number;
+}
 export interface PurchaseOrderDataResponse extends PageStatus {
   purchaseOrder_data: PurchaseOrderBase[];
+  summary: PurchaseOrderSummaryResponse;
 }
 
 export interface PurchaseOrderApiResponse extends MessageStatus {

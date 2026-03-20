@@ -280,6 +280,11 @@ export type EditSupplierBillPayload = Partial<SupplierBillFormValues> & {
 export interface SupplierBillDataResponse extends PageStatus {
   supplierBill_data: SupplierBillBase[];
   totalData: number;
+    summary: {
+    paidAmount: number;
+    totalPurchase: number;
+    unpaidAmount: number;
+  };
 }
 
 export interface SupplierBillApiResponse extends MessageStatus {
