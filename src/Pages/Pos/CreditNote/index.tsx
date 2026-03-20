@@ -34,11 +34,11 @@ const CreditNoteList = () => {
 
   const columns: AppGridColDef<PosCreditNoteBase>[] = [
     CommonObjectNameColumn<PosCreditNoteBase>("companyId", { headerName: "Company", width: 200 }),
-    { field: "creditNoteNo", headerName: "Credit Note No.", flex: 1, minWidth: 150 },
-    { field: "customerId", headerName: "Customer Name", flex: 1, minWidth: 150, renderCell: (params) => (params.row.customerId ? `${params.row.customerId.firstName || ""} ${params.row.customerId.lastName || ""}`.trim() : "-") },
-    { field: "createdAt", headerName: "Date", flex: 1, minWidth: 120, renderCell: (params) => FormatDate(params.row.createdAt) },
-    { field: "totalAmount", headerName: "Total Amount", flex: 1, minWidth: 120 },
-    { field: "creditsUsed", headerName: "Credits Used", flex: 1, minWidth: 120 },
+    { field: "creditNoteNo", headerName: "Credit Note No.",  width: 180 },
+    { field: "customerId", headerName: "Customer Name",  width: 230, renderCell: (params) => (params.row.customerId ? `${params.row.customerId.firstName || ""} ${params.row.customerId.lastName || ""}`.trim() : "-") },
+    { field: "createdAt", headerName: "Date",  width: 190, renderCell: (params) => FormatDate(params.row.createdAt) },
+    { field: "totalAmount", headerName: "Total Amount",  width: 150 },
+    { field: "creditsUsed", headerName: "Credits Used",  width: 150 },
     { field: "creditsRemaining", headerName: "Credits Remaining", width: 150 },
     { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 130, renderCell: (params) => <span className={`status-${params.row.status || ""}`}>{params.row.status}</span> },
     CommonActionColumn<PosCreditNoteBase>({

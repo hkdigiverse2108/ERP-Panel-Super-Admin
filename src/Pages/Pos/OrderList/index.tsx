@@ -31,37 +31,35 @@ const OrderList = () => {
 
   const columns: AppGridColDef<PosOrderBase>[] = [
     CommonObjectNameColumn<PosOrderBase>("companyId", { headerName: "Company", width: 200 }),
-    { field: "orderNo", headerName: "Invoice No", flex: 1, minWidth: 150 },
-    { field: "createdAt", headerName: "Date", flex: 1, minWidth: 120, renderCell: (params) => (params.row.createdAt ? FormatDate(params.row.createdAt) : "-") },
-    { field: "dueDate", headerName: "Due Date", flex: 1, minWidth: 120, renderCell: (params) => (params.row.payLater?.dueDate ? FormatDate(params.row.payLater.dueDate) : "-") },
+    { field: "orderNo", headerName: "Invoice No", width: 150 },
+    { field: "createdAt", headerName: "Date", width: 150, renderCell: (params) => (params.row.createdAt ? FormatDate(params.row.createdAt) : "-") },
+    { field: "dueDate", headerName: "Due Date", width: 150, renderCell: (params) => (params.row.payLater?.dueDate ? FormatDate(params.row.payLater.dueDate) : "-") },
     {
       field: "customerName",
       headerName: "Customer Name",
-      flex: 1,
-      minWidth: 150,
+      width: 200,
       renderCell: (params) => {
         const customer = params.row.customerId;
         return customer ? `${customer.firstName || ""} ${customer.lastName || ""}`.trim() : "Walk-in";
       },
     },
-    { field: "totalAmount", headerName: "Total Amount", flex: 1, minWidth: 120 },
-    { field: "dueAmount", headerName: "Due Amount", flex: 1, minWidth: 100 },
-    { field: "paymentMethod", headerName: "Payment Mode", flex: 1, minWidth: 120, renderCell: (params) => FormatPayment(params.row.paymentMethod) },
-    { field: "paymentStatus", headerName: "Payment Status", flex: 1, minWidth: 130, renderCell: (params) => FormatPayment(params.row.paymentStatus) },
-    { field: "creditAppliedAmt", headerName: "Credit Applied Amt", flex: 1, minWidth: 150, renderCell: (params) => (params.row.totalAmount && params.row.dueAmount ? params.row.totalAmount - params.row.dueAmount : 0) },
-    { field: "orderType", headerName: "Order Type", flex: 1, minWidth: 100, renderCell: (params) => FormatPayment(params.row.orderType) },
-    { field: "remark", headerName: "Feedback", flex: 1, minWidth: 120 },
+    { field: "totalAmount", headerName: "Total Amount", width: 150 },
+    { field: "dueAmount", headerName: "Due Amount", width: 150 },
+    { field: "paymentMethod", headerName: "Payment Mode", width: 190, renderCell: (params) => FormatPayment(params.row.paymentMethod) },
+    { field: "paymentStatus", headerName: "Payment Status", width: 190, renderCell: (params) => FormatPayment(params.row.paymentStatus) },
+    { field: "creditAppliedAmt", headerName: "Credit Applied Amt", width: 180, renderCell: (params) => (params.row.totalAmount && params.row.dueAmount ? params.row.totalAmount - params.row.dueAmount : 0) },
+    { field: "orderType", headerName: "Order Type", width: 180, renderCell: (params) => FormatPayment(params.row.orderType) },
+    { field: "remark", headerName: "Feedback", width: 190 },
     {
       field: "createdBy",
       headerName: "Created By",
-      flex: 1,
-      minWidth: 150,
+      width: 170,
       renderCell: (params) => {
         const salesMan = params.row.salesManId;
         return salesMan ? `${salesMan.fullName || ""}`.trim() : "-";
       },
     },
-    { field: "channelName", headerName: "Channel Name", flex: 1, minWidth: 130, renderCell: () => "POS" },
+    { field: "channelName", headerName: "Channel Name", width: 130, renderCell: () => "POS" },
     { field: "status", headerName: "Status", flex: 1, minWidth: 100, renderCell: (params) => FormatPayment(params.row.status) },
     ...(permission?.edit || permission?.delete
       ? [
