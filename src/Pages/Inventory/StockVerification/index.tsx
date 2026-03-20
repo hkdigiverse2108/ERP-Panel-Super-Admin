@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BREADCRUMBS } from "../../../Data";
+import { BREADCRUMBS, STOCK_VARIFICATION_STATUS } from "../../../Data";
 import type { AppGridColDef, StockVerificationBase } from "../../../Types";
 import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
@@ -40,20 +40,20 @@ const StockVerification = () => {
     { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
     ...(permission?.edit || permission?.delete
       ? [
-        {
-          ...CommonActionColumn<StockVerificationBase>({
-            ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
-          }),
-          renderCell: (params: GridRenderCellParams<StockVerificationBase>) =>
-            params.row.status === "pending"
-              ? CommonActionColumn<StockVerificationBase>({
-                ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
-                ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
-              }).renderCell?.(params)
-              : "-",
-        },
-      ]
+          {
+            ...CommonActionColumn<StockVerificationBase>({
+              ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
+              ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
+            }),
+            renderCell: (params: GridRenderCellParams<StockVerificationBase>) =>
+              params.row.status === "pending"
+                ? CommonActionColumn<StockVerificationBase>({
+                    ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
+                    ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
+                  }).renderCell?.(params)
+                : "-",
+          },
+        ]
       : []),
   ];
 
@@ -78,7 +78,10 @@ const StockVerification = () => {
     },
   };
 
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, STOCK_VARIFICATION_STATUS, false, { xs: 12, sm: 6, md: 3 }),
+  ];
 
   return (
     <>
