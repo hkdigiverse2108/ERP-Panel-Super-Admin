@@ -48,9 +48,9 @@ const OrderList = () => {
     { field: "dueAmount", headerName: "Due Amount", flex: 1, minWidth: 100 },
     { field: "paymentMethod", headerName: "Payment Mode", flex: 1, minWidth: 120, renderCell: (params) => FormatPayment(params.row.paymentMethod) },
     { field: "paymentStatus", headerName: "Payment Status", flex: 1, minWidth: 130, renderCell: (params) => FormatPayment(params.row.paymentStatus) },
-    { field: "creditAppliedAmt", headerName: "Credit Applied Amt", flex: 1, minWidth: 150, renderCell: (params) => (params.row.totalAmount && params.row.dueAmount ? params.row.totalAmount - params.row.dueAmount : 0) },
+    { field: "redeemCreditAmount", headerName: "Credit Applied Amt", flex: 1, minWidth: 150 },
     { field: "orderType", headerName: "Order Type", flex: 1, minWidth: 100, renderCell: (params) => FormatPayment(params.row.orderType) },
-    { field: "remark", headerName: "Feedback", flex: 1, minWidth: 120 },
+    // { field: "remark", headerName: "Feedback", flex: 1, minWidth: 120 },
     {
       field: "createdBy",
       headerName: "Created By",
@@ -61,7 +61,6 @@ const OrderList = () => {
         return salesMan ? `${salesMan.fullName || ""}`.trim() : "-";
       },
     },
-    { field: "channelName", headerName: "Channel Name", flex: 1, minWidth: 130, renderCell: () => "POS" },
     { field: "status", headerName: "Status", flex: 1, minWidth: 100, renderCell: (params) => FormatPayment(params.row.status) },
     ...(permission?.edit || permission?.delete
       ? [
