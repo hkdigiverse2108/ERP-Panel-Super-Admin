@@ -192,4 +192,9 @@ export const ROUTES = {
     BASE: "/purchase-debit-note",
     ADD_EDIT: "/purchase-debit-note/add-edit",
   },
+
+  DISCOUNT: {
+    BASE: "/discount",
+    ADD_EDIT: "/discount/add-edit",
+  }
 } as const;

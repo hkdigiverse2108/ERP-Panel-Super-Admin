@@ -57,6 +57,8 @@ import AnnouncementForm from "../Pages/Announcement/AnnouncementForm";
 import ChangePassword from "../Pages/Auth/ChangePassword";
 import VerifyOtp from "../Pages/Auth/VerifyOtp";
 import SupportDeskForm from "../Pages/SupportDesk/CallRequest/CallRequestForm";
+import DiscountForm from "../Pages/CRM/Discount/DiscountForm";
+import Discount from "../Pages/CRM/Discount";
 import AdminSetting from "../Pages/Settings/AdminSetting/AdminSetting";
 import BankTransaction from "../Pages/Bank/BankTransaction";
 import BankTransactionForm from "../Pages/Bank/BankTransaction/BankTransactionForm";
@@ -162,6 +164,9 @@ export const PageRoutes = [
 
   { path: ROUTES.COUPON.BASE, name: PAGE_TITLE.CRM.COUPON.BASE, element: <Coupon /> },
   { path: ROUTES.COUPON.ADD_EDIT, name: PAGE_TITLE.CRM.COUPON.BASE, element: <CouponForm /> },
+
+  { path: ROUTES.DISCOUNT.BASE, name: PAGE_TITLE.CRM.DISCOUNT.BASE, element: <Discount /> },
+  { path: ROUTES.DISCOUNT.ADD_EDIT, name: PAGE_TITLE.CRM.DISCOUNT.BASE, element: <DiscountForm /> },
 
   { path: ROUTES.LOYALTY.BASE, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <Loyalty /> },
   { path: ROUTES.LOYALTY.ADD_EDIT, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <LoyaltyForm /> },

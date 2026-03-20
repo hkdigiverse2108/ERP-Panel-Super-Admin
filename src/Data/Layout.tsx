@@ -62,6 +62,7 @@ export const NavItems: NavItem[] = [
     children: [
       { name: PAGE_TITLE.CRM.COUPON.BASE, path: ROUTES.COUPON.BASE },
       { name: PAGE_TITLE.CRM.LOYALTY.BASE, path: ROUTES.LOYALTY.BASE },
+      { name: PAGE_TITLE.CRM.DISCOUNT.BASE, path: ROUTES.DISCOUNT.BASE },
     ],
   },
   {

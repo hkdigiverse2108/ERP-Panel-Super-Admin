@@ -32,6 +32,7 @@ export * from "./PosPayment";
 export * from "./Expense";
 export * from "./Salary";
 export * from "./PosCashRegister";
+export * from "./Discount";
 export * from "./PosCreditNote";
 export * from "./PosOrder";
 export * from "./Product";

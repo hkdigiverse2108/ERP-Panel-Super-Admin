@@ -1,31 +1,26 @@
 import { Grid, FormControl, FormHelperText } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { useField } from "formik";
 import type { FC } from "react";
-import type { CommonValidationDatePickerProps, CommonDatePickerProps } from "../../Types";
+import type { CommonValidationTimePickerProps, CommonTimePickerProps } from "../../Types";
 import { DateConfig } from "../../Utils";
-import { DateTimePicker } from "@mui/x-date-pickers-pro";
 
-const todayUtc = () => DateConfig.utc().startOf("day");
-
-export const CommonValidationDatePicker: FC<CommonValidationDatePickerProps> = ({ name, label, required, disabled, grid, minDate, maxDate, pickerType, ...props }) => {
+export const CommonValidationTimePicker: FC<CommonValidationTimePickerProps> = ({ name, label, required, disabled, grid, minTime, maxTime, ampm = true, ...props }) => {
   const [field, meta, helpers] = useField(name);
   const value = field.value ? DateConfig.utc(field.value) : null;
-  const PickerComponent = pickerType === "datetime" ? DateTimePicker : DatePicker;
 
   const Input = (
     <FormControl fullWidth error={meta.touched && Boolean(meta.error)}>
-      <PickerComponent
+      <TimePicker
         {...props}
         className="capitalize"
         label={label}
         value={value}
-        format={pickerType === "datetime" ? "DD/MM/YYYY HH:MM A" : "DD/MM/YYYY"}
         onChange={(value) => helpers.setValue(value ? DateConfig.utc(value).toISOString() : null)}
         onClose={() => helpers.setTouched(true)}
         disabled={disabled}
-        minDate={minDate ? DateConfig.utc(minDate) : undefined}
-        maxDate={maxDate ? DateConfig.utc(maxDate) : undefined}
+        minTime={minTime ? DateConfig.utc(minTime) : undefined}
+        maxTime={maxTime ? DateConfig.utc(maxTime) : undefined}
         slotProps={{
           textField: {
             required,
@@ -33,6 +28,7 @@ export const CommonValidationDatePicker: FC<CommonValidationDatePickerProps> = (
             error: meta.touched && Boolean(meta.error),
           },
         }}
+        ampm={ampm}
       />
 
       {meta.touched && meta.error && <FormHelperText>{meta.error}</FormHelperText>}
@@ -42,27 +38,25 @@ export const CommonValidationDatePicker: FC<CommonValidationDatePickerProps> = (
   return grid ? <Grid size={grid}>{Input}</Grid> : Input;
 };
 
-export const CommonDatePicker: FC<CommonDatePickerProps> = ({ label, value, onChange, disabled, grid, minDate, maxDate, pickerType, ...props }) => {
-  const dateValue = value ? DateConfig.utc(value) : todayUtc();
-
-  const PickerComponent = pickerType === "datetime" ? DateTimePicker : DatePicker;
+export const CommonTimePicker: FC<CommonTimePickerProps> = ({ label, value, onChange, disabled, grid, minTime, maxTime, ampm = true, ...props }) => {
+  const timeValue = value ? DateConfig.utc(value) : null;
   const Input = (
     <FormControl fullWidth>
-      <PickerComponent
+      <TimePicker
         {...props}
         className="capitalize"
         label={label}
-        value={dateValue}
-        format={pickerType === "datetime" ? "DD/MM/YYYY HH:MM A" : "DD/MM/YYYY"}
+        value={timeValue}
         onChange={(value) => onChange?.(value ? DateConfig.utc(value).toISOString() : null)}
         disabled={disabled}
-        minDate={minDate ? DateConfig.utc(minDate) : undefined}
-        maxDate={maxDate ? DateConfig.utc(maxDate) : undefined}
+        minTime={minTime ? DateConfig.utc(minTime) : undefined}
+        maxTime={maxTime ? DateConfig.utc(maxTime) : undefined}
         slotProps={{
           textField: {
             size: "small",
           },
         }}
+        ampm={ampm}
       />
     </FormControl>
   );

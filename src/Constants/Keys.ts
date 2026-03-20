@@ -246,6 +246,13 @@ export const KEYS = {
     POINTS_ADD: "loyalty-points-add",
   },
 
+  DISCOUNT: {
+    BASE: "discount",
+    ADD: "discount-add",
+    EDIT: "discount-edit",
+    DELETE: "discount-delete",
+  },
+
   SALES_REGISTER: {
     BASE: "sales-register",
     ADD: "sales-register-add",

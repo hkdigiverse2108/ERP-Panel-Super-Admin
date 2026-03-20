@@ -108,6 +108,7 @@ export interface CommonValidationDatePickerProps extends DatePickerOption {
   grid?: GridType;
   required?: boolean;
   label?: string;
+  pickerType?: "date" | "datetime";
 }
 
 export interface CommonDatePickerProps extends CommonValidationDatePickerProps {
@@ -116,6 +117,29 @@ export interface CommonDatePickerProps extends CommonValidationDatePickerProps {
 }
 
 // ************ Date Range Selector End ***********
+
+// ************ Time Selector Start ***********
+
+export type TimePickerOption = {
+  minTime?: any;
+  maxTime?: any;
+};
+
+export interface CommonValidationTimePickerProps extends TimePickerOption {
+  name: string;
+  disabled?: boolean;
+  grid?: GridType;
+  required?: boolean;
+  label?: string;
+  ampm?: boolean;
+}
+
+export interface CommonTimePickerProps extends CommonValidationTimePickerProps {
+  value: any;
+  onChange: (value: any) => void;
+}
+
+// ************ Time Selector End ***********
 
 // ************ Table Start ***********
 
@@ -493,6 +517,7 @@ export interface CommonRadioProps {
 export interface CommonValidationRadioProps extends Omit<CommonRadioProps, "value" | "onChange"> {
   name: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }
 
 // ************ Radio End ***********
@@ -552,6 +577,7 @@ export type DependentSelectProps<T extends ApiOption, P = string | undefined> = 
   enabled?: boolean;
   value?: string[];
   onChange?: (values: string[]) => void;
+  multiple?: boolean;
   query: (
     params?: P,
     enabled?: boolean,

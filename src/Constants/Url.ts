@@ -261,6 +261,14 @@ export const URL_KEYS = {
     EDIT: "/loyalty/edit",
   },
 
+  DISCOUNT: {
+    BASE: "/discount",
+    DROPDOWN: "/discount/dropdown",
+    ALL: "/discount/all",
+    ADD: "/discount/add",
+    EDIT: "/discount/edit",
+  },
+
   SALES_REGISTER: {
     BASE: "/sales-register",
     ADD: "/sales-register/add",
