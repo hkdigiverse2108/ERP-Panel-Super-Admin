@@ -16,10 +16,9 @@ const Discount = () => {
 
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { data, isLoading, isFetching } = Queries.useGetDiscount(params);
-
   const { mutate: deleteDiscount } = Mutations.useDeleteDiscount();
   const { mutate: editDiscount } = Mutations.useEditDiscount();
-
+  const summaryData = data?.data?.summary;
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
     deleteDiscount(rowToDelete?._id as string, {
@@ -29,15 +28,13 @@ const Discount = () => {
 
   const rows = useMemo(() => data?.data?.discount_data.map((r: DiscountBase) => ({ ...r, id: r?._id })) || [], [data]);
 
-  const stats = useMemo(() => {
-    return [
-      { label: "Total Discounts", value: data?.data?.totalData || 0 },
-      { label: "Active Discounts", value: data?.data?.activeDiscounts || 0 },
-      { label: "Order with Discounts", value: data?.data?.orderWithDiscounts || 0 },
-      { label: "Revenue from Discounts", value: data?.data?.revenue || 0 },
-      { label: "Discount Given", value: data?.data?.discountGiven || 0 },
+  const stats = [
+      { label: "Total Discounts", value: summaryData?.totalData || 0 },
+      { label: "Active Discounts", value: summaryData?.activeDiscounts || 0 },
+      { label: "Order with Discounts", value: summaryData?.orderWithDiscounts || 0 },
+      { label: "Revenue from Discounts", value: summaryData?.revenue || 0 },
+      { label: "Discount Given", value: summaryData?.discountGiven || 0 },
     ];
-  }, [data]);
 
   const columns: AppGridColDef<DiscountBase>[] = [
     CommonObjectNameColumn<DiscountBase>("companyId", { headerName: "Company", width: 150 }),

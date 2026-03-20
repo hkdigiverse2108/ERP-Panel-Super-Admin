@@ -91,6 +91,13 @@ export interface DiscountDataResponse extends PageStatus {
   discountGiven: number;
   orderWithDiscounts: number;
   revenue: number;
+  summary: {
+    totalData: number;
+    activeDiscounts: number;
+    orderWithDiscounts: number;
+    revenue: number;
+    discountGiven: number;
+  };
 }
 
 export interface DiscountApiResponse extends MessageStatus {
