@@ -22,7 +22,7 @@ const ExpenseForm = () => {
   const navigate = useNavigate();
   const { data } = location.state || {};
   const permission = usePagePermission(PAGE_TITLE.EXPENSE.BASE);
-  const [activeImageKey, setActiveImageKey] = useState<"file" | null>(null);
+  const [activeImageKey, setActiveImageKey] = useState<"image" | null>(null);
   const dispatch = useAppDispatch();
   const { mutate: addExpense, isPending: isAddLoading } = Mutations.useAddExpense();
   const { mutate: editExpense, isPending: isEditLoading } = Mutations.useEditExpense();
@@ -56,7 +56,7 @@ const ExpenseForm = () => {
     return null;
   };
   const handleUpload = () => {
-    setActiveImageKey("file");
+    setActiveImageKey("image");
     dispatch(setUploadModal({ open: true, type: "image" }));
   };
 

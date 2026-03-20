@@ -21,7 +21,7 @@ const SalaryForm = () => {
   const navigate = useNavigate();
   const { data } = location.state || {};
   const permission = usePagePermission(PAGE_TITLE.SALARY.BASE);
-  const [activeImageKey, setActiveImageKey] = useState<"file" | null>(null);
+  const [activeImageKey, setActiveImageKey] = useState<"image" | null>(null);
   const dispatch = useAppDispatch();
   const { mutate: addSalary, isPending: isAddLoading } = Mutations.useAddSalary();
   const { mutate: editSalary, isPending: isEditLoading } = Mutations.useEditSalary();
@@ -58,7 +58,7 @@ const SalaryForm = () => {
     return null;
   };
   const handleUpload = () => {
-    setActiveImageKey("file");
+    setActiveImageKey("image");
     dispatch(setUploadModal({ open: true, type: "image" }));
   };
   const SalaryTotalCalculator = () => {

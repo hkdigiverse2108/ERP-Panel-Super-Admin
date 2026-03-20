@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BREADCRUMBS } from "../../../Data";
+import { BREADCRUMBS, PAYMENT_TYPE_OPTIONS } from "../../../Data";
 import type { AppGridColDef, PosPaymentBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
@@ -15,6 +15,7 @@ const Receipt = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.RECEIPT.BASE);
 
+  const { data: contactData, isLoading: contactDataLoading } = Queries.useGetContactDropdown();
   const { data, isLoading, isFetching } = Queries.useGetPosPayment({ ...params, voucherTypeFilter: "sales" });
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deletePayment, isPending: isDeleteLoading } = Mutations.useDeletePosPayment();
@@ -41,7 +42,7 @@ const Receipt = () => {
     { field: "paymentMode", headerName: "Payment Mode", width: 140 },
     { field: "paymentType", headerName: "Payment Type", width: 140 },
     { field: "date", headerName: "Payment Date", width: 190, valueGetter: (v) => FormatDate(v) },
-    { field: "amount", headerName: "Amount", width: 150,  valueGetter: (_v, row: PosPaymentBase) => row?.amount ?? row?.totalAmount ?? 0 },
+    { field: "amount", headerName: "Amount", width: 150, valueGetter: (_v, row: PosPaymentBase) => row?.amount ?? row?.totalAmount ?? 0 },
     { field: "status", headerName: "Status", headerAlign: "center", minWidth: 110, flex: 1, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
 
     ...(permission?.edit || permission?.delete
@@ -75,6 +76,8 @@ const Receipt = () => {
 
   const filter = [
     CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Payment Type", "paymentTypeFilter", advancedFilter, updateAdvancedFilter, PAYMENT_TYPE_OPTIONS, false, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select party", "partyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(contactData?.data), contactDataLoading, { xs: 12, sm: 6, md: 3 }),
   ];
 
   return (
