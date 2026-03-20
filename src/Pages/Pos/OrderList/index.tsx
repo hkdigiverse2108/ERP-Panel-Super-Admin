@@ -43,13 +43,13 @@ const OrderList = () => {
         return customer ? `${customer.firstName || ""} ${customer.lastName || ""}`.trim() : "Walk-in";
       },
     },
-    { field: "totalAmount", headerName: "Total Amount", width: 150 },
-    { field: "dueAmount", headerName: "Due Amount", width: 150 },
-    { field: "paymentMethod", headerName: "Payment Mode", width: 190, renderCell: (params) => FormatPayment(params.row.paymentMethod) },
-    { field: "paymentStatus", headerName: "Payment Status", width: 190, renderCell: (params) => FormatPayment(params.row.paymentStatus) },
-    { field: "creditAppliedAmt", headerName: "Credit Applied Amt", width: 180, renderCell: (params) => (params.row.totalAmount && params.row.dueAmount ? params.row.totalAmount - params.row.dueAmount : 0) },
-    { field: "orderType", headerName: "Order Type", width: 180, renderCell: (params) => FormatPayment(params.row.orderType) },
-    { field: "remark", headerName: "Feedback", width: 190 },
+    { field: "totalAmount", headerName: "Total Amount", flex: 1, minWidth: 120 },
+    { field: "dueAmount", headerName: "Due Amount", flex: 1, minWidth: 100 },
+    { field: "paymentMethod", headerName: "Payment Mode", flex: 1, minWidth: 120, renderCell: (params) => FormatPayment(params.row.paymentMethod) },
+    { field: "paymentStatus", headerName: "Payment Status", flex: 1, minWidth: 130, renderCell: (params) => FormatPayment(params.row.paymentStatus) },
+    { field: "redeemCreditAmount", headerName: "Credit Applied Amt", flex: 1, minWidth: 150 },
+    { field: "orderType", headerName: "Order Type", flex: 1, minWidth: 100, renderCell: (params) => FormatPayment(params.row.orderType) },
+    // { field: "remark", headerName: "Feedback", flex: 1, minWidth: 120 },
     {
       field: "createdBy",
       headerName: "Created By",
@@ -59,7 +59,6 @@ const OrderList = () => {
         return salesMan ? `${salesMan.fullName || ""}`.trim() : "-";
       },
     },
-    { field: "channelName", headerName: "Channel Name", width: 130, renderCell: () => "POS" },
     { field: "status", headerName: "Status", flex: 1, minWidth: 100, renderCell: (params) => FormatPayment(params.row.status) },
     ...(permission?.edit || permission?.delete
       ? [
