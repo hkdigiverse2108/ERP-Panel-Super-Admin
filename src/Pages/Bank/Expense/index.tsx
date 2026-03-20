@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BREADCRUMBS } from "../../../Data";
+import { BREADCRUMBS, EXPENSE_TYPE_OPTIONS } from "../../../Data";
 import type { AppGridColDef, ExpenseBase } from "../../../Types";
 import type { GridRenderCellParams } from "@mui/x-data-grid";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
@@ -65,32 +65,33 @@ const Expense = () => {
     },
     { field: "fromDate", headerName: "Expense Date", width: 190, valueGetter: (v) => FormatDate(v) },
     { field: "amount", headerName: "Amount", width: 150 },
-    { field: "description", headerName: "Description", flex:1, minWidth: 200 },
+    { field: "type", headerName: "Expense Type", width: 150 },
+    { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
-        {
-          ...CommonActionColumn<ExpenseBase>({}),
-          renderCell: (params: GridRenderCellParams<ExpenseBase>) => {
-            const row = params.row;
-            if (row?.isSalary) {
+          {
+            ...CommonActionColumn<ExpenseBase>({}),
+            renderCell: (params: GridRenderCellParams<ExpenseBase>) => {
+              const row = params.row;
+              if (row?.isSalary) {
+                return CommonActionColumn<ExpenseBase>({
+                  ...(permissionSalary?.edit && {
+                    active: (row) => editSalary({ salaryId: row?._id, isActive: !row.isActive }),
+                    editRoute: ROUTES.SALARY.ADD_EDIT,
+                  }),
+                  ...(permissionSalary?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.description ?? row?.description, isSalary: true } as unknown as ExpenseBase) }),
+                }).renderCell?.(params);
+              }
               return CommonActionColumn<ExpenseBase>({
-                ...(permissionSalary?.edit && {
-                  active: (row) => editSalary({ salaryId: row?._id, isActive: !row.isActive }),
-                  editRoute: ROUTES.SALARY.ADD_EDIT,
+                ...(permission?.edit && {
+                  active: (row) => editExpense({ expenseId: row?._id, isActive: !row.isActive }),
+                  editRoute: ROUTES.EXPENSE.ADD_EDIT,
                 }),
-                ...(permissionSalary?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.description ?? row?.description, isSalary: true } as unknown as ExpenseBase) }),
+                ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.description }) }),
               }).renderCell?.(params);
-            }
-            return CommonActionColumn<ExpenseBase>({
-              ...(permission?.edit && {
-                active: (row) => editExpense({ expenseId: row?._id, isActive: !row.isActive }),
-                editRoute: ROUTES.EXPENSE.ADD_EDIT,
-              }),
-              ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.description }) }),
-            }).renderCell?.(params);
+            },
           },
-        },
-      ]
+        ]
       : []),
   ];
 
@@ -110,7 +111,10 @@ const Expense = () => {
     onFilterModelChange: setFilterModel,
   };
 
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Expense Type", "typeFilter", advancedFilter, updateAdvancedFilter, EXPENSE_TYPE_OPTIONS, false, { xs: 12, sm: 6, md: 3 }),
+  ];
 
   const topContent = (
     <Grid size={"auto"}>
