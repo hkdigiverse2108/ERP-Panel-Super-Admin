@@ -39,8 +39,8 @@ const CreditNoteList = () => {
     { field: "createdAt", headerName: "Date", flex: 1, minWidth: 120, renderCell: (params) => FormatDate(params.row.createdAt) },
     { field: "totalAmount", headerName: "Total Amount", flex: 1, minWidth: 120 },
     { field: "creditsUsed", headerName: "Credits Used", flex: 1, minWidth: 120 },
-    { field: "creditsRemaining", headerName: "Credits Remaining", flex: 1, minWidth: 150 },
-    { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status || ""}`}>{params.row.status}</span> },
+    { field: "creditsRemaining", headerName: "Credits Remaining", width: 150 },
+    { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 130, renderCell: (params) => <span className={`status-${params.row.status || ""}`}>{params.row.status}</span> },
     CommonActionColumn<PosCreditNoteBase>({
       onRefund: (row) => (row.creditsRemaining > 0 ? handleRefundBtn(row) : undefined),
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.creditNoteNo }),
