@@ -55,7 +55,7 @@ const BankTransaction = () => {
       exportFormatter: (value) => (typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-"),
     },
     { field: "amount", headerName: "Amount", width: 150 },
-    { field: "description", headerName: "Description", width: 250 },
+    { field: "description", headerName: "Description", flex:1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<BankTransactionBase>({

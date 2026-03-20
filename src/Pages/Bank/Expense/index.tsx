@@ -64,8 +64,8 @@ const Expense = () => {
       },
     },
     { field: "fromDate", headerName: "Expense Date", width: 190, valueGetter: (v) => FormatDate(v) },
-    { field: "amount", headerName: "Amount", width: 200 },
-    { field: "description", headerName: "Description", width: 200 },
+    { field: "amount", headerName: "Amount", width: 150 },
+    { field: "description", headerName: "Description", flex:1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
         {
