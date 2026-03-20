@@ -450,3 +450,8 @@ export const STATUS = {
   ACTIVE: "active",
   INACTIVE: "inactive",
 };
+
+export const CREDIT_NOTE_STATUS = [
+  { label: "Available", value: "available" },
+  { label: "Used", value: "used" },
+];

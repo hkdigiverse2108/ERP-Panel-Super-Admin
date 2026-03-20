@@ -13,6 +13,8 @@ const Stock = () => {
 
   const { data: stockData, isLoading: stockDataLoading, isFetching: stockDataFetching } = Queries.useGetStock(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const { data: brandData, isLoading: brandDataLoading } = Queries.useGetBrandDropdown();
+  const { data: categoryData, isLoading: categoryDataLoading } = Queries.useGetCategoryDropdown();
 
   const allStock = useMemo(() => stockData?.data?.stock_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [stockData]);
   const totalRows = stockData?.data?.totalData || 0;
@@ -34,7 +36,13 @@ const Stock = () => {
     onFilterModelChange: setFilterModel,
   };
 
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Brand", "brandFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(brandData?.data), brandDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Sub Brand", "subBrandFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(brandData?.data), brandDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Category", "categoryFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(categoryData?.data), categoryDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Sub Category", "subCategoryFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(categoryData?.data), categoryDataLoading, { xs: 12, sm: 6, md: 3 }), //
+  ];
 
   return (
     <>

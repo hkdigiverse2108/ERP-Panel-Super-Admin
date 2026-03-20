@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { BREADCRUMBS } from "../../../Data";
+import { BREADCRUMBS, CREDIT_NOTE_STATUS } from "../../../Data";
 import { useAppDispatch } from "../../../Store/hooks";
 import type { AppGridColDef, PosCreditNoteBase } from "../../../Types";
 import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
@@ -59,7 +59,10 @@ const CreditNoteList = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
   };
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, CREDIT_NOTE_STATUS, false, { xs: 12, sm: 6, md: 3 }),
+  ];
 
   return (
     <>
