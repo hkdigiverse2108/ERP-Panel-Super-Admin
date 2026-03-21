@@ -217,13 +217,17 @@ export interface ExportToPDFProps<T extends GridValidRowModel> {
   rows: readonly T[];
   fileName?: string;
   title?: string;
+  user?: string;
+  email?: string;
 }
 
+export type ColumnFormatType = "default" | "phone" | "date" | "datetime" | "format" | "status";
 export interface CommonObjectNameColumnOptions {
   headerName?: string;
   width?: number;
   flex?: number;
   minWidth?: number;
+  type?: ColumnFormatType;
 }
 
 export interface CommonActionColumnProps<T> {

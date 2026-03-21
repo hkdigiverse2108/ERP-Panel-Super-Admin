@@ -49,6 +49,11 @@ export const RequiredWhen = (dependentField: string, requiredValues: Primitive[]
   });
 };
 
+export const FormatCountryCode = (code?: string) => {
+  if (!code) return "";
+  return code.startsWith("+") ? code : `+${code}`;
+};
+
 // ---------- Reusable helpers ----------
 
 export const PhoneValidation = (label = "Phone No", options?: { requiredCountryCode?: boolean; requiredNumber?: boolean }) =>

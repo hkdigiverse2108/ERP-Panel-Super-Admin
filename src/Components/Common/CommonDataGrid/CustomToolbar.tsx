@@ -4,7 +4,6 @@ import DownloadIcon from "@mui/icons-material/Download";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import GridOnIcon from "@mui/icons-material/GridOn";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import PrintIcon from "@mui/icons-material/Print";
 import ViewColumnIcon from "@mui/icons-material/ViewColumn";
 import { Box, Grid, IconButton, Menu, MenuItem, TextField, Tooltip } from "@mui/material";
 import { GridToolbarContainer } from "@mui/x-data-grid";
@@ -20,6 +19,7 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ isExport = true, fileName, apiR
   const [searchText, setSearchText] = useState(filterModel?.quickFilterValues?.[0] || "");
 
   const { user } = useAppSelector((state) => state.auth);
+    const exportFileName = `${fileName ? `${fileName?.replace(/\s+/g, "-")}-` : ""}`
 
   const handleSearch = () => {
     onFilterModelChange({ ...filterModel, quickFilterValues: [searchText] });
@@ -95,7 +95,7 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ isExport = true, fileName, apiR
                 ExportDataGridToExcel({
                   columns,
                   rows,
-                  fileName: fileName,
+                  fileName: exportFileName,
                   title: user?.fullName,
                 });
                 setAnchorEl(null);
@@ -105,7 +105,7 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ isExport = true, fileName, apiR
               Excel
             </MenuItem>
 
-            {/* PRINT */}
+            {/* PRINT
             <MenuItem
               onClick={() => {
                 apiRef?.current?.exportDataAsPrint();
@@ -114,7 +114,7 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ isExport = true, fileName, apiR
             >
               <PrintIcon fontSize="small" sx={{ mr: 1 }} />
               Print
-            </MenuItem>
+            </MenuItem> */}
 
             {/* PDF */}
             <MenuItem
@@ -122,7 +122,7 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ isExport = true, fileName, apiR
                 ExportDataGridToPDF({
                   columns,
                   rows,
-                  fileName: fileName,
+                  fileName: exportFileName,
                   title: user?.fullName,
                 });
                 setAnchorEl(null);

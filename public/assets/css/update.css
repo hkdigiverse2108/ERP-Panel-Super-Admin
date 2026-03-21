@@ -152,6 +152,7 @@ input[type="number"] {
 .status-paid,
 .status-delivered,
 .status-approved,
+.status-completed,
 .status-available {
   @apply text-white capitalize text-center w-full bg-green-500 dark:bg-green-600 h-6 leading-6 rounded-sm px-2;
 }
@@ -161,6 +162,7 @@ input[type="number"] {
 .status-unpaid,
 .status-used,
 .status-closed,
+.status-returned,
 .status-rejected {
   @apply text-white capitalize text-center w-full bg-red-500 dark:bg-red-600 h-6 leading-6 rounded-sm px-2;
 }
@@ -175,6 +177,7 @@ input[type="number"] {
 
 .status-invoiced,
 .status-invoice_created,
+.status-hold,
 .status-invoice-created {
   @apply text-white capitalize text-center w-full bg-blue-500 dark:bg-blue-600 h-6 leading-6 rounded-sm px-2;
 }
