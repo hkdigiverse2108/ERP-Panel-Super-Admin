@@ -26,6 +26,7 @@ export interface PhoneNumberType {
 
 export type AppGridColDef<T extends GridValidRowModel> = GridColDef<T> & {
   exportFormatter?: (value: unknown, row: T) => string | number;
+    isSummary?: boolean;
 };
 
 // ************ Drawer Start ***********

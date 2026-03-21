@@ -7,8 +7,9 @@ import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcr
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, STOCK_VARIFICATION_STATUS } from "../../../Data";
 import type { AppGridColDef, StockVerificationBase } from "../../../Types";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const StockVerification = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, params, advancedFilter, updateAdvancedFilter } = useDataGrid({ active: false });
@@ -32,12 +33,12 @@ const StockVerification = () => {
 
   const columns: AppGridColDef<StockVerificationBase>[] = [
     CommonObjectNameColumn("companyId", { headerName: "Company Name", width: 200 }),
-    { field: "stockVerificationNo", headerName: "Stock Verification No.", flex: 1, minWidth: 200 },
-    { field: "createdAt", headerName: "Stock Verification Date", flex: 1, minWidth: 200, renderCell: (params) => FormatDate(params.row.createdAt) },
-    { field: "totalProducts", headerName: "Total Products", width: 200 },
-    { field: "totalPhysicalQty", headerName: "Total Physical Qty", width: 200 },
-    { field: "totalDifferenceAmount", headerName: "Difference Amount", width: 180 },
-    { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 150, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
+    { field: "stockVerificationNo", headerName: "Stock Verification No.", flex: 1, minWidth: 230 },
+    CommonObjectPropertyColumn<StockVerificationBase>("createdAt", "createdAt", [], { headerName: "Stock Verification Date", width: 230, type: "date" }),
+    { field: "totalProducts", headerName: "Total Products", width: 230, isSummary: true },
+    { field: "totalPhysicalQty", headerName: "Total Physical Qty", width: 230, isSummary: true },
+    { field: "totalDifferenceAmount", headerName: "Difference Amount", width: 230, isSummary: true },
+    CommonObjectPropertyColumn<StockVerificationBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 150, type: "status" }),
     ...(permission?.edit || permission?.delete
       ? [
           {
@@ -73,6 +74,7 @@ const StockVerification = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE,
     slots: {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },
