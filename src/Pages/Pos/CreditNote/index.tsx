@@ -6,10 +6,11 @@ import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, CREDIT_NOTE_STATUS } from "../../../Data";
 import { useAppDispatch } from "../../../Store/hooks";
 import type { AppGridColDef, PosCreditNoteBase } from "../../../Types";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
 import { setOrderRefundModal } from "../../../Store/Slices/ModalSlice";
 import OrderRefund from "./OrderRefund";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const CreditNoteList = () => {
   const dispatch = useAppDispatch();
@@ -34,13 +35,13 @@ const CreditNoteList = () => {
 
   const columns: AppGridColDef<PosCreditNoteBase>[] = [
     CommonObjectNameColumn<PosCreditNoteBase>("companyId", { headerName: "Company", width: 200 }),
-    { field: "creditNoteNo", headerName: "Credit Note No.",  width: 180 },
-    { field: "customerId", headerName: "Customer Name",  width: 230, renderCell: (params) => (params.row.customerId ? `${params.row.customerId.firstName || ""} ${params.row.customerId.lastName || ""}`.trim() : "-") },
-    { field: "createdAt", headerName: "Date",  width: 190, renderCell: (params) => FormatDate(params.row.createdAt) },
-    { field: "totalAmount", headerName: "Total Amount",  width: 150 },
-    { field: "creditsUsed", headerName: "Credits Used",  width: 150 },
+    { field: "creditNoteNo", headerName: "Credit Note No.", width: 180 },
+    CommonObjectPropertyColumn<PosCreditNoteBase>("customerId", "customerId", ["firstName", "lastName"], { headerName: "Customer Name", width: 150 }),
+    CommonObjectPropertyColumn<PosCreditNoteBase>("created", "createdAt", [], { headerName: "Date", width: 120, type: "date" }),
+    { field: "totalAmount", headerName: "Total Amount", width: 150 },
+    { field: "creditsUsed", headerName: "Credits Used", width: 150 },
     { field: "creditsRemaining", headerName: "Credits Remaining", width: 150 },
-    { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 130, renderCell: (params) => <span className={`status-${params.row.status || ""}`}>{params.row.status}</span> },
+    CommonObjectPropertyColumn<PosCreditNoteBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 150, type: "status" }),
     CommonActionColumn<PosCreditNoteBase>({
       onRefund: (row) => (row.creditsRemaining > 0 ? handleRefundBtn(row) : undefined),
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.creditNoteNo }),
@@ -58,6 +59,7 @@ const CreditNoteList = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.POS.CREDIT_NOTE,
   };
   const filter = [
     CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
