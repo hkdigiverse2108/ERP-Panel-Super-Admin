@@ -1,5 +1,4 @@
 import { Box, Grid } from "@mui/material";
-import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { Queries } from "../../../Api";
 import { CommonDateRangeSelector } from "../../../Attribute";
@@ -7,22 +6,19 @@ import { AdvancedSearch, CalculateGridSummary, CommonBreadcrumbs, CommonCard, Co
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, SALES_REGISTER_STATUS } from "../../../Data";
 import type { AppGridColDef, PosCashRegisterBase } from "../../../Types";
-import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { CreateFilter, DateConfig, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
 import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const SalesRegister = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params, advancedFilter, updateAdvancedFilter } = useDataGrid({ active: false });
 
-  const [dateRange, setDateRange] = useState({ start: dayjs(), end: dayjs() });
+  const [dateRange, setDateRange] = useState({ start: DateConfig.utc().startOf("month"), end: DateConfig.utc().endOf("month") });
+  const queryParams = useMemo(() => ({ startDate: dateRange.start.toISOString(), endDate: dateRange.end.toISOString() }), [dateRange]);
 
   const { data: userDropdown, isLoading: userDropdownLoading } = Queries.useGetUserDropdown();
-
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
-
-  const queryParams = useMemo(() => ({ ...params, startDate: dateRange.start.format("YYYY-MM-DD"), endDate: dateRange.end.format("YYYY-MM-DD") }), [params, dateRange]);
-
-  const { data, isLoading, isFetching } = Queries.useGetPosCashRegister(queryParams);
+  const { data, isLoading, isFetching } = Queries.useGetPosCashRegister({ ...params, ...queryParams });
 
   const rows = useMemo(() => {
     const apiData = data?.data?.posCashRegister_data;
@@ -35,7 +31,6 @@ const SalesRegister = () => {
     return CalculateGridSummary(rows, ["openingCash", "cashPayment", "cardPayment", "upiPayment", "payLater", "totalSales", "creditAdvanceRedeemed", "salesReturn", "physicalDrawerCash", "shortExceed"]);
   }, [rows]);
 
-
   const columns: AppGridColDef<PosCashRegisterBase>[] = [
     CommonObjectNameColumn<PosCashRegisterBase>("companyId", { headerName: "Company", width: 200 }), //
     CommonObjectPropertyColumn<PosCashRegisterBase>("salesManId", "salesManId", ["fullName"], { headerName: "Sales Man", width: 150 }),
@@ -43,16 +38,16 @@ const SalesRegister = () => {
     CommonObjectPropertyColumn<PosCashRegisterBase>("updated", "updatedAt", [], { headerName: "To Date", width: 100, type: "date" }),
     CommonObjectPropertyColumn<PosCashRegisterBase>("status", "status", [], { headerName: "Status", width: 100, type: "status" }),
     { field: "openingCash", headerName: "Cash In Hand", width: 130, isSummary: true },
-    { field: "cashPayment", headerName: "Cash", width: 110, isSummary: true  },
+    { field: "cashPayment", headerName: "Cash", width: 110, isSummary: true },
     { field: "cardPayment", headerName: "Card", width: 110, isSummary: true },
-    { field: "upiPayment", headerName: "UPI", width: 110,isSummary: true  },
-    { field: "payLater", headerName: "Pay Later", width: 110, isSummary: true  },
-    { field: "totalSales", headerName: "Total Sales", width: 130, isSummary: true  },
-    { field: "creditAdvanceRedeemed", headerName: "Credit/Advance Redeemed", width: 190, isSummary: true  },
-    { field: "salesReturn", headerName: "Sales Return Amount", width: 160, isSummary: true  },
+    { field: "upiPayment", headerName: "UPI", width: 110, isSummary: true },
+    { field: "payLater", headerName: "Pay Later", width: 110, isSummary: true },
+    { field: "totalSales", headerName: "Total Sales", width: 130, isSummary: true },
+    { field: "creditAdvanceRedeemed", headerName: "Credit/Advance Redeemed", width: 190, isSummary: true },
+    { field: "salesReturn", headerName: "Sales Return Amount", width: 160, isSummary: true },
     { field: "bankTransferAmount", headerName: "Cash Transfered To HO", width: 180, isSummary: true },
-    { field: "physicalDrawerCash", headerName: "Closing Amount", width: 150, isSummary: true  },
-    { field: "shortExceed", headerName: "Short/Exceed", width: 140, isSummary: true  },
+    { field: "physicalDrawerCash", headerName: "Closing Amount", width: 150, isSummary: true },
+    { field: "shortExceed", headerName: "Short/Exceed", width: 140, isSummary: true },
   ];
 
   const gridOptions = {

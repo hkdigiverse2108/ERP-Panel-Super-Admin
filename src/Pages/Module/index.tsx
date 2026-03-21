@@ -35,7 +35,7 @@ const Module = () => {
     { field: "tabName", headerName: "Tab Name", width: 200 },
     { field: "displayName", headerName: "Display Name", width: 200 },
     { field: "tabUrl", headerName: "Tab URL", width: 200 },
-    CommonObjectPropertyColumn<ModuleBase>("Parent", "parentId", "tabName", { headerName: "Parent Name", width: 150 }),
+    CommonObjectPropertyColumn<ModuleBase>("Parent", "parentId", ["tabName"], { headerName: "Parent Name", width: 150 }),
     { field: "number", headerName: "Number", width: 80 },
     { field: "hasAdd", headerName: "Add", width: 85, headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ Add" : "❌ Add") },
     { field: "hasEdit", headerName: "Edit", width: 85, headerAlign: "center", align: "center", renderCell: (params) => (params.value ? "✅ Edit" : "❌ Edit") },

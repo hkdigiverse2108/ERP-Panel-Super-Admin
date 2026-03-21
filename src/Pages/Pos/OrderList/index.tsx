@@ -67,7 +67,7 @@ const OrderList = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    fileName:PAGE_TITLE.POS.ORDER_LIST,
+    fileName: PAGE_TITLE.POS.ORDER_LIST,
   };
 
   return (

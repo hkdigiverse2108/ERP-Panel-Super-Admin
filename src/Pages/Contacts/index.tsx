@@ -58,10 +58,10 @@ const Contact = () => {
     { field: "email", headerName: "Email", width: 220 },
     { field: "dob", headerName: "Date of Birth", width: 160, valueGetter: (v) => FormatDate(v) },
     { field: "anniversaryDate", headerName: "Anniversary Date", width: 180, valueGetter: (v) => FormatDate(v) },
-    CommonObjectPropertyColumn<ContactBase>("bankName", "bankDetails", "name", { headerName: "Bank name", width: 300 }),
-    CommonObjectPropertyColumn<ContactBase>("ifscCode", "bankDetails", "ifscCode", { headerName: "IFSC Code", width: 300 }),
-    CommonObjectPropertyColumn<ContactBase>("branchName", "bankDetails", "branch", { headerName: "Branch Name", width: 300 }),
-    CommonObjectPropertyColumn<ContactBase>("accountNumber", "bankDetails", "accountNumber", { headerName: "Account Number", width: 300 }),
+    CommonObjectPropertyColumn<ContactBase>("bankName", "bankDetails", ["name"], { headerName: "Bank name", width: 300 }),
+    CommonObjectPropertyColumn<ContactBase>("ifscCode", "bankDetails", ["ifscCode"], { headerName: "IFSC Code", width: 300 }),
+    CommonObjectPropertyColumn<ContactBase>("branchName", "bankDetails", ["branch"], { headerName: "Branch Name", width: 300 }),
+    CommonObjectPropertyColumn<ContactBase>("accountNumber", "bankDetails", ["accountNumber"], { headerName: "Account Number", width: 300 }),
 
     // Address
     { field: "addressLine1", headerName: "Address Line 1", width: 180, valueGetter: (_value, row) => row?.address?.[0]?.addressLine1 || "" },

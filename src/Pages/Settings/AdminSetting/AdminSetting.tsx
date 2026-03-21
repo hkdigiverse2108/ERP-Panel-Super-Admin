@@ -101,7 +101,7 @@ const AdminSetting = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.PROFILE.EDIT} maxItems={3} breadcrumbs={BREADCRUMBS.SETTINGS.ADMIN_SETTING} />
+      <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.ADMIN_SETTING.BASE} maxItems={3} breadcrumbs={BREADCRUMBS.SETTINGS.ADMIN_SETTING} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<AdminSettingFormValues> enableReinitialize initialValues={initialValues} validationSchema={AdminSettingFormSchema} onSubmit={handleSubmit}>
           {({ dirty, values }) => (
@@ -114,7 +114,7 @@ const AdminSetting = () => {
                 <CommonCard title="Contact Info" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} />
-                     <CommonValidationTextField name="email" label="Support Email" grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="email" label="Support Email" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="address" label="Address" multiline grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>
@@ -169,7 +169,7 @@ const AdminSetting = () => {
                   </Grid>
                 </CommonCard>
 
-                <CommonBottomActionBar save disabled={!dirty} isLoading={isEditLoading} />
+                <CommonBottomActionBar submit disabled={!dirty} isLoading={isEditLoading} />
               </Grid>
             </Form>
           )}

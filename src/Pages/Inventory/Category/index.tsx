@@ -9,6 +9,7 @@ import { setCategoryModal } from "../../../Store/Slices/ModalSlice";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import CategoryForm from "./CategoryForm";
 import type { AppGridColDef, CategoryBase } from "../../../Types";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Category = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -41,14 +42,8 @@ const Category = () => {
     { field: "name", headerName: "Name", width: 200 },
     { field: "code", headerName: "Code", width: 200 },
     { field: "description", headerName: "Description", width: 300 },
-    {
-      field: "parentCategoryId",
-      headerName: "Parent Category",
-      flex: 1,
-      minWidth: 200,
-      renderCell: ({ value }) => (typeof value === "object" ? value?.name || "-" : value),
-      exportFormatter: (value) => (typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-"),
-    },
+    CommonObjectPropertyColumn<CategoryBase>("parentCategoryId", "parentCategoryId", ["name"], { headerName: "Parent Category", flex: 1, minWidth: 200 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<CategoryBase>({
@@ -76,7 +71,7 @@ const Category = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    isExport: false,
+    fileName: PAGE_TITLE.INVENTORY.CATEGORY.BASE,
   };
 
   return (
