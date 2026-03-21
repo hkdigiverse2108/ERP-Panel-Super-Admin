@@ -9,7 +9,6 @@ import { Box, Grid, IconButton, Menu, MenuItem, TextField, Tooltip } from "@mui/
 import { GridToolbarContainer } from "@mui/x-data-grid";
 import { useState, type FC } from "react";
 import { CommonButton, CommonSwitch } from "../../../Attribute";
-import { useAppSelector } from "../../../Store/hooks";
 import type { CustomToolbarProps } from "../../../Types";
 import { ExportDataGridToExcel } from "./ExportDataGridToExcel";
 import { ExportDataGridToPDF } from "./ExportDataGridToPDF";
@@ -18,8 +17,8 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ isExport = true, fileName, apiR
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [searchText, setSearchText] = useState(filterModel?.quickFilterValues?.[0] || "");
 
-  const { user } = useAppSelector((state) => state.auth);
-    const exportFileName = `${fileName ? `${fileName?.replace(/\s+/g, "-")}-` : ""}`
+  // const { user } = useAppSelector((state) => state.auth);
+  const exportFileName = `${fileName ? `${fileName?.replace(/\s+/g, "-")}-${new Date().toISOString().split("T")[0]}` : ""}`;
 
   const handleSearch = () => {
     onFilterModelChange({ ...filterModel, quickFilterValues: [searchText] });
@@ -96,7 +95,7 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ isExport = true, fileName, apiR
                   columns,
                   rows,
                   fileName: exportFileName,
-                  title: user?.fullName,
+                  title: fileName,
                 });
                 setAnchorEl(null);
               }}
@@ -123,7 +122,7 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ isExport = true, fileName, apiR
                   columns,
                   rows,
                   fileName: exportFileName,
-                  title: user?.fullName,
+                  title: fileName,
                 });
                 setAnchorEl(null);
               }}

@@ -18,7 +18,7 @@ const normalizeExportValue = (value: unknown): string | number => {
 /* -------------------------------------------------------
    Export Function
 ------------------------------------------------------- */
-export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows, fileName = "data.pdf", title = "", user, email }: ExportToPDFProps<T>): void => {
+export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows, fileName = "data.pdf", title = "", user }: ExportToPDFProps<T>): void => {
   const doc = new jsPDF("l", "pt", "a4");
   /* -----------------------------------------------
      Filter exportable columns
@@ -113,7 +113,7 @@ export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows
       doc.setFontSize(10);
 
       // Left
-      doc.text(`Email: ${email}`, 40, pageHeight - 20);
+      // doc.text(`Email: ${email}`, 40, pageHeight - 20);
 
       // Center (Page number)
       doc.text(`${pageNumber}`, pageWidth / 2, pageHeight - 20, {
