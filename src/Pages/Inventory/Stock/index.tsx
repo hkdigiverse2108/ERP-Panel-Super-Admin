@@ -34,6 +34,7 @@ const Stock = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName:PAGE_TITLE.INVENTORY.STOCK.BASE,
   };
 
   const filter = [

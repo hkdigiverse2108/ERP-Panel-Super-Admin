@@ -6,8 +6,9 @@ import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, Comm
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, RecipeBase } from "../../../Types";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Recipe = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -37,19 +38,19 @@ const Recipe = () => {
   const columns: AppGridColDef<RecipeBase>[] = [
     CommonObjectNameColumn<RecipeBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "number", headerName: "Recipe No", width: 200 },
-    { field: "name", headerName: "Recipe Name", width: 270 },
-    { field: "date", headerName: "Recipe Date", width: 220, valueGetter: (v) => FormatDate(v) },
-    { field: "type", headerName: "Recipe Type", minWidth: 150, flex: 1 },
+    { field: "name", headerName: "Recipe Name", width: 200 },
+    CommonObjectPropertyColumn<RecipeBase>("date", "date", [], { headerName: "Recipe Date", width: 120, type: "date" }),
+      CommonObjectPropertyColumn<RecipeBase>("type", "type", [], { headerName: "Recipe Type",flex: 1, width: 120}),
     ...(permission?.edit || permission?.delete
       ? [
-        CommonActionColumn<RecipeBase>({
-          ...(permission?.edit && {
-            active: (row) => editRecipe({ recipeId: row._id, isActive: !row.isActive }),
-            editRoute: ROUTES.RECIPE.ADD_EDIT,
+          CommonActionColumn<RecipeBase>({
+            ...(permission?.edit && {
+              active: (row) => editRecipe({ recipeId: row._id, isActive: !row.isActive }),
+              editRoute: ROUTES.RECIPE.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
           }),
-          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
-        }),
-      ]
+        ]
       : []),
   ];
 
@@ -67,6 +68,7 @@ const Recipe = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName:PAGE_TITLE.INVENTORY.RECIPE.BASE,
   };
 
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
