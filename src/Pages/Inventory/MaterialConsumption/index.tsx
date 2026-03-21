@@ -7,8 +7,9 @@ import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcr
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { MaterialConsumptionBase } from "../../../Types";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const MaterialConsumption = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
@@ -35,22 +36,22 @@ const MaterialConsumption = () => {
   const columns: GridColDef<MaterialConsumptionBase>[] = [
     CommonObjectNameColumn<MaterialConsumptionBase>("companyId", { headerName: "Company", width: 200 }),
     CommonObjectNameColumn<MaterialConsumptionBase>("branchId", { headerName: "Branch", width: 200 }),
-    { field: "number", headerName: "MC No.", width: 100 },
-    { field: "type", headerName: "Type", width: 150 },
+    { field: "number", headerName: "MC No.", width: 140 },
+    CommonObjectPropertyColumn<MaterialConsumptionBase>("type", "type", [], { headerName: "Type", width: 140}),
     { field: "totalQty", type: "number", headerName: "Total Qty", width: 150 },
     { field: "totalAmount", type: "number", headerName: "Total Amount", width: 150 },
-    { field: "date", headerName: "Date", width: 150, renderCell: (params) => FormatDate(params.row.date) },
+    CommonObjectPropertyColumn<MaterialConsumptionBase>("date", "date", [], { headerName: "Date", width: 120, type: "date" }),
     { field: "remark", headerName: "Remark", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
-        CommonActionColumn<MaterialConsumptionBase>({
-          ...(permission?.edit && {
-            active: (row) => editMaterialConsumption({ materialConsumptionId: row?._id, isActive: !row.isActive }),
-            editRoute: ROUTES.MATERIAL_CONSUMPTION.ADD_EDIT,
+          CommonActionColumn<MaterialConsumptionBase>({
+            ...(permission?.edit && {
+              active: (row) => editMaterialConsumption({ materialConsumptionId: row?._id, isActive: !row.isActive }),
+              editRoute: ROUTES.MATERIAL_CONSUMPTION.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.number }) }),
           }),
-          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.number }) }),
-        }),
-      ]
+        ]
       : []),
   ];
 
@@ -72,6 +73,7 @@ const MaterialConsumption = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName:PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE,
     slots: {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },

@@ -3,12 +3,13 @@ import type { GridColDef } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn, CommonPhoneColumns } from "../../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { DebitNoteBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const DebitNote = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -34,9 +35,9 @@ const DebitNote = () => {
   const columns: GridColDef<DebitNoteBase>[] = [
     CommonObjectNameColumn<DebitNoteBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "personName", headerName: "Person Name", width: 200 },
-    { field: "amount", headerName: "Amount", width: 200 },
-    { field: "date", headerName: "Date", width: 200, valueGetter: (v) => FormatDate(v) },
-    CommonPhoneColumns("phoneNo", { headerName: "Phone No", width: 200 }),
+    { field: "amount", headerName: "Amount", width: 140 },
+    CommonObjectPropertyColumn<DebitNoteBase>("date", "date", [], { headerName: "Date", width: 120, type: "date" }),
+    CommonObjectPropertyColumn<DebitNoteBase>("phoneNo", "phoneNo", ["countryCode", "phoneNo"], { headerName: "Phone No", width: 150, type: "phone" }),
     { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [

@@ -3,12 +3,13 @@ import type { GridColDef } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn, CommonPhoneColumns } from "../../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { CreditNoteBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const CreditNote = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -33,9 +34,9 @@ const CreditNote = () => {
   const columns: GridColDef<CreditNoteBase>[] = [
     CommonObjectNameColumn<CreditNoteBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "personName", headerName: "Person Name", width: 200 },
-    { field: "amount", headerName: "Amount", width: 200 },
-    { field: "date", headerName: "Date", width: 200, valueGetter: (v) => FormatDate(v) },
-    CommonPhoneColumns("phoneNo", { headerName: "Phone No", width: 200 }),
+    { field: "amount", headerName: "Amount", width: 140 },
+    CommonObjectPropertyColumn<CreditNoteBase>("date", "date", [], { headerName: "Date", width: 120, type: "date" }),
+    CommonObjectPropertyColumn<CreditNoteBase>("phoneNo", "phoneNo", ["countryCode", "phoneNo"], { headerName: "Phone No", width: 150, type: "phone" }),
     { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
@@ -64,6 +65,7 @@ const CreditNote = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.CREDIT_NOTE.BASE,
   };
 
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
