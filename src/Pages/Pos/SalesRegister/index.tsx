@@ -7,8 +7,9 @@ import { AdvancedSearch, CalculateGridSummary, CommonBreadcrumbs, CommonCard, Co
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, SALES_REGISTER_STATUS } from "../../../Data";
 import type { AppGridColDef, PosCashRegisterBase } from "../../../Types";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const SalesRegister = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params, advancedFilter, updateAdvancedFilter } = useDataGrid({ active: false });
@@ -39,19 +40,11 @@ const SalesRegister = () => {
   // }, [userDropdown]);
 
   const columns: AppGridColDef<PosCashRegisterBase>[] = [
-    CommonObjectNameColumn<PosCashRegisterBase>("companyId", { headerName: "Company", width: 200 }),
-    {
-      field: "salesManId",
-      headerName: "Salesman",
-      width: 180,
-      renderCell: (params) => {
-        const s = params.row.salesManId;
-        return typeof s === "string" || !s ? "-" : s.fullName || "-";
-      },
-    },
-    { field: "createdAt", headerName: "From Date", width: 150, renderCell: (params) => FormatDate(params.value) },
-    { field: "updatedAt", headerName: "To Date", width: 150, renderCell: (params) => FormatDate(params.value) },
-    { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
+    CommonObjectNameColumn<PosCashRegisterBase>("companyId", { headerName: "Company", width: 200 }), //
+    CommonObjectPropertyColumn<PosCashRegisterBase>("salesManId", "salesManId", ["fullName"], { headerName: "Sales Man", width: 150 }),
+    CommonObjectPropertyColumn<PosCashRegisterBase>("created", "createdAt", [], { headerName: "From Date", width: 100, type: "date" }),
+    CommonObjectPropertyColumn<PosCashRegisterBase>("updated", "updatedAt", [], { headerName: "To Date", width: 100, type: "date" }),
+    CommonObjectPropertyColumn<PosCashRegisterBase>("status", "status", [], { headerName: "Status", width: 100, type: "status" }),
     { field: "openingCash", headerName: "Cash In Hand", width: 130 },
     { field: "cashPayment", headerName: "Cash", width: 110 },
     { field: "cardPayment", headerName: "Card", width: 110 },
@@ -77,7 +70,7 @@ const SalesRegister = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     isExport: true,
-    fileName: "Sales_Register",
+    fileName: PAGE_TITLE.POS.SALES_REGISTER,
     slots: {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },
