@@ -47,9 +47,9 @@ const Contact = () => {
   const getVisibleFields = () => {
     const common = ["companyId", "firstName", "phoneNo", "whatsappNo", "loyaltyPoints"];
 
-    if (selectedType === "Customer") return [...common, "customerType"];
-    if (selectedType === "Supplier") return [...common, "tanNo"];
-    if (selectedType === "Transport") return [...common, "transporterId"];
+    if (selectedType === "customer") return [...common, "customerType"];
+    if (selectedType === "supplier") return [...common, "tanNo", "supplierType"];
+    if (selectedType === "transporter") return [...common, "transporterId"];
 
     return common;
   };
@@ -68,6 +68,7 @@ const Contact = () => {
     { field: "panNo", headerName: "PAN No", width: 120 },
     { field: "telephoneNo", headerName: "Telephone No", width: 150 },
     { field: "customerType", headerName: "Customer Type", width: 150 },
+    { field: "supplierType", headerName: "Supplier Type", width: 150 },
     { field: "email", headerName: "Email", width: 220 },
     CommonObjectPropertyColumn<ContactBase>("dob", "dob", [], { headerName: "Date of Birth", flex: 1, minWidth: 150, type: "date" }),
     CommonObjectPropertyColumn<ContactBase>("anniversaryDate", "anniversaryDate", [], { headerName: "Anniversary Date", flex: 1, minWidth: 150, type: "date" }),
