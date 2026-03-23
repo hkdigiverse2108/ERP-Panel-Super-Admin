@@ -61,7 +61,7 @@ const Uom = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    isExport: false,
+    fileName:PAGE_TITLE.INVENTORY.UOM.BASE
   };
 
   return (

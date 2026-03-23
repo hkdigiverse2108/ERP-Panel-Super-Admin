@@ -231,6 +231,7 @@ export interface CommonObjectNameColumnOptions {
   flex?: number;
   minWidth?: number;
   type?: ColumnFormatType;
+  isSummary?: boolean;
 }
 
 export interface CommonActionColumnProps<T> {

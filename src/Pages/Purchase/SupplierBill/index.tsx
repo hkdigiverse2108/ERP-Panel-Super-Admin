@@ -14,6 +14,7 @@ const SupplierBill = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.SUPPLIER_BILL.BASE);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetSupplierBillDetails({}, false);
   const { data, isLoading, isFetching } = Queries.useGetSupplierBillDetails(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deleteSupplierBill, isPending: deleteSupplierBillLoading } = Mutations.useDeleteSupplierBill();
@@ -100,7 +101,8 @@ const SupplierBill = () => {
     slots: {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },
-    fileName:PAGE_TITLE.SUPPLIER_BILL.BASE
+    fileName: PAGE_TITLE.SUPPLIER_BILL.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
   return (
     <>

@@ -19,7 +19,7 @@ const SalesRegister = () => {
   const { data: userDropdown, isLoading: userDropdownLoading } = Queries.useGetUserDropdown();
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { data, isLoading, isFetching } = Queries.useGetPosCashRegister({ ...params, ...queryParams });
-
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPosCashRegister({}, false);
   const rows = useMemo(() => {
     const apiData = data?.data?.posCashRegister_data;
     return apiData?.map((r: PosCashRegisterBase) => ({ ...r, id: r._id, shortExceed: (r.physicalDrawerCash || 0) - (r.totalCashLeftInDrawer || 0) })) || [];
@@ -62,6 +62,7 @@ const SalesRegister = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     fileName: PAGE_TITLE.POS.SALES_REGISTER,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
     slots: {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },

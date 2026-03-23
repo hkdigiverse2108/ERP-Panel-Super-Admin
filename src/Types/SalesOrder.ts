@@ -1,11 +1,4 @@
-import type {
-  AdditionalChargeItem,
-  CommonDataType,
-  MessageStatus,
-  PageStatus,
-  ShippingDetails,
-  TransactionSummary,
-} from "./Common";
+import type { AdditionalChargeItem, CommonDataType, MessageStatus, PageStatus, ShippingDetails, TransactionSummary } from "./Common";
 import type { CompanyBase } from "./Company";
 import type { Address, ContactBase } from "./Contacts";
 import type { ProductBase } from "./Product";
@@ -30,7 +23,7 @@ export interface SalesOrderItem {
   price: number;
   discount1: number;
   // discount2: number;
-  taxId: string | TaxBase ;
+  taxId: string | TaxBase;
   taxableAmount: number;
   totalAmount: number;
   unit?: string;
@@ -67,18 +60,7 @@ export type AddSalesOrderPayload = SalesOrderFormValues;
 
 export type EditSalesOrderPayload = SalesOrderFormValues & { salesOrderId?: string };
 
-export interface SalesOrderBase
-  extends
-    Omit<
-      SalesOrderFormValues,
-      | "customerId"
-      | "companyId"
-      | "termsAndConditionIds"
-      | "additionalCharges"
-      | "billingAddress"
-      | "shippingAddress"
-    >,
-    CommonDataType {
+export interface SalesOrderBase extends Omit<SalesOrderFormValues, "customerId" | "companyId" | "termsAndConditionIds" | "additionalCharges" | "billingAddress" | "shippingAddress">, CommonDataType {
   salesOrderNo: string;
   estimateNo: string;
   companyId: CompanyBase;

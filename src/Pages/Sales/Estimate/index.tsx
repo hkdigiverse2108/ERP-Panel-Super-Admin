@@ -4,15 +4,16 @@ import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonStatsCard } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import type { AppGridColDef, EstimateBase } from "../../../Types";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { BREADCRUMBS, ESTIMATE_STATUS } from "../../../Data";
 import { Box } from "@mui/material";
 import { useDataGrid } from "../../../Utils/Hooks";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Estimate = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const navigate = useNavigate();
-
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetEstimate({}, false);
   const { data: estimate, isLoading: estimateLoading, isFetching: estimateFetching } = Queries.useGetEstimate(params);
   const { mutate: deleteEstimateMutate } = Mutations.useDeleteEstimate();
   const { mutate: editEstimate, isPending: isEditLoading } = Mutations.useEditEstimate();
@@ -38,12 +39,12 @@ const Estimate = () => {
 
   const columns: AppGridColDef<EstimateBase>[] = [
     { field: "estimateNo", headerName: "Estimate No", flex: 1, minWidth: 120 },
-    { field: "customerId", headerName: "Customer Name", flex: 1, minWidth: 150, valueGetter: (_, row: EstimateBase) => (row?.customerId ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || row.customerId.companyName || "" : "") },
-    { field: "date", headerName: "Estimate Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDate(params.row.date) },
-    { field: "dueDate", headerName: "Due Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDate(params.row.dueDate) },
-    { field: "netAmount", headerName: "Amount", flex: 1, minWidth: 110, type: "number" },
-    { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 150, renderCell: (params) => <span className={`status-${params.row.status} overflow-hidden`}>{params.row.status}</span> },
-    { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 110 },
+    CommonObjectPropertyColumn<EstimateBase>("customerId", "customerId", ["firstName", "lastName"], { headerName: "Customer Name", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<EstimateBase>("date", "date", [], { headerName: "Estimate Date", flex: 1, minWidth: 120, type: "date" }),
+    CommonObjectPropertyColumn<EstimateBase>("dueDate", "dueDate", [], { headerName: "Due Date", flex: 1, minWidth: 120, type: "date" }),
+    CommonObjectPropertyColumn<EstimateBase>("transactionSummary.netAmount", "transactionSummary.netAmount", ["netAmount"], { headerName: "Amount", flex: 1, minWidth: 110, isSummary: true }),
+    CommonObjectPropertyColumn<EstimateBase>("status", "status", [], { headerName: "Status", width: 150, type: "status" }),
+    CommonObjectPropertyColumn<EstimateBase>("transactionSummary.taxAmount", "transactionSummary.taxAmount", ["taxAmount"], { headerName: "Tax Amount", flex: 1, minWidth: 110, isSummary: true }),
     CommonActionColumn({
       active: (row) => editEstimate({ estimateId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.ESTIMATE.ADD_EDIT,
@@ -67,6 +68,8 @@ const Estimate = () => {
     slots: {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },
+    fileName: PAGE_TITLE.ESTIMATE.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(companyData?.data), companyDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Customer", "customerFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(customerData?.data), customerDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ESTIMATE_STATUS, false, { xs: 12, sm: 6, md: 3 })];
