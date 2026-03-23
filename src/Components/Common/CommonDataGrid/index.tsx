@@ -5,7 +5,7 @@ import type { CommonDataGridProps } from "../../../Types";
 import CustomToolbar from "./CustomToolbar";
 import NoRowsOverlay from "./NoRowsOverlay";
 
-const CommonDataGrid: FC<CommonDataGridProps> = ({ slots, slotProps, isExport, pagination, fileName, columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, defaultHidden = [], BoxClass, handleAdd, isActive, setActive }) => {
+const CommonDataGrid: FC<CommonDataGridProps> = ({onExportAll, isToolbar = true, slots, slotProps, isExport, pagination, fileName, columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, defaultHidden = [], BoxClass, handleAdd, isActive, setActive }) => {
   const apiRef = useGridApiRef();
 
   const visibilityModel = useMemo(() => {
@@ -30,7 +30,7 @@ const CommonDataGrid: FC<CommonDataGridProps> = ({ slots, slotProps, isExport, p
       {
         field: "srNo",
         headerName: "Sr No",
-        width: 90,
+        width: 60,
         sortable: false,
         filterable: false,
         valueGetter: (_value, row) => (paginationModel ? paginationModel?.page * paginationModel?.pageSize + rows.findIndex((r) => r.id === row.id) + 1 : rows.findIndex((r) => r.id === row.id) + 1),
@@ -48,12 +48,12 @@ const CommonDataGrid: FC<CommonDataGridProps> = ({ slots, slotProps, isExport, p
         rowCount={rowCount}
         loading={loading}
         slots={{
-          toolbar: () => <CustomToolbar filterModel={filterModel} onFilterModelChange={onFilterModelChange} isExport={isExport} fileName={fileName} apiRef={apiRef} columns={fixedColumns} rows={rows} rowCount={rowCount} handleAdd={handleAdd} isActive={isActive} setActive={setActive} />,
+          toolbar: () => isToolbar && <CustomToolbar onExportAll={onExportAll} filterModel={filterModel} onFilterModelChange={onFilterModelChange} isExport={isExport} fileName={fileName} apiRef={apiRef} columns={fixedColumns} rows={rows} rowCount={rowCount} handleAdd={handleAdd} isActive={isActive} setActive={setActive} />,
           noRowsOverlay: () => <NoRowsOverlay />,
           bottomContainer: (props) => <>{slots?.bottomContainer?.(props)}</>,
         }}
         slotProps={slotProps}
-        showToolbar
+        showToolbar={isToolbar}
         initialState={{
           columns: { columnVisibilityModel: visibilityModel },
         }}
@@ -70,7 +70,7 @@ const CommonDataGrid: FC<CommonDataGridProps> = ({ slots, slotProps, isExport, p
         filterModel={filterModel}
         onFilterModelChange={onFilterModelChange}
         disableRowSelectionOnClick
-        sx={{ "--DataGrid-overlayHeight": "300px" }}
+        sx={{ "--DataGrid-overlayHeight": "200px" }}
       />
     </div>
   );

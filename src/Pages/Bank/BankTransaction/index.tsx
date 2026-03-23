@@ -18,6 +18,8 @@ const BankTransaction = () => {
   const permission = usePagePermission(PAGE_TITLE.BANK_TRANSACTION.BASE);
 
   const { data: bankTransaction_data, isLoading: bankTransactionDataLoading, isFetching: bankTransactionDataFetching } = Queries.useGetBankTransaction(params);
+    const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetBankTransaction({}, false);
+
   const { mutate: deleteBankTransactionMutate } = Mutations.useDeleteBankTransaction();
   const { mutate: editBankTransaction, isPending: isEditLoading } = Mutations.useEditBankTransaction();
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
@@ -69,7 +71,8 @@ const BankTransaction = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    fileName:PAGE_TITLE.BANK_TRANSACTION.BASE
+    fileName: PAGE_TITLE.BANK_TRANSACTION.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 

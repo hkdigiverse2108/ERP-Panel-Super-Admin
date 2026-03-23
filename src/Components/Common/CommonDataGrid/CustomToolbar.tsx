@@ -12,16 +12,42 @@ import { CommonButton, CommonSwitch } from "../../../Attribute";
 import type { CustomToolbarProps } from "../../../Types";
 import { ExportDataGridToExcel } from "./ExportDataGridToExcel";
 import { ExportDataGridToPDF } from "./ExportDataGridToPDF";
+import { PAGE_TITLE } from "../../../Constants";
 
-const CustomToolbar: FC<CustomToolbarProps> = ({ isExport = true, fileName, apiRef, columns, rows, handleAdd, isActive, setActive, filterModel, onFilterModelChange }) => {
+
+const CustomToolbar: FC<CustomToolbarProps> = ({ onExportAll, isExport = true, fileName, apiRef, columns, rows, handleAdd, isActive, setActive, filterModel, onFilterModelChange }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [searchText, setSearchText] = useState(filterModel?.quickFilterValues?.[0] || "");
 
   // const { user } = useAppSelector((state) => state.auth);
   const exportFileName = `${fileName ? `${fileName?.replace(/\s+/g, "-")}-${new Date().toISOString().split("T")[0]}` : ""}`;
+  const exportAllFileName = `${fileName ? `All-${fileName?.replace(/\s+/g, "-")}-` : ""}-${new Date().toISOString().split("T")[0]}`;
 
   const handleSearch = () => {
     onFilterModelChange({ ...filterModel, quickFilterValues: [searchText] });
+  };
+  const extractArray = (data: any): any[] => {
+    if (!data) return [];
+    // 1. Direct array
+    if (Array.isArray(data)) return data;
+    // 2. Common nested "data"
+    if (Array.isArray(data?.data)) return data.data;
+    // 3. 🔥 Find FIRST array dynamically
+    for (const key in data) if (Array.isArray(data[key])) return data[key];
+    return [];
+  };
+  const handleExportAll = async () => {
+    if (!onExportAll) return;
+    const res: any = await onExportAll.onExportAll();
+    const raw = res?.data?.data ?? res?.data;
+    const list = extractArray(raw);
+    const finalData = list.map((item) => ({
+      ...item,
+      id: item?._id || item?.id,
+      ...(fileName === PAGE_TITLE.POS.SALES_REGISTER && { shortExceed: (item.physicalDrawerCash || 0) - (item.totalCashInDrawer || 0) }),
+      ...(fileName === PAGE_TITLE.INVOICE.BASE && { dueAmount: Number(((item.transactionSummary?.netAmount || 0) - (item.paidAmount || 0)).toFixed(2)) }),
+    }));
+    ExportDataGridToExcel({ columns, rows: finalData, fileName: exportAllFileName });
   };
 
   return (
@@ -103,7 +129,12 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ isExport = true, fileName, apiR
               <GridOnIcon fontSize="small" sx={{ mr: 1 }} />
               Excel
             </MenuItem>
-
+            {onExportAll && (
+              <MenuItem onClick={handleExportAll} disabled={onExportAll?.isFetching}>
+                <GridOnIcon fontSize="small" sx={{ mr: 1 }} />
+                {onExportAll?.isFetching ? "Loading..." : "All Data Excel"}
+              </MenuItem>
+            )}
             {/* PRINT
             <MenuItem
               onClick={() => {

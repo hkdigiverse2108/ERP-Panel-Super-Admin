@@ -26,7 +26,7 @@ export interface PhoneNumberType {
 
 export type AppGridColDef<T extends GridValidRowModel> = GridColDef<T> & {
   exportFormatter?: (value: unknown, row: T) => string | number;
-    isSummary?: boolean;
+  isSummary?: boolean;
 };
 
 // ************ Drawer Start ***********
@@ -187,9 +187,10 @@ export interface CommonDataGridProps {
   isExport?: boolean;
   fileName?: string;
   pagination?: boolean;
-
+  isToolbar?: boolean;
   slots?: any;
   slotProps?: GridSlotsComponentsProps;
+  onExportAll?: { onExportAll: () => void; isFetching: boolean };
 }
 
 export interface CustomToolbarProps {
@@ -204,6 +205,7 @@ export interface CustomToolbarProps {
   fileName?: string;
   filterModel: GridFilterModel;
   onFilterModelChange: (model: GridFilterModel) => void;
+  onExportAll?: { onExportAll: () => void; isFetching: boolean };
 }
 
 export interface ExportToExcelProps<T extends GridValidRowModel> {

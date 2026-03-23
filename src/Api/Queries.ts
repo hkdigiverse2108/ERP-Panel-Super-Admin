@@ -133,7 +133,7 @@ export const Queries = {
   useGetAdminSetting: (params?: Params) => useQueries<AdminSettingApiResponse>([KEYS.ADMIN_SETTING.BASE, params], () => Get(URL_KEYS.ADMIN_SETTING.ALL, params)),
 
   //***************bank transaction**************** */
-  useGetBankTransaction: (params?: Params) => useQueries<BankTransactionApiResponse>([KEYS.BANK_TRANSACTION.BASE, params], () => Get(URL_KEYS.BANK_TRANSACTION.ALL, params)),
+  useGetBankTransaction: (params?: Params, enabled?: boolean) => useQueries<BankTransactionApiResponse>([KEYS.BANK_TRANSACTION.BASE, params], () => Get(URL_KEYS.BANK_TRANSACTION.ALL, params), { enabled: enabled }),
   useGetBankTransactionDropdown: (params?: Params, enabled?: boolean) => useQueries<BankTransactionDropdownApiResponse>([KEYS.BANK_TRANSACTION.BASE, params], () => Get(URL_KEYS.BANK_TRANSACTION.DROPDOWN, params), { enabled: enabled }),
   
   // ************ Announcement ***********
