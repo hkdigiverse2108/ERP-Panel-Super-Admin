@@ -7,7 +7,8 @@ import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, PURCHASE_DEBIT_NOTE_STATUS_OPTIONS } from "../../../Data";
 import { useDataGrid } from "../../../Utils/Hooks";
 import type { AppGridColDef, PurchaseDebitNoteBase } from "../../../Types";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const PurchaseDebitNote = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -46,22 +47,12 @@ const PurchaseDebitNote = () => {
   };
 
   const columns: AppGridColDef<PurchaseDebitNoteBase>[] = [
-    { field: "debitNoteNo", headerName: "Debit Note No",flex: 1, minWidth: 150 },
-    { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
-    {
-      field: "supplierId",
-      headerName: "Supplier",
-      flex: 1, minWidth: 200,
-      valueGetter: (_, row) => row.supplierId?.firstName + " " + row.supplierId?.lastName || "-",
-    },
-    {
-      field: "debitNoteDate",
-      headerName: "Debit Note Date",
-      flex: 1, minWidth: 150,
-      renderCell: (params) => FormatDate(params.row.debitNoteDate),
-    },
-    { field: "netAmount", headerName: "Debit Note Amount", flex: 1, minWidth: 150, type: "number" },
-    { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 120, type: "number" },
+    { field: "debitNoteNo", headerName: "Debit Note No", flex: 1, minWidth: 150 },
+    CommonObjectPropertyColumn<PurchaseDebitNoteBase>("status", "status", [], { headerName: "Status", width: 150, type: "status" }),
+    CommonObjectPropertyColumn<PurchaseDebitNoteBase>("supplierId", "supplierId", ["firstName", "lastName"], { headerName: "Supplier", width: 150 }),
+    CommonObjectPropertyColumn<PurchaseDebitNoteBase>("debitNoteDate", "debitNoteDate", [], { headerName: "Debit Note Date", flex: 1, minWidth: 150, type: "date" }),
+    { field: "netAmount", headerName: "Debit Note Amount", flex: 1, minWidth: 150, type: "number", isSummary: true },
+    { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 120, type: "number", isSummary: true },
     { field: "notes", headerName: "Notes", flex: 1, minWidth: 200 },
     CommonActionColumn({
       active: (row) => editPurchaseDebitNote({ purchaseDebitNoteId: row?._id, isActive: !row.isActive }),
@@ -76,7 +67,7 @@ const PurchaseDebitNote = () => {
   const stats = [
     {
       label: "Total Amount",
-      value: `${purchaseDebitNote?.data?.totalAmount || "0"}`,      
+      value: `${purchaseDebitNote?.data?.totalAmount || "0"}`,
       color: "secondary",
     },
   ];
@@ -108,6 +99,7 @@ const PurchaseDebitNote = () => {
               slots={{
                 bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
               }}
+              fileName={PAGE_TITLE.PURCHASE_DEBIT_NOTE.BASE}
             />
           </Box>
         </CommonCard>

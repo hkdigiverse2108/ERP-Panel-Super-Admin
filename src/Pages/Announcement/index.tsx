@@ -9,7 +9,7 @@ import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, Comm
 import { BREADCRUMBS } from "../../Data";
 
 const Announcement = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params} = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
 
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.ANNOUNCEMENT.BASE);
@@ -33,23 +33,24 @@ const Announcement = () => {
   };
 
   const columns: AppGridColDef<AnnouncementBase>[] = [
-      { field: "version", headerName: "Version", width: 150 },
-      { field: "link", headerName: "Link", width: 330 },
-      { field: "desc", headerName: "Description",flex:1, minWidth: 300 ,renderCell: (params) => <span dangerouslySetInnerHTML={{ __html: params.row.desc || "" }}/> },
+    { field: "version", headerName: "Version", width: 150 },
+    { field: "link", headerName: "Link", width: 330 },
+    { field: "desc", headerName: "Description", flex: 1, minWidth: 300, renderCell: (params) => <span dangerouslySetInnerHTML={{ __html: params.row.desc || "" }} /> },
+
     ...(permission?.edit || permission?.delete
       ? [
-        CommonActionColumn<AnnouncementBase>({
-          ...(permission?.edit && {
-            active: (row) =>
-              editAnnouncement({
-               announcementId: row._id,
-                isActive: !row.isActive,
-              }),
-            editRoute: ROUTES.ANNOUNCEMENT.ADD_EDIT,
+          CommonActionColumn<AnnouncementBase>({
+            ...(permission?.edit && {
+              active: (row) =>
+                editAnnouncement({
+                  announcementId: row._id,
+                  isActive: !row.isActive,
+                }),
+              editRoute: ROUTES.ANNOUNCEMENT.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: Array.isArray(row?.desc) ? row.desc[0] : "" }) }),
           }),
-          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: Array.isArray(row?.desc) ? row.desc[0] : "" }) }),
-        }),
-      ]
+        ]
       : []),
   ];
 
@@ -67,8 +68,9 @@ const Announcement = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.ANNOUNCEMENT.BASE,
+    isExport: false,
   };
-
 
   return (
     <>

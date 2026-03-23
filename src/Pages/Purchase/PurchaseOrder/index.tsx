@@ -7,7 +7,8 @@ import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, ORDER_STATUS } from "../../../Data";
 import type { AppGridColDef, PurchaseOrderBase } from "../../../Types";
 import { useDataGrid } from "../../../Utils/Hooks";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const PurchaseOrder = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -23,8 +24,8 @@ const PurchaseOrder = () => {
 
   const allPurchaseOrder = useMemo(() => purchaseOrderData?.data?.purchaseOrder_data?.map((purchaseOrder) => ({ ...purchaseOrder, id: purchaseOrder._id, netAmount: purchaseOrder.summary?.netAmount || 0 })) || [], [purchaseOrderData]);
   const totalRows = purchaseOrderData?.data?.totalData || 0;
- const summaryData = purchaseOrderData?.data?.summary;
- 
+  const summaryData = purchaseOrderData?.data?.summary;
+
   const summary = useMemo(() => {
     return CalculateGridSummary(allPurchaseOrder, ["netAmount"]);
   }, [allPurchaseOrder]);
@@ -38,10 +39,10 @@ const PurchaseOrder = () => {
 
   const columns: AppGridColDef<PurchaseOrderBase>[] = [
     { field: "orderNo", headerName: "Order No", flex: 1, minWidth: 150 },
-    { field: "supplierId", headerName: "Supplier", flex: 1, minWidth: 150, valueGetter: (_, row: PurchaseOrderBase) => (row?.supplierId ? `${row.supplierId.firstName || ""} ${row.supplierId.lastName || ""}`.trim() || row.supplierId.companyName || "" : "") },
-    { field: "date", headerName: "Order Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDate(params.row.date || params.row.orderDate) },
-    { field: "netAmount", headerName: "Amount", flex: 1, minWidth: 110, type: "number" },
-    { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
+    CommonObjectPropertyColumn<PurchaseOrderBase>("supplierId", "supplierId", ["firstName", "lastName"], { headerName: "Supplier", width: 150 }),
+    CommonObjectPropertyColumn<PurchaseOrderBase>("orderDate", "orderDate", [], { headerName: "Order Date", flex: 1, minWidth: 150, type: "date" }),
+    { field: "netAmount", headerName: "Amount", flex: 1, minWidth: 110, type: "number", isSummary: true },
+    CommonObjectPropertyColumn<PurchaseOrderBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 110, type: "status" }),
     { field: "notes", headerName: "Notes", flex: 1, minWidth: 150 },
     CommonActionColumn({
       active: (row) => editPurchaseOrder({ purchaseOrderId: row?._id, isActive: !row.isActive }),
@@ -67,6 +68,7 @@ const PurchaseOrder = () => {
     slots: {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },
+    fileName: PAGE_TITLE.PURCHASE_ORDER.BASE,
   };
 
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(companyData?.data), companyDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Supplier", "supplier", advancedFilter, updateAdvancedFilter, GenerateOptions(supplierData?.data), supplierDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ORDER_STATUS, false, { xs: 12, sm: 6, md: 3 })];

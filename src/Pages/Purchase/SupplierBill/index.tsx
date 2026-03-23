@@ -8,6 +8,7 @@ import { BREADCRUMBS, PAYMENT_STATUS_OPTIONS } from "../../../Data";
 import type { AppGridColDef, SupplierBillBase } from "../../../Types";
 import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const SupplierBill = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
@@ -17,7 +18,7 @@ const SupplierBill = () => {
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deleteSupplierBill, isPending: deleteSupplierBillLoading } = Mutations.useDeleteSupplierBill();
   const { mutate: editSupplierBill, isPending: editSupplierBillLoading } = Mutations.useEditSupplierBill();
-   const summaryData = data?.data?.summary;
+  const summaryData = data?.data?.summary;
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
     deleteSupplierBill(rowToDelete?._id as string, {
@@ -51,21 +52,23 @@ const SupplierBill = () => {
   const filter = [CreateFilter("Payment Status", "statusFilter", advancedFilter, updateAdvancedFilter, PAYMENT_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 
   const columns: AppGridColDef<SupplierBillBase>[] = [
-    { field: "paymentStatus", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 110, renderCell: (params) => <span className={`status-${params.row.paymentStatus}`}>{params.row.paymentStatus}</span> },
     CommonObjectNameColumn<SupplierBillBase>("companyId", { headerName: "Company", flex: 1, minWidth: 150 }),
-    { field: "supplierBillNo", headerName: "Bill No", flex: 1, minWidth: 110 },
 
-    { field: "supplierId", headerName: "Supplier", flex: 1, minWidth: 150, valueGetter: (_, row: SupplierBillBase) => (row?.supplierId ? `${row.supplierId.firstName || ""} ${row.supplierId.lastName || ""}`.trim()  : "") },
+    CommonObjectPropertyColumn<SupplierBillBase>("paymentStatus", "paymentStatus", [], { headerName: "Status", width: 150, type: "status" }),
 
-    { field: "supplierBillDate", headerName: "Bill Date", flex: 1, minWidth: 130, valueGetter: (v) => FormatDate(v) },
+    { field: "supplierBillNo", headerName: "Bill No", flex: 1, minWidth: 130 },
+
+    CommonObjectPropertyColumn<SupplierBillBase>("supplierId", "supplierId", ["firstName", "lastName"], { headerName: "Supplier", width: 150 }),
+
+    CommonObjectPropertyColumn<SupplierBillBase>("supplierBillDate", "supplierBillDate", [], { headerName: "Bill Date", flex: 1, minWidth: 150, type: "date" }),
 
     { field: "billAmount", headerName: "Bill Amount", flex: 1, minWidth: 130, valueGetter: (_, row: SupplierBillBase) => row?.summary?.netAmount ?? Number(row?.invoiceAmount ?? 0) },
 
-    { field: "paidAmount", headerName: "Paid Amount", flex: 1, minWidth: 130, valueGetter: (v) => Number(v ?? 0) },
+    { field: "paidAmount", headerName: "Paid Amount", flex: 1, minWidth: 130, isSummary: true },
 
-    { field: "balanceAmount", headerName: "Due Amount", flex: 1, minWidth: 130, valueGetter: (v) => Number(v ?? 0) },
+    { field: "balanceAmount", headerName: "Due Amount", flex: 1, minWidth: 130, isSummary: true },
 
-    { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 140, type: "number" },
+    { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 140, type: "number", isSummary: true },
 
     { field: "dueDate", headerName: "Due Date", flex: 1, minWidth: 140, valueGetter: (v) => FormatDate(v) },
 
@@ -73,11 +76,11 @@ const SupplierBill = () => {
 
     ...(permission?.edit || permission?.delete
       ? [
-        CommonActionColumn<SupplierBillBase>({
-          ...(permission?.edit && { active: (row) => editSupplierBill({ supplierBillId: row?._id, isActive: !row.isActive }), editRoute: ROUTES.SUPPLIER_BILL.ADD_EDIT }),
-          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.supplierBillNo }) }),
-        }),
-      ]
+          CommonActionColumn<SupplierBillBase>({
+            ...(permission?.edit && { active: (row) => editSupplierBill({ supplierBillId: row?._id, isActive: !row.isActive }), editRoute: ROUTES.SUPPLIER_BILL.ADD_EDIT }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.supplierBillNo }) }),
+          }),
+        ]
       : []),
   ];
   const gridOptions = {
@@ -97,6 +100,7 @@ const SupplierBill = () => {
     slots: {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },
+    fileName:PAGE_TITLE.SUPPLIER_BILL.BASE
   };
   return (
     <>

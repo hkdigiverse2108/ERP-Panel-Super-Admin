@@ -35,7 +35,6 @@ const Role = () => {
 
   const columns: AppGridColDef<RolesBase>[] = [
     CommonObjectNameColumn<RolesBase>("companyId", { headerName: "Company", width: 200 }),
-
     { field: "name", headerName: "Name", flex: 1, minWidth: 300 },
     ...(permission?.edit || permission?.delete
       ? [
@@ -64,7 +63,7 @@ const Role = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    isExport: false,
+    fileName: PAGE_TITLE.ROLE.BASE,
   };
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 

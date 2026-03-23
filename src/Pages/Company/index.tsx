@@ -2,12 +2,12 @@ import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonPhoneColumns } from "../../Components/Common";
+import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../Constants";
-import { ACCOUNTING_TYPE, BREADCRUMBS } from "../../Data";
+import { BREADCRUMBS } from "../../Data";
 import type { AppGridColDef, CompanyBase } from "../../Types";
 import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
-import { FormatDate } from "../../Utils";
+import { CommonObjectPropertyColumn } from "../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Company = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -29,13 +29,13 @@ const Company = () => {
   const handleAdd = () => navigate(ROUTES.COMPANY.ADD_EDIT);
 
   const columns: AppGridColDef<CompanyBase>[] = [
-    { field: "accountingType", headerName: "Accounting Type", width: 150, renderCell: (params) => ACCOUNTING_TYPE.find((item) => item.value === params.value)?.label },
+    CommonObjectPropertyColumn<CompanyBase>("accountingType", "accountingType", [], { headerName: "Accounting Type", width: 150 }),
     { field: "name", headerName: "Company Name", width: 170 },
     { field: "displayName", headerName: "Display Name", width: 140 },
     { field: "contactName", headerName: "Contact Name", width: 150 },
-    { field: "planStartDate", headerName: "Plan Start Date", width: 150, renderCell: (params) => FormatDate(params?.value) },
-    { field: "planEndDate", headerName: "Plan End Date", width: 150, renderCell: (params) => FormatDate(params?.value) },
-    CommonPhoneColumns<CompanyBase>("phoneNo", { headerName: "Phone No", width: 150 }),
+    CommonObjectPropertyColumn<CompanyBase>("planStartDate", "planStartDate", [], { headerName: "Plan Start Date", width: 150, type: "date" }),
+    CommonObjectPropertyColumn<CompanyBase>("planEndDate", "planEndDate", [], { headerName: "Plan End Date", width: 150, type: "date" }),
+    CommonObjectPropertyColumn<CompanyBase>("phoneNo", "phoneNo", ["countryCode", "phoneNo"], { headerName: "Phone No", width: 150, type: "phone" }),
     { field: "email", headerName: "Email", width: 150 },
     { field: "webSite", headerName: "Website", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
@@ -65,6 +65,7 @@ const Company = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.COMPANY.BASE,
   };
 
   return (
