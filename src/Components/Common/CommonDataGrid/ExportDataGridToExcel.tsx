@@ -42,7 +42,7 @@ export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, ro
             return sum;
           }, 0);
 
-          return total;
+          return total.toFixed(2);
         }
 
         return "";
@@ -77,7 +77,7 @@ export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, ro
     alignment: { horizontal: "center", vertical: "center" },
   };
 
-  worksheet["!rows"] = [{ hpt: 30 }];
+  worksheet["!rows"] = [{ hpt: 28 }, { hpt: 20 }];
 
   /* ---------------------------------- */
   /* Header style                       */
@@ -85,12 +85,47 @@ export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, ro
   headers.forEach((_, i) => {
     const ref = XLSX.utils.encode_cell({ r: 1, c: i });
     worksheet[ref].s = {
-      font: { bold: true },
-      alignment: { horizontal: "center" },
-      border: {
-        bottom: { style: "thin" },
-      },
+        font: { bold: true },
+        alignment: { horizontal: "center", vertical: "center" },
+        fill: {
+          fgColor: { rgb: "E7E6E6" },
+        },
+        border: {
+          top: { style: "thin" },
+          bottom: { style: "thin" },
+          left: { style: "thin" },
+          right: { style: "thin" },
+        },
     };
+  });
+
+    /* ---------------------------------- */
+  /* Data Cell Styling                  */
+  /* ---------------------------------- */
+  const startRow = 2;
+
+  dataRows.forEach((row, rowIndex) => {
+    row.forEach((_, colIndex) => {
+      const ref = XLSX.utils.encode_cell({
+        r: startRow + rowIndex,
+        c: colIndex,
+      });
+
+      if (worksheet[ref]) {
+        worksheet[ref].s = {
+          alignment: {
+            horizontal: colIndex === 0 ? "center" : "left",
+            vertical: "center",
+          },
+          border: {
+            top: { style: "thin" },
+            bottom: { style: "thin" },
+            left: { style: "thin" },
+            right: { style: "thin" },
+          },
+        };
+      }
+    });
   });
 
   /* ---------------------------------- */
@@ -103,14 +138,19 @@ export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, ro
       const ref = XLSX.utils.encode_cell({ r: summaryRowIndex, c: colIndex });
 
       if (worksheet[ref]) {
-        worksheet[ref].s = {
+         worksheet[ref].s = {
           font: { bold: true },
-          alignment: { horizontal: colIndex === 0 ? "left" : "right" },
+          alignment: {
+            horizontal: colIndex === 0 ? "left" : "right",
+          },
           fill: {
             fgColor: { rgb: "F5F5F5" },
           },
           border: {
             top: { style: "thin" },
+            bottom: { style: "thin" },
+            left: { style: "thin" },
+            right: { style: "thin" },
           },
         };
       }

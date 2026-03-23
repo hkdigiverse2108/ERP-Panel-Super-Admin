@@ -65,7 +65,7 @@ export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows
             return sum;
           }, 0);
 
-          return total;
+          return total.toFixed(2);
         }
 
         return "";

@@ -53,7 +53,7 @@ const formatValues = (values: (string | number)[], type?: ColumnFormatType): str
     case "phone": {
       const [code, number] = values;
       if (!code || !number) return "-";
-      return `+${code} ${number}`;
+      return `${FormatCountryCode(code.toString())} ${number}`;
     }
 
     case "date":
@@ -97,7 +97,8 @@ export const CommonObjectPropertyColumn = <T extends GridValidRowModel>(field: s
 
   renderCell: ({ value }) => {
     if (options?.type === "status") {
-      return <span className={`status-${value?.toLowerCase()}`}>{value}</span>;
+      const formatted = value?.toString().toLowerCase().replace(/\s/g, "_")||"";
+      return <span className={`status-${formatted}`}>{value}</span>;
     }
 
     return String(value ?? "-");
