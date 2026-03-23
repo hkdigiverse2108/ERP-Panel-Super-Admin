@@ -12,7 +12,7 @@ import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDat
 const OrderList = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params, rowToDelete, setRowToDelete, advancedFilter, updateAdvancedFilter } = useDataGrid({});
   const permission = usePagePermission(PAGE_TITLE.POS.BASE);
-
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPosOrder({}, false);
   const { data: orderData, isLoading: orderDataLoading, isFetching: orderDataFetching } = Queries.useGetPosOrder(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deleteOrder, isPending: isDeleteLoading } = Mutations.useDeletePosOrder();
@@ -68,6 +68,7 @@ const OrderList = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     fileName: PAGE_TITLE.POS.ORDER_LIST,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   return (

@@ -14,7 +14,8 @@ const Branch = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.BRANCH.BASE);
-
+  
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetBranch({}, false);
   const { data: branchData, isLoading: branchDataLoading, isFetching: branchDataFetching } = Queries.useGetBranch(params);
   const { mutate: deleteBranchMutate } = Mutations.useDeleteBranch();
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
@@ -36,7 +37,7 @@ const Branch = () => {
     { field: "displayName", headerName: "Display Name", width: 200 },
     { field: "userName", headerName: "User Name", width: 200 },
     { field: "contactName", headerName: "Contact Name", width: 250 },
-    { field: "email", headerName: "Email", flex: 1 },
+    { field: "email", headerName: "Email", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<BranchBase>({
@@ -64,6 +65,8 @@ const Branch = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.BRANCH.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 

@@ -15,6 +15,7 @@ const User = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.USER.BASE);
 
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetUser({}, false);
   const { data: userData, isLoading: userDataLoading, isFetching: userDataFetching } = Queries.useGetUser(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deleteUserMutate } = Mutations.useDeleteUser();
@@ -36,7 +37,7 @@ const User = () => {
     { field: "designation", headerName: "Designation", width: 170 },
     { field: "email", headerName: "Email", width: 240 },
     CommonObjectPropertyColumn<UserBase>("phoneNo", "phoneNo", ["countryCode", "phoneNo"], { headerName: "Phone No", width: 150, type: "phone" }),
-    { field: "panNumber", headerName: "PAN Number",flex:1, minWidth: 150 },
+    { field: "panNumber", headerName: "PAN Number", flex: 1, minWidth: 150 },
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<UserBase>({
@@ -65,7 +66,8 @@ const User = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    fileName:PAGE_TITLE.USER.BASE,
+    fileName: PAGE_TITLE.USER.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
   return (

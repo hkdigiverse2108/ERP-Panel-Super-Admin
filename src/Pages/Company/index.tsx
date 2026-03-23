@@ -14,6 +14,7 @@ const Company = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.COMPANY.BASE);
 
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetCompany({}, false);
   const { data: companyData, isLoading: companyDataLoading, isFetching: companyDataFetching } = Queries.useGetCompany(params);
   const { mutate: deleteCompanyMutate } = Mutations.useDeleteCompany();
   const { mutate: editCompany, isPending: isEditLoading } = Mutations.useEditCompany();
@@ -66,6 +67,7 @@ const Company = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     fileName: PAGE_TITLE.COMPANY.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   return (
