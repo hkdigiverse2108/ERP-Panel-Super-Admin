@@ -5,9 +5,10 @@ import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { Mutations, Queries } from "../../../Api";
 import type { AppGridColDef, CallRequestBase } from "../../../Types";
-import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn, CommonPhoneColumns } from "../../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { BREADCRUMBS } from "../../../Data";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const CallRequest = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -37,7 +38,7 @@ const CallRequest = () => {
     CommonObjectNameColumn<CallRequestBase>("companyId", { headerName: "Company", width: 180 }),
     { field: "businessName", headerName: "Business Name", width: 220 },
     { field: "contactName", headerName: "Contact Name", width: 200 },
-    CommonPhoneColumns<CallRequestBase>("contactNo", { headerName: "Contact No", width: 180 }),
+    CommonObjectPropertyColumn<CallRequestBase>("contactNo", "contactNo", ["countryCode", "phoneNo"], { headerName: "Contact No", width: 150, type: "phone" }),
     { field: "note", headerName: "Note", flex: 1, minWidth: 150 },
     ...(permission?.edit || permission?.delete
       ? [
@@ -66,6 +67,7 @@ const CallRequest = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.CALL_REQUEST.BASE,
   };
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 
