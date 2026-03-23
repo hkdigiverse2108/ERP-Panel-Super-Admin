@@ -6,8 +6,9 @@ import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, Comm
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, DiscountBase } from "../../../Types";
-import { CreateFilter, FormatDate, FormatPayment, FormatValidity, GenerateOptions } from "../../../Utils";
+import { CreateFilter, FormatValidity, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Discount = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
@@ -29,23 +30,23 @@ const Discount = () => {
   const rows = useMemo(() => data?.data?.discount_data.map((r: DiscountBase) => ({ ...r, id: r?._id })) || [], [data]);
 
   const stats = [
-      { label: "Total Discounts", value: summaryData?.totalData || 0 },
-      { label: "Active Discounts", value: summaryData?.activeDiscounts || 0 },
-      { label: "Order with Discounts", value: summaryData?.orderWithDiscounts || 0 },
-      { label: "Revenue from Discounts", value: summaryData?.revenue || 0 },
-      { label: "Discount Given", value: summaryData?.discountGiven || 0 },
-    ];
+    { label: "Total Discounts", value: summaryData?.totalData || 0 },
+    { label: "Active Discounts", value: summaryData?.activeDiscounts || 0 },
+    { label: "Order with Discounts", value: summaryData?.orderWithDiscounts || 0 },
+    { label: "Revenue from Discounts", value: summaryData?.revenue || 0 },
+    { label: "Discount Given", value: summaryData?.discountGiven || 0 },
+  ];
 
   const columns: AppGridColDef<DiscountBase>[] = [
     CommonObjectNameColumn<DiscountBase>("companyId", { headerName: "Company", width: 150 }),
     { field: "title", headerName: "Title", width: 200 },
-    { field: "createdAt", headerName: "Created On", width: 120, valueGetter: (v) => FormatDate(v) },
-    { field: "validity", headerName: "Validity", width: 250, valueGetter: (v, row) => FormatValidity(v, row) },
-    { field: "orders", headerName: "Orders", width: 100 },
-    { field: "revenue", headerName: "Revenue", width: 100 },
-    { field: "discountValue", headerName: "Discount", width: 100 },
-    { field: "discountType", headerName: "Discount Type", width: 150, valueGetter: (v) => FormatPayment(v) },
-    { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 100, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
+    CommonObjectPropertyColumn<DiscountBase>("createdAt", "createdAt", [], { headerName: "Created On", flex: 1, minWidth: 100, type: "date" }),
+    { field: "validity", headerName: "Validity", width: 200, valueGetter: (v, row) => FormatValidity(v, row) },
+    { field: "orders", headerName: "Orders", flex: 1, minWidth: 100 },
+    { field: "revenue", headerName: "Revenue", flex: 1, minWidth: 100 },
+    { field: "discountValue", headerName: "Discount", flex: 1, minWidth: 100 },
+    CommonObjectPropertyColumn<DiscountBase>("discountType", "discountType", [], { headerName: "Discount Type", flex: 1, minWidth: 100, type: "format" }),
+    CommonObjectPropertyColumn<DiscountBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 100, type: "status" }),
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<DiscountBase>({
@@ -70,7 +71,7 @@ const Discount = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    isExport: false,
+   fileName:PAGE_TITLE.CRM.DISCOUNT.BASE,
   };
 
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];

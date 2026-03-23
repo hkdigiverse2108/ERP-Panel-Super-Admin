@@ -2,13 +2,14 @@ import { Box, Tab, Tabs } from "@mui/material";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonTabPanel } from "../../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn, CommonTabPanel } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BREADCRUMBS, LOYALTY_TYPE } from "../../../Data";
+import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, LoyaltyBase } from "../../../Types";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import PointSetup from "./PointSetup";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Loyalty = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -33,35 +34,26 @@ const Loyalty = () => {
   const handleAdd = () => navigate(ROUTES.LOYALTY.ADD_EDIT);
 
   const columns: AppGridColDef<LoyaltyBase>[] = [
+    CommonObjectNameColumn<LoyaltyBase>("companyId", { headerName: "Company", width: 150 }),
     { field: "name", headerName: "Campaign Name", width: 170 },
-    {
-      field: "companyId",
-      headerName: "Company Name",
-      width: 150,
-      valueGetter: (_value, row) => {
-        if (typeof row.companyId === "object") return row.companyId?.name;
-        return CompanyData?.data?.find((c) => c._id === (row.companyId as unknown as string))?.name || "";
-      },
-    },
     { field: "discountValue", headerName: "Discount Value", width: 120 },
     { field: "minimumPurchaseAmount", headerName: "Minimum Purchase Amount", width: 150 },
-    { field: "singleTimeUse", headerName: "Single Time Use", width: 150, renderCell: (params) => (params.row.singleTimeUse ? "Yes" : "No") },
     { field: "redemptionPoints", headerName: "Redemption Points", width: 150 },
-    { field: "type", headerName: "Type", width: 100, renderCell: (params) => LOYALTY_TYPE.find((item) => item.value === params.row.type)?.label },
+    CommonObjectPropertyColumn<LoyaltyBase>("type", "type", [], { headerName: "Type", flex: 1, minWidth: 100, type: "format" }),
     { field: "usageLimit", headerName: "Usage Limit", width: 100 },
     { field: "usedCount", headerName: "Used Count", width: 100 },
-    { field: "campaignExpiryDate", headerName: "Expiry Date", width: 100, renderCell: (params) => FormatDate(params.row.campaignExpiryDate) },
-    { field: "campaignLaunchDate", headerName: "Launch Date", flex: 1, minWidth: 100, renderCell: (params) => FormatDate(params.row.campaignLaunchDate) },
+    CommonObjectPropertyColumn<LoyaltyBase>("campaignExpiryDate", "campaignExpiryDate", [], { headerName: "Expiry Date", flex: 1, minWidth: 100, type: "date" }),
+    CommonObjectPropertyColumn<LoyaltyBase>("campaignLaunchDate", "campaignLaunchDate", [], { headerName: "Launch Date", flex: 1, minWidth: 100, type: "date" }),
     ...(permission?.edit || permission?.delete
       ? [
-        CommonActionColumn<LoyaltyBase>({
-          ...(permission?.edit && {
-            active: (row) => editLoyalty({ loyaltyId: row?._id, isActive: !row.isActive }),
-            editRoute: ROUTES.LOYALTY.ADD_EDIT,
+          CommonActionColumn<LoyaltyBase>({
+            ...(permission?.edit && {
+              active: (row) => editLoyalty({ loyaltyId: row?._id, isActive: !row.isActive }),
+              editRoute: ROUTES.LOYALTY.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
           }),
-          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
-        }),
-      ]
+        ]
       : []),
   ];
 
@@ -79,7 +71,7 @@ const Loyalty = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    isExport: false,
+    fileName: PAGE_TITLE.CRM.LOYALTY.BASE,
   };
 
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];

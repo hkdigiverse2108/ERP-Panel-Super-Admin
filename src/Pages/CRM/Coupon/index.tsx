@@ -7,7 +7,8 @@ import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, CouponBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { CommonObjectNameColumn, CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Coupon = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -31,36 +32,27 @@ const Coupon = () => {
   const handleAdd = () => navigate(ROUTES.COUPON.ADD_EDIT);
 
   const columns: AppGridColDef<CouponBase>[] = [
+    CommonObjectNameColumn<CouponBase>("companyId", { headerName: "Company", width: 150 }),
     { field: "name", headerName: "Coupon name", width: 170 },
-    {
-      field: "companyId",
-      headerName: "Company Name",
-      width: 150,
-      valueGetter: (_value, row) => {
-        if (typeof row.companyId === "object") return row.companyId?.name;
-        return CompanyData?.data?.find((c) => c._id === row.companyId)?.name || "";
-      },
-    },
     { field: "couponPrice", headerName: "Coupon Price", width: 100 },
     { field: "redeemValue", headerName: "Redeem value", width: 120 },
     { field: "usageLimit", headerName: "Usage limit", width: 100 },
     { field: "usedCount", headerName: "Used count", width: 100 },
     { field: "expiryDays", headerName: "Expiry days", width: 100 },
-    { field: "endDate", headerName: "End Date", width: 150, renderCell: (params) => FormatDate(params.row.endDate) },
-    { field: "startDate", headerName: "Start Date", width: 150, renderCell: (params) => FormatDate(params.row.startDate) },
-    { field: "redemptionType", headerName: "Redemption Type", width: 150, renderCell: (params) => params.row.redemptionType },
-    { field: "singleTimeUse", headerName: "Single Time Use", width: 150, renderCell: (params) => (params.row.singleTimeUse ? "Yes" : "No") },
-    { field: "status", headerName: "Status", flex: 1, minWidth: 100, renderCell: (params) => params.row.status },
+    CommonObjectPropertyColumn<CouponBase>("endDate", "endDate", [], { headerName: "End Date", width: 150, type: "date" }),
+    CommonObjectPropertyColumn<CouponBase>("startDate", "startDate", [], { headerName: "Start Date", width: 150, type: "date" }),
+    CommonObjectPropertyColumn<CouponBase>("redemptionType", "redemptionType", [], { headerName: "Redemption Type", flex: 1, minWidth: 150, type: "format" }),
+    CommonObjectPropertyColumn<CouponBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 100, type: "status" }),
     ...(permission?.edit || permission?.delete
       ? [
-        CommonActionColumn<CouponBase>({
-          ...(permission?.edit && {
-            active: (row) => editCoupon({ couponId: row?._id, isActive: !row.isActive }),
-            editRoute: ROUTES.COUPON.ADD_EDIT,
+          CommonActionColumn<CouponBase>({
+            ...(permission?.edit && {
+              active: (row) => editCoupon({ couponId: row?._id, isActive: !row.isActive }),
+              editRoute: ROUTES.COUPON.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
           }),
-          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
-        }),
-      ]
+        ]
       : []),
   ];
 
@@ -78,7 +70,7 @@ const Coupon = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    isExport: false,
+    fileName: PAGE_TITLE.CRM.COUPON.BASE,
   };
 
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
