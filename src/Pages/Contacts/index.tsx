@@ -16,7 +16,7 @@ const Contact = () => {
 
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.CONTACT.BASE);
-
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetContacts({}, false);
   const { data: contactData, isLoading: contactDataLoading, isFetching: contactDataFetching } = Queries.useGetContacts(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deleteContactMutate, isPending: isDeleteLoading } = Mutations.useDeleteContacts();
@@ -115,6 +115,7 @@ const Contact = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     fileName: PAGE_TITLE.CONTACT.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
     defaultHidden: ["email", "dob", "anniversaryDate", "telephoneNo", "panNo", "accountNumber", "branchName", "ifscCode", "bankName", "addressLine1", "addressLine2", "city", "state", "country", "pinCode", "gstIn", "gstType"],
   };
 

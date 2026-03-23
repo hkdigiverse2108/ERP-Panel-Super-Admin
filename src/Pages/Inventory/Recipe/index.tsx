@@ -16,6 +16,7 @@ const Recipe = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.RECIPE.BASE);
 
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetRecipe({}, false);
   const { data, isLoading, isFetching } = Queries.useGetRecipe(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deleteRecipe, isPending: isDeleteLoading } = Mutations.useDeleteRecipe();
@@ -40,7 +41,7 @@ const Recipe = () => {
     { field: "number", headerName: "Recipe No", width: 200 },
     { field: "name", headerName: "Recipe Name", width: 200 },
     CommonObjectPropertyColumn<RecipeBase>("date", "date", [], { headerName: "Recipe Date", width: 120, type: "date" }),
-      CommonObjectPropertyColumn<RecipeBase>("type", "type", [], { headerName: "Recipe Type",flex: 1, width: 120}),
+    CommonObjectPropertyColumn<RecipeBase>("type", "type", [], { headerName: "Recipe Type", flex: 1, width: 120 }),
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<RecipeBase>({
@@ -68,7 +69,8 @@ const Recipe = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    fileName:PAGE_TITLE.INVENTORY.RECIPE.BASE,
+    fileName: PAGE_TITLE.INVENTORY.RECIPE.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];

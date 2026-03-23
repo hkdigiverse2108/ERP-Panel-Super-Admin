@@ -17,6 +17,7 @@ const StockVerification = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE);
 
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetStockVerification({}, false);
   const { data: stockVerificationData, isLoading: stockVerificationDataLoading, isFetching: stockVerificationDataFetching } = Queries.useGetStockVerification(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deleteStockVerificationMutate, isPending: isDeleteLoading } = Mutations.useDeleteStockVerification();
@@ -75,6 +76,7 @@ const StockVerification = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     fileName: PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
     slots: {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },

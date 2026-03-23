@@ -22,6 +22,7 @@ const Product = () => {
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.PRODUCT.BASE);
   const permissionItem = usePagePermission(PAGE_TITLE.INVENTORY.STOCK.BASE);
 
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetProduct({}, false);
   const { data: productData, isLoading: productDataLoading, isFetching: productDataFetching } = Queries.useGetProduct(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true });
@@ -123,6 +124,8 @@ const Product = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.INVENTORY.PRODUCT.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   const filter = [
