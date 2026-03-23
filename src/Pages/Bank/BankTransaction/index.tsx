@@ -9,7 +9,8 @@ import { setBankTransactionModal } from "../../../Store/Slices/ModalSlice";
 import type { AppGridColDef, BankTransactionBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import BankTransactionForm from "./BankTransactionForm";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const BankTransaction = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -36,26 +37,11 @@ const BankTransaction = () => {
   const columns: AppGridColDef<BankTransactionBase>[] = [
     CommonObjectNameColumn<BankTransactionBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "voucherNo", headerName: "Voucher No", width: 150 },
-    { field: "transactionDate", headerName: "Transaction Date", width: 150, valueGetter: (v) => FormatDate(v) },
-    { field: "transactionType", headerName: "Transaction Type", width: 150, renderCell: ({ value }) => <span style={{ textTransform: "capitalize" }}>{value as string}</span> },
-    {
-      field: "fromAccount",
-      headerName: "From Account",
-      flex: 1,
-      minWidth: 200,
-      renderCell: ({ value }) => (typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-"),
-      exportFormatter: (value) => (typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-"),
-    },
-    {
-      field: "toAccount",
-      headerName: "To Account",
-      flex: 1,
-      minWidth: 200,
-      renderCell: ({ value }) => (typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-"),
-      exportFormatter: (value) => (typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-"),
-    },
-    { field: "amount", headerName: "Amount", width: 150 },
-    { field: "description", headerName: "Description", flex:1, minWidth: 200 },
+    CommonObjectPropertyColumn<BankTransactionBase>("transactionDate", "transactionDate", [], { headerName: "Transaction Date", flex: 1, minWidth: 150, type: "date" }),
+    CommonObjectPropertyColumn<BankTransactionBase>("transactionType", "transactionType", [], { headerName: "Transaction Type", flex: 1, minWidth: 150, type: "format" }),
+    CommonObjectPropertyColumn<BankTransactionBase>("fromAccount", "fromAccount", ["name"], { headerName: "From Account", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<BankTransactionBase>("toAccount", "toAccount", ["name"], { headerName: "To Account", flex: 1, minWidth: 150 }),
+    { field: "amount", headerName: "Amount", flex: 1, minWidth: 150 },
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<BankTransactionBase>({
@@ -83,7 +69,7 @@ const BankTransaction = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    isExport: false,
+    fileName:PAGE_TITLE.BANK_TRANSACTION.BASE
   };
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 

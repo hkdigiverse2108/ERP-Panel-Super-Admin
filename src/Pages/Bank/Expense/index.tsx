@@ -8,8 +8,9 @@ import { BREADCRUMBS, EXPENSE_TYPE_OPTIONS } from "../../../Data";
 import type { AppGridColDef, ExpenseBase } from "../../../Types";
 import type { GridRenderCellParams } from "@mui/x-data-grid";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { CommonButton } from "../../../Attribute";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Expense = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -25,9 +26,7 @@ const Expense = () => {
 
   const { mutate: deleteSalary, isPending: isDeleteSalaryLoading } = Mutations.useDeleteSalary();
   const { mutate: editSalary, isPending: isEditSalaryLoading } = Mutations.useEditSalary();
-  const rows = useMemo(() => {
-    return data?.data?.expense_data.map((r) => ({ ...r, id: r?._id })) || [];
-  }, [data]);
+  const rows = useMemo(() => data?.data?.expense_data.map((r) => ({ ...r, id: r?._id })) || [], [data]);
 
   const totalRows = data?.data?.totalData || 0;
 
@@ -46,27 +45,11 @@ const Expense = () => {
 
   const columns: AppGridColDef<ExpenseBase>[] = [
     CommonObjectNameColumn<ExpenseBase>("companyId", { headerName: "Company", width: 200 }),
-    { field: "salary", headerName: "Salary", width: 200, valueGetter: (_v, row: ExpenseBase) => (row?.isSalary ? row?.total : "-") },
-    {
-      field: "partyId",
-      headerName: "Party Name",
-      width: 230,
-      valueGetter: (_v, row: ExpenseBase) => {
-        const party = row?.partyId;
-        if (!party) return "-";
-        if ("fullName" in party) {
-          return party.fullName;
-        }
-        if ("firstName" in party) {
-          return `${party.firstName ?? ""} ${party.lastName ?? ""}`;
-        }
-        return "-";
-      },
-    },
-    { field: "fromDate", headerName: "Expense Date", width: 190, valueGetter: (v) => FormatDate(v) },
-    { field: "amount", headerName: "Amount", width: 150 },
-    { field: "type", headerName: "Expense Type", width: 150 },
-    { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<ExpenseBase>("partyId", "partyId", ["fullName"], { headerName: "Party Name", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<ExpenseBase>("salary", "total", [], { headerName: "Salary", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<ExpenseBase>("fromDate", "fromDate", [], { headerName: "Expense Date", flex: 1, minWidth: 150, type: "date" }),
+    { field: "amount", headerName: "Amount", flex: 1, minWidth: 150 },
+    CommonObjectPropertyColumn<ExpenseBase>("type", "type", [], { headerName: "Expense Type", flex: 1, minWidth: 150, type: "format" }),
     ...(permission?.edit || permission?.delete
       ? [
           {
@@ -109,6 +92,7 @@ const Expense = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName:PAGE_TITLE.EXPENSE.BASE
   };
 
   const filter = [

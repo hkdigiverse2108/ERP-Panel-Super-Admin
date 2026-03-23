@@ -7,7 +7,8 @@ import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, SalaryBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Salary = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -36,13 +37,13 @@ const Salary = () => {
 
   const columns: AppGridColDef<SalaryBase>[] = [
     CommonObjectNameColumn<SalaryBase>("companyId", { headerName: "Company", width: 200 }),
-    { field: "partyId", headerName: "Party Name", width: 200, valueGetter: (_v, row) => row?.partyId?.fullName || "-" },
-    { field: "fromDate", headerName: "From Date", width: 190, valueGetter: (v) => FormatDate(v) },
-    { field: "toDate", headerName: "To Date", width: 190, valueGetter: (v) => FormatDate(v) },
-    { field: "amount", headerName: "Amount", width: 200 },
-    { field: "incentive", headerName: "Incentive", width: 200 },
-    { field: "description", headerName: "Description", width: 200 },
-    { field: "total", headerName: "Total", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<SalaryBase>("partyId", "partyId", ["firstName", "lastName", "fullName"], { headerName: "Party Name", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<SalaryBase>("fromDate", "fromDate", [], { headerName: "From Date", flex: 1, minWidth: 150, type: "date" }),
+    CommonObjectPropertyColumn<SalaryBase>("toDate", "toDate", [], { headerName: "To Date", flex: 1, minWidth: 150, type: "date" }),
+    CommonObjectPropertyColumn<SalaryBase>("amount", "amount", [], { headerName: "Amount", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<SalaryBase>("type", "type", [], { headerName: "Expense Type", flex: 1, minWidth: 150, type: "format" }),
+    CommonObjectPropertyColumn<SalaryBase>("incentive", "incentive", [], { headerName: "Incentive", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<SalaryBase>("total", "total", [], { headerName: "Total", flex: 1, minWidth: 200 }),
 
     ...(permission?.edit || permission?.delete
       ? [
@@ -71,6 +72,7 @@ const Salary = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName:PAGE_TITLE.SALARY.BASE
   };
 
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];

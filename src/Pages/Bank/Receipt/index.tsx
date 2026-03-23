@@ -7,7 +7,8 @@ import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, PAYMENT_TYPE_OPTIONS } from "../../../Data";
 import type { AppGridColDef, PosPaymentBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Receipt = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -38,13 +39,12 @@ const Receipt = () => {
   const columns: AppGridColDef<PosPaymentBase>[] = [
     CommonObjectNameColumn<PosPaymentBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "voucherType", headerName: "Receipt No", width: 200 },
-    { field: "partyId", headerName: "Party Name", width: 230, valueGetter: (_v, row: PosPaymentBase) => (row?.partyId ? `${row?.partyId?.firstName} ${row?.partyId?.lastName}` : "-") },
-    { field: "paymentMode", headerName: "Payment Mode", width: 140 },
-    { field: "paymentType", headerName: "Payment Type", width: 140 },
-    { field: "date", headerName: "Payment Date", width: 190, valueGetter: (v) => FormatDate(v) },
-    { field: "amount", headerName: "Amount", width: 150, valueGetter: (_v, row: PosPaymentBase) => row?.amount ?? row?.totalAmount ?? 0 },
-    { field: "status", headerName: "Status", headerAlign: "center", minWidth: 110, flex: 1, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
-
+    CommonObjectPropertyColumn<PosPaymentBase>("partyId", "partyId", ["firstName", "lastName"], { headerName: "Party Name", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<PosPaymentBase>("paymentMode", "paymentMode", [], { headerName: "Payment Mode", flex: 1, minWidth: 150, type: "format" }),
+    CommonObjectPropertyColumn<PosPaymentBase>("paymentType", "paymentType", [], { headerName: "Payment Type", flex: 1, minWidth: 150, type: "format" }),
+    CommonObjectPropertyColumn<PosPaymentBase>("date", "date", [], { headerName: "Payment Date", flex: 1, minWidth: 150, type: "date" }),
+    { field: "amount", headerName: "Amount", flex: 1, minWidth: 150 },
+    CommonObjectPropertyColumn<PosPaymentBase>("status", "status", [], { headerName: "Status", width: 150, type: "status" }),
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<PosPaymentBase>({
@@ -72,6 +72,7 @@ const Receipt = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.RECEIPT.BASE,
   };
 
   const filter = [
