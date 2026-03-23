@@ -9,6 +9,7 @@ import type { AdditionalChargesBase, AppGridColDef } from "../../../Types";
 import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
 import AdditionalChargesForm from "./AdditionalChargesForm";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const AdditionalCharges = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -40,8 +41,9 @@ const AdditionalCharges = () => {
     CommonObjectNameColumn<AdditionalChargesBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "name", headerName: "Additional Charge", width: 250 },
     { field: "defaultValue", headerName: "Default Value", width: 250 },
-    { field: "hsnSac", headerName: "HSN Code", width: 250 },
-    { field: "taxId", headerName: "Tax", flex: 1, valueGetter: (_v, row) => (typeof row.taxId === "object" ? row.taxId?.name : row.taxId) },
+    { field: "hsnSac", headerName: "HSN Code", width: 200 },
+    CommonObjectPropertyColumn<AdditionalChargesBase>("taxId", "taxId", ["name"], { headerName: "Tax", width: 150 }),
+
     CommonActionColumn<AdditionalChargesBase>({
       active: (row) =>
         editAdditionalCharges({
@@ -67,6 +69,7 @@ const AdditionalCharges = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE,
   };
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 

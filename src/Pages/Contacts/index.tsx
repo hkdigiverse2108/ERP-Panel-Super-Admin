@@ -9,7 +9,7 @@ import type { AppGridColDef, ContactBase } from "../../Types";
 import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
 import { CommonRadio } from "../../Attribute";
 import { CommonObjectNameColumn, CommonObjectPropertyColumn } from "../../Components/Common/CommonDataGrid/CommonColumns";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../Utils";
+import { CreateFilter, GenerateOptions } from "../../Utils";
 
 const Contact = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, updateAdvancedFilter, advancedFilter, params } = useDataGrid();
@@ -42,6 +42,19 @@ const Contact = () => {
     updateAdvancedFilter("typeFilter", [CONTACT_TYPE[0]]);
   }, []);
 
+  const selectedType = advancedFilter?.typeFilter?.[0];
+
+  const getVisibleFields = () => {
+    const common = ["companyId", "firstName", "phoneNo", "whatsappNo", "loyaltyPoints"];
+
+    if (selectedType === "Customer") return [...common, "customerType"];
+    if (selectedType === "Supplier") return [...common, "tanNo"];
+    if (selectedType === "Transport") return [...common, "transporterId"];
+
+    return common;
+  };
+  const visibleFields = getVisibleFields();
+
   const columns: AppGridColDef<ContactBase>[] = [
     CommonObjectNameColumn<ContactBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "firstName", headerName: "Name", width: 240 },
@@ -56,8 +69,8 @@ const Contact = () => {
     { field: "telephoneNo", headerName: "Telephone No", width: 150 },
     { field: "customerType", headerName: "Customer Type", width: 150 },
     { field: "email", headerName: "Email", width: 220 },
-    { field: "dob", headerName: "Date of Birth", width: 160, valueGetter: (v) => FormatDate(v) },
-    { field: "anniversaryDate", headerName: "Anniversary Date", width: 180, valueGetter: (v) => FormatDate(v) },
+    CommonObjectPropertyColumn<ContactBase>("dob", "dob", [], { headerName: "Date of Birth", flex: 1, minWidth: 150, type: "date" }),
+    CommonObjectPropertyColumn<ContactBase>("anniversaryDate", "anniversaryDate", [], { headerName: "Anniversary Date", flex: 1, minWidth: 150, type: "date" }),
     CommonObjectPropertyColumn<ContactBase>("bankName", "bankDetails", ["name"], { headerName: "Bank name", width: 300 }),
     CommonObjectPropertyColumn<ContactBase>("ifscCode", "bankDetails", ["ifscCode"], { headerName: "IFSC Code", width: 300 }),
     CommonObjectPropertyColumn<ContactBase>("branchName", "bankDetails", ["branch"], { headerName: "Branch Name", width: 300 }),
@@ -82,9 +95,12 @@ const Contact = () => {
         ]
       : []),
   ];
-
+  const filteredColumns = columns.filter((col) => {
+    if (!col.field || col.field === "actions") return true;
+    return visibleFields.includes(col.field);
+  });
   const CommonDataGridOption = {
-    columns,
+    columns: filteredColumns,
     rows: allContact,
     rowCount: totalRows,
     loading: contactDataLoading || contactDataFetching || isEditLoading,
@@ -97,7 +113,8 @@ const Contact = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    defaultHidden: ["email", "dob", "anniversaryDate", "customerType", "telephoneNo", "panNo", "accountNumber", "branchName", "ifscCode", "bankName", "addressLine1", "addressLine2", "city", "state", "country", "pinCode", "gstIn", "gstType", "transporterId", "tanNo"],
+    fileName: PAGE_TITLE.CONTACT.BASE,
+    defaultHidden: ["email", "dob", "anniversaryDate", "telephoneNo", "panNo", "accountNumber", "branchName", "ifscCode", "bankName", "addressLine1", "addressLine2", "city", "state", "country", "pinCode", "gstIn", "gstType"],
   };
 
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
