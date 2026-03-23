@@ -3,7 +3,7 @@ import { saveAs } from "file-saver";
 import * as XLSX from "xlsx-js-style";
 import type { AppGridColDef } from "../../../Types";
 
-export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, rows, fileName = "data", title = "Report", companyName }: { columns: AppGridColDef<T>[]; rows: readonly T[]; fileName?: string; title?: string; companyName?: string }) => {
+export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, rows, fileName = "data", title = "Report" }: { columns: AppGridColDef<T>[]; rows: readonly T[]; fileName?: string; title?: string; }) => {
   const exportableColumns = columns.filter((col) => !col.disableExport && col.field !== "actions");
 
   /* ---------------------------------- */
@@ -58,8 +58,7 @@ export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, ro
   /* Sheet Data (Title + Subtitle)      */
   /* ---------------------------------- */
   const sheetData = [
-    [companyName],
-    [title], // subtitle
+    [title],
     headers,
     ...dataRows,
     ...(summaryRow ? [summaryRow] : []),
@@ -72,7 +71,7 @@ export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, ro
   /* ---------------------------------- */
   worksheet["!merges"] = [
     { s: { r: 0, c: 0 }, e: { r: 0, c: headers.length - 1 } },
-    { s: { r: 1, c: 0 }, e: { r: 1, c: headers.length - 1 } },
+    // { s: { r: 1, c: 0 }, e: { r: 1, c: headers.length - 1 } },
   ];
 
   /* ---------------------------------- */
@@ -87,7 +86,7 @@ export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, ro
   /* ---------------------------------- */
   worksheet["!rows"] = [
     { hpt: 28 }, // title
-    { hpt: 22 }, // subtitle
+    // { hpt: 22 }, // subtitle
     { hpt: 20 }, // header
   ];
 
@@ -104,18 +103,18 @@ export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, ro
   /* ---------------------------------- */
   /* Subtitle Style                     */
   /* ---------------------------------- */
-  if (worksheet["A2"]) {
-    worksheet["A2"].s = {
-      font: { bold: true, sz: 12 },
-      alignment: { horizontal: "center", vertical: "center" },
-    };
-  }
+  // if (worksheet["A2"]) {
+  //   worksheet["A2"].s = {
+  //     font: { bold: true, sz: 12 },
+  //     alignment: { horizontal: "center", vertical: "center" },
+  //   };
+  // }
 
   /* ---------------------------------- */
   /* Header Style                       */
   /* ---------------------------------- */
   headers.forEach((_, i) => {
-    const ref = XLSX.utils.encode_cell({ r: 2, c: i });
+    const ref = XLSX.utils.encode_cell({ r: 1, c: i });
 
     if (worksheet[ref]) {
       worksheet[ref].s = {
@@ -137,7 +136,7 @@ export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, ro
   /* ---------------------------------- */
   /* Data Cell Styling                  */
   /* ---------------------------------- */
-  const startRow = 3;
+  const startRow = 2;
 
   dataRows.forEach((row, rowIndex) => {
     row.forEach((_, colIndex) => {
@@ -167,7 +166,7 @@ export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, ro
   /* Summary Row Styling                */
   /* ---------------------------------- */
   if (summaryRow) {
-    const summaryRowIndex = 3 + dataRows.length;
+    const summaryRowIndex = 2 + dataRows.length;
 
     exportableColumns.forEach((_, colIndex) => {
       const ref = XLSX.utils.encode_cell({

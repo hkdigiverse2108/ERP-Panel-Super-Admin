@@ -18,7 +18,7 @@ const BankTransaction = () => {
   const permission = usePagePermission(PAGE_TITLE.BANK_TRANSACTION.BASE);
 
   const { data: bankTransaction_data, isLoading: bankTransactionDataLoading, isFetching: bankTransactionDataFetching } = Queries.useGetBankTransaction(params);
-    const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetBankTransaction({}, false);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetBankTransaction({}, false);
 
   const { mutate: deleteBankTransactionMutate } = Mutations.useDeleteBankTransaction();
   const { mutate: editBankTransaction, isPending: isEditLoading } = Mutations.useEditBankTransaction();

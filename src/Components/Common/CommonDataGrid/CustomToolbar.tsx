@@ -47,7 +47,7 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ onExportAll, isExport = true, f
       ...(fileName === PAGE_TITLE.POS.SALES_REGISTER && { shortExceed: (item.physicalDrawerCash || 0) - (item.totalCashInDrawer || 0) }),
       ...(fileName === PAGE_TITLE.INVOICE.BASE && { dueAmount: Number(((item.transactionSummary?.netAmount || 0) - (item.paidAmount || 0)).toFixed(2)) }),
     }));
-    ExportDataGridToExcel({ columns, rows: finalData, fileName: exportAllFileName });
+    ExportDataGridToExcel({ columns, rows: finalData, fileName: exportAllFileName ,title: fileName});
   };
 
   return (

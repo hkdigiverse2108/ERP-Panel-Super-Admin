@@ -13,7 +13,7 @@ const Bank = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.BANK.BASE);
-
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetBank({}, false);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { data: bankData, isLoading, isFetching } = Queries.useGetBank(params);
   const { mutate: deleteBankMutate, isPending: isDeleteLoading } = Mutations.useDeleteBank();
@@ -73,7 +73,8 @@ const Bank = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    fileName: PAGE_TITLE.BANK.BASE
+    fileName: PAGE_TITLE.BANK.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   const filter = [

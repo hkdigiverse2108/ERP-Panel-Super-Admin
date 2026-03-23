@@ -50,7 +50,8 @@ export const Queries = {
   useGetProductDropdown: (params?: Params, enabled?: boolean) => useQueries<ProductDropDownApiResponse>([KEYS.PRODUCT.BASE, params], () => Get(URL_KEYS.PRODUCT.DROPDOWN, params), { enabled: enabled }),
 
   //***************bank**************** */
-  useGetBank: (params?: Params) => useQueries<BankApiResponse>([KEYS.BANK.BASE, params], () => Get(URL_KEYS.BANK.ALL, params)),
+  useGetBank: (params?: Params, enabled?: boolean) => useQueries<BankApiResponse>([KEYS.BANK.BASE, params], () => Get(URL_KEYS.BANK.ALL, params), { enabled: enabled }),
+
   useGetBankDropdown: (params?: Params, enabled?: boolean) => useQueries<BankDropdownApiResponse>([KEYS.BANK.BASE, params], () => Get(URL_KEYS.BANK.DROPDOWN, params), { enabled: enabled }),
 
   // ************ Product Type ***********
@@ -135,7 +136,7 @@ export const Queries = {
   //***************bank transaction**************** */
   useGetBankTransaction: (params?: Params, enabled?: boolean) => useQueries<BankTransactionApiResponse>([KEYS.BANK_TRANSACTION.BASE, params], () => Get(URL_KEYS.BANK_TRANSACTION.ALL, params), { enabled: enabled }),
   useGetBankTransactionDropdown: (params?: Params, enabled?: boolean) => useQueries<BankTransactionDropdownApiResponse>([KEYS.BANK_TRANSACTION.BASE, params], () => Get(URL_KEYS.BANK_TRANSACTION.DROPDOWN, params), { enabled: enabled }),
-  
+
   // ************ Announcement ***********
   useGetPosCashRegister: (params?: Params) => useQueries<PosCashRegisterApiResponse>([KEYS.POS_CASH_REGISTER.BASE, params], () => Get(URL_KEYS.POS_CASH_REGISTER.ALL, params)),
   useGetPosCashRegisterDropdown: (params?: Params, enabled?: boolean) => useQueries<PosCashRegisterDropdownApiResponse>([KEYS.POS_CASH_REGISTER.DROPDOWN, params], () => Get(URL_KEYS.POS_CASH_REGISTER.DROPDOWN, params), { enabled: enabled }),
@@ -151,7 +152,7 @@ export const Queries = {
   //*************** Discount *********
   useGetDiscount: (params?: Params) => useQueries<DiscountApiResponse>([KEYS.DISCOUNT.BASE, params], () => Get(URL_KEYS.DISCOUNT.ALL, params)),
   useGetDiscountDropdown: (params?: Params, enabled?: boolean) => useQueries<DiscountDropdownApiResponse>([KEYS.DISCOUNT.BASE, params], () => Get(URL_KEYS.DISCOUNT.DROPDOWN, params), { enabled: enabled }),
-  
+
   // ************ Pos Payment ***********
   useGetPosPayment: (params?: Params) => useQueries<PosPaymentApiResponse>([KEYS.POS_PAYMENT.BASE, params], () => Get(URL_KEYS.POS_PAYMENT.ALL, params)),
 
