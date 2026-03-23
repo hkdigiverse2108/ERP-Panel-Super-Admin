@@ -19,6 +19,7 @@ const Expense = () => {
   const permission = usePagePermission(PAGE_TITLE.EXPENSE.BASE);
   const permissionSalary = usePagePermission(PAGE_TITLE.SALARY.BASE);
 
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetExpense({}, false);
   const { data, isLoading, isFetching } = Queries.useGetExpense({ ...params, avoidSalary: false });
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deleteExpense, isPending: isDeleteLoading } = Mutations.useDeleteExpense();
@@ -92,7 +93,8 @@ const Expense = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    fileName:PAGE_TITLE.EXPENSE.BASE
+    fileName: PAGE_TITLE.EXPENSE.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   const filter = [

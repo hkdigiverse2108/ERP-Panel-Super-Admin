@@ -17,6 +17,8 @@ const Receipt = () => {
   const permission = usePagePermission(PAGE_TITLE.RECEIPT.BASE);
 
   const { data: contactData, isLoading: contactDataLoading } = Queries.useGetContactDropdown();
+
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPosPayment({}, false);
   const { data, isLoading, isFetching } = Queries.useGetPosPayment({ ...params, voucherTypeFilter: "sales" });
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deletePayment, isPending: isDeleteLoading } = Mutations.useDeletePosPayment();
@@ -73,6 +75,7 @@ const Receipt = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     fileName: PAGE_TITLE.RECEIPT.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   const filter = [

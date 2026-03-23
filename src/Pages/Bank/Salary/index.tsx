@@ -16,6 +16,7 @@ const Salary = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.SALARY.BASE);
 
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetSalary({}, false);
   const { data, isLoading, isFetching } = Queries.useGetSalary(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deleteSalary, isPending: isDeleteLoading } = Mutations.useDeleteSalary();
@@ -72,7 +73,8 @@ const Salary = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    fileName:PAGE_TITLE.SALARY.BASE
+    fileName: PAGE_TITLE.SALARY.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];

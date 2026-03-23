@@ -17,6 +17,8 @@ const Payment = () => {
   const permission = usePagePermission(PAGE_TITLE.PAYMENT.BASE);
 
   const { data: contactData, isLoading: contactDataLoading } = Queries.useGetContactDropdown();
+  
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPosPayment({}, false);
   const { data, isLoading, isFetching } = Queries.useGetPosPayment({ ...params, voucherTypeFilter: "purchase" });
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deletePayment, isPending: isDeleteLoading } = Mutations.useDeletePosPayment();
@@ -74,6 +76,7 @@ const Payment = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     fileName: PAGE_TITLE.PAYMENT.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   const filter = [

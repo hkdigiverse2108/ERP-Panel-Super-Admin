@@ -154,13 +154,13 @@ export const Queries = {
   useGetDiscountDropdown: (params?: Params, enabled?: boolean) => useQueries<DiscountDropdownApiResponse>([KEYS.DISCOUNT.BASE, params], () => Get(URL_KEYS.DISCOUNT.DROPDOWN, params), { enabled: enabled }),
 
   // ************ Pos Payment ***********
-  useGetPosPayment: (params?: Params) => useQueries<PosPaymentApiResponse>([KEYS.POS_PAYMENT.BASE, params], () => Get(URL_KEYS.POS_PAYMENT.ALL, params)),
+  useGetPosPayment: (params?: Params, enabled?: boolean) => useQueries<PosPaymentApiResponse>([KEYS.POS_PAYMENT.BASE, params], () => Get(URL_KEYS.POS_PAYMENT.ALL, params), { enabled: enabled }),
 
   // ************ Expense *********** */
-  useGetExpense: (params?: Params) => useQueries<ExpenseApiResponse>([KEYS.EXPENSE.BASE, params], () => Get(URL_KEYS.EXPENSE.ALL, params)),
+  useGetExpense: (params?: Params, enabled?: boolean) => useQueries<ExpenseApiResponse>([KEYS.EXPENSE.BASE, params], () => Get(URL_KEYS.EXPENSE.ALL, params), { enabled: enabled }),
 
   //*************** Salary *************** */
-  useGetSalary: (params?: Params) => useQueries<SalaryApiResponse>([KEYS.SALARY.BASE, params], () => Get(URL_KEYS.SALARY.ALL, params)),
+  useGetSalary: (params?: Params, enabled?: boolean) => useQueries<SalaryApiResponse>([KEYS.SALARY.BASE, params], () => Get(URL_KEYS.SALARY.ALL, params), { enabled: enabled }),
   //*************** Estimate **************** */
   useGetEstimate: (params?: Params, enabled?: boolean) => useQueries<EstimateApiResponse>([KEYS.ESTIMATE.BASE, params], () => Get(URL_KEYS.ESTIMATE.ALL, params), { enabled: enabled }),
   useGetEstimateDropdown: (params?: Params, enabled?: boolean) => useQueries<EstimateDropdownApiResponse>([KEYS.ESTIMATE.BASE, params], () => Get(URL_KEYS.ESTIMATE.DROPDOWN, params), { enabled: enabled }),
