@@ -348,4 +348,11 @@ export const KEYS = {
     DELETE: "sales-credit-note-delete",
     DROPDOWN: "sales-credit-note-dropdown",
   },
+
+    PREFIX: {
+    BASE: "prefix",
+    ADD: "prefix-add",
+    EDIT: "prefix-edit",
+    DELETE: "prefix-delete",
+  },
 };

@@ -392,4 +392,12 @@ export const URL_KEYS = {
     DROPDOWN: "/sales-credit-note/dropdown",
     ADD_EDIT: "/sales-credit-note/add-edit",
   },
+
+  PREFIX: {
+    BASE: "/prefix",
+    DROPDOWN: "/prefix/dropdown",
+    ALL: "/prefix/all",
+    ADD: "/prefix/add",
+    EDIT: "/prefix/edit",
+  },
 } as const;

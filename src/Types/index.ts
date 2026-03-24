@@ -51,3 +51,4 @@ export * from "./Tax";
 export * from "./TermsCondition";
 export * from "./Uom";
 export * from "./User";
+export * from "./Prefix";

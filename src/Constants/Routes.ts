@@ -196,5 +196,9 @@ export const ROUTES = {
   DISCOUNT: {
     BASE: "/discount",
     ADD_EDIT: "/discount/add-edit",
-  }
+  },
+  PREFIX: {
+    BASE: "/prefix",
+    ADD_EDIT: "/prefix/add-edit",
+  },
 } as const;

@@ -851,3 +851,10 @@ export const DiscountFormSchema = Yup.object({
   startDateTime: Validation("string", "Start Date Time"),
   endDateTime: RequiredWhenTrue("hasEndDate", "End Date Time", Yup.string()),
 });
+
+
+export const PrefixFormSchema = Yup.object({
+  prefixType: Validation("string", "Prefix Type"),
+  prefix: Validation("string", "Prefix"),
+  sequenceNumber: Validation("number", "Sequence Number", { required: false }),
+});
