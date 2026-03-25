@@ -8,7 +8,7 @@ import { CommonButton, CommonTextField, CommonValidationDatePicker, CommonValida
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonTable } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { BillOfLiveProductBase, BillOfLiveProductDetailUI, BillOfLiveProductFormValues, ProductBase, RecipeBase, CommonTableColumn } from "../../../Types";
+import type { BillOfLiveProductBase, BillOfLiveProductFormValues, ProductBase, RecipeBase, CommonTableColumn, BillOfLiveProductDetail } from "../../../Types";
 import { GenerateOptions, DateConfig } from "../../../Utils";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePagePermission } from "../../../Utils/Hooks";
@@ -53,16 +53,6 @@ const RecipeWatcher = ({ onChange }: { onChange: (ids: string[]) => void }) => {
   return null;
 };
 
-const CompanyWatcher = ({ currentCompanyId, onChange }: { currentCompanyId: string; onChange: (id: string) => void }) => {
-  const { values } = useFormikContext<BillOfLiveProductFormValues>();
-  useEffect(() => {
-    if (values.companyId !== currentCompanyId) {
-      onChange(values.companyId || "");
-    }
-  }, [values.companyId, currentCompanyId, onChange]);
-  return null;
-};
-
 const BOLP_PREFIX = "BOLP";
 const parseBimNumber = (value?: string) => {
   if (!value) return "";
@@ -80,8 +70,7 @@ const BillOfLiveProductForm = () => {
     no?: number;
   };
 
-  const [filter, setFilter] = useState({ companyFilter: data?.companyId?._id || "" });
-  const { data: recipeData, isLoading: recipeLoading, isFetching: recipeFetching } = Queries.useGetRecipe({ activeFilter: true, companyFilter: filter.companyFilter });
+  const { data: recipeData, isLoading: recipeLoading, isFetching: recipeFetching } = Queries.useGetRecipe({ activeFilter: true });
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
 
   const navigate = useNavigate();
@@ -103,8 +92,9 @@ const BillOfLiveProductForm = () => {
 
   /* ---------------- CREATE ROW FROM RECIPE ---------------- */
 
-  const createRowFromRecipe = (recipe: RecipeBase): BomRow => {
+  const createRowFromRecipe = (recipe: RecipeBase): BomRow | null => {
     const product = recipe.finalProducts?.productId as ProductBase;
+    if (!product) return null;
 
     return {
       id: product._id,
@@ -118,14 +108,15 @@ const BillOfLiveProductForm = () => {
       expiryDays: recipe.finalProducts?.expiryDays ?? 0,
       mfgDate: DateConfig.utc().toISOString(),
       expDate: null,
-      rawProducts: recipe.rawProducts?.map((r) => ({ productId: r.productId as ProductBase, baseAvailableQty: (r.productId as ProductBase)?.qty ?? 0, availableQty: (r.productId as ProductBase)?.qty ?? 0, useQty: r.useQty ?? 0, baseUseQty: r.useQty ?? 0 })) || [],
+      rawProducts: recipe.rawProducts?.filter((r) => r.productId).map((r) => ({ productId: r.productId as ProductBase, baseAvailableQty: (r.productId as ProductBase)?.qty ?? 0, availableQty: (r.productId as ProductBase)?.qty ?? 0, useQty: r.useQty ?? 0, baseUseQty: r.useQty ?? 0 })) || [],
     };
   };
 
   /* ---------------- MERGE HELPERS ---------------- */
 
-  const mergeRow = (recipe: RecipeBase, saved?: BillOfLiveProductDetailUI, existing?: BomRow): BomRow => {
+  const mergeRow = (recipe: RecipeBase, saved?: BillOfLiveProductDetail, existing?: BomRow): BomRow | null => {
     const base = createRowFromRecipe(recipe);
+    if (!base) return null;
     const withSaved: BomRow = {
       ...base,
       qty: saved?.qty ?? base.qty,
@@ -138,7 +129,10 @@ const BillOfLiveProductForm = () => {
       expDate: saved?.expiryDate ?? base.expDate,
       rawProducts:
         base.rawProducts?.map((raw) => {
-          const matchedSaved = saved?.ingredients?.find((ing) => ing.productId._id === raw.productId._id);
+          const matchedSaved = saved?.ingredients?.find((ing) => {
+            const id = typeof ing.productId === "string" ? ing.productId : ing.productId?._id;
+            return id === raw.productId?._id;
+          });
           return { ...raw, useQty: matchedSaved?.useQty ?? raw.useQty, availableQty: matchedSaved?.availableQty ?? raw.availableQty };
         }) ?? [],
     };
@@ -148,13 +142,13 @@ const BillOfLiveProductForm = () => {
       ...existing,
       rawProducts:
         withSaved.rawProducts?.map((raw) => {
-          const matchedExisting = existing.rawProducts?.find((r) => r.productId._id === raw.productId._id);
+          const matchedExisting = existing.rawProducts?.find((r) => r.productId?._id === raw.productId?._id);
           return matchedExisting ? { ...raw, ...matchedExisting } : raw;
         }) ?? [],
     };
   };
 
-  const buildRowsFromSelection = (ids: string[], prevRows: BomRow[], productDetails?: BillOfLiveProductDetailUI[]) => {
+  const buildRowsFromSelection = (ids: string[], prevRows: BomRow[], productDetails?: BillOfLiveProductDetail[]) => {
     const allRecipes = recipeData?.data?.recipe_data || [];
 
     return ids
@@ -162,7 +156,10 @@ const BillOfLiveProductForm = () => {
         const recipe = allRecipes.find((r) => r._id === id);
         if (!recipe) return null;
         const finalProductId = (recipe.finalProducts?.productId as ProductBase)?._id;
-        const savedDetail = productDetails?.find((pd) => pd.productId?._id === finalProductId);
+        const savedDetail = productDetails?.find((pd) => {
+          const id = typeof pd.productId === "string" ? pd.productId : pd.productId?._id;
+          return id === finalProductId;
+        });
         const existing = prevRows.find((r) => r.recipeId === id);
         return mergeRow(recipe, savedDetail, existing);
       })
@@ -203,17 +200,17 @@ const BillOfLiveProductForm = () => {
       prev.map((row) =>
         row.id === rowId
           ? {
-              ...row,
-              rawProducts: row.rawProducts?.map((raw, i) =>
-                i === index
-                  ? {
-                      ...raw,
-                      useQty: value,
-                      baseUseQty: value / row.qty,
-                    }
-                  : raw,
-              ),
-            }
+            ...row,
+            rawProducts: row.rawProducts?.map((raw, i) =>
+              i === index
+                ? {
+                  ...raw,
+                  useQty: value,
+                  baseUseQty: value / row.qty,
+                }
+                : raw,
+            ),
+          }
           : row,
       ),
     );
@@ -238,7 +235,6 @@ const BillOfLiveProductForm = () => {
     () => ({
       number: isEditing ? parseBimNumber(data?.number) : bomNumber,
       date: isEditing ? data?.date : DateConfig.utc().toISOString(),
-      companyId: data?.companyId?._id || "",
       allowReverseCalculation: data?.allowReverseCalculation ?? false,
       recipeId: data?.recipeId?.map((b: RecipeBase) => b._id) ?? [],
     }),
@@ -255,7 +251,7 @@ const BillOfLiveProductForm = () => {
   /* ---------------- SUBMIT ---------------- */
 
   const handleSubmit = (values: BillOfLiveProductFormValues) => {
-    const productDetails = rows.map((r) => ({
+    const productDetails: BillOfLiveProductDetail[] = rows.map((r) => ({
       productId: r.id,
       qty: r.qty,
       purchasePrice: r.purchasePrice,
@@ -268,16 +264,16 @@ const BillOfLiveProductForm = () => {
       expiryDate: r.expDate || undefined,
 
       ingredients: r.rawProducts?.map((raw) => ({
-        productId: raw.productId._id,
+        productId: raw.productId?._id,
         availableQty: raw.availableQty,
         useQty: raw.useQty,
       })),
     }));
 
     if (isEditing) {
-      editBOM({ billOfLiveProductId: data!._id, recipeId: values.recipeId, productDetails, number: formatBimNumber(values.number), companyId: values.companyId }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
+      editBOM({ billOfLiveProductId: data!._id, recipeId: values.recipeId, productDetails, number: formatBimNumber(values.number) }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
     } else {
-      addBOM({ number: formatBimNumber(values.number), date: values.date, allowReverseCalculation: values.allowReverseCalculation, recipeId: values.recipeId, productDetails, companyId: values.companyId }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
+      addBOM({ number: formatBimNumber(values.number), date: values.date, allowReverseCalculation: values.allowReverseCalculation, recipeId: values.recipeId, productDetails }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
     }
   };
   useEffect(() => {
@@ -295,20 +291,12 @@ const BillOfLiveProductForm = () => {
                 {() => (
                   <Form noValidate>
                     <RecipeWatcher onChange={syncRowsFromRecipeIds} />
-                    <CompanyWatcher
-                      currentCompanyId={filter.companyFilter || ""}
-                      onChange={(id) => {
-                        setFilter({ companyFilter: id });
-                        formikRef.current?.setFieldValue("recipeId", []);
-                        setRows([]);
-                      }}
-                    />
                     <Grid container spacing={2}>
                       <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 4 }} required />
                       <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 4 }} />
                       <CommonValidationTextField name="text" label="BOLP" disabled grid={{ xs: 12, md: 4 }} />
                       <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 4 }} />
-                      <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 4 }} disabled={!filter.companyFilter} options={recipeLoading || recipeFetching ? [] : GenerateOptions(recipeData?.data?.recipe_data || [])} isLoading={recipeLoading || recipeFetching} />
+                      <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 4 }} options={GenerateOptions(recipeData?.data?.recipe_data || [])} isLoading={recipeLoading || recipeFetching} />
                       <CommonValidationSwitch name="allowReverseCalculation" label="Allow Reverse Calculation" />
                     </Grid>
                   </Form>
