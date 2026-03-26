@@ -408,10 +408,10 @@ export const URL_KEYS = {
     EDIT: "/consumption-type/edit",
   },
   PAYMENT_TERM: {
-    BASE: "/payment-terms",
-    DROPDOWN: "/payment-terms/dropdown",
-    ALL: "/payment-terms/all",
-    ADD: "/payment-terms/add",
-    EDIT: "/payment-terms/edit",
+    BASE: "/payment-term",
+    DROPDOWN: "/payment-term/dropdown",
+    ALL: "/payment-term/all",
+    ADD: "/payment-term/add",
+    EDIT: "/payment-term/edit",
   }
 } as const;
