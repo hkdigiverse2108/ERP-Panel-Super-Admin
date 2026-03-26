@@ -6,16 +6,19 @@ import { PAGE_TITLE } from "../../../Constants";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { Mutations, Queries } from "../../../Api";
 import type { AppGridColDef, ConsumptionTypeBase } from "../../../Types";
-import { CommonActionColumn, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
-import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { CommonObjectNameColumn, CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import { setConsumptionTypeModal } from "../../../Store/Slices/ModalSlice";
+import { BREADCRUMBS } from "../../../Data";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
 
 const ConsumptionType = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
 
   const dispatch = useDispatch();
   const permission = usePagePermission(PAGE_TITLE.SETTINGS.CONSUMPTION_TYPE.BASE);
 
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { data: consumptionTypeData, isLoading: consumptionTypeDataLoading, isFetching: consumptionTypeDataFetching } = Queries.useGetConsumptionType(params);
   const { mutate: deleteConsumptionTypeMutate, isPending: isDeleteLoading } = Mutations.useDeleteConsumptionType();
   const { mutate: editConsumptionType, isPending: isEditLoading } = Mutations.useEditConsumptionType();
@@ -33,7 +36,8 @@ const ConsumptionType = () => {
   const handleEdit = (row: ConsumptionTypeBase) => dispatch(setConsumptionTypeModal({ open: true, data: row }));
 
   const columns: AppGridColDef<ConsumptionTypeBase>[] = [
-    { field: "name", headerName: "Consumption Type", flex: 1, minWidth: 200 },
+    CommonObjectNameColumn<ConsumptionTypeBase>("companyId", { headerName: "Company", width: 250 }),
+    { field: "name", headerName: "Consumption Type", width: 250 },
     CommonObjectPropertyColumn<ConsumptionTypeBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
 
     ...(permission?.edit || permission?.delete
@@ -63,15 +67,20 @@ const ConsumptionType = () => {
     onFilterModelChange: setFilterModel,
     fileName: PAGE_TITLE.SETTINGS.CONSUMPTION_TYPE.BASE,
   };
+  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
 
   return (
-    <Box sx={{ display: "grid" }}>
-      <CommonCard title={PAGE_TITLE.SETTINGS.CONSUMPTION_TYPE.BASE}>
-        <CommonDataGrid {...CommonDataGridOption} />
-      </CommonCard>
-      <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
-      <ConsumptionTypeForm />
-    </Box>
+    <>
+      <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.CONSUMPTION_TYPE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.CALL_REQUEST.BASE} />
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <AdvancedSearch filter={filter} />
+        <CommonCard hideDivider>
+          <CommonDataGrid {...CommonDataGridOption} />
+        </CommonCard>
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
+        <ConsumptionTypeForm />
+      </Box>
+    </>
   );
 };
 

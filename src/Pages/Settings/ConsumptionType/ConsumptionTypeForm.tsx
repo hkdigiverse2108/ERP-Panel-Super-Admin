@@ -1,18 +1,19 @@
 import { Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import { useDispatch } from "react-redux";
-import { Mutations } from "../../../Api";
+import { Mutations, Queries } from "../../../Api";
 import { useAppSelector } from "../../../Store/hooks";
 import type { ConsumptionTypeFormValues } from "../../../Types";
 import { setConsumptionTypeModal } from "../../../Store/Slices/ModalSlice";
-import { ConsumptionTypeFormSchema, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
+import { ConsumptionTypeFormSchema, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { CommonModal } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { CommonButton, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
+import { CommonButton, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 
 const ConsumptionTypeForm = () => {
   const { mutate: addConsumptionType, isPending: isAddLoading } = Mutations.useAddConsumptionType();
   const { mutate: editConsumptionType, isPending: isEditLoading } = Mutations.useEditConsumptionType();
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
 
   const dispatch = useDispatch();
   const { isConsumptionTypeModal } = useAppSelector((state) => state.modal);
@@ -49,6 +50,7 @@ const ConsumptionTypeForm = () => {
         {({ dirty }) => (
           <Form noValidate>
             <Grid container spacing={2} sx={{ p: 1 }}>
+              <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12 }} />
               <CommonValidationTextField name="name" label="Payment Terms Name" required grid={{ xs: 12 }} />
               {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
               <Grid sx={{ display: "flex", gap: 2, ml: "auto" }}>

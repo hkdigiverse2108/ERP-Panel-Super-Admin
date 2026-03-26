@@ -2,6 +2,7 @@ import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { CompanyBase } from "./Company";
 
 export interface ConsumptionTypeFormValues {
+  companyId?: string;
   name?: string;
   isActive?: boolean;
 }
