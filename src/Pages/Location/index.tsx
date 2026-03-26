@@ -10,6 +10,7 @@ import type { AppGridColDef, LocationBase } from "../../Types";
 import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
 import LocationForm from "./LocationForm";
 import { CreateFilter, GenerateOptions, WithAllOption } from "../../Utils";
+import { CommonObjectPropertyColumn } from "../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Location = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
@@ -38,14 +39,9 @@ const Location = () => {
     { field: "name", headerName: "Name", width: 300 },
     { field: "code", headerName: "Code", width: 300 },
     { field: "type", headerName: "Type", width: 300 },
-    {
-      field: "parentId",
-      headerName: "Parent",
-      flex: 1,
-      minWidth: 300,
-      renderCell: ({ value }) => (typeof value === "object" ? value?.name || "-" : value),
-      exportFormatter: (value) => (typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-"),
-    },
+    CommonObjectPropertyColumn<LocationBase>("parentId", "parentId", ["name"], { headerName: "Parent", flex: 1, minWidth: 200 }),
+    CommonObjectPropertyColumn<LocationBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<LocationBase>({
@@ -73,7 +69,7 @@ const Location = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    isExport: false,
+    fileName:PAGE_TITLE.LOCATION.BASE
   };
 
   const filter = useMemo(() => {

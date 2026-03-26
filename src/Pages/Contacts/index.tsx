@@ -76,6 +76,7 @@ const Contact = () => {
     CommonObjectPropertyColumn<ContactBase>("ifscCode", "bankDetails", ["ifscCode"], { headerName: "IFSC Code", width: 300 }),
     CommonObjectPropertyColumn<ContactBase>("branchName", "bankDetails", ["branch"], { headerName: "Branch Name", width: 300 }),
     CommonObjectPropertyColumn<ContactBase>("accountNumber", "bankDetails", ["accountNumber"], { headerName: "Account Number", width: 300 }),
+    CommonObjectPropertyColumn<ContactBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
 
     // Address
     { field: "addressLine1", headerName: "Address Line 1", width: 180, valueGetter: (_value, row) => row?.address?.[0]?.addressLine1 || "" },

@@ -7,6 +7,7 @@ import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, StockBase } from "../../../Types";
 import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Stock = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -20,7 +21,16 @@ const Stock = () => {
   const allStock = useMemo(() => stockData?.data?.stock_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [stockData]);
   const totalRows = stockData?.data?.totalData || 0;
 
-  const columns: AppGridColDef<StockBase>[] = [CommonObjectNameColumn("companyId", { headerName: "Company Name", width: 200 }), { field: "name", headerName: "Product Name", width: 320 }, CommonObjectNameColumn("categoryId", { headerName: "Category Name", width: 230 }), CommonObjectNameColumn("subCategoryId", { headerName: "Sub Category Name", width: 230 }), CommonObjectNameColumn("brandId", { headerName: "Brand Name", width: 230 }), CommonObjectNameColumn("subBrandId", { headerName: "Sub Brand Name", width: 230 }), { field: "availableQty", headerName: "Available Qty", flex: 1, minWidth: 200 }];
+  const columns: AppGridColDef<StockBase>[] = [
+    CommonObjectNameColumn("companyId", { headerName: "Company Name", width: 200 }), //
+    { field: "name", headerName: "Product Name", width: 320 },
+    CommonObjectNameColumn("categoryId", { headerName: "Category Name", width: 230 }),
+    CommonObjectNameColumn("subCategoryId", { headerName: "Sub Category Name", width: 230 }),
+    CommonObjectNameColumn("brandId", { headerName: "Brand Name", width: 230 }),
+    CommonObjectNameColumn("subBrandId", { headerName: "Sub Brand Name", width: 230 }),
+    { field: "availableQty", headerName: "Available Qty", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<StockBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+  ];
 
   const CommonDataGridOption = {
     columns,

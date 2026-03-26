@@ -9,6 +9,7 @@ import { setUomModal } from "../../../Store/Slices/ModalSlice";
 import type { AppGridColDef, UomBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import UomForm from "./UomForm";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Uom = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -34,6 +35,8 @@ const Uom = () => {
   const columns: AppGridColDef<UomBase>[] = [
     { field: "name", headerName: "Name", flex: 1, minWidth: 200 },
     { field: "code", headerName: "Code", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<UomBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<UomBase>({
@@ -61,7 +64,7 @@ const Uom = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    fileName:PAGE_TITLE.INVENTORY.UOM.BASE
+    fileName: PAGE_TITLE.INVENTORY.UOM.BASE,
   };
 
   return (

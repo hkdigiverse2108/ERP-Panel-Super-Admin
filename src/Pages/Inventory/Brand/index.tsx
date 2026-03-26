@@ -43,6 +43,7 @@ const Brand = () => {
     { field: "code", headerName: "Code", width: 200 },
     { field: "description", headerName: "Description", width: 300 },
     CommonObjectPropertyColumn<BrandBase>("parentBrandId", "parentBrandId", ["name"], { headerName: "Parent Brand", flex: 1, minWidth: 200 }),
+    CommonObjectPropertyColumn<BrandBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
 
     ...(permission?.edit || permission?.delete
       ? [
@@ -71,7 +72,7 @@ const Brand = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    fileName:PAGE_TITLE.INVENTORY.BRAND.BASE
+    fileName: PAGE_TITLE.INVENTORY.BRAND.BASE,
   };
 
   return (

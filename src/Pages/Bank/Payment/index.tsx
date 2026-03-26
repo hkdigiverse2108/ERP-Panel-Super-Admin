@@ -17,7 +17,7 @@ const Payment = () => {
   const permission = usePagePermission(PAGE_TITLE.PAYMENT.BASE);
 
   const { data: contactData, isLoading: contactDataLoading } = Queries.useGetContactDropdown();
-  
+
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPosPayment({}, false);
   const { data, isLoading, isFetching } = Queries.useGetPosPayment({ ...params, voucherTypeFilter: "purchase" });
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
@@ -47,6 +47,7 @@ const Payment = () => {
     CommonObjectPropertyColumn<PosPaymentBase>("date", "date", [], { headerName: "Payment Date", flex: 1, minWidth: 150, type: "date" }),
     { field: "amount", headerName: "Amount", flex: 1, minWidth: 150 },
     CommonObjectPropertyColumn<PosPaymentBase>("status", "status", [], { headerName: "Status", width: 150, type: "status" }),
+    CommonObjectPropertyColumn<PosPaymentBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
 
     ...(permission?.edit || permission?.delete
       ? [

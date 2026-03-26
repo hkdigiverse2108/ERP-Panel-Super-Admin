@@ -44,6 +44,8 @@ const OrderList = () => {
     CommonObjectPropertyColumn<PosOrderBase>("orderType", "orderType", [], { headerName: "Order Type", width: 120, type: "format" }),
     CommonObjectPropertyColumn<PosOrderBase>("salesManId", "salesManId", ["fullName"], { headerName: "Sales Man", width: 150 }),
     CommonObjectPropertyColumn<PosOrderBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 150, type: "status" }),
+    CommonObjectPropertyColumn<PosOrderBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<PosOrderBase>({

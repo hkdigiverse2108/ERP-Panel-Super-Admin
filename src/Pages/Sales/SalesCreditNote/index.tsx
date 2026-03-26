@@ -57,6 +57,8 @@ const SalesCreditNote = () => {
     CommonObjectPropertyColumn<SalesCreditNoteBase>("creditUsed", "creditUsed", ["creditUsed"], { headerName: "Credit Used", flex: 1, minWidth: 120, isSummary: true }),
     CommonObjectPropertyColumn<SalesCreditNoteBase>("creditRemaining", "creditRemaining", ["creditRemaining"], { headerName: "Credit Remaining", flex: 1, minWidth: 150, isSummary: true }),
     CommonObjectPropertyColumn<SalesCreditNoteBase>("status", "status", [], { headerName: "Status", width: 150, type: "status" }),
+    CommonObjectPropertyColumn<SalesCreditNoteBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     CommonActionColumn({
       active: (row) => editSalesCreditNote({ salesCreditNoteId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.SALES_CREDIT_NOTE.ADD_EDIT,

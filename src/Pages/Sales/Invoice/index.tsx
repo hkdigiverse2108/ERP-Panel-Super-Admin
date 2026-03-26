@@ -50,7 +50,7 @@ const Invoice = () => {
 
   const columns: AppGridColDef<InvoiceBase>[] = [
     { field: "invoiceNo", headerName: "Invoice No", flex: 1, minWidth: 120 },
-   CommonObjectPropertyColumn<InvoiceBase>("date", "date", [], { headerName: "Invoice Date", flex: 1, minWidth: 120, type: "date" }),
+    CommonObjectPropertyColumn<InvoiceBase>("date", "date", [], { headerName: "Invoice Date", flex: 1, minWidth: 120, type: "date" }),
     CommonObjectPropertyColumn<InvoiceBase>("dueDate", "dueDate", [], { headerName: "Due Date", flex: 1, minWidth: 120, type: "date" }),
     CommonObjectPropertyColumn<InvoiceBase>("customerId", "customerId", ["firstName", "lastName"], { headerName: "Customer Name", flex: 1, minWidth: 150 }),
     CommonObjectPropertyColumn<InvoiceBase>("transactionSummary.netAmount", "transactionSummary.netAmount", ["netAmount"], { headerName: "Net Amount", flex: 1, minWidth: 110, isSummary: true }),
@@ -59,6 +59,8 @@ const Invoice = () => {
     CommonObjectPropertyColumn<InvoiceBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 100, type: "status" }),
     CommonObjectPropertyColumn<InvoiceBase>("paymentStatus", "paymentStatus", [], { headerName: "Payment Status", flex: 1, minWidth: 100, type: "status" }),
     CommonObjectPropertyColumn<InvoiceBase>("transactionSummary.taxAmount", "transactionSummary.taxAmount", ["taxAmount"], { headerName: "Tax Amount", flex: 1, minWidth: 110, isSummary: true }),
+    CommonObjectPropertyColumn<InvoiceBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     CommonActionColumn({
       active: (row) => editInvoice({ invoiceId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.INVOICE.ADD_EDIT,

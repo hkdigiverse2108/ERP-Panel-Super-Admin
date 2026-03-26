@@ -51,6 +51,8 @@ const Expense = () => {
     CommonObjectPropertyColumn<ExpenseBase>("fromDate", "fromDate", [], { headerName: "Expense Date", flex: 1, minWidth: 150, type: "date" }),
     { field: "amount", headerName: "Amount", flex: 1, minWidth: 150 },
     CommonObjectPropertyColumn<ExpenseBase>("type", "type", [], { headerName: "Expense Type", flex: 1, minWidth: 150, type: "format" }),
+    CommonObjectPropertyColumn<ExpenseBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           {

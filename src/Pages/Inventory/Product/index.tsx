@@ -12,6 +12,7 @@ import type { AppGridColDef, ProductBase, ProductWithRemoveQty } from "../../../
 import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { ProductItemRemoveFormSchema } from "../../../Utils/ValidationSchemas";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Product = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
@@ -75,6 +76,8 @@ const Product = () => {
     { field: "sellingPrice", headerName: "Selling Price", width: 150 },
     { field: "hsnCode", headerName: "HSN", width: 200 },
     { field: "openingQty", headerName: "Opening Qty", flex: 1, minWidth: 150 },
+    CommonObjectPropertyColumn<ProductBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(isRemoveItem
       ? [
           {

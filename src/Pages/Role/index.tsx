@@ -10,6 +10,7 @@ import type { AppGridColDef, RolesBase } from "../../Types";
 import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
 import RoleForm from "./RoleForm";
 import { CreateFilter, GenerateOptions } from "../../Utils";
+import { CommonObjectPropertyColumn } from "../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Role = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -36,6 +37,8 @@ const Role = () => {
   const columns: AppGridColDef<RolesBase>[] = [
     CommonObjectNameColumn<RolesBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "name", headerName: "Name", flex: 1, minWidth: 300 },
+    CommonObjectPropertyColumn<RolesBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<RolesBase>({

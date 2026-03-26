@@ -9,6 +9,7 @@ import { setProductTypeModal } from "../../../Store/Slices/ModalSlice";
 import type { AppGridColDef, ProductTypeBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import ProductTypeForm from "./ProductTypeForm";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const ProductType = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -33,6 +34,8 @@ const ProductType = () => {
 
   const columns: AppGridColDef<ProductTypeBase>[] = [
     { field: "name", headerName: "Name", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<ProductTypeBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<ProductTypeBase>({

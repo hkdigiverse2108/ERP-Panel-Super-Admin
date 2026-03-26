@@ -45,6 +45,7 @@ const Salary = () => {
     CommonObjectPropertyColumn<SalaryBase>("type", "type", [], { headerName: "Expense Type", flex: 1, minWidth: 150, type: "format" }),
     CommonObjectPropertyColumn<SalaryBase>("incentive", "incentive", [], { headerName: "Incentive", flex: 1, minWidth: 150 }),
     CommonObjectPropertyColumn<SalaryBase>("total", "total", [], { headerName: "Total", flex: 1, minWidth: 200 }),
+    CommonObjectPropertyColumn<SalaryBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
 
     ...(permission?.edit || permission?.delete
       ? [

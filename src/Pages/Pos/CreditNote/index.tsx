@@ -42,6 +42,8 @@ const CreditNoteList = () => {
     { field: "creditsUsed", headerName: "Credits Used", width: 150 },
     { field: "creditsRemaining", headerName: "Credits Remaining", width: 150 },
     CommonObjectPropertyColumn<PosCreditNoteBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 150, type: "status" }),
+    CommonObjectPropertyColumn<PosCreditNoteBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     CommonActionColumn<PosCreditNoteBase>({
       onRefund: (row) => (row.creditsRemaining > 0 ? handleRefundBtn(row) : undefined),
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.creditNoteNo }),

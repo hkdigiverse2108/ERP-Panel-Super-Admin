@@ -45,6 +45,8 @@ const SalesOrder = () => {
     CommonObjectPropertyColumn<SalesOrderBase>("transactionSummary.netAmount", "transactionSummary.netAmount", ["netAmount"], { headerName: "Amount", flex: 1, minWidth: 110, isSummary: true }),
     CommonObjectPropertyColumn<SalesOrderBase>("transactionSummary.taxAmount", "transactionSummary.taxAmount", ["taxAmount"], { headerName: "Tax Amount", flex: 1, minWidth: 110, isSummary: true }),
     CommonObjectPropertyColumn<SalesOrderBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 200, type: "status" }),
+    CommonObjectPropertyColumn<SalesOrderBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     CommonActionColumn({
       active: (row) => editSalesOrder({ salesOrderId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.SALES_ORDER.ADD_EDIT,

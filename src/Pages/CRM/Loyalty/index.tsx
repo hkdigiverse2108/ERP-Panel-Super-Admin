@@ -44,6 +44,8 @@ const Loyalty = () => {
     { field: "usedCount", headerName: "Used Count", width: 100 },
     CommonObjectPropertyColumn<LoyaltyBase>("campaignExpiryDate", "campaignExpiryDate", [], { headerName: "Expiry Date", flex: 1, minWidth: 100, type: "date" }),
     CommonObjectPropertyColumn<LoyaltyBase>("campaignLaunchDate", "campaignLaunchDate", [], { headerName: "Launch Date", flex: 1, minWidth: 100, type: "date" }),
+    CommonObjectPropertyColumn<LoyaltyBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<LoyaltyBase>({

@@ -38,6 +38,8 @@ const User = () => {
     { field: "email", headerName: "Email", width: 240 },
     CommonObjectPropertyColumn<UserBase>("phoneNo", "phoneNo", ["countryCode", "phoneNo"], { headerName: "Phone No", width: 150, type: "phone" }),
     { field: "panNumber", headerName: "PAN Number", flex: 1, minWidth: 150 },
+    CommonObjectPropertyColumn<UserBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<UserBase>({

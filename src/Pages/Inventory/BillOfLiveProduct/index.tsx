@@ -38,7 +38,9 @@ const BillOfLiveProduct = () => {
   const columns: AppGridColDef<BillOfLiveProductBase>[] = [
     CommonObjectNameColumn<BillOfLiveProductBase>("companyId", { headerName: "Company Name", width: 280 }),
     { field: "number", headerName: "Bill Of Live Product No.", width: 280 },
-    CommonObjectPropertyColumn<BillOfLiveProductBase>("date", "date", ["dueDate"], { headerName: "Bill Of Live Product Date", flex: 1, minWidth: 110, type: "date" }),
+    CommonObjectPropertyColumn<BillOfLiveProductBase>("date", "date", ["dueDate"], { headerName: "Bill Of Live Product Date", flex: 1, minWidth: 200, type: "date" }),
+    CommonObjectPropertyColumn<BillOfLiveProductBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<BillOfLiveProductBase>({

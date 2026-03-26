@@ -41,7 +41,9 @@ const Recipe = () => {
     { field: "number", headerName: "Recipe No", width: 200 },
     { field: "name", headerName: "Recipe Name", width: 200 },
     CommonObjectPropertyColumn<RecipeBase>("date", "date", [], { headerName: "Recipe Date", width: 120, type: "date" }),
-    CommonObjectPropertyColumn<RecipeBase>("type", "type", [], { headerName: "Recipe Type", flex: 1, width: 120 }),
+    CommonObjectPropertyColumn<RecipeBase>("type", "type", [], { headerName: "Recipe Type", width: 150 }),
+    CommonObjectPropertyColumn<RecipeBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<RecipeBase>({

@@ -7,6 +7,7 @@ import { Mutations, Queries } from "../../Api";
 import type { AnnouncementBase, AppGridColDef } from "../../Types";
 import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../Components/Common";
 import { BREADCRUMBS } from "../../Data";
+import { CommonObjectPropertyColumn } from "../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Announcement = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -36,6 +37,7 @@ const Announcement = () => {
     { field: "version", headerName: "Version", width: 150 },
     { field: "link", headerName: "Link", width: 330 },
     { field: "desc", headerName: "Description", flex: 1, minWidth: 300, renderCell: (params) => <span dangerouslySetInnerHTML={{ __html: params.row.desc || "" }} /> },
+    CommonObjectPropertyColumn<AnnouncementBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
 
     ...(permission?.edit || permission?.delete
       ? [

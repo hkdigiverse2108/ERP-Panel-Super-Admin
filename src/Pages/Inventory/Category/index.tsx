@@ -43,6 +43,7 @@ const Category = () => {
     { field: "code", headerName: "Code", width: 200 },
     { field: "description", headerName: "Description", width: 300 },
     CommonObjectPropertyColumn<CategoryBase>("parentCategoryId", "parentCategoryId", ["name"], { headerName: "Parent Category", flex: 1, minWidth: 200 }),
+    CommonObjectPropertyColumn<CategoryBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
 
     ...(permission?.edit || permission?.delete
       ? [

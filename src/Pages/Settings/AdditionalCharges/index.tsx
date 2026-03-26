@@ -43,6 +43,7 @@ const AdditionalCharges = () => {
     { field: "defaultValue", headerName: "Default Value", width: 250 },
     { field: "hsnSac", headerName: "HSN Code", width: 200 },
     CommonObjectPropertyColumn<AdditionalChargesBase>("taxId", "taxId", ["name"], { headerName: "Tax", width: 150 }),
+    CommonObjectPropertyColumn<AdditionalChargesBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
 
     CommonActionColumn<AdditionalChargesBase>({
       active: (row) =>

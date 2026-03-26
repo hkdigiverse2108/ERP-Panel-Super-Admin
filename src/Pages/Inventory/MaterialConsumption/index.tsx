@@ -42,6 +42,8 @@ const MaterialConsumption = () => {
     { field: "totalAmount", type: "number", headerName: "Total Amount", width: 150 },
     CommonObjectPropertyColumn<MaterialConsumptionBase>("date", "date", [], { headerName: "Date", width: 120, type: "date" }),
     { field: "remark", headerName: "Remark", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<MaterialConsumptionBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<MaterialConsumptionBase>({

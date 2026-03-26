@@ -39,6 +39,8 @@ const Company = () => {
     CommonObjectPropertyColumn<CompanyBase>("phoneNo", "phoneNo", ["countryCode", "phoneNo"], { headerName: "Phone No", width: 150, type: "phone" }),
     { field: "email", headerName: "Email", width: 150 },
     { field: "webSite", headerName: "Website", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<CompanyBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<CompanyBase>({

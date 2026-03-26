@@ -74,6 +74,7 @@ const SupplierBill = () => {
     { field: "dueDate", headerName: "Due Date", flex: 1, minWidth: 140, valueGetter: (v) => FormatDate(v) },
 
     { field: "notes", headerName: "Notes", flex: 1, minWidth: 280 },
+    CommonObjectPropertyColumn<SupplierBillBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
 
     ...(permission?.edit || permission?.delete
       ? [

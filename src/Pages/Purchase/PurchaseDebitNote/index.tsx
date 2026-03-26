@@ -54,6 +54,8 @@ const PurchaseDebitNote = () => {
     { field: "netAmount", headerName: "Debit Note Amount", flex: 1, minWidth: 150, type: "number", isSummary: true },
     { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 120, type: "number", isSummary: true },
     { field: "notes", headerName: "Notes", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<PurchaseDebitNoteBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     CommonActionColumn({
       active: (row) => editPurchaseDebitNote({ purchaseDebitNoteId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.PURCHASE_DEBIT_NOTE.ADD_EDIT,

@@ -47,6 +47,8 @@ const Discount = () => {
     { field: "discountValue", headerName: "Discount", flex: 1, minWidth: 100 },
     CommonObjectPropertyColumn<DiscountBase>("discountType", "discountType", [], { headerName: "Discount Type", flex: 1, minWidth: 100, type: "format" }),
     CommonObjectPropertyColumn<DiscountBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 100, type: "status" }),
+    CommonObjectPropertyColumn<DiscountBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<DiscountBase>({
@@ -71,7 +73,7 @@ const Discount = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-   fileName:PAGE_TITLE.CRM.DISCOUNT.BASE,
+    fileName: PAGE_TITLE.CRM.DISCOUNT.BASE,
   };
 
   const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];

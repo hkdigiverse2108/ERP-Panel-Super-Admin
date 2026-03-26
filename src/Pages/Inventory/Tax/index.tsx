@@ -10,6 +10,7 @@ import type { AppGridColDef, TaxBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import TaxForm from "./TaxForm";
 import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Tax = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -36,6 +37,8 @@ const Tax = () => {
     CommonObjectNameColumn<TaxBase>("companyId", { headerName: "Company", width: 200 }),
     { field: "name", headerName: "Name", flex: 1, minWidth: 200 },
     { field: "percentage", headerName: "Percentage", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<TaxBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<TaxBase>({
@@ -69,7 +72,7 @@ const Tax = () => {
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.TAX.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.TAX.BASE} />
-      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap:2 }}>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />

@@ -44,6 +44,8 @@ const BankTransaction = () => {
     CommonObjectPropertyColumn<BankTransactionBase>("fromAccount", "fromAccount", ["name"], { headerName: "From Account", flex: 1, minWidth: 150 }),
     CommonObjectPropertyColumn<BankTransactionBase>("toAccount", "toAccount", ["name"], { headerName: "To Account", flex: 1, minWidth: 150 }),
     { field: "amount", headerName: "Amount", flex: 1, minWidth: 150 },
+    CommonObjectPropertyColumn<BankTransactionBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<BankTransactionBase>({

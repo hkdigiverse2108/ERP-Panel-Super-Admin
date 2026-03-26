@@ -15,7 +15,7 @@ const CreditNote = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.CREDIT_NOTE.BASE);
-    const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetCreditNote({}, false);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetCreditNote({}, false);
   const { data: creditNoteData, isLoading: creditNoteDataLoading, isFetching: creditNoteDataFetching } = Queries.useGetCreditNote(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
 
@@ -39,6 +39,8 @@ const CreditNote = () => {
     CommonObjectPropertyColumn<CreditNoteBase>("date", "date", [], { headerName: "Date", width: 120, type: "date" }),
     CommonObjectPropertyColumn<CreditNoteBase>("phoneNo", "phoneNo", ["countryCode", "phoneNo"], { headerName: "Phone No", width: 150, type: "phone" }),
     { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<CreditNoteBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<CreditNoteBase>({

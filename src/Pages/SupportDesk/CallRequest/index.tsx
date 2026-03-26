@@ -40,7 +40,9 @@ const CallRequest = () => {
     { field: "businessName", headerName: "Business Name", width: 220 },
     { field: "contactName", headerName: "Contact Name", width: 200 },
     CommonObjectPropertyColumn<CallRequestBase>("contactNo", "contactNo", ["countryCode", "phoneNo"], { headerName: "Contact No", width: 150, type: "phone" }),
-    { field: "note", headerName: "Note", flex: 1, minWidth: 150 },
+    { field: "note", headerName: "Note", width: 250 },
+    CommonObjectPropertyColumn<CallRequestBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<CallRequestBase>({

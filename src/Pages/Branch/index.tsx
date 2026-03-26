@@ -9,12 +9,13 @@ import type { BranchBase } from "../../Types";
 import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
 import { useNavigate } from "react-router-dom";
 import { CreateFilter, GenerateOptions } from "../../Utils";
+import { CommonObjectPropertyColumn } from "../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Branch = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.BRANCH.BASE);
-  
+
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetBranch({}, false);
   const { data: branchData, isLoading: branchDataLoading, isFetching: branchDataFetching } = Queries.useGetBranch(params);
   const { mutate: deleteBranchMutate } = Mutations.useDeleteBranch();
@@ -38,6 +39,8 @@ const Branch = () => {
     { field: "userName", headerName: "User Name", width: 200 },
     { field: "contactName", headerName: "Contact Name", width: 250 },
     { field: "email", headerName: "Email", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<BranchBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<BranchBase>({
