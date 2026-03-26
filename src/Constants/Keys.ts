@@ -349,10 +349,16 @@ export const KEYS = {
     DROPDOWN: "sales-credit-note-dropdown",
   },
 
-    PREFIX: {
+  PREFIX: {
     BASE: "prefix",
     ADD: "prefix-add",
     EDIT: "prefix-edit",
     DELETE: "prefix-delete",
+  },
+  CONSUMPTION_TYPE: {
+    BASE: "consumption-type",
+    ADD: "consumption-type-add",
+    EDIT: "consumption-type-edit",
+    DELETE: "consumption-type-delete",
   },
 };

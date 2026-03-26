@@ -201,4 +201,8 @@ export const ROUTES = {
     BASE: "/prefix",
     ADD_EDIT: "/prefix/add-edit",
   },
+  CONSUMPTION_TYPE:{
+    BASE: "/consumption-type",
+    ADD_EDIT: "/consumption-type/add-edit",
+  }
 } as const;

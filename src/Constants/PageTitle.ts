@@ -149,10 +149,15 @@ export const PAGE_TITLE = {
       ADD: "Add Admin Settings",
       EDIT: "Edit Admin Settings",
     },
-       PREFIX: {
+    PREFIX: {
       BASE: "Prefix",
       ADD: "Add Prefix",
       EDIT: "Edit Prefix",
+    },
+    CONSUMPTION_TYPE: {
+      BASE: "Consumption Type",
+      ADD: "Add Consumption Type",
+      EDIT: "Edit Consumption Type",
     },
   },
   CONTACT: {

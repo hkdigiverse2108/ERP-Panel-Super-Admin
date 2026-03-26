@@ -858,3 +858,7 @@ export const PrefixFormSchema = Yup.object({
   prefix: Validation("string", "Prefix"),
   sequenceNumber: Validation("number", "Sequence Number", { required: false }),
 });
+
+export const ConsumptionTypeFormSchema = Yup.object({
+  name: Validation("string", "Consumption Type Name"),
+});

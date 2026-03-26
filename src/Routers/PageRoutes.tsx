@@ -88,6 +88,8 @@ import SalesCreditNoteForm from "../Pages/Sales/SalesCreditNote/SalesCreditNoteF
 import SalesRegister from "../Pages/Pos/SalesRegister";
 import Profile from "../Pages/Settings/Profile";
 import Prefix from "../Pages/Settings/Prefix";
+import ConsumptionType from "../Pages/Settings/ConsumptionType";
+import ConsumptionTypeForm from "../Pages/Settings/ConsumptionType/ConsumptionTypeForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -216,7 +218,7 @@ export const PageRoutes = [
 
   { path: ROUTES.SALES_ORDER.BASE, name: PAGE_TITLE.SALES_ORDER.BASE, element: <SalesOrder /> },
   { path: ROUTES.SALES_ORDER.ADD_EDIT, name: PAGE_TITLE.SALES_ORDER.BASE, element: <SalesOrderForm /> },
-  
+
   { path: ROUTES.INVOICE.BASE, name: PAGE_TITLE.INVOICE.BASE, element: <Invoice /> },
   { path: ROUTES.INVOICE.ADD_EDIT, name: PAGE_TITLE.INVOICE.BASE, element: <InvoiceForm /> },
 
@@ -227,7 +229,9 @@ export const PageRoutes = [
   { path: ROUTES.SALES_CREDIT_NOTE.ADD_EDIT, name: PAGE_TITLE.SALES_CREDIT_NOTE.BASE, element: <SalesCreditNoteForm /> },
 
   { path: ROUTES.PREFIX.BASE, name: PAGE_TITLE.SETTINGS.PREFIX.BASE, element: <Prefix /> },
-  
+
+  { path: ROUTES.CONSUMPTION_TYPE.BASE, name: PAGE_TITLE.SETTINGS.CONSUMPTION_TYPE.BASE, element: <ConsumptionType /> },
+  { path: ROUTES.CONSUMPTION_TYPE.ADD_EDIT, name: PAGE_TITLE.SETTINGS.CONSUMPTION_TYPE.BASE, element: <ConsumptionTypeForm /> },
 ];
 
 export const AuthRoutes = [

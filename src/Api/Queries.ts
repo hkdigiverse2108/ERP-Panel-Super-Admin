@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AdditionalChargesApiResponse, AdditionalChargesDropdownApiResponse, AdminSettingApiResponse, AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BankDropdownApiResponse, BankTransactionApiResponse, BankTransactionDropdownApiResponse, BillOfLiveProductApiResponse, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CallRequestApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, CompanyDropdownApiResponse, ContactApiResponse, ContactDropdownApiResponse, CountryApiResponse, CouponApiResponse, CouponDropdownApiResponse, CreditNoteApiResponse, DebitNoteApiResponse, DeliveryChallanApiResponse, DeliveryChallanDropdownApiResponse, DiscountApiResponse, DiscountDropdownApiResponse, EstimateApiResponse, EstimateDropdownApiResponse, ExpenseApiResponse, InvoiceApiResponse, InvoiceDropdownApiResponse, LocationApiResponse, LoyaltyApiResponse, LoyaltyDropdownApiResponse, LoyaltyPointsApiResponse, MaterialConsumptionApiResponse, ModuleApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, PosCashRegisterApiResponse, PosCashRegisterDropdownApiResponse, PosCreditNoteApiResponse, PosOrderApiResponse, PosOrderDropdownApiResponse, PosPaymentApiResponse, PrefixApiResponse, PrefixDropdownApiResponse, ProductApiResponse, ProductDropDownApiResponse, ProductTypeApiResponse, ProductTypeDropdownApiResponse, PurchaseDebitNoteApiResponse, PurchaseDebitNoteDropdownApiResponse, PurchaseOrderApiResponse, PurchaseOrderDropdownApiResponse, RecipeApiResponse, RecipeDropdownApiResponse, RolesApiResponse, RolesDropdownApiResponse, SalaryApiResponse, SalesCreditNoteApiResponse, SalesCreditNoteDropdownApiResponse, SalesOrderApiResponse, SalesOrderDropdownApiResponse, SingleCompanyApiResponse, SingleDeliveryChallanApiResponse, SingleEmployeeApiResponse, SingleInvoiceApiResponse, SinglePurchaseDebitNoteApiResponse, SingleSalesCreditNoteApiResponse, StockApiResponse, StockVerificationApiResponse, SupplierBillApiResponse, TaxApiResponse, TaxDropdownApiResponse, TermsConditionApiResponse, TermsConditionDropdownApiResponse, UomApiResponse, UomDropdownApiResponse, UploadResponse, UserApiResponse, UserModulePermissionApiResponse } from "../Types";
+import type { AdditionalChargesApiResponse, AdditionalChargesDropdownApiResponse, AdminSettingApiResponse, AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BankDropdownApiResponse, BankTransactionApiResponse, BankTransactionDropdownApiResponse, BillOfLiveProductApiResponse, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CallRequestApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, CompanyDropdownApiResponse, ConsumptionTypeApiResponse, ConsumptionTypeDropdownApiResponse, ContactApiResponse, ContactDropdownApiResponse, CountryApiResponse, CouponApiResponse, CouponDropdownApiResponse, CreditNoteApiResponse, DebitNoteApiResponse, DeliveryChallanApiResponse, DeliveryChallanDropdownApiResponse, DiscountApiResponse, DiscountDropdownApiResponse, EstimateApiResponse, EstimateDropdownApiResponse, ExpenseApiResponse, InvoiceApiResponse, InvoiceDropdownApiResponse, LocationApiResponse, LoyaltyApiResponse, LoyaltyDropdownApiResponse, LoyaltyPointsApiResponse, MaterialConsumptionApiResponse, ModuleApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, PosCashRegisterApiResponse, PosCashRegisterDropdownApiResponse, PosCreditNoteApiResponse, PosOrderApiResponse, PosOrderDropdownApiResponse, PosPaymentApiResponse, PrefixApiResponse, PrefixDropdownApiResponse, ProductApiResponse, ProductDropDownApiResponse, ProductTypeApiResponse, ProductTypeDropdownApiResponse, PurchaseDebitNoteApiResponse, PurchaseDebitNoteDropdownApiResponse, PurchaseOrderApiResponse, PurchaseOrderDropdownApiResponse, RecipeApiResponse, RecipeDropdownApiResponse, RolesApiResponse, RolesDropdownApiResponse, SalaryApiResponse, SalesCreditNoteApiResponse, SalesCreditNoteDropdownApiResponse, SalesOrderApiResponse, SalesOrderDropdownApiResponse, SingleCompanyApiResponse, SingleDeliveryChallanApiResponse, SingleEmployeeApiResponse, SingleInvoiceApiResponse, SinglePurchaseDebitNoteApiResponse, SingleSalesCreditNoteApiResponse, StockApiResponse, StockVerificationApiResponse, SupplierBillApiResponse, TaxApiResponse, TaxDropdownApiResponse, TermsConditionApiResponse, TermsConditionDropdownApiResponse, UomApiResponse, UomDropdownApiResponse, UploadResponse, UserApiResponse, UserModulePermissionApiResponse } from "../Types";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 
@@ -9,7 +9,7 @@ export const Queries = {
   useGetUploadPdf: (options?: AppQueryOptions<UploadResponse>) => useQueries<UploadResponse>([KEYS.UPLOAD.ALL_PDF], () => Get(URL_KEYS.UPLOAD.ALL_PDF), options),
 
   // ************ User ***********
-  useGetUser: (params?: Params, enabled?: boolean) => useQueries<UserApiResponse>([KEYS.USER.BASE, params], () => Get(URL_KEYS.USER.ALL, params),{enabled: enabled}),
+  useGetUser: (params?: Params, enabled?: boolean) => useQueries<UserApiResponse>([KEYS.USER.BASE, params], () => Get(URL_KEYS.USER.ALL, params), { enabled: enabled }),
   useGetSingleUser: (id?: string) => useQueries<SingleEmployeeApiResponse>([KEYS.USER.BASE, id], () => Get(`${URL_KEYS.USER.BASE}/${id}`), { enabled: !!id }),
   useGetUserDropdown: (params?: Params, enabled?: boolean) => useQueries<SingleEmployeeApiResponse>([KEYS.USER.DROPDOWN, params], () => Get(URL_KEYS.USER.DROPDOWN, params), { enabled: enabled }),
 
@@ -19,11 +19,11 @@ export const Queries = {
 
   // ************ Company ***********
   useGetSingleCompany: (id?: string) => useQueries<SingleCompanyApiResponse>([KEYS.COMPANY.BASE, id], () => Get(`${URL_KEYS.COMPANY.BASE}/${id}`), { enabled: !!id }),
-  useGetCompany: (params?: Params, enabled?: boolean) => useQueries<CompanyApiResponse>([KEYS.COMPANY.BASE, params], () => Get(URL_KEYS.COMPANY.ALL, params),{enabled: enabled}),
+  useGetCompany: (params?: Params, enabled?: boolean) => useQueries<CompanyApiResponse>([KEYS.COMPANY.BASE, params], () => Get(URL_KEYS.COMPANY.ALL, params), { enabled: enabled }),
   useGetCompanyDropdown: (params?: Params) => useQueries<CompanyDropdownApiResponse>([KEYS.COMPANY.BASE, params], () => Get(URL_KEYS.COMPANY.DROPDOWN, params)),
 
   // ************ Branch ***********
-  useGetBranch: (params?: Params, enabled?: boolean) => useQueries<BranchApiResponse>([KEYS.BRANCH.BASE, params], () => Get(URL_KEYS.BRANCH.ALL, params),{enabled: enabled}),
+  useGetBranch: (params?: Params, enabled?: boolean) => useQueries<BranchApiResponse>([KEYS.BRANCH.BASE, params], () => Get(URL_KEYS.BRANCH.ALL, params), { enabled: enabled }),
   useGetBranchDropdown: (params?: Params, enabled?: boolean) => useQueries<BranchDropdownApiResponse>([KEYS.BRANCH.BASE, params], () => Get(URL_KEYS.BRANCH.DROPDOWN, params), { enabled: enabled }),
 
   // ************ Brand ***********
@@ -128,7 +128,7 @@ export const Queries = {
   useGetLoyaltyPoints: (params?: Params, enabled?: boolean) => useQueries<LoyaltyPointsApiResponse>([KEYS.LOYALTY.BASE, params], () => Get(URL_KEYS.LOYALTY.POINTS, params), { enabled: enabled }),
 
   //************ Support Desk ********/
-  useGetCallRequest: (params?: Params, enabled?: boolean) => useQueries<CallRequestApiResponse>([KEYS.CALL_REQUEST.BASE, params], () => Get(URL_KEYS.CALL_REQUEST.ALL, params),{enabled: enabled}),
+  useGetCallRequest: (params?: Params, enabled?: boolean) => useQueries<CallRequestApiResponse>([KEYS.CALL_REQUEST.BASE, params], () => Get(URL_KEYS.CALL_REQUEST.ALL, params), { enabled: enabled }),
 
   //************ Admin Setting ********/
   useGetAdminSetting: (params?: Params) => useQueries<AdminSettingApiResponse>([KEYS.ADMIN_SETTING.BASE, params], () => Get(URL_KEYS.ADMIN_SETTING.ALL, params)),
@@ -186,4 +186,7 @@ export const Queries = {
   useGetPrefix: (params?: Params, enabled?: boolean) => useQueries<PrefixApiResponse>([KEYS.PREFIX.BASE, params], () => Get(URL_KEYS.PREFIX.ALL, params), { enabled: enabled }),
   useGetPrefixDropdown: (params?: Params, enabled?: boolean) => useQueries<PrefixDropdownApiResponse>([KEYS.PREFIX.BASE, params], () => Get(URL_KEYS.PREFIX.DROPDOWN, params), { enabled: enabled }),
 
+  //*************** Consumption Type **************** */
+  useGetConsumptionType: (params?: Params, enabled?: boolean) => useQueries<ConsumptionTypeApiResponse>([KEYS.CONSUMPTION_TYPE.BASE, params], () => Get(URL_KEYS.CONSUMPTION_TYPE.ALL, params), { enabled: enabled }),
+  useGetConsumptionTypeDropdown: (params?: Params, enabled?: boolean) => useQueries<ConsumptionTypeDropdownApiResponse>([KEYS.CONSUMPTION_TYPE.BASE, params], () => Get(URL_KEYS.CONSUMPTION_TYPE.DROPDOWN, params), { enabled: enabled }),
 };

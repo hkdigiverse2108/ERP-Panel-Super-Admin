@@ -400,4 +400,11 @@ export const URL_KEYS = {
     ADD: "/prefix/add",
     EDIT: "/prefix/edit",
   },
+  CONSUMPTION_TYPE: {
+    BASE: "/consumption-type",
+    DROPDOWN: "/consumption-type/dropdown",
+    ALL: "/consumption-type/all",
+    ADD: "/consumption-type/add",
+    EDIT: "/consumption-type/edit",
+  },
 } as const;
