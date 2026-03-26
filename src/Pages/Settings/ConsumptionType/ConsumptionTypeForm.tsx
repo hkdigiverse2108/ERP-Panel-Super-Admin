@@ -24,6 +24,7 @@ const ConsumptionTypeForm = () => {
   const pageMode = isEditing ? "EDIT" : "ADD";
 
   const initialValues: ConsumptionTypeFormValues = {
+    companyId: isEdit?.companyId?._id || "",
     name: isEdit?.name || "",
     isActive: isEdit?.isActive ?? true,
   };
