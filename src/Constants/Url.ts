@@ -407,4 +407,11 @@ export const URL_KEYS = {
     ADD: "/consumption-type/add",
     EDIT: "/consumption-type/edit",
   },
+  PAYMENT_TERM: {
+    BASE: "/payment-terms",
+    DROPDOWN: "/payment-terms/dropdown",
+    ALL: "/payment-terms/all",
+    ADD: "/payment-terms/add",
+    EDIT: "/payment-terms/edit",
+  }
 } as const;

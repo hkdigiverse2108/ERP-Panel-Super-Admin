@@ -18,6 +18,7 @@ import type { Theme } from "@emotion/react";
 import type { ProductTypeBase } from "./ProductType";
 import type { PrefixBase } from "./Prefix";
 import type { ConsumptionTypeBase } from "./ConsumptionType";
+import type { PaymentTermsBase } from "./PaymentTerms";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -514,6 +515,7 @@ export interface ModalStateSlice {
   };
   isPrefixModal: { open: boolean; data: PrefixBase | null };
   isConsumptionTypeModal: { open: boolean; data: ConsumptionTypeBase | null };
+  isPaymentTermsModal: { open: boolean; data: PaymentTermsBase | null };
 }
 
 // ************ Modal End ***********

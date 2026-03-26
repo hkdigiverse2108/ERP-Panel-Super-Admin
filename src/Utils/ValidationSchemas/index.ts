@@ -859,6 +859,12 @@ export const PrefixFormSchema = Yup.object({
 });
 
 export const ConsumptionTypeFormSchema = Yup.object({
-  companyId: Validation("string", "Company", {required: false}),
+  companyId: Validation("string", "Company", { required: false }),
   name: Validation("string", "Consumption Type Name"),
+});
+
+export const PaymentTermsFormSchema = Yup.object({
+  companyId: Validation("string", "Company", { required: false }),
+  name: Validation("string", "Payment Terms Name"),
+  day: Validation("number", "Payment Terms Day", { extraRules: (s) => s.min(1, "Payment Terms Day must be at least 1") }),
 });

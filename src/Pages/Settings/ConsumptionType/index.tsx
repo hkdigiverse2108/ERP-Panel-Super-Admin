@@ -71,7 +71,7 @@ const ConsumptionType = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.CONSUMPTION_TYPE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.CALL_REQUEST.BASE} />
+      <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.CONSUMPTION_TYPE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.CONSUMPTION_TYPE.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>

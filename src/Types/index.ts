@@ -53,3 +53,4 @@ export * from "./Uom";
 export * from "./User";
 export * from "./Prefix";
 export * from "./ConsumptionType";
+export * from "./PaymentTerms";

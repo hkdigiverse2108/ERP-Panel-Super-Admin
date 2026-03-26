@@ -159,6 +159,11 @@ export const PAGE_TITLE = {
       ADD: "Add Consumption Type",
       EDIT: "Edit Consumption Type",
     },
+    PAYMENT_TERMS:{
+      BASE: "Payment Terms",
+      ADD: "Add Payment Terms",
+      EDIT: "Edit Payment Terms",
+    }
   },
   CONTACT: {
     BASE: "Contact",

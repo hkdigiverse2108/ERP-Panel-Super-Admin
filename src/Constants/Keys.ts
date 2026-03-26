@@ -361,4 +361,10 @@ export const KEYS = {
     EDIT: "consumption-type-edit",
     DELETE: "consumption-type-delete",
   },
+  PAYMENT_TERM: {
+    BASE: "payment-terms",
+    ADD: "payment-terms-add",
+    EDIT: "payment-terms-edit",
+    DELETE: "payment-terms-delete",
+  },
 };

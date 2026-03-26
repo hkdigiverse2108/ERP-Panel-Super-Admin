@@ -204,5 +204,9 @@ export const ROUTES = {
   CONSUMPTION_TYPE:{
     BASE: "/consumption-type",
     ADD_EDIT: "/consumption-type/add-edit",
-  }
+  },
+  PAYMENT_TERMS:{
+    BASE: "/payment-terms",
+    ADD_EDIT: "/payment-terms/add-edit",
+  },
 } as const;
