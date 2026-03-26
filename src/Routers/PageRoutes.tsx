@@ -87,6 +87,7 @@ import SalesCreditNote from "../Pages/Sales/SalesCreditNote";
 import SalesCreditNoteForm from "../Pages/Sales/SalesCreditNote/SalesCreditNoteForm";
 import SalesRegister from "../Pages/Pos/SalesRegister";
 import Profile from "../Pages/Settings/Profile";
+import Prefix from "../Pages/Settings/Prefix";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -225,7 +226,7 @@ export const PageRoutes = [
   { path: ROUTES.SALES_CREDIT_NOTE.BASE, name: PAGE_TITLE.SALES_CREDIT_NOTE.BASE, element: <SalesCreditNote /> },
   { path: ROUTES.SALES_CREDIT_NOTE.ADD_EDIT, name: PAGE_TITLE.SALES_CREDIT_NOTE.BASE, element: <SalesCreditNoteForm /> },
 
-
+  { path: ROUTES.PREFIX.BASE, name: PAGE_TITLE.SETTINGS.PREFIX.BASE, element: <Prefix /> },
   
 ];
 

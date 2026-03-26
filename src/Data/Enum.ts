@@ -467,3 +467,36 @@ export const PAYMENT_TYPE_OPTIONS = [
   { label: "Advance", value: "advance" },
   { label: "On_Account", value: "on_account" },
 ];
+
+export const PREFIX_MODULES = {
+  INVOICE: "Invoice",
+  PURCHASE_ORDER: "Purchase_Order",
+  SALES_ORDER: "Sales_Order",
+  ESTIMATE: "Estimate",
+  DELIVERY_CHALLAN: "Delivery_Challan",
+  PURCHASE_DEBIT_NOTE: "Purchase_Debit_Note",
+  SALES_CREDIT_NOTE: "Sales_Credit_Note",
+  POS_ORDER: "POS_Order",
+  POS_CREDIT_NOTE: "POS_Credit_Note",
+  RECEIPT: "Receipt",
+  PAYMENT: "Payment",
+  EXPENSE: "Expense",
+  JOURNAL_VOUCHER: "Journal_Voucher",
+  CONTRA_VOUCHER: "Contra_Voucher",
+  SUPPLIER_BILL: "Supplier_Bill",
+  MATERIAL_CONSUMPTION: "Material_Consumption",
+  STOCK_VERIFICATION: "Stock_Verification",
+  STOCK: "Stock",
+  RETURN_POS_ORDER: "Return_POS_Order",
+  RECIPE: "Recipe",
+  POS_PAYMENT: "POS_Payment",
+  POS_CASH_REGISTER: "POS_Cash_Register",
+  DEBIT_NOTE: "Debit_Note",
+  CREDIT_NOTE: "Credit_Note",
+  BANK_TRANSACTION: "Bank_Transaction",
+} as const;
+
+export const PREFIX_MODULES_OPTIONS = Object.values(PREFIX_MODULES).map((value) => ({
+  label: value.split("_").join(" "),
+  value: value,
+}));
