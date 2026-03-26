@@ -1,4 +1,5 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { CompanyBase } from "./Company";
 import type { ProductBase } from "./Product";
 import type { RecipeBase } from "./Recipe";
 
@@ -44,10 +45,11 @@ export type EditBillOfLiveProductPayload = AddBillOfLiveProductPayload & { billO
 
 /* ================= BASE ================= */
 
-export interface BillOfLiveProductBase extends Omit<BillOfLiveProductFormValues, "recipeId" | "productId" | "productDetails">, CommonDataType {
+export interface BillOfLiveProductBase extends Omit<BillOfLiveProductFormValues, "recipeId" | "productId" | "productDetails" | "companyId">, CommonDataType {
   recipeId?: RecipeBase[];
   productId: ProductBase;
   productDetails?: BillOfLiveProductDetail[];
+  companyId?: CompanyBase;
 }
 
 /* ================= API RESPONSE ================= */

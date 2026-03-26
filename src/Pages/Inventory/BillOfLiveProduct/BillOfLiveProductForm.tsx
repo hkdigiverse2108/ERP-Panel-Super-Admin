@@ -2,7 +2,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { Box, Grid } from "@mui/material";
 import { Form, Formik, useFormikContext } from "formik";
 import type { FormikProps } from "formik";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Mutations, Queries } from "../../../Api";
 import { CommonButton, CommonTextField, CommonValidationDatePicker, CommonValidationTextField, CommonDatePicker, CommonValidationSelect, CommonValidationSwitch } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonTable } from "../../../Components/Common";
@@ -53,6 +53,14 @@ const RecipeWatcher = ({ onChange }: { onChange: (ids: string[]) => void }) => {
   return null;
 };
 
+const CompanyWatcher = ({ onChange }: { onChange: (id: string) => void }) => {
+  const { values } = useFormikContext<BillOfLiveProductFormValues>();
+  useEffect(() => {
+    onChange(values.companyId || "");
+  }, [values.companyId, onChange]);
+  return null;
+};
+
 const BOLP_PREFIX = "BOLP";
 const parseBimNumber = (value?: string) => {
   if (!value) return "";
@@ -69,23 +77,20 @@ const BillOfLiveProductForm = () => {
     data?: BillOfLiveProductBase;
     no?: number;
   };
-
-  const { data: recipeData, isLoading: recipeLoading, isFetching: recipeFetching } = Queries.useGetRecipe({ activeFilter: true });
-  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
-
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE);
 
   const isEditing = Boolean(data?._id);
 
   const [rows, setRows] = useState<BomRow[]>([]);
+  const [selectedCompany, setSelectedCompany] = useState(data?.companyId?._id || "");
+  const { data: recipeData, isLoading: recipeLoading, isFetching: recipeFetching } = Queries.useGetRecipe({ activeFilter: true, companyFilter: selectedCompany }, !!selectedCompany);
+  const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
 
   const pageMode = isEditing ? "EDIT" : "ADD";
-
   const bomNumber = isEditing ? data?.number : String((Number(no) || 0) + 1);
 
   const { mutate: addBOM, isPending: isAddLoading } = Mutations.useAddBillOfLiveProduct();
-
   const { mutate: editBOM, isPending: isEditLoading } = Mutations.useEditBillOfLiveProduct();
 
   const formikRef = useRef<FormikProps<BillOfLiveProductFormValues> | null>(null);
@@ -200,17 +205,17 @@ const BillOfLiveProductForm = () => {
       prev.map((row) =>
         row.id === rowId
           ? {
-            ...row,
-            rawProducts: row.rawProducts?.map((raw, i) =>
-              i === index
-                ? {
-                  ...raw,
-                  useQty: value,
-                  baseUseQty: value / row.qty,
-                }
-                : raw,
-            ),
-          }
+              ...row,
+              rawProducts: row.rawProducts?.map((raw, i) =>
+                i === index
+                  ? {
+                      ...raw,
+                      useQty: value,
+                      baseUseQty: value / row.qty,
+                    }
+                  : raw,
+              ),
+            }
           : row,
       ),
     );
@@ -231,15 +236,13 @@ const BillOfLiveProductForm = () => {
 
   /* ---------------- FORM ---------------- */
 
-  const initialValues: BillOfLiveProductFormValues = useMemo(
-    () => ({
-      number: isEditing ? parseBimNumber(data?.number) : bomNumber,
-      date: isEditing ? data?.date : DateConfig.utc().toISOString(),
-      allowReverseCalculation: data?.allowReverseCalculation ?? false,
-      recipeId: data?.recipeId?.map((b: RecipeBase) => b._id) ?? [],
-    }),
-    [isEditing, bomNumber, data?.number, data?.date, data?.allowReverseCalculation, data?.recipeId],
-  );
+  const initialValues: BillOfLiveProductFormValues = {
+    companyId: data?.companyId?._id || "",
+    number: isEditing ? parseBimNumber(data?.number) : bomNumber,
+    date: isEditing ? data?.date : DateConfig.utc().toISOString(),
+    allowReverseCalculation: data?.allowReverseCalculation ?? false,
+    recipeId: data?.recipeId?.map((b: RecipeBase) => b._id) ?? [],
+  };
 
   const syncRowsFromRecipeIds = useCallback(
     (ids: string[]) => {
@@ -273,7 +276,7 @@ const BillOfLiveProductForm = () => {
     if (isEditing) {
       editBOM({ billOfLiveProductId: data!._id, recipeId: values.recipeId, productDetails, number: formatBimNumber(values.number) }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
     } else {
-      addBOM({ number: formatBimNumber(values.number), date: values.date, allowReverseCalculation: values.allowReverseCalculation, recipeId: values.recipeId, productDetails }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
+      addBOM({ companyId: values.companyId, number: formatBimNumber(values.number), date: values.date, allowReverseCalculation: values.allowReverseCalculation, recipeId: values.recipeId, productDetails }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
     }
   };
   useEffect(() => {
@@ -284,92 +287,88 @@ const BillOfLiveProductForm = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT[pageMode]} breadcrumbs={BREADCRUMBS.BILL_OF_LIVE_PRODUCT[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2, mb: 10 }}>
-        <CommonCard hideDivider>
-          <Grid container spacing={2} sx={{ p: 2 }}>
-            <Grid size={12}>
-              <Formik enableReinitialize={isEditing} innerRef={formikRef} initialValues={initialValues} onSubmit={handleSubmit}>
-                {() => (
-                  <Form noValidate>
-                    <RecipeWatcher onChange={syncRowsFromRecipeIds} />
+        <Formik enableReinitialize={isEditing} innerRef={formikRef} initialValues={initialValues} onSubmit={handleSubmit}>
+          {({ values }) => (
+            <Form noValidate>
+              <RecipeWatcher onChange={syncRowsFromRecipeIds} />
+              <CompanyWatcher onChange={setSelectedCompany} />
+              <CommonCard hideDivider>
+                <Grid container spacing={2} sx={{ p: 2 }}>
+                  <Grid size={12}>
                     <Grid container spacing={2}>
                       <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 4 }} required />
                       <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 4 }} />
                       <CommonValidationTextField name="text" label="BOLP" disabled grid={{ xs: 12, md: 4 }} />
                       <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 4 }} />
-                      <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 4 }} options={GenerateOptions(recipeData?.data?.recipe_data || [])} isLoading={recipeLoading || recipeFetching} />
+                      <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 4 }} options={GenerateOptions(recipeData?.data?.recipe_data || [])} isLoading={recipeLoading || recipeFetching} disabled={!values.companyId} />
                       <CommonValidationSwitch name="allowReverseCalculation" label="Allow Reverse Calculation" />
                     </Grid>
-                  </Form>
-                )}
-              </Formik>
-            </Grid>
+                  </Grid>
 
-            {/* ================= TABLE ================= */}
-            <Grid size={12}>
-              <CommonCard title="Product Details">
-                <Box sx={{ display: "grid", gap: 3, p: 2 }}>
-                  {rows.map((row) => {
-                    const recipe = recipeData?.data?.recipe_data.find((r) => r._id === row.recipeId);
+                  {/* ================= TABLE ================= */}
+                  <Grid size={12}>
+                    <CommonCard title="Product Details">
+                      <Box sx={{ display: "grid", gap: 3, p: 2 }}>
+                        {rows.map((row) => {
+                          const recipe = recipeData?.data?.recipe_data.find((r) => r._id === row.recipeId);
 
-                    const productColumns: CommonTableColumn<BomRow>[] = [
-                      { key: "sr", header: "Sr No", render: (_, idx) => idx + 1, bodyClass: "w-10" },
-                      { key: "name", header: "Product", bodyClass: "text-start min-w-40", render: (r) => r.name },
-                      { key: "qty", header: "Qty", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.qty} onChange={(v) => handleQtyChange(r.id, Number(v))} /> },
-                      { key: "purchasePrice", header: "Purchase Price", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.purchasePrice} onChange={(v) => updateRow(r.id, { purchasePrice: Number(v) })} /> },
-                      { key: "landingCost", header: "Landing Cost", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.landingCost} onChange={(v) => updateRow(r.id, { landingCost: Number(v) })} /> },
-                      { key: "mrp", header: "MRP", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.mrp} onChange={(v) => updateRow(r.id, { mrp: Number(v) })} /> },
-                      { key: "sellingPrice", header: "Selling Price", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.sellingPrice} onChange={(v) => updateRow(r.id, { sellingPrice: Number(v) })} /> },
-                      { key: "mfgDate", header: "MFG Date", bodyClass: "min-w-30", render: (r) => <CommonDatePicker name="mfgDate" value={r.mfgDate} onChange={(v) => updateRow(r.id, { mfgDate: v })} /> },
-                      { key: "expiryDays", header: "Expiry Days", render: (r) => r.expiryDays },
-                      { key: "expDate", header: "EXP Date", bodyClass: "min-w-30", render: (r) => <CommonDatePicker name="expDate" value={r.expDate ?? ""} onChange={(v) => updateRow(r.id, { expDate: v })} /> },
-                      {
-                        key: "actions",
-                        header: "Action",
-                        render: (r) => (
-                          <CommonButton size="small" color="error" variant="outlined" onClick={() => handleCut(r.recipeId)}>
-                            <ClearIcon />
-                          </CommonButton>
-                        ),
-                      },
-                    ];
+                          const productColumns: CommonTableColumn<BomRow>[] = [
+                            { key: "sr", header: "Sr No", render: (_, idx) => idx + 1, bodyClass: "w-10" },
+                            { key: "name", header: "Product", bodyClass: "text-start min-w-40", render: (r) => r.name },
+                            { key: "qty", header: "Qty", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.qty} onChange={(v) => handleQtyChange(r.id, Number(v))} /> },
+                            { key: "purchasePrice", header: "Purchase Price", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.purchasePrice} onChange={(v) => updateRow(r.id, { purchasePrice: Number(v) })} /> },
+                            { key: "landingCost", header: "Landing Cost", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.landingCost} onChange={(v) => updateRow(r.id, { landingCost: Number(v) })} /> },
+                            { key: "mrp", header: "MRP", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.mrp} onChange={(v) => updateRow(r.id, { mrp: Number(v) })} /> },
+                            { key: "sellingPrice", header: "Selling Price", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.sellingPrice} onChange={(v) => updateRow(r.id, { sellingPrice: Number(v) })} /> },
+                            { key: "mfgDate", header: "MFG Date", bodyClass: "min-w-30", render: (r) => <CommonDatePicker name="mfgDate" value={r.mfgDate} onChange={(v) => updateRow(r.id, { mfgDate: v })} /> },
+                            { key: "expiryDays", header: "Expiry Days", render: (r) => r.expiryDays },
+                            { key: "expDate", header: "EXP Date", bodyClass: "min-w-30", render: (r) => <CommonDatePicker name="expDate" value={r.expDate ?? ""} onChange={(v) => updateRow(r.id, { expDate: v })} /> },
+                            {
+                              key: "actions",
+                              header: "Action",
+                              render: (r) => (
+                                <CommonButton size="small" color="error" variant="outlined" onClick={() => handleCut(r.recipeId)}>
+                                  <ClearIcon />
+                                </CommonButton>
+                              ),
+                            },
+                          ];
 
-                    const rawColumns: CommonTableColumn<{ productId: ProductBase; availableQty: number; useQty: number }>[] = [
-                      { key: "sr", header: "Sr No", render: (_, idx) => idx + 1, bodyClass: "w-10" },
-                      { key: "name", header: "Raw Product", bodyClass: "text-start min-w-60", render: (raw) => raw.productId?.name },
-                      { key: "availableQty", header: "Available Qty", render: (raw) => raw.availableQty },
-                      { key: "useQty", header: "Use Qty", bodyClass: "min-w-30", render: (raw, index) => <CommonTextField type="number" value={raw.useQty ?? 0} onChange={(v) => updateRawQty(row.id, index, Number(v))} /> },
-                    ];
+                          const rawColumns: CommonTableColumn<{ productId: ProductBase; availableQty: number; useQty: number }>[] = [
+                            { key: "sr", header: "Sr No", render: (_, idx) => idx + 1, bodyClass: "w-10" },
+                            { key: "name", header: "Raw Product", bodyClass: "text-start min-w-60", render: (raw) => raw.productId?.name },
+                            { key: "availableQty", header: "Available Qty", render: (raw) => raw.availableQty },
+                            { key: "useQty", header: "Use Qty", bodyClass: "min-w-30", render: (raw, index) => <CommonTextField type="number" value={raw.useQty ?? 0} onChange={(v) => updateRawQty(row.id, index, Number(v))} /> },
+                          ];
 
-                    return (
-                      <Box key={row.id} sx={{ border: "1px solid", borderColor: "divider", borderRadius: 1, overflow: "hidden" }}>
-                        {/* Recipe Header */}
-                        <Box sx={{ p: 1.5, bgcolor: "action.hover", borderBottom: "1px solid", borderColor: "divider", fontWeight: "bold", color: "text.primary" }}>{recipe?.name}</Box>
-
-                        {/* Final Product Table */}
-                        <Box sx={{ overflowX: "auto" }} className="custom-scrollbar">
-                          <CommonTable data={[row]} columns={productColumns} rowKey={(r) => r.id} />
-                        </Box>
-
-                        {/* Raw Materials Section */}
-                        {row.rawProducts?.length ? (
-                          <Box sx={{ p: 2, bgcolor: "action.hover" }}>
-                            <Box sx={{ mb: 1, fontWeight: "500", fontSize: "0.875rem" }}>Raw Materials</Box>
-                            <Box sx={{ bgcolor: "background.paper", borderRadius: 1, border: "1px solid", borderColor: "divider", overflow: "hidden" }}>
+                          return (
+                            <Box key={row.id} sx={{ border: "1px solid", borderColor: "divider", borderRadius: 1, overflow: "hidden" }}>
+                              <Box sx={{ p: 1.5, bgcolor: "action.hover", borderBottom: "1px solid", borderColor: "divider", fontWeight: "bold", color: "text.primary" }}>{recipe?.name}</Box>
                               <Box sx={{ overflowX: "auto" }} className="custom-scrollbar">
-                                <CommonTable data={row.rawProducts} columns={rawColumns} rowKey={(_, idx) => idx.toString()} />
+                                <CommonTable data={[row]} columns={productColumns} rowKey={(r) => r.id} />
                               </Box>
+                              {row.rawProducts?.length ? (
+                                <Box sx={{ p: 2, bgcolor: "action.hover" }}>
+                                  <Box sx={{ mb: 1, fontWeight: "500", fontSize: "0.875rem" }}>Raw Materials</Box>
+                                  <Box sx={{ bgcolor: "background.paper", borderRadius: 1, border: "1px solid", borderColor: "divider", overflow: "hidden" }}>
+                                    <Box sx={{ overflowX: "auto" }} className="custom-scrollbar">
+                                      <CommonTable data={row.rawProducts} columns={rawColumns} rowKey={(_, idx) => idx.toString()} />
+                                    </Box>
+                                  </Box>
+                                </Box>
+                              ) : null}
                             </Box>
-                          </Box>
-                        ) : null}
+                          );
+                        })}
                       </Box>
-                    );
-                  })}
-                </Box>
+                    </CommonCard>
+                  </Grid>
+                  <CommonBottomActionBar save isLoading={isAddLoading || isEditLoading} onSave={() => formikRef.current?.submitForm()} />
+                </Grid>
               </CommonCard>
-            </Grid>
-            <CommonBottomActionBar save isLoading={isAddLoading || isEditLoading} onSave={() => formikRef.current?.submitForm()} />
-          </Grid>
-        </CommonCard>
+            </Form>
+          )}
+        </Formik>
       </Box>
     </>
   );
