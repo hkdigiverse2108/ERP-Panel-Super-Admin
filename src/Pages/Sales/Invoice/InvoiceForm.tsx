@@ -44,7 +44,7 @@ const InvoiceForm = () => {
     placeOfSupply: data?.placeOfSupply || "",
     billingAddress: typeof data?.billingAddress === "object" ? data.billingAddress?._id : data?.billingAddress || "",
     shippingAddress: typeof data?.shippingAddress === "object" ? data.shippingAddress?._id : data?.shippingAddress || "",
-    paymentTerms: data?.paymentTerms || "",
+    paymentTermsId: typeof data?.paymentTermsId === "object" ? data.paymentTermsId?._id : data?.paymentTermsId || "",
     taxType: data?.taxType || "default",
     reverseCharge: data?.reverseCharge !== undefined ? String(data.reverseCharge) : "false",
     createdFrom: data?.createdFrom || "sales-order",

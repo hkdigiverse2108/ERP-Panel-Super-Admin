@@ -38,7 +38,7 @@ export interface SalesOrderFormValues {
   placeOfSupply?: string;
   billingAddress?: string;
   shippingAddress?: string;
-  paymentTerms?: string;
+  paymentTermsId?: string;
   taxType?: string;
   reverseCharge?: boolean | string;
   // sez?: string;

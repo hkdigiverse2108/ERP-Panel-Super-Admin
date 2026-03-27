@@ -1,6 +1,7 @@
 import type { BranchBase } from "./Branch";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { CompanyBase } from "./Company";
+import type { ConsumptionTypeBase } from "./ConsumptionType";
 import type { ProductBase } from "./Product";
 
 export interface MaterialConsumptionRow {
@@ -18,7 +19,6 @@ export interface MaterialConsumptionFormValues {
   branchId?: string;
   number?: string;
   date?: string;
-  type?: string;
   remark?: string;
   items?: MaterialConsumptionRow[];
   totalQty?: number;
@@ -31,9 +31,10 @@ export type AddMaterialConsumptionPayload = MaterialConsumptionFormValues;
 
 export type EditMaterialConsumptionPayload = MaterialConsumptionFormValues & { materialConsumptionId?: string };
 
-export interface MaterialConsumptionBase extends Omit<MaterialConsumptionFormValues, "companyId" | "branchId" | "items">, CommonDataType {
+export interface MaterialConsumptionBase extends Omit<MaterialConsumptionFormValues, "companyId" | "branchId" | "items"| "consumptionTypeId">, CommonDataType {
   companyId: CompanyBase;
   branchId: BranchBase;
+  consumptionTypeId?: ConsumptionTypeBase;
   items: (Omit<MaterialConsumptionItem, "productId"> & {
     productId: ProductBase;
   })[];

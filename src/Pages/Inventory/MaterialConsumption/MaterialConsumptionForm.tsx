@@ -7,7 +7,7 @@ import { Mutations, Queries } from "../../../Api";
 import { CommonButton, CommonSelect, CommonTextField, CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { BREADCRUMBS, CONSUMPTION_TYPE } from "../../../Data";
+import { BREADCRUMBS } from "../../../Data";
 import type { MaterialConsumptionBase, MaterialConsumptionFormValues, MaterialConsumptionItem, MaterialConsumptionRow, ProductBase } from "../../../Types";
 import { DateConfig, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
@@ -22,21 +22,20 @@ const MaterialConsumptionForm = () => {
   const [rows, setRows] = useState<MaterialConsumptionItem[]>([]);
 
   const { data: companyData, isLoading: companyLoading } = Queries.useGetCompanyDropdown();
-
   const { mutate: addMaterialConsumption, isPending: isAddLoading } = Mutations.useAddMaterialConsumption();
   const { mutate: editMaterialConsumption, isPending: isEditLoading } = Mutations.useEditMaterialConsumption();
-// console.log(data);
+  // console.log(data);
 
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
 
   const initialValues = useMemo<MaterialConsumptionFormValues>(
     () => ({
+      consumptionTypeId: data?.consumptionTypeId?._id || "",
       companyId: data?.companyId?._id || "",
       branchId: data?.branchId?._id || "",
       number: data?.number || "",
       date: data?.date || DateConfig.utc().toISOString(),
-      type: data?.type || "",
       remark: data?.remark || "",
       isActive: data?.isActive ?? true,
     }),
@@ -147,8 +146,8 @@ const MaterialConsumptionForm = () => {
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       {isEditing && <CommonValidationTextField name="number" label="Consumption No" grid={{ xs: 12, sm: 6, md: 3 }} disabled />}
                       <CommonValidationSelect name="companyId" label="Select Company" options={GenerateOptions(companyData?.data)} isLoading={companyLoading} grid={{ xs: 12, sm: 6, md: 3 }} required />
-                      <DependentSelect name="branchId" label="Select Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, sm: 6, md: 3 }}  required/>
-                      <CommonValidationSelect name="type" label="Select Type" options={CONSUMPTION_TYPE} grid={{ xs: 12, sm: 6, md: 3 }} />
+                      <DependentSelect name="branchId" label="Select Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, sm: 6, md: 3 }} required />
+                      <DependentSelect name="consumptionTypeId" label="Select Type" query={Queries.useGetConsumptionTypeDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, sm: 6, md: 3 }} />
                       <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, sm: isEditing ? 12 : 6, md: 3 }} required />
                       <CommonValidationTextField name="remark" label="Remark" grid={{ xs: 12, md: isEditing ? 9 : 12 }} multiline />
                       {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}

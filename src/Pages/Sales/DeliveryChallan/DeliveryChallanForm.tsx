@@ -43,7 +43,7 @@ const DeliveryChallanForm = () => {
     placeOfSupply: data?.placeOfSupply || "",
     billingAddress: typeof data?.billingAddress === "object" ? data.billingAddress?._id : data?.billingAddress || "",
     shippingAddress: typeof data?.shippingAddress === "object" ? data.shippingAddress?._id : data?.shippingAddress || "",
-    paymentTerms: data?.paymentTerms || "",
+    paymentTermsId: typeof data?.paymentTermsId === "object" ? data.paymentTermsId?._id : data?.paymentTermsId || "",
     taxType: data?.taxType || "default",
     createdFrom: data?.createdFrom || "",
     selectedSalesOrderId: data?.salesOrderIds?.map((so: string | { _id: string }) => (typeof so === "object" ? so?._id : so)) || [],

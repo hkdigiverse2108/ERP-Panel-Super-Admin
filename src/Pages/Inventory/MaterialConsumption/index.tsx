@@ -37,7 +37,7 @@ const MaterialConsumption = () => {
     CommonObjectNameColumn<MaterialConsumptionBase>("companyId", { headerName: "Company", width: 200 }),
     CommonObjectNameColumn<MaterialConsumptionBase>("branchId", { headerName: "Branch", width: 200 }),
     { field: "number", headerName: "MC No.", width: 140 },
-    CommonObjectPropertyColumn<MaterialConsumptionBase>("type", "type", [], { headerName: "Type", width: 140 }),
+    CommonObjectPropertyColumn<MaterialConsumptionBase>("consumptionTypeId", "consumptionTypeId", ["name"], { headerName: "Type", width: 140 }),
     { field: "totalQty", type: "number", headerName: "Total Qty", width: 150 },
     { field: "totalAmount", type: "number", headerName: "Total Amount", width: 150 },
     CommonObjectPropertyColumn<MaterialConsumptionBase>("date", "date", [], { headerName: "Date", width: 120, type: "date" }),

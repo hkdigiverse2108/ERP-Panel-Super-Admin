@@ -1,11 +1,11 @@
 import { Box, Grid, Typography, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { CommonValidationDatePicker, CommonValidationSelect } from "../../../Attribute";
-import { DELIVERY_CHALLAN_CREATED_FROM_OPTIONS, PAYMENT_TERMS_OPTIONS, TAX_TYPE } from "../../../Data";
+import { DELIVERY_CHALLAN_CREATED_FROM_OPTIONS, TAX_TYPE } from "../../../Data";
 import { useFormikContext } from "formik";
-import type { ContactAddressApi, DeliveryChallanFormValues } from "../../../Types";
+import type { ContactAddressApi, DeliveryChallanFormValues, PaymentTermsBase } from "../../../Types";
 import { useState, useEffect, useRef, useMemo } from "react";
-import { AddressSelectionModal } from "../../Common";
+import { AddressSelectionModal, DependentSelect } from "../../Common";
 import { Queries } from "../../../Api";
 import { GenerateOptions, DateConfig } from "../../../Utils";
 
@@ -15,20 +15,35 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
 
   const { data: companyData, isLoading: isCompanyLoading } = Queries.useGetCompanyDropdown();
   const companyOptions = GenerateOptions(companyData?.data || []);
-
+  
+  const { data: paymentTermsData } = Queries.useGetPaymentTermsDropdown();
   const { data: customerData, isLoading: isCustomerLoading, isFetching: isCustomerFetching } = Queries.useGetContactDropdown({ typeFilter: "customer", companyFilter: values?.companyId }, !!values?.companyId);
 
-  const { data: salesOrderData, isLoading: isSalesOrderLoading, isFetching: isSalesOrderFetching } = Queries.useGetSalesOrderDropdown({ 
-    companyFilter: values?.companyId, 
-    customerFilter: values?.customerId,
-    ...(isEditing ? {} : { statusFilter: "pending" })
-  }, !!values?.companyId && !!values?.customerId);
+  const {
+    data: salesOrderData,
+    isLoading: isSalesOrderLoading,
+    isFetching: isSalesOrderFetching,
+  } = Queries.useGetSalesOrderDropdown(
+    {
+      companyFilter: values?.companyId,
+      customerFilter: values?.customerId,
+      ...(isEditing ? {} : { statusFilter: "pending" }),
+    },
+    !!values?.companyId && !!values?.customerId,
+  );
 
-  const { data: invoiceData, isLoading: isInvoiceLoading, isFetching: isInvoiceFetching } = Queries.useGetInvoiceDropdown({ 
-    companyFilter: values?.companyId, 
-    customerFilter: values?.customerId,
-    ...(isEditing ? {} : { statusFilter: "pending" })
-  }, !!values?.companyId && !!values?.customerId);
+  const {
+    data: invoiceData,
+    isLoading: isInvoiceLoading,
+    isFetching: isInvoiceFetching,
+  } = Queries.useGetInvoiceDropdown(
+    {
+      companyFilter: values?.companyId,
+      customerFilter: values?.customerId,
+      ...(isEditing ? {} : { statusFilter: "pending" }),
+    },
+    !!values?.companyId && !!values?.customerId,
+  );
 
   const salesOrderOptions = useMemo(() => GenerateOptions(salesOrderData?.data || []), [salesOrderData]);
   const invoiceOptions = useMemo(() => GenerateOptions(invoiceData?.data || []), [invoiceData]);
@@ -84,26 +99,29 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
   }, [values.billingAddress, selectedCustomer, values.placeOfSupply, setFieldValue]);
 
   const prevDateRef = useRef(values.date);
-  const prevPaymentTermsRef = useRef(values.paymentTerms);
+  const prevPaymentTermsRef = useRef(values.paymentTermsId);
 
   useEffect(() => {
     const dateChanged = values.date !== prevDateRef.current;
-    const termsChanged = values.paymentTerms !== prevPaymentTermsRef.current;
+    const termsChanged = values.paymentTermsId !== prevPaymentTermsRef.current;
 
     if (dateChanged || termsChanged) {
-      if (values.paymentTerms && values.date) {
-        const days = parseInt(values.paymentTerms.split("_")[0]);
-        if (!isNaN(days)) {
-          const newDueDate = DateConfig(values.date).add(days, "day").toISOString();
-          if (values.dueDate !== newDueDate) {
-            setFieldValue("dueDate", newDueDate);
-          }
+      const selectedTerm = paymentTermsData?.data?.find((t: PaymentTermsBase) => t._id === values.paymentTermsId);
+
+      if (selectedTerm && values.date) {
+        const days = selectedTerm.day || 0;
+
+        const newDueDate = DateConfig(values.date).add(days, "day").toISOString();
+
+        if (values.dueDate !== newDueDate) {
+          setFieldValue("dueDate", newDueDate);
         }
       }
-      prevDateRef.current = values.date;
-      prevPaymentTermsRef.current = values.paymentTerms;
     }
-  }, [values.paymentTerms, values.date, values.dueDate, setFieldValue]);
+
+    prevDateRef.current = values.date;
+    prevPaymentTermsRef.current = values.paymentTermsId;
+  }, [values.paymentTermsId, values.date, values.dueDate, paymentTermsData]);
 
   useEffect(() => {
     if (values.createdFrom === "") {
@@ -120,10 +138,15 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
     <Grid container spacing={2} sx={{ p: 2 }}>
       <Grid size={{ xs: 12, md: 3 }} container spacing={2}>
         <CommonValidationSelect name="companyId" label="Select Company" required options={companyOptions} isLoading={isCompanyLoading} grid={{ xs: 12 }} />
-        <Grid size={{ xs: 12, md: 12 }} container spacing={2} sx={{
-          order: { xs: 10, md: 5 },
-          display: { xs: "none", md: "flex" },
-        }}>
+        <Grid
+          size={{ xs: 12, md: 12 }}
+          container
+          spacing={2}
+          sx={{
+            order: { xs: 10, md: 5 },
+            display: { xs: "none", md: "flex" },
+          }}
+        >
           <Grid size={{ xs: 12, md: 12 }}>
             <Box display="flex" flexDirection="column" gap={0.5}>
               <Typography variant="caption" color="text.secondary" fontWeight={600}>
@@ -187,7 +210,7 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
 
         <CommonValidationDatePicker name="date" label="Delivery Challan Date" required grid={{ xs: 12, md: 4 }} />
 
-        <CommonValidationSelect name="paymentTerms" label="Payment Term" options={PAYMENT_TERMS_OPTIONS} grid={{ xs: 12, md: 4 }} />
+        <DependentSelect name="paymentTermsId" label="Payment Term" query={Queries.useGetPaymentTermsDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4 }} />
 
         <CommonValidationDatePicker name="dueDate" label="Due Date" required grid={{ xs: 12, md: 4 }} />
 
@@ -195,16 +218,13 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
 
         <CommonValidationSelect name="createdFrom" label="Created From" options={DELIVERY_CHALLAN_CREATED_FROM_OPTIONS} disabled={isEditing} grid={{ xs: 12, md: 4 }} />
 
-        {values.createdFrom === "sales-order" && (
-          <CommonValidationSelect name="selectedSalesOrderId" label="Reference Sales Order" options={salesOrderOptions} multiple disabled={isEditing || !values.companyId || !values.customerId} isLoading={isSalesOrderLoading || isSalesOrderFetching} grid={{ xs: 12, md: 4 }} />
-        )}
+        {values.createdFrom === "sales-order" && <CommonValidationSelect name="selectedSalesOrderId" label="Reference Sales Order" options={salesOrderOptions} multiple disabled={isEditing || !values.companyId || !values.customerId} isLoading={isSalesOrderLoading || isSalesOrderFetching} grid={{ xs: 12, md: 4 }} />}
 
-        {values.createdFrom === "invoice" && (
-          <CommonValidationSelect name="selectedInvoiceId" label="Reference Invoice" options={invoiceOptions} multiple disabled={isEditing || !values.companyId || !values.customerId} isLoading={isInvoiceLoading || isInvoiceFetching} grid={{ xs: 12, md: 4 }} />
-        )}
+        {values.createdFrom === "invoice" && <CommonValidationSelect name="selectedInvoiceId" label="Reference Invoice" options={invoiceOptions} multiple disabled={isEditing || !values.companyId || !values.customerId} isLoading={isInvoiceLoading || isInvoiceFetching} grid={{ xs: 12, md: 4 }} />}
       </Grid>
 
-      <Grid size={{ xs: 12, md: 12 }}
+      <Grid
+        size={{ xs: 12, md: 12 }}
         container
         spacing={2}
         sx={{

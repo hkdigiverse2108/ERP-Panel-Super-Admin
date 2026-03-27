@@ -319,9 +319,9 @@ export const CreditNoteFormSchema = Yup.object({
 
 export const MaterialConsumptionFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
+  consumptionTypeId: Validation("string", "Consumption Type", { required: false }),
   branchId: Validation("string", "Branch"),
   date: Validation("string", "Date"),
-  type: Validation("string", "Type", { required: false }),
   remark: Validation("string", "Remark", { required: false, extraRules: (s) => s?.trim().max(200, "Maximum 200 characters allowed") }),
 });
 

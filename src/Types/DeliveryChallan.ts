@@ -41,7 +41,7 @@ export interface DeliveryChallanBase extends CommonDataType {
   placeOfSupply?: string;
   billingAddress?: string | AddressApi;
   shippingAddress?: string | AddressApi;
-  paymentTerms?: string;
+  paymentTermsId?: string;
   createdFrom?: string | null;
   taxType?: string;
   shippingDetails?: ShippingDetails;

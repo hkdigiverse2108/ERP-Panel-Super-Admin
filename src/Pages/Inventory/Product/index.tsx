@@ -7,7 +7,7 @@ import { Mutations, Queries } from "../../../Api";
 import { CommonButton, CommonTextField, CommonValidationSelect } from "../../../Attribute";
 import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BREADCRUMBS, CONSUMPTION_TYPE, PRODUCT_TYPE_OPTIONS } from "../../../Data";
+import { BREADCRUMBS, PRODUCT_TYPE_OPTIONS } from "../../../Data";
 import type { AppGridColDef, ProductBase, ProductWithRemoveQty } from "../../../Types";
 import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
@@ -22,7 +22,8 @@ const Product = () => {
   const [gridRows, setGridRows] = useState<ProductWithRemoveQty[]>([]);
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.PRODUCT.BASE);
   const permissionItem = usePagePermission(PAGE_TITLE.INVENTORY.STOCK.BASE);
-
+  
+  const { data: consumptionData, isLoading: consumptionLoading } = Queries.useGetConsumptionTypeDropdown();
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetProduct({}, false);
   const { data: productData, isLoading: productDataLoading, isFetching: productDataFetching } = Queries.useGetProduct(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
@@ -180,7 +181,7 @@ const Product = () => {
           <Formik initialValues={{ type: "" }} enableReinitialize validationSchema={ProductItemRemoveFormSchema} onSubmit={handleRemoveItem}>
             <Form noValidate>
               <Grid sx={{ p: 1 }} container spacing={2}>
-                <CommonValidationSelect name="type" label="Consumption Type" options={CONSUMPTION_TYPE} grid={{ xs: 12 }} required />
+                <CommonValidationSelect name="consumptionTypeId" label="Select Type" options={GenerateOptions(consumptionData?.data)} isLoading={consumptionLoading} grid={{ xs: 12, sm: 6, md: 4 }} />
                 <CommonButton type="submit" variant="contained" title="Save" size="medium" loading={isAddLoading} fullWidth grid={{ xs: 12 }} />
               </Grid>
             </Form>
