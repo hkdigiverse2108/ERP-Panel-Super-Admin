@@ -5,7 +5,7 @@ import { Mutations, Queries } from "../../Api";
 import { CommonValidationTextField as CommonTextField, CommonSwitch, CommonPhoneNumber, CommonValidationSelect, CommonValidationRadio, CommonValidationDatePicker, CommonButton } from "../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
-import { BREADCRUMBS, CONTACT_CATEGORY_CUSTOMER, CONTACT_CATEGORY_SUPPLIER, CONTACT_TYPE, CUSTOMER_CATEGORY, GST_TYPE, PAYMENT_MODE, PAYMENT_TERMS } from "../../Data";
+import { BREADCRUMBS, CONTACT_CATEGORY_CUSTOMER, CONTACT_CATEGORY_SUPPLIER, CONTACT_TYPE, CUSTOMER_CATEGORY, GST_TYPE, PAYMENT_MODE } from "../../Data";
 import type { ContactAddressApi, ContactFormValues, Address } from "../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { getContactFormSchema } from "../../Utils/ValidationSchemas";
@@ -36,7 +36,7 @@ const ContactForm = () => {
 
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
-  
+
   const bank = data?.bankDetails;
 
   const emptyAddress: Address = {
@@ -97,7 +97,7 @@ const ContactForm = () => {
     panNo: data?.panNo || "",
     customerCategory: data?.customerCategory || "",
     paymentMode: data?.paymentMode || "",
-    paymentTerms: data?.paymentTerms || "",
+    paymentTermsId: data?.paymentTermsId || "",
     openingBalance: {
       debitBalance: data?.openingBalance?.debitBalance || "",
       creditBalance: data?.openingBalance?.creditBalance || "",
@@ -166,7 +166,7 @@ const ContactForm = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.CONTACT[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.CONTACT[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
-        <Formik initialValues={initialValues} validationSchema={getContactFormSchema} validationContext={{ contactType: initialValues.contactType }}  onSubmit={handleSubmit}>
+        <Formik initialValues={initialValues} validationSchema={getContactFormSchema} validationContext={{ contactType: initialValues.contactType }} onSubmit={handleSubmit}>
           {({ resetForm, setFieldValue, dirty, values }) => (
             <Form noValidate>
               <AddressDependencyHandler count={values?.address?.length || 0} />
@@ -184,7 +184,7 @@ const ContactForm = () => {
                     <CommonTextField name="remarks" label="Remarks" grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="panNo" label="PAN No" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="paymentMode" label="Payment Mode" options={PAYMENT_MODE} required grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationSelect name="paymentTerms" label="Payment Terms" options={PAYMENT_TERMS} grid={{ xs: 12, md: 4 }} />
+                    <DependentSelect name="paymentTermsId" label="Payment Term" query={Queries.useGetPaymentTermsDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="openingBalance.debitBalance" label="Debit Balance" grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="openingBalance.creditBalance" label="Credit Balance" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationDatePicker name="dob" label="Date Of Birth" grid={{ xs: 12, md: 4 }} />
@@ -275,7 +275,6 @@ const ContactForm = () => {
                     setFieldValue("_submitAction", "saveAndNew");
                   }}
                 />
-
               </Grid>
             </Form>
           )}
@@ -283,6 +282,6 @@ const ContactForm = () => {
       </Box>
     </>
   );
-}
+};
 
 export default ContactForm;

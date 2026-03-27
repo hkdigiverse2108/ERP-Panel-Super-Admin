@@ -2,26 +2,26 @@ import { Box, Grid, IconButton, Typography } from "@mui/material";
 import { useFormikContext } from "formik";
 import { Queries } from "../../../Api";
 import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
-import { PAYMENT_TERMS, REVERSE_CHARGE, TAX_TYPE } from "../../../Data";
+import { REVERSE_CHARGE, TAX_TYPE } from "../../../Data";
 import { DateConfig, GenerateOptions } from "../../../Utils";
-import { AddressSelectionModal } from "../../Common";
+import { AddressSelectionModal, DependentSelect } from "../../Common";
 import { useState, useEffect, useRef, useMemo } from "react";
 import EditIcon from "@mui/icons-material/Edit";
-import type { ContactAddressApi, ContactBase } from "../../../Types";
+import type { ContactAddressApi, ContactBase, PaymentTermsBase, SupplierBillFormValues } from "../../../Types";
 
 const SupplierBillDetails = () => {
-  const { values, setFieldValue } = useFormikContext<any>();
+  const { values, setFieldValue } = useFormikContext<SupplierBillFormValues>();
   const [addressModal, setAddressModal] = useState<boolean>(false);
 
+  const { data: paymentTermsData } = Queries.useGetPaymentTermsDropdown();
   const { data: companyData, isLoading: isCompanyLoading } = Queries.useGetCompanyDropdown();
   const companyOptions = GenerateOptions(companyData?.data || []);
-
   const { data: supplierData, isLoading: supplierDataLoading, isFetching: supplierDataFetching } = Queries.useGetContactDropdown({ activeFilter: true, typeFilter: "supplier", companyFilter: values.companyId }, !!values.companyId);
   // Use useMemo to avoid re-calculating (and creating new references) on every render
   const suppliers = useMemo(() => {
     return (supplierData?.data || []).map((s: ContactBase) => ({
       ...s,
-      name: s.companyName || `${s.firstName} ${s.lastName}`
+      name: s.companyName || `${s.firstName} ${s.lastName}`,
     }));
   }, [supplierData?.data]);
 
@@ -39,26 +39,32 @@ const SupplierBillDetails = () => {
   };
 
   const prevDateRef = useRef(values.supplierBillDate);
-  const prevPaymentTermsRef = useRef(values.paymentTerm);
+  const prevPaymentTermsRef = useRef(values.paymentTermsId);
 
   // Set default addresses when supplier is selected
   useEffect(() => {
-    if (selectedSupplier && selectedSupplier.address && selectedSupplier.address.length > 0) {
-      const currentBilling = values.billingAddress;
-      const isBillingValid = selectedSupplier.address.some((a: ContactAddressApi) => a._id === currentBilling);
+    const dateChanged = values.supplierBillDate !== prevDateRef.current;
+    const termsChanged = values.paymentTermsId !== prevPaymentTermsRef.current;
 
-      if (!currentBilling || !isBillingValid) {
-        const firstAddressId = selectedSupplier.address[0]._id;
-        if (currentBilling !== firstAddressId) {
-          setFieldValue("billingAddress", firstAddressId);
+    if (dateChanged || termsChanged) {
+      const selectedTerm = paymentTermsData?.data?.find((t: PaymentTermsBase) => t._id === values.paymentTermsId);
+
+      if (selectedTerm && values.supplierBillDate) {
+        const days = selectedTerm.day || 0;
+
+        const newDueDate = DateConfig(values.supplierBillDate).add(days, "day").toISOString();
+
+        if (values.dueDate !== newDueDate) {
+          setFieldValue("dueDate", newDueDate);
         }
-      }
-    } else if (!selectedSupplier || !selectedSupplier.address || selectedSupplier.address.length === 0) {
-      if (values.billingAddress) {
-        setFieldValue("billingAddress", "");
+
+        setFieldValue("dueDate", newDueDate);
       }
     }
-  }, [selectedSupplier, values.billingAddress, setFieldValue]);
+
+    prevDateRef.current = values.supplierBillDate;
+    prevPaymentTermsRef.current = values.paymentTermsId;
+  }, [values.paymentTermsId, values.supplierBillDate, paymentTermsData]);
 
   // Sync place of supply with billing address
   useEffect(() => {
@@ -77,20 +83,20 @@ const SupplierBillDetails = () => {
 
   useEffect(() => {
     const dateChanged = values.supplierBillDate !== prevDateRef.current;
-    const termsChanged = values.paymentTerm !== prevPaymentTermsRef.current;
+    const termsChanged = values.paymentTermsId !== prevPaymentTermsRef.current;
 
     if (dateChanged || termsChanged) {
-      if (values.paymentTerm && values.supplierBillDate) {
-        const days = parseInt(values.paymentTerm.split("_")[0]);
+      if (values.paymentTermsId && values.supplierBillDate) {
+        const days = parseInt(values.paymentTermsId.split("_")[0]);
         if (!isNaN(days)) {
           const newDueDate = DateConfig(values.supplierBillDate).add(days, "day").toISOString();
           setFieldValue("dueDate", newDueDate);
         }
       }
       prevDateRef.current = values.supplierBillDate;
-      prevPaymentTermsRef.current = values.paymentTerm;
+      prevPaymentTermsRef.current = values.paymentTermsId;
     }
-  }, [values.paymentTerm, values.supplierBillDate, setFieldValue]);
+  }, [values.paymentTermsId, values.supplierBillDate, setFieldValue]);
 
   return (
     <>
@@ -150,7 +156,7 @@ const SupplierBillDetails = () => {
           <CommonValidationSelect name="supplierId" label="Select Supplier" required isLoading={supplierDataLoading || supplierDataFetching} options={supplierOptions} grid={{ xs: 12, md: 4, xl: 3 }} disabled={!values.companyId} />
           <CommonValidationDatePicker name="supplierBillDate" label="Supplier Bill Date" required grid={{ xs: 12, md: 4, xl: 3 }} />
           <CommonValidationTextField name="referenceBillNo" label="Reference Bill No." grid={{ xs: 12, md: 4, xl: 3 }} />
-          <CommonValidationSelect name="paymentTerm" label="Payment Term" options={PAYMENT_TERMS} grid={{ xs: 12, md: 4, xl: 3 }} />
+          <DependentSelect name="paymentTermsId" label="Payment Term" query={Queries.useGetPaymentTermsDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4, xl: 3 }} />
           <CommonValidationDatePicker name="dueDate" label="Due Date" required grid={{ xs: 12, md: 4, xl: 3 }} />
           <CommonValidationSelect name="reverseCharge" label="Reverse Charge" options={REVERSE_CHARGE} grid={{ xs: 12, md: 4, xl: 3 }} />
           <CommonValidationDatePicker name="shippingDate" label="Shipping Date" required grid={{ xs: 12, md: 4, xl: 3 }} />

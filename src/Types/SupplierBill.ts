@@ -112,7 +112,7 @@ export interface SupplierBillFormValues {
   placeOfSupply?: string;
   gstIn?: string;
   billingAddress?: string;
-  paymentTerm?: string;
+  paymentTermsId?: string;
   dueDate?: string | Date;
   reverseCharge?: boolean | string;
   shippingDate?: string | Date;

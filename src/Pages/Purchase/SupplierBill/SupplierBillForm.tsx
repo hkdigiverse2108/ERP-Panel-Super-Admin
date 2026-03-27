@@ -41,7 +41,7 @@ const SupplierBillForm = () => {
     supplierBillNo: data?.supplierBillNo || "",
     referenceBillNo: data?.referenceBillNo || "",
     supplierBillDate: data?.supplierBillDate || DateConfig.utc().toISOString(),
-    paymentTerm: data?.paymentTerm || "",
+    paymentTermsId:  typeof data?.paymentTermsId === "object" ? data.paymentTermsId?._id : data?.paymentTermsId || "",
     dueDate: data?.dueDate || "",
     shippingDate: data?.shippingDate || data?.date || data?.orderDate || "",
     reverseCharge: data?.reverseCharge !== undefined ? String(data.reverseCharge) : "false",

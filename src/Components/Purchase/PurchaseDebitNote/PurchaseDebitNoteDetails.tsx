@@ -1,11 +1,11 @@
 import { Box, Grid, Typography, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
-import { PAYMENT_TERMS, REVERSE_CHARGE } from "../../../Data";
+import { REVERSE_CHARGE } from "../../../Data";
 import { useFormikContext } from "formik";
-import type { ContactAddressApi, ContactBase,  PurchaseDebitNoteFormValues } from "../../../Types";
+import type { ContactAddressApi, ContactBase, PaymentTermsBase, PurchaseDebitNoteFormValues } from "../../../Types";
 import { useState, useEffect, useMemo, useRef } from "react";
-import { AddressSelectionModal } from "../../Common";
+import { AddressSelectionModal, DependentSelect } from "../../Common";
 import { Queries } from "../../../Api";
 import { GenerateOptions, DateConfig } from "../../../Utils";
 
@@ -16,10 +16,11 @@ const PurchaseDebitNoteDetails = () => {
   const { data: companyData, isLoading: isCompanyLoading } = Queries.useGetCompanyDropdown();
   const companyOptions = GenerateOptions(companyData?.data || []);
 
+  const { data: paymentTermsData } = Queries.useGetPaymentTermsDropdown();
   const { data: supplierData, isLoading: isSupplierLoading, isFetching: isSupplierFetching } = Queries.useGetContactDropdown({ typeFilter: "supplier", companyFilter: values?.companyId }, !!values?.companyId);
 
   const { data: purchaseOrderData, isLoading: isPurchaseOrderLoading, isFetching: isPurchaseOrderFetching } = Queries.useGetPurchaseOrderDropdown({ companyFilter: values?.companyId, supplierFilter: values?.supplierId }, !!values?.companyId && !!values?.supplierId);
-  console.log(purchaseOrderData, "purchaseOrderData")
+  console.log(purchaseOrderData, "purchaseOrderData");
   const purchaseOrderOptions = useMemo(() => GenerateOptions(purchaseOrderData?.data || []), [purchaseOrderData]);
   const suppliers = useMemo(() => supplierData?.data || [], [supplierData]);
 
@@ -65,24 +66,27 @@ const PurchaseDebitNoteDetails = () => {
 
   // Sync due date with date and payment terms
   const prevDateRef = useRef(values.debitNoteDate);
-  const prevPaymentTermRef = useRef(values.paymentTerm);
+  const prevPaymentTermsRef = useRef(values.paymentTermsId);
 
   useEffect(() => {
     const dateChanged = values.debitNoteDate !== prevDateRef.current;
-    const termChanged = values.paymentTerm !== prevPaymentTermRef.current;
+    const termChanged = values.paymentTermsId !== prevPaymentTermsRef.current;
 
     if (dateChanged || termChanged) {
-      if (values.paymentTerm && values.debitNoteDate) {
-        const days = parseInt(String(values.paymentTerm).split("_")[0]);
-        if (!isNaN(days)) {
-          const newDueDate = DateConfig(values.debitNoteDate).add(days, "day").toISOString();
-          setFieldValue("dueDate", newDueDate);
-        }
+      const selectedTerm = paymentTermsData?.data?.find((t: PaymentTermsBase) => t._id === values.paymentTermsId);
+
+      if (selectedTerm && values.debitNoteDate) {
+        const days = selectedTerm.day || 0;
+
+        const newDueDate = DateConfig(values.debitNoteDate).add(days, "day").toISOString();
+
+        setFieldValue("dueDate", newDueDate);
       }
-      prevDateRef.current = values.debitNoteDate;
-      prevPaymentTermRef.current = values.paymentTerm;
     }
-  }, [values.paymentTerm, values.debitNoteDate, setFieldValue]);
+
+    prevDateRef.current = values.debitNoteDate;
+    prevPaymentTermsRef.current = values.paymentTermsId;
+  }, [values.paymentTermsId, values.debitNoteDate, paymentTermsData]);
 
   return (
     <Grid container spacing={2} sx={{ p: 2 }}>
@@ -153,14 +157,13 @@ const PurchaseDebitNoteDetails = () => {
 
         <CommonValidationDatePicker name="debitNoteDate" label="Debit Note Date" required grid={{ xs: 12, md: 4 }} />
 
-        <CommonValidationSelect name="paymentTerm" label="Payment Term" options={PAYMENT_TERMS} grid={{ xs: 12, md: 4 }} />
+        <DependentSelect name="paymentTermsId" label="Payment Term" query={Queries.useGetPaymentTermsDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4 }} />
 
         <CommonValidationDatePicker name="dueDate" label="Due Date" grid={{ xs: 12, md: 4 }} />
 
         <CommonValidationSelect name="purchaseId" label="Select Purchase" options={purchaseOrderOptions} disabled={!values.companyId || !values.supplierId} isLoading={isPurchaseOrderLoading || isPurchaseOrderFetching} grid={{ xs: 12, md: 4 }} />
 
         <CommonValidationTextField name="referenceBillNo" label="Reference Bill No" grid={{ xs: 12, md: 4 }} />
-
 
         <CommonValidationSelect name="reverseCharge" label="Reverse Charge" options={REVERSE_CHARGE} grid={{ xs: 12, md: 4 }} />
 
@@ -235,4 +238,3 @@ const PurchaseDebitNoteDetails = () => {
 };
 
 export default PurchaseDebitNoteDetails;
-
