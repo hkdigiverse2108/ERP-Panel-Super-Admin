@@ -1,6 +1,6 @@
 import { PAGE_TITLE, ROUTES } from "../Constants";
 import type { NavItem } from "../Types";
-import { AdminPanelSettings, Apartment, GridViewRounded, MyLocation, People, ReceiptLong, Settings, AccountTree, ViewModule, Work, PersonRounded, AccountBalance, Redeem, PointOfSale, Announcement, SupportAgent, ShoppingCart } from "@mui/icons-material";
+import { AdminPanelSettings, Apartment, GridViewRounded, MyLocation, People, ReceiptLong, Settings, AccountTree, ViewModule, Work, PersonRounded, AccountBalance, Redeem, PointOfSale, Announcement, SupportAgent, ShoppingCart, AutoAwesome } from "@mui/icons-material";
 
 export const NavItems: NavItem[] = [
   { icon: <GridViewRounded />, name: PAGE_TITLE.DASHBOARD, path: ROUTES.DASHBOARD },
@@ -28,6 +28,7 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE, path: ROUTES.STOCK_VERIFICATION.BASE, pro: false },
       { name: PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE, path: ROUTES.BILL_OF_LIVE_PRODUCT.BASE, pro: false },
       { name: PAGE_TITLE.INVENTORY.PRODUCT_TYPE.BASE, path: ROUTES.PRODUCT_TYPE.BASE },
+      { name: PAGE_TITLE.INVENTORY.SPECIALS.BASE, path: ROUTES.SPECIALS.BASE },
     ],
   },
   {
@@ -104,6 +105,8 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.SETTINGS.PREFIX.BASE, path: ROUTES.PREFIX.BASE },
       { name: PAGE_TITLE.SETTINGS.CONSUMPTION_TYPE.BASE, path: ROUTES.CONSUMPTION_TYPE.BASE },
       { name: PAGE_TITLE.SETTINGS.PAYMENT_TERMS.BASE, path: ROUTES.PAYMENT_TERMS.BASE },
+      { name: PAGE_TITLE.CREDENTIALS.BASE, path: ROUTES.CREDENTIALS.BASE },
     ],
   },
+  { icon: <AutoAwesome />, name: PAGE_TITLE.BILLSNAP.BASE, path: ROUTES.BILLSNAP.BASE },
 ];

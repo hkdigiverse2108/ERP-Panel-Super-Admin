@@ -4,3 +4,43 @@
 
 @import "tailwindcss";
 @import "../public/assets/css/style.css";
+
+@theme {
+  --background: hsl(36 33% 97%);
+  --foreground: hsl(220 30% 15%);
+
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(220 30% 15%);
+
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(220 30% 15%);
+
+  --primary: hsl(27 82% 50%);
+  --primary-foreground: hsl(0 0% 100%);
+
+  --secondary: hsl(36 20% 92%);
+  --secondary-foreground: hsl(220 30% 15%);
+
+  --muted: hsl(36 15% 93%);
+  --muted-foreground: hsl(220 10% 45%);
+
+  --accent: hsl(145 50% 40%);
+  --accent-foreground: hsl(0 0% 100%);
+
+  --destructive: hsl(0 72% 51%);
+  --destructive-foreground: hsl(0 0% 100%);
+
+  --border: hsl(30 15% 88%);
+  --input: hsl(30 15% 88%);
+  --ring: hsl(27 82% 50%);
+
+  --radius: 0.75rem;
+
+  --success: hsl(145 50% 40%);
+  --success-foreground: hsl(0 0% 100%);
+  --warning: hsl(45 93% 47%);
+  --warning-foreground: hsl(220 30% 15%);
+  
+  --font-body: 'Poppins', 'Noto Sans', sans-serif;
+  --font-heading: 'Poppins', sans-serif;
+}

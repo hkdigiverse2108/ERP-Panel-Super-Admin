@@ -92,6 +92,11 @@ import ConsumptionType from "../Pages/Settings/ConsumptionType";
 import ConsumptionTypeForm from "../Pages/Settings/ConsumptionType/ConsumptionTypeForm";
 import PaymentTerms from "../Pages/Settings/PaymentTerms";
 import PaymentTermsForm from "../Pages/Settings/PaymentTerms/PaymentTermsForm";
+import Specials from "../Pages/Inventory/Specials";
+import SpecialForm from "../Pages/Inventory/Specials/SpecialForm";
+import Credentials from "../Pages/Settings/Credentials";
+import CredentialForm from "../Pages/Settings/Credentials/CredentialForm";
+import BillSnap from "../Pages/BillSnap";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -237,6 +242,13 @@ export const PageRoutes = [
 
   { path: ROUTES.PAYMENT_TERMS.BASE, name: PAGE_TITLE.SETTINGS.PAYMENT_TERMS.BASE, element: <PaymentTerms /> },
   { path: ROUTES.PAYMENT_TERMS.ADD_EDIT, name: PAGE_TITLE.SETTINGS.PAYMENT_TERMS.BASE, element: <PaymentTermsForm /> },
+
+  // Global Specials & AI
+  { path: ROUTES.SPECIALS.BASE, name: PAGE_TITLE.INVENTORY.SPECIALS.BASE, element: <Specials /> },
+  { path: ROUTES.SPECIALS.ADD_EDIT, name: PAGE_TITLE.INVENTORY.SPECIALS.BASE, element: <SpecialForm /> },
+  { path: ROUTES.CREDENTIALS.BASE, name: PAGE_TITLE.CREDENTIALS.BASE, element: <Credentials /> },
+  { path: ROUTES.CREDENTIALS.ADD_EDIT, name: PAGE_TITLE.CREDENTIALS.BASE, element: <CredentialForm /> },
+  { path: ROUTES.BILLSNAP.BASE, name: PAGE_TITLE.BILLSNAP.BASE, element: <BillSnap /> },
 ];
 
 export const AuthRoutes = [

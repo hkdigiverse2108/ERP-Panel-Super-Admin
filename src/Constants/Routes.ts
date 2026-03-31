@@ -209,4 +209,15 @@ export const ROUTES = {
     BASE: "/payment-terms",
     ADD_EDIT: "/payment-terms/add-edit",
   },
+  SPECIALS: {
+    BASE: "/specials",
+    ADD_EDIT: "/specials/add-edit",
+  },
+  CREDENTIALS: {
+    BASE: "/credentials",
+    ADD_EDIT: "/credentials/add-edit",
+  },
+  BILLSNAP: {
+    BASE: "/billsnap",
+  },
 } as const;

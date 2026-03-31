@@ -79,6 +79,11 @@ export const PAGE_TITLE = {
       ADD: "Add Product Type",
       EDIT: "Edit Product Type",
     },
+    SPECIALS: {
+      BASE: "Specials",
+      ADD: "Add Special Item",
+      EDIT: "Edit Special Item",
+    },
   },
   CUSTOMER: {
     BASE: "Customer",
@@ -159,7 +164,7 @@ export const PAGE_TITLE = {
       ADD: "Add Consumption Type",
       EDIT: "Edit Consumption Type",
     },
-    PAYMENT_TERMS:{
+    PAYMENT_TERMS: {
       BASE: "Payment Terms",
       ADD: "Add Payment Terms",
       EDIT: "Edit Payment Terms",
@@ -271,5 +276,13 @@ export const PAGE_TITLE = {
     BASE: "Sales Credit Note",
     ADD: "Add Sales Credit Note",
     EDIT: "Edit Sales Credit Note",
+  },
+  CREDENTIALS: {
+    BASE: "AI Credentials",
+    ADD: "Add Credential",
+    EDIT: "Edit Credential",
+  },
+  BILLSNAP: {
+    BASE: "BillSnap AI",
   },
 } as const;
