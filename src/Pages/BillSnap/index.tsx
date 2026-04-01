@@ -15,6 +15,37 @@ const BillSnap = () => {
 
   const { mutate: analyzeTable, isPending: isScanning } = Mutations.useAnalyzeTable();
 
+  // Helper to resize and compress image to keep payload small and fast
+  const resizeAndCompressImage = (base64Str: string, maxWidth = 800, maxHeight = 800): Promise<string> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = base64Str;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx?.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg", 0.5)); // 0.5 quality and 800px ensures payload < 500KB
+      };
+    });
+  };
+
   const handleScan = () => {
     if (!capturedImage) return;
 
@@ -32,9 +63,11 @@ const BillSnap = () => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (event) => {
+      reader.onload = async (event) => {
         const base64 = event.target?.result as string;
-        setCapturedImage(base64);
+        // Compress before setting in state to ensure fast UI and fast API
+        const compressedBase64 = await resizeAndCompressImage(base64);
+        setCapturedImage(compressedBase64);
         setIdentifiedItems([]);
       };
       reader.readAsDataURL(file);
@@ -114,7 +147,7 @@ const BillSnap = () => {
                     Waiting for photo...
                   </Typography>
                   <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 280, mx: "auto" }}>
-                    Upload an image of items on the table to begin AI analysis.
+                    Upload an image produced from your camera to begin AI analysis.
                   </Typography>
                 </Box>
               )}
