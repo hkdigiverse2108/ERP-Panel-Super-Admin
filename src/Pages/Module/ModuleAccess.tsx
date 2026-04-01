@@ -176,7 +176,7 @@ const ModuleAccess: FC<ModuleAccessProps> = ({ data }) => {
   const topContent = <CommonButton variant="contained" title="Save All" size="small" loading={isAddModulePermissionLoading} onClick={handleSaveAll} />;
   const columns: AppGridColDef<UserModulePermissionDataResponse>[] = [
     { field: "fullName", headerName: "User Full Name", width: 300 }, //
-    { field: "email", headerName: "User Email", width: 300 },
+    { field: "email", headerName: "User Email",flex:1, minWidth: 300 },
     permissionColumnWithHeader("add", "Add"),
     permissionColumnWithHeader("edit", "Edit"),
     permissionColumnWithHeader("delete", "Delete"),

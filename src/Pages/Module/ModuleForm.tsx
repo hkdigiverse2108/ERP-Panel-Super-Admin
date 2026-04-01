@@ -44,7 +44,7 @@ const ModuleForm = () => {
 
   const handleSubmit = async (values: ModuleFormValues, { resetForm }: FormikHelpers<ModuleFormValues>) => {
     const { _submitAction, ...rest } = values;
-    const payload = { ...rest };
+    const payload = { ...rest, tabName: rest?.tabName?.toLowerCase() };
 
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
@@ -57,7 +57,7 @@ const ModuleForm = () => {
       await addModule(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
     }
   };
-  
+
   useEffect(() => {
     const hasAccess = isEditing ? permission.edit : permission.add;
     if (!hasAccess) navigate(-1);
@@ -70,7 +70,7 @@ const ModuleForm = () => {
           <CommonCard hideDivider>
             <Box sx={{ width: "100%" }}>
               {isEditing && (
-                <Box sx={{ borderBottom: 1, borderColor: "divider", }}>
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                   <Tabs value={value} onChange={(_, newValue: number) => setValue(newValue)} aria-label="module tabs">
                     <Tab label={PAGE_TITLE.MODULE.EDIT} />
                     <Tab label="Module Access" />
