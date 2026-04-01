@@ -96,7 +96,7 @@ import Specials from "../Pages/Inventory/Specials";
 import SpecialForm from "../Pages/Inventory/Specials/SpecialForm";
 import Credentials from "../Pages/Settings/Credentials";
 import CredentialForm from "../Pages/Settings/Credentials/CredentialForm";
-import BillSnap from "../Pages/BillSnap";
+import BillSnap from "../Pages/Settings/BillSnap";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
