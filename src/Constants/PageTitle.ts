@@ -168,7 +168,7 @@ export const PAGE_TITLE = {
       BASE: "Payment Terms",
       ADD: "Add Payment Terms",
       EDIT: "Edit Payment Terms",
-    }
+    },
   },
   CONTACT: {
     BASE: "Contact",
@@ -278,7 +278,7 @@ export const PAGE_TITLE = {
     EDIT: "Edit Sales Credit Note",
   },
   CREDENTIALS: {
-    BASE: "AI Credentials",
+    BASE: "Credentials",
     ADD: "Add Credential",
     EDIT: "Edit Credential",
   },
