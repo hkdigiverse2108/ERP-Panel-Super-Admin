@@ -1,46 +1,93 @@
-import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { Link } from "react-router-dom";
+import { Box } from "@mui/material";
+import { useMemo } from "react";
+import { useDispatch } from "react-redux";
+import { Mutations, Queries } from "../../../Api";
+import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { PAGE_TITLE } from "../../../Constants";
+import { BREADCRUMBS } from "../../../Data";
+import { setSpecialsModal } from "../../../Store/Slices/ModalSlice";
+import type { AppGridColDef, SpecialsBase } from "../../../Types";
+import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import SpecialsForm from "./SpecialsForm";
 
 const Specials = () => {
-  return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-foreground">{PAGE_TITLE.INVENTORY.SPECIALS.BASE}</h1>
-        <Link to={ROUTES.SPECIALS.ADD_EDIT} className="bg-primary text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
-          Add Special Item
-        </Link>
-      </div>
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const dispatch = useDispatch();
+  const permission = usePagePermission(PAGE_TITLE.INVENTORY.SPECIALS.BASE);
 
-      <div className="bg-white border border-border rounded-xl shadow-sm overflow-hidden text-black">
-        <table className="w-full text-left">
-          <thead className="bg-muted text-muted-foreground uppercase text-xs font-semibold">
-            <tr>
-              <th className="px-6 py-4">Item Name</th>
-              <th className="px-6 py-4">Price</th>
-              <th className="px-6 py-4">Description</th>
-              <th className="px-6 py-4">Status</th>
-              <th className="px-6 py-4">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            <tr className="hover:bg-muted/50 transition-colors">
-              <td className="px-6 py-4 font-medium">KitKat Large</td>
-              <td className="px-6 py-4 text-sm font-semibold text-primary">₹30</td>
-              <td className="px-6 py-4 text-xs text-muted-foreground line-clamp-1 max-w-[200px]">Special offer for this month</td>
-              <td className="px-6 py-4">
-                <span className="px-2 py-1 bg-success/20 text-success text-[10px] font-bold rounded-full uppercase">Active</span>
-              </td>
-              <td className="px-6 py-4">
-                <div className="flex gap-2">
-                  <button className="text-primary hover:underline text-sm font-medium">Edit</button>
-                  <button className="text-destructive hover:underline text-sm font-medium">Delete</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+  const { data: specialsData, isLoading: specialsLoading, isFetching: specialsFetching } = Queries.useGetSpecials(params);
+  const { mutate: deleteSpecial } = Mutations.useDeleteSpecial();
+  const { mutate: editSpecial, isPending: isEditLoading } = Mutations.useEditSpecial();
+
+  const allSpecials = useMemo(() => specialsData?.data?.specials_data.map((special) => ({ ...special, id: special?._id })) || [], [specialsData]);
+  const totalRows = specialsData?.data?.totalData || 0;
+
+  const handleDeleteBtn = () => {
+    if (!rowToDelete) return;
+    deleteSpecial(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
+  };
+
+  const handleAdd = () => dispatch(setSpecialsModal({ open: true, data: null }));
+
+  const handleEdit = (row: SpecialsBase) => dispatch(setSpecialsModal({ open: true, data: row }));
+
+  const columns: AppGridColDef<SpecialsBase>[] = [
+    {
+      field: "image",
+      headerName: "Image",
+      width: 100,
+      renderCell: ({ value }) => (value ? <img src={value} style={{ width: 40, height: 40, objectFit: "cover", borderRadius: "4px" }} /> : "-"),
+    },
+    { field: "name", headerName: "Item Name", flex: 1, minWidth: 200 },
+    { 
+      field: "price", 
+      headerName: "Price", 
+      width: 120,
+      renderCell: ({ value }) => `₹${value}`,
+    },
+    { field: "description", headerName: "Description", flex: 1, minWidth: 250 },
+
+    ...(permission?.edit || permission?.delete
+      ? [
+          CommonActionColumn<SpecialsBase>({
+            ...(permission?.edit && {
+                active: (row) => editSpecial({ specialId: row?._id, isActive: !row.isActive }),
+                onEdit: { handleEdit: (row) => handleEdit(row) },
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+          }),
+        ]
+      : []),
+  ];
+
+  const gridOptions = {
+    columns,
+    rows: allSpecials,
+    rowCount: totalRows,
+    loading: specialsLoading || specialsFetching || isEditLoading,
+    isActive,
+    setActive,
+    ...(permission?.add && { handleAdd }),
+    paginationModel,
+    onPaginationModelChange: setPaginationModel,
+    sortModel,
+    onSortModelChange: setSortModel,
+    filterModel,
+    onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.INVENTORY.SPECIALS.BASE,
+  };
+
+  return (
+    <>
+      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.SPECIALS.BASE} maxItems={1} breadcrumbs={(BREADCRUMBS as any).SPECIALS.BASE} />
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
+        <CommonCard hideDivider>
+          <CommonDataGrid {...gridOptions} />
+        </CommonCard>
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
+        <SpecialsForm />
+      </Box>
+    </>
   );
 };
 

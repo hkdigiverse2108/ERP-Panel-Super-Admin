@@ -868,3 +868,17 @@ export const PaymentTermsFormSchema = Yup.object({
   name: Validation("string", "Payment Terms Name"),
   day: Validation("number", "Payment Terms Day", { extraRules: (s) => s.min(1, "Payment Terms Day must be at least 1") }),
 });
+
+export const SpecialsFormSchema = Yup.object({
+  name: Validation("string", "Item Name"),
+  price: Validation("number", "Price"),
+  description: Validation("string", "Description", { required: false }),
+  isActive: Yup.boolean(),
+});
+
+export const CredentialsFormSchema = Yup.object({
+  projectId: Validation("string", "Project ID"),
+  publishableKey: Validation("string", "Publishable Key"),
+  supabaseUrl: Validation("string", "Supabase URL"),
+  isActive: Yup.boolean(),
+});

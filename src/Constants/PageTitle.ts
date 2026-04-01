@@ -283,6 +283,6 @@ export const PAGE_TITLE = {
     EDIT: "Edit Credential",
   },
   BILLSNAP: {
-    BASE: "BillSnap AI",
+    BASE: "BillBuddy AI",
   },
 } as const;

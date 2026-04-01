@@ -367,4 +367,19 @@ export const KEYS = {
     EDIT: "payment-terms-edit",
     DELETE: "payment-terms-delete",
   },
+  SPECIALS: {
+    BASE: "specials",
+    ADD: "specials-add",
+    EDIT: "specials-edit",
+    DELETE: "specials-delete",
+  },
+  CREDENTIALS: {
+    BASE: "credentials",
+    ADD: "credentials-add",
+    EDIT: "credentials-edit",
+    DELETE: "credentials-delete",
+  },
+  AI: {
+    ANALYZE: "ai-analyze",
+  },
 };

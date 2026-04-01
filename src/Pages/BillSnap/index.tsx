@@ -1,24 +1,31 @@
-import React, { useState, useRef } from "react";
+import { AutoAwesome, CameraAlt, LibraryAdd, Receipt, Refresh, Search } from "@mui/icons-material";
+import { Box, Grid, Stack, Typography, Skeleton, useTheme } from "@mui/material";
+import { useRef, useState } from "react";
+import { Mutations } from "../../Api";
+import { CommonButton } from "../../Attribute";
+import { CommonCard } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
-import { CameraAlt, LibraryAdd, AutoAwesome, Refresh, Search, Receipt } from "@mui/icons-material";
+import type { DetectedItem } from "../../Types";
 
 const BillSnap = () => {
-  const [isScanning, setIsScanning] = useState(false);
+  const theme = useTheme();
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
-  const [identifiedItems, setIdentifiedItems] = useState<any[]>([]);
+  const [identifiedItems, setIdentifiedItems] = useState<DetectedItem[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const { mutate: analyzeTable, isPending: isScanning } = Mutations.useAnalyzeTable();
+
   const handleScan = () => {
-    setIsScanning(true);
-    // Mimic scanning delay
-    setTimeout(() => {
-      setIsScanning(false);
-      setIdentifiedItems([
-        { name: "KitKat Large", price: 30, quantity: 2, matched: true, sku: "KK001" },
-        { name: "Rice 1kg", price: 65, quantity: 1, matched: true, sku: "RIC-01" },
-        { name: "Unknown Item", price: 0, quantity: 1, matched: false, sku: "N/A" },
-      ]);
-    }, 2500);
+    if (!capturedImage) return;
+
+    analyzeTable(
+      { imageBase64: capturedImage },
+      {
+        onSuccess: (response) => {
+          setIdentifiedItems(response.data || []);
+        },
+      }
+    );
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,157 +33,287 @@ const BillSnap = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        setCapturedImage(event.target?.result as string);
+        const base64 = event.target?.result as string;
+        setCapturedImage(base64);
         setIdentifiedItems([]);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  return (
-    <div className="p-6 min-h-[calc(100vh-80px)] bg-background font-body">
-      {/* Header */}
-      <header className="mb-8 flex justify-between items-end">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <AutoAwesome className="text-primary text-2xl animate-pulse" />
-            <h1 className="text-3xl font-extrabold text-foreground tracking-tight">{PAGE_TITLE.BILLSNAP.BASE}</h1>
-          </div>
-          <p className="text-muted-foreground text-sm">AI-powered item detection and billing for rapid checkouts.</p>
-        </div>
-        <div className="flex gap-3">
-          <button 
-            onClick={() => fileInputRef.current?.click()}
-            className="flex items-center gap-2 px-5 py-2.5 bg-white border border-border rounded-xl font-semibold text-foreground hover:bg-secondary transition-all"
-          >
-            <LibraryAdd className="text-sm" /> Upload Photo
-          </button>
-          <input 
-            type="file" 
-            ref={fileInputRef} 
-            onChange={handleImageUpload} 
-            accept="image/*" 
-            className="hidden" 
-          />
-        </div>
-      </header>
+  const totalAmount = identifiedItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sticky top-0">
-        
+  return (
+    <Box sx={{ p: { xs: 2, md: 3 }, minHeight: "calc(100vh - 80px)", bgcolor: "background.default" }}>
+      {/* Header */}
+      <Stack direction="row" justifyContent="space-between" alignItems="flex-end" sx={{ mb: 4 }}>
+        <Box>
+          <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
+            <AutoAwesome sx={{ color: "primary.main", fontSize: "1.75rem", animation: "pulse 2s infinite" }} />
+            <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: "-0.025em" }}>
+              {PAGE_TITLE.BILLSNAP.BASE}
+            </Typography>
+          </Stack>
+          <Typography variant="body2" color="text.secondary">
+            AI-powered item detection and billing for rapid checkouts.
+          </Typography>
+        </Box>
+        <CommonButton 
+          startIcon={<LibraryAdd />} 
+          onClick={() => fileInputRef.current?.click()} 
+          title="Upload Photo" 
+          variant="outlined"
+          sx={{ borderRadius: 3, px: 3 }}
+        />
+        <input type="file" ref={fileInputRef} onChange={handleImageUpload} accept="image/*" style={{ display: "none" }} />
+      </Stack>
+
+      <Grid container spacing={4}>
         {/* Left Section: Camera/Image View */}
-        <div className="lg:col-span-7 flex flex-col gap-4">
-          <div className="aspect-[4/3] bg-card border-2 border-dashed border-border rounded-3xl flex flex-col items-center justify-center relative overflow-hidden group shadow-sm transition-all hover:border-primary/50">
-            {capturedImage ? (
-              <img src={capturedImage} alt="Captured" className="w-full h-full object-cover" />
-            ) : (
-                <div className="text-center p-8">
-                  <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                    <CameraAlt className="text-3xl text-muted-foreground" />
-                  </div>
-                  <h3 className="text-lg font-bold text-foreground">Waiting for photo...</h3>
-                  <p className="text-muted-foreground text-sm max-w-xs">Upload an image of items on the table to begin AI analysis.</p>
-                </div>
-            )}
-            
-            {isScanning && (
-              <div className="absolute inset-0 bg-primary/20 backdrop-blur-[2px] flex items-center justify-center">
-                <div className="flex flex-col items-center gap-4">
-                   <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                   <p className="text-white font-bold text-lg animate-pulse">Analyzing Image...</p>
-                </div>
-                {/* Scanning line effect */}
-                <div className="absolute top-0 left-0 w-full h-[2px] bg-primary shadow-[0_0_15px_#f97316] animate-scanline"></div>
-              </div>
-            )}
-          </div>
-          
-          <div className="flex gap-4">
-            <button 
-              disabled={!capturedImage || isScanning}
-              onClick={handleScan}
-              className="flex-1 py-4 bg-primary text-white rounded-2xl font-bold flex items-center justify-center gap-3 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:grayscale disabled:hover:scale-100"
+        <Box sx={{ flexBasis: { xs: "100%", lg: "58.33%" }, flexGrow: 0, maxWidth: { xs: "100%", lg: "58.33%" } }}>
+          <Stack spacing={2}>
+            <Box
+              sx={{
+                aspectRatio: "4/3",
+                bgcolor: "background.paper",
+                border: "2px dashed",
+                borderColor: "divider",
+                borderRadius: 6,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                position: "relative",
+                overflow: "hidden",
+                boxShadow: theme.shadows[1],
+                transition: "border-color 0.3s",
+                "&:hover": { borderColor: "primary.light" },
+              }}
             >
-              <AutoAwesome /> {identifiedItems.length > 0 ? 'Rescan Table' : 'Scan Table'}
-            </button>
-            <button 
-               onClick={() => { setCapturedImage(null); setIdentifiedItems([]); }}
-               className="px-6 bg-secondary text-foreground rounded-2xl font-bold border border-border hover:bg-muted"
-            >
-              <Refresh />
-            </button>
-          </div>
-        </div>
+              {capturedImage ? (
+                <Box component="img" src={capturedImage} alt="Captured" sx={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              ) : (
+                <Box sx={{ textAlign: "center", p: 4 }}>
+                  <Box
+                    sx={{
+                      width: 80,
+                      height: 80,
+                      bgcolor: "secondary.light",
+                      borderRadius: "50%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      mx: "auto",
+                      mb: 2,
+                      opacity: 0.7,
+                    }}
+                  >
+                    <CameraAlt sx={{ fontSize: "2rem", color: "text.secondary" }} />
+                  </Box>
+                  <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                    Waiting for photo...
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 280, mx: "auto" }}>
+                    Upload an image of items on the table to begin AI analysis.
+                  </Typography>
+                </Box>
+              )}
+
+              {isScanning && (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    inset: 0,
+                    bgcolor: "rgba(255, 255, 255, 0.4)",
+                    backdropFilter: "blur(4px)",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    zIndex: 10,
+                  }}
+                >
+                  <Stack spacing={2} alignItems="center">
+                    <Box
+                      sx={{
+                        width: 64,
+                        height: 64,
+                        border: "4px solid",
+                        borderColor: "primary.main",
+                        borderTopColor: "transparent",
+                        borderRadius: "50%",
+                        animation: "spin 1s linear infinite",
+                      }}
+                    />
+                    <Typography variant="h6" sx={{ fontWeight: 800, color: "primary.main", animation: "pulse 1.5s infinite" }}>
+                      Analyzing Table...
+                    </Typography>
+                  </Stack>
+                  {/* Scanline Effect */}
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      left: 0,
+                      top: 0,
+                      width: "100%",
+                      height: "2px",
+                      bgcolor: "primary.main",
+                      boxShadow: "0 0 15px rgba(249, 115, 22, 0.8)",
+                      animation: "scanline 2.5s linear infinite",
+                    }}
+                  />
+                </Box>
+              )}
+            </Box>
+
+            <Stack direction="row" spacing={2}>
+              <CommonButton
+                sx={{ flex: 1, py: 2, borderRadius: 4, fontWeight: "bold", boxShadow: "0 10px 20px -10px rgba(249, 115, 22, 0.4)" }}
+                disabled={!capturedImage || isScanning}
+                onClick={handleScan}
+                startIcon={<AutoAwesome />}
+                title={identifiedItems.length > 0 ? "Rescan Table" : "Scan Table"}
+              />
+              <CommonButton
+                onClick={() => {
+                  setCapturedImage(null);
+                  setIdentifiedItems([]);
+                }}
+                disabled={isScanning}
+                startIcon={<Refresh />}
+                title=""
+                variant="outlined"
+                sx={{ borderRadius: 4, px: 3 }}
+              />
+            </Stack>
+          </Stack>
+        </Box>
 
         {/* Right Section: Results/Checkout */}
-        <div className="lg:col-span-5 flex flex-col gap-6">
-          <div className="bg-card border border-border rounded-3xl p-6 shadow-sm flex flex-col h-full min-h-[400px]">
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-border">
-              <h2 className="text-xl font-extrabold flex items-center gap-2">
-                <Receipt className="text-primary" /> Detected Items
-              </h2>
-              <span className="text-xs font-bold bg-secondary text-muted-foreground px-2 py-1 rounded-md uppercase">
+        <CommonCard 
+            grid={{ xs: 12, lg: 5 }} 
+            hideDivider
+            paperProps={{ 
+                sx: { 
+                    height: "100%", 
+                    display: "flex", 
+                    flexDirection: "column", 
+                    minHeight: 480, 
+                    p: 0,
+                    borderRadius: 6,
+                    border: '1px solid',
+                    borderColor: 'divider'
+                } 
+            }}
+        >
+            <Box sx={{ p: 3, borderBottom: "1px solid", borderColor: "divider", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Receipt sx={{ color: "primary.main" }} />
+                <Typography variant="h6" sx={{ fontWeight: 800 }}>
+                  Detected Items
+                </Typography>
+              </Stack>
+              <Typography variant="caption" sx={{ fontWeight: 800, bgcolor: "secondary.light", color: "text.secondary", px: 1, py: 0.5, borderRadius: 1, textTransform: "uppercase" }}>
                 {identifiedItems.length} found
-              </span>
-            </div>
+              </Typography>
+            </Box>
 
-            {identifiedItems.length > 0 ? (
-              <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar flex flex-col gap-3 mb-6">
-                {identifiedItems.map((item, idx) => (
-                  <div key={idx} className={`p-4 rounded-2xl border flex justify-between items-center group transition-all hover:translate-x-1 ${item.matched ? 'bg-white border-border hover:border-primary/30' : 'bg-destructive/5 border-destructive/20'}`}>
-                    <div className="flex flex-col">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-foreground">{item.name}</span>
-                        {!item.matched && <span className="text-[10px] font-bold bg-destructive text-white px-1.5 py-0.5 rounded uppercase">New</span>}
-                      </div>
-                      <span className="text-xs text-muted-foreground">{item.sku !== 'N/A' ? `SKU: ${item.sku}` : 'Match manually'}</span>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-bold text-primary">₹{item.price * item.quantity}</div>
-                      <div className="text-[10px] uppercase font-bold text-muted-foreground">{item.quantity} units</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex-1 flex flex-col items-center justify-center text-center opacity-50">
-                <Search className="text-5xl mb-2 text-muted-foreground" />
-                <p className="text-sm font-medium">Scan the table to see items here</p>
-              </div>
-            )}
+            <Box sx={{ p: 3, flex: 1, overflowY: "auto", maxHeight: 400 }}>
+              {isScanning ? (
+                <Stack spacing={2}>
+                  {[1, 2, 3].map((i) => (
+                    <Skeleton key={i} variant="rounded" height={80} sx={{ borderRadius: 4 }} />
+                  ))}
+                </Stack>
+              ) : identifiedItems.length > 0 ? (
+                <Stack spacing={1.5}>
+                  {identifiedItems.map((item, idx) => (
+                    <Stack
+                      key={idx}
+                      direction="row"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      sx={{
+                        p: 2,
+                        borderRadius: 4,
+                        border: "1px solid",
+                        borderColor: item.matched ? "divider" : "error.light",
+                        bgcolor: item.matched ? "background.paper" : "error.lighter",
+                        transition: "all 0.2s",
+                        "&:hover": { transform: "translateX(4px)", borderColor: "primary.light" },
+                      }}
+                    >
+                      <Box>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
+                            {item.name}
+                          </Typography>
+                          {!item.matched && (
+                            <Typography variant="caption" sx={{ bgcolor: "error.main", color: "white", px: 1, borderRadius: 0.5, fontWeight: 800, textTransform: "uppercase", fontSize: "0.6rem" }}>
+                              New
+                            </Typography>
+                          )}
+                        </Stack>
+                        <Typography variant="caption" color="text.secondary">
+                          {item.sku_code !== "N/A" ? `SKU: ${item.sku_code}` : "Match manually"}
+                        </Typography>
+                      </Box>
+                      <Box textAlign="right">
+                        <Typography variant="subtitle2" color="primary.main" sx={{ fontWeight: 800 }}>
+                          ₹{item.price * item.quantity}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700, textTransform: "uppercase" }}>
+                          {item.quantity} units
+                        </Typography>
+                      </Box>
+                    </Stack>
+                  ))}
+                </Stack>
+              ) : (
+                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", opacity: 0.4, py: 8 }}>
+                  <Search sx={{ fontSize: "4rem", mb: 2 }} />
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    Scan the table to see items here
+                  </Typography>
+                </Box>
+              )}
+            </Box>
 
-            <div className="mt-auto space-y-4 pt-6 border-t border-border">
-              <div className="flex justify-between items-end">
-                <span className="text-muted-foreground font-medium">Total Amount</span>
-                <span className="text-3xl font-black text-foreground">₹{identifiedItems.reduce((acc, item) => acc + (item.price * item.quantity), 0)}</span>
-              </div>
-              <button 
-                disabled={identifiedItems.length === 0}
-                className="w-full py-4 bg-foreground text-white rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-colors disabled:opacity-50"
-              >
-                Create ERP Invoice
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      
+            <Box sx={{ p: 3, borderTop: "1px solid", borderColor: "divider", mt: "auto" }}>
+              <Stack direction="row" justifyContent="space-between" alignItems="flex-end" sx={{ mb: 3 }}>
+                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                  Total Amount
+                </Typography>
+                <Typography variant="h3" sx={{ fontWeight: 900 }}>
+                  ₹{totalAmount}
+                </Typography>
+              </Stack>
+              <CommonButton 
+                fullWidth 
+                title="Create ERP Invoice" 
+                disabled={identifiedItems.length === 0 || isScanning} 
+                sx={{ py: 2, borderRadius: 4, fontWeight: 900, letterSpacing: "1px", textTransform: "uppercase" }} 
+              />
+            </Box>
+        </CommonCard>
+      </Grid>
+
       <style>{`
         @keyframes scanline {
           0% { top: 0; }
           100% { top: 100%; }
         }
-        .animate-scanline {
-          animation: scanline 2s linear infinite;
+        @keyframes pulse {
+          0% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.7; transform: scale(1.05); }
+          100% { opacity: 1; transform: scale(1); }
         }
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background-color: #cbd5e1;
-          border-radius: 20px;
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
         }
       `}</style>
-    </div>
+    </Box>
   );
 };
 

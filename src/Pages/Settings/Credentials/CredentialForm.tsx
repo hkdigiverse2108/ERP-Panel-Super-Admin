@@ -1,68 +1,72 @@
-import { useState } from "react";
+import { Grid } from "@mui/material";
+import { Form, Formik, type FormikHelpers } from "formik";
+import { useDispatch } from "react-redux";
+import { Mutations } from "../../../Api";
+import { CommonButton, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
+import { CommonModal } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
+import { useAppSelector } from "../../../Store/hooks";
+import { setCredentialsModal } from "../../../Store/Slices/ModalSlice";
+import type { CredentialsFormValues } from "../../../Types";
+import { GetChangedFields, RemoveEmptyFields } from "../../../Utils";
+import { CredentialsFormSchema } from "../../../Utils/ValidationSchemas";
 
 const CredentialForm = () => {
-  const [formData, setFormData] = useState({
-    projectId: "",
-    supabaseUrl: "",
-    publishableKey: ""
-  });
+  const { mutate: addCredential, isPending: isAddLoading } = Mutations.useAddCredential();
+  const { mutate: editCredential, isPending: isEditLoading } = Mutations.useEditCredential();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Saving credential:", formData);
+  const { isCredentialsModal } = useAppSelector((state) => state.modal);
+  const dispatch = useDispatch();
+
+  const isEdit = isCredentialsModal.data;
+  const openModal = isCredentialsModal.open;
+  const isEditing = Boolean(isEdit?._id);
+  const pageMode = isEditing ? "EDIT" : "ADD";
+
+  const initialValues: CredentialsFormValues = {
+    projectId: isEdit?.projectId || "",
+    publishableKey: isEdit?.publishableKey || "",
+    supabaseUrl: isEdit?.supabaseUrl || "",
+    isActive: isEdit?.isActive ?? true,
+  };
+
+  const closeModal = () => dispatch(setCredentialsModal({ open: false, data: null }));
+
+  const handleSubmit = (values: CredentialsFormValues, { resetForm }: FormikHelpers<CredentialsFormValues>) => {
+    const onSuccessHandler = () => {
+      resetForm();
+      closeModal();
+    };
+
+    if (isEditing) {
+      const changedFields = GetChangedFields(values, isEdit as Partial<CredentialsFormValues>);
+      editCredential({ ...changedFields, credentialId: isEdit?._id as string }, { onSuccess: onSuccessHandler });
+    } else {
+      addCredential(RemoveEmptyFields(values) as any, { onSuccess: onSuccessHandler });
+    }
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">{PAGE_TITLE.CREDENTIALS.ADD}</h1>
-        <p className="text-muted-foreground text-sm">Add a new Supabase project for AI rotation logic.</p>
-      </div>
+    <CommonModal title={PAGE_TITLE.CREDENTIALS[pageMode]} isOpen={openModal} onClose={closeModal} className="max-w-125">
+      <Formik<CredentialsFormValues> enableReinitialize initialValues={initialValues} validationSchema={CredentialsFormSchema} onSubmit={handleSubmit}>
+        {({ dirty }) => (
+          <Form noValidate>
+            <Grid container spacing={2} sx={{ p: 1 }}>
+              <CommonValidationTextField name="projectId" label="Project ID" required grid={{ xs: 12 }} />
+              <CommonValidationTextField name="publishableKey" label="Publishable Key" required grid={{ xs: 12 }} />
+              <CommonValidationTextField name="supabaseUrl" label="Supabase URL" required grid={{ xs: 12 }} />
 
-      <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 border border-border rounded-2xl shadow-sm">
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-foreground uppercase tracking-wider">Project ID</label>
-          <input 
-            type="text" 
-            placeholder="e.g. gvnwsvvmgfjahyrqijuz"
-            className="w-full px-4 py-3 bg-secondary/50 border border-border rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
-            value={formData.projectId}
-            onChange={(e) => setFormData({...formData, projectId: e.target.value})}
-          />
-        </div>
+              <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />
 
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-foreground uppercase tracking-wider">Supabase URL</label>
-          <input 
-            type="url" 
-            placeholder="https://your-project.supabase.co"
-            className="w-full px-4 py-3 bg-secondary/50 border border-border rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
-            value={formData.supabaseUrl}
-            onChange={(e) => setFormData({...formData, supabaseUrl: e.target.value})}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-foreground uppercase tracking-wider">Publishable Key</label>
-          <textarea 
-            placeholder="Enter your supabase anon key"
-            className="w-full px-4 py-3 bg-secondary/50 border border-border rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none min-h-[100px]"
-            value={formData.publishableKey}
-            onChange={(e) => setFormData({...formData, publishableKey: e.target.value})}
-          />
-        </div>
-
-        <div className="pt-4 flex gap-4">
-          <button type="submit" className="flex-1 py-3 bg-primary text-white font-bold rounded-xl hover:opacity-90 transition-opacity">
-            Save Credential
-          </button>
-          <button type="button" className="px-6 py-3 bg-secondary text-foreground font-bold rounded-xl border border-border hover:bg-muted transition-colors">
-            Cancel
-          </button>
-        </div>
-      </form>
-    </div>
+              <Grid sx={{ display: "flex", gap: 2, ml: "auto", mt: 2 }}>
+                <CommonButton variant="outlined" onClick={closeModal} title="Cancel" />
+                <CommonButton type="submit" variant="contained" title="Save" loading={isEditLoading || isAddLoading} disabled={!dirty} />
+              </Grid>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
+    </CommonModal>
   );
 };
 

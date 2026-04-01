@@ -19,6 +19,8 @@ import type { ProductTypeBase } from "./ProductType";
 import type { PrefixBase } from "./Prefix";
 import type { ConsumptionTypeBase } from "./ConsumptionType";
 import type { PaymentTermsBase } from "./PaymentTerms";
+import type { SpecialsBase } from "./Specials";
+import type { CredentialsBase } from "./Credentials";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -516,6 +518,8 @@ export interface ModalStateSlice {
   isPrefixModal: { open: boolean; data: PrefixBase | null };
   isConsumptionTypeModal: { open: boolean; data: ConsumptionTypeBase | null };
   isPaymentTermsModal: { open: boolean; data: PaymentTermsBase | null };
+  isSpecialsModal: { open: boolean; data: SpecialsBase | null };
+  isCredentialsModal: { open: boolean; data: CredentialsBase | null };
 }
 
 // ************ Modal End ***********

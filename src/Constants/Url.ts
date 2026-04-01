@@ -413,5 +413,22 @@ export const URL_KEYS = {
     ALL: "/payment-term/all",
     ADD: "/payment-term/add",
     EDIT: "/payment-term/edit",
-  }
+  },
+  SPECIALS: {
+    BASE: "/specials",
+    ADD: "/specials/add",
+    EDIT: "/specials/edit",
+    ALL: "/specials/all",
+    DELETE: "/specials",
+  },
+  CREDENTIALS: {
+    BASE: "/credentials",
+    ADD: "/credentials/add",
+    EDIT: "/credentials/edit",
+    ALL: "/credentials/all",
+    DELETE: "/credentials",
+  },
+  AI: {
+    ANALYZE: "/ai/analyze",
+  },
 } as const;
