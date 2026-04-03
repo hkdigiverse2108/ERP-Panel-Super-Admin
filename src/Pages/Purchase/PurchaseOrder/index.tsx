@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
-import { useMemo } from "react";
+import { Box, Grid } from "@mui/material";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonStatsCard } from "../../../Components/Common";
@@ -7,15 +7,20 @@ import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, ORDER_STATUS } from "../../../Data";
 import type { AppGridColDef, PurchaseOrderBase } from "../../../Types";
 import { useDataGrid } from "../../../Utils/Hooks";
-import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { CreateFilter, DateConfig, GenerateOptions } from "../../../Utils";
 import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import type { GridRenderCellParams } from "@mui/x-data-grid";
+import { CommonDateRangeSelector } from "../../../Attribute";
+
 
 const PurchaseOrder = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const navigate = useNavigate();
-  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPurchaseOrder({}, false);
-  const { data: purchaseOrderData, isLoading: purchaseOrderDataLoading, isFetching: purchaseOrderDataFetching } = Queries.useGetPurchaseOrder(params);
+
+  const [range, setRange] = useState({ start:  DateConfig.utc().startOf("day"), end:  DateConfig.utc().endOf("day") });
+
+  const { data: purchaseOrderData, isLoading: purchaseOrderDataLoading, isFetching: purchaseOrderDataFetching } = Queries.useGetPurchaseOrder({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPurchaseOrder({ startDate: range.start.toISOString(), endDate: range.end.toISOString() }, false);
   const { mutate: deletePurchaseOrderMutate, isPending: deletePurchaseOrderLoading } = Mutations.useDeletePurchaseOrder();
   const { mutate: editPurchaseOrder, isPending: isEditLoading } = Mutations.useEditPurchaseOrder();
 
@@ -117,13 +122,20 @@ const PurchaseOrder = () => {
     { label: "Completed", value: summaryData?.completed || 0, color: "info" },
     { label: "Cancelled", value: summaryData?.cancelled || 0, color: "warning" },
   ];
+    const topContent = (
+    <>
+      <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
+        <CommonDateRangeSelector value={range} onChange={setRange} active="This Financial Year"/>
+      </Grid>
+    </>
+  );
 
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE_ORDER.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.PURCHASE_ORDER.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <CommonStatsCard stats={stats} grid={{ xs: 6, sm: 4, md: 2 }} />
-        <AdvancedSearch filter={filter} />
+        <AdvancedSearch filter={filter} defaultExpanded children={topContent} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

@@ -1,20 +1,24 @@
-import { Box } from "@mui/material";
-import { useMemo } from "react";
+import { Box, Grid } from "@mui/material";
+import { useMemo, useState } from "react";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, ORDER_STATUS } from "../../../Data";
 import type { AppGridColDef, PosOrderBase } from "../../../Types";
-import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { CreateFilter, DateConfig, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import type { GridRenderCellParams } from "@mui/x-data-grid";
+import { CommonDateRangeSelector } from "../../../Attribute";
 
 const OrderList = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params, rowToDelete, setRowToDelete, advancedFilter, updateAdvancedFilter } = useDataGrid({});
   const permission = usePagePermission(PAGE_TITLE.POS.BASE);
-  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPosOrder({}, false);
-  const { data: orderData, isLoading: orderDataLoading, isFetching: orderDataFetching } = Queries.useGetPosOrder(params);
+
+   const [range, setRange] = useState({ start:  DateConfig.utc().startOf("day"), end:  DateConfig.utc().endOf("day") });
+
+   const { data: orderData, isLoading: orderDataLoading, isFetching: orderDataFetching } = Queries.useGetPosOrder({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
+  const { refetch: fetchAllOrders, isFetching: orderDataAllFetching, isLoading: orderDataAllLoading } = Queries.useGetPosOrder({ startDate: range.start.toISOString(), endDate: range.end.toISOString() }, false);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
   const { mutate: deleteOrder, isPending: isDeleteLoading } = Mutations.useDeletePosOrder();
   const { mutate: editOrder, isPending: isEditLoading } = Mutations.useEditPosOrder();
@@ -102,15 +106,23 @@ const OrderList = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     fileName: PAGE_TITLE.POS.ORDER_LIST,
-    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
-    onAccountingExportAll: { accountingColumns: accountingColumns, onAccountingExportAll: fetchAll, isFetching: AllLoading || AllFetching },
+    onExportAll: { onExportAll: fetchAllOrders, isFetching: orderDataAllLoading || orderDataAllFetching },
+    onAccountingExportAll: { accountingColumns: accountingColumns, onAccountingExportAll: fetchAllOrders, isFetching: orderDataAllLoading || orderDataAllFetching },
   };
+
+      const topContent = (
+    <>
+      <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
+        <CommonDateRangeSelector value={range} onChange={setRange} active="This Financial Year"/>
+      </Grid>
+    </>
+  );
 
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.POS.ORDER_LIST} breadcrumbs={BREADCRUMBS.POS_ORDER_LIST.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <AdvancedSearch filter={filter} />
+        <AdvancedSearch filter={filter} defaultExpanded children={topContent} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
