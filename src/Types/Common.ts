@@ -196,6 +196,7 @@ export interface CommonDataGridProps {
   slots?: any;
   slotProps?: GridSlotsComponentsProps;
   onExportAll?: { onExportAll: () => void; isFetching: boolean };
+  onAccountingExportAll?: { accountingColumns: GridColDef[]; onAccountingExportAll: () => void; isFetching: boolean };
 }
 
 export interface CustomToolbarProps {
@@ -211,6 +212,7 @@ export interface CustomToolbarProps {
   filterModel: GridFilterModel;
   onFilterModelChange: (model: GridFilterModel) => void;
   onExportAll?: { onExportAll: () => void; isFetching: boolean };
+  onAccountingExportAll?: { accountingColumns: GridColDef[]; onAccountingExportAll: () => void; isFetching: boolean };
 }
 
 export interface ExportToExcelProps<T extends GridValidRowModel> {
@@ -227,6 +229,7 @@ export interface ExportToPDFProps<T extends GridValidRowModel> {
   title?: string;
   user?: string;
   email?: string;
+  isAccounting?: boolean;
 }
 
 export type ColumnFormatType = "default" | "phone" | "date" | "datetime" | "format" | "status";
