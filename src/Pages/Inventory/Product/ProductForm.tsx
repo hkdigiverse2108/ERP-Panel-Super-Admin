@@ -27,7 +27,6 @@ const ProductForm = () => {
   const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true });
   const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true });
   const { data: ProductTypeData, isLoading: ProductTypeDataLoading } = Queries.useGetProductTypeDropdown();
-  console.log("data", data);
 
   const { mutate: addProduct, isPending: isAddLoading } = Mutations.useAddProduct();
   const { mutate: editProduct, isPending: isEditLoading } = Mutations.useEditProduct();

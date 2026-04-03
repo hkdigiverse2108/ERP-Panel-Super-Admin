@@ -5,7 +5,9 @@ import { useAppSelector } from "../Store/hooks";
 import { setIsMobile, setPermission,   } from "../Store/Slices/LayoutSlice";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-import { CommonTermsAndConditionFormModal, CommonTermsAndConditionSelectModal, CommonUpload } from "../Components/Common";
+import { ProductRenameModal, CommonTermsAndConditionFormModal, CommonTermsAndConditionSelectModal, CommonUpload } from "../Components/Common";
+
+
 import { Queries } from "../Api";
 import CommonVideoModal from "../Components/Common/Modal/CommonVideoModal";
 import { setUser } from "../Store/Slices/AuthSlice";
@@ -71,7 +73,10 @@ const Layout = () => {
       <CommonVideoModal />
       <CommonTermsAndConditionFormModal />
       <CommonTermsAndConditionSelectModal />
+      <ProductRenameModal />
     </>
+
+
   );
 };
 

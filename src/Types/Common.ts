@@ -520,6 +520,15 @@ export interface ModalStateSlice {
   isPaymentTermsModal: { open: boolean; data: PaymentTermsBase | null };
   isSpecialsModal: { open: boolean; data: SpecialsBase | null };
   isCredentialsModal: { open: boolean; data: CredentialsBase | null };
+  isProductRenameModal: {
+    open: boolean;
+    data: {
+      productId: string;
+      oldName: string;
+      newName: string;
+    } | null;
+    title?: string;
+  };
 }
 
 // ************ Modal End ***********

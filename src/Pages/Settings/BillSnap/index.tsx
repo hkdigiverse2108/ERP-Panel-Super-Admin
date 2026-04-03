@@ -1,19 +1,61 @@
-import { AutoAwesome, CameraAlt, Receipt, Refresh, Search } from "@mui/icons-material";
-import { Box, Grid, Skeleton, Stack, Typography, useTheme } from "@mui/material";
+import { Add, AutoAwesome, CameraAlt, Receipt, Refresh, Search } from "@mui/icons-material";
+import { Box, Grid, IconButton, Skeleton, Stack, Typography, useTheme } from "@mui/material";
 import { useRef, useState } from "react";
-import { Mutations } from "../../../Api";
-import { CommonButton } from "../../../Attribute";
+import { Mutations, Queries } from "../../../Api";
+import { CommonButton, CommonSelect } from "../../../Attribute";
 import { CommonCard } from "../../../Components/Common";
-import { PAGE_TITLE } from "../../../Constants";
-import type { DetectedItem } from "../../../Types";
+import { PAGE_TITLE, ROUTES } from "../../../Constants";
+import { useNavigate } from "react-router-dom";
+import { GenerateOptions } from "../../../Utils";
+import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
+import { setProductRenameModal } from "../../../Store/Slices/ModalSlice";
+import { useEffect } from "react";
+import { setCapturedImage, setIdentifiedItems } from "../../../Store/Slices/BillSnapSlice";
+import type { RootState } from "../../../Store/Store";
 
 const BillSnap = () => {
   const theme = useTheme();
-  const [capturedImage, setCapturedImage] = useState<string | null>(null);
-  const [identifiedItems, setIdentifiedItems] = useState<DetectedItem[]>([]);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const { capturedImage, identifiedItems } = useAppSelector((state: RootState) => state.billsnap);
+  const [value, setValue] = useState<string[]>([]);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { mutate: analyzeTable, isPending: isScanning } = Mutations.useAnalyzeTable();
+  const { data: ProductData, isLoading: ProductDataLoading, refetch: refetchProductData } = Queries.useGetProductDropdown();
+
+  const [selectedItemIdx, setSelectedItemIdx] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (identifiedItems.length === 1 && !identifiedItems[0].matched) {
+      setSelectedItemIdx(0);
+    } else {
+      setSelectedItemIdx(null);
+    }
+  }, [identifiedItems]);
+
+  const handleProductSelect = (productIds: string[]) => {
+    if (selectedItemIdx === null || productIds.length === 0) return;
+
+    setValue(productIds);
+    const productId = productIds[0];
+    const detectedItem = identifiedItems[selectedItemIdx];
+    const oldProductName = ProductData?.data.find((p: any) => p._id === productId)?.name || "";
+
+    dispatch(
+      setProductRenameModal({
+        open: true,
+        title: "Confirm Rename",
+        data: {
+          productId: productId,
+          oldName: oldProductName,
+          newName: detectedItem.name,
+        },
+      }),
+    );
+  };
 
   // Helper to resize and compress image to keep payload small and fast
   const resizeAndCompressImage = (base64Str: string, maxWidth = 800, maxHeight = 800): Promise<string> => {
@@ -52,8 +94,9 @@ const BillSnap = () => {
     analyzeTable(
       { imageBase64: capturedImage },
       {
-        onSuccess: (response) => {
-          setIdentifiedItems(response.data || []);
+        onSuccess: (response: any) => {
+          dispatch(setIdentifiedItems(response.data || []));
+          refetchProductData();
         },
       },
     );
@@ -67,8 +110,8 @@ const BillSnap = () => {
         const base64 = event.target?.result as string;
         // Compress before setting in state to ensure fast UI and fast API
         const compressedBase64 = await resizeAndCompressImage(base64);
-        setCapturedImage(compressedBase64);
-        setIdentifiedItems([]);
+        dispatch(setCapturedImage(compressedBase64));
+        dispatch(setIdentifiedItems([]));
       };
       reader.readAsDataURL(file);
     }
@@ -133,8 +176,8 @@ const BillSnap = () => {
               <CommonButton sx={{ flex: 1, py: 2, borderRadius: 4, fontWeight: "bold" }} variant="contained" disabled={!capturedImage || isScanning} onClick={handleScan} startIcon={<AutoAwesome />} title={identifiedItems.length > 0 ? "Rescan Table" : "Scan Table"} />
               <CommonButton
                 onClick={() => {
-                  setCapturedImage(null);
-                  setIdentifiedItems([]);
+                  dispatch(setCapturedImage(null));
+                  dispatch(setIdentifiedItems([]));
                 }}
                 disabled={isScanning}
                 variant="outlined"
@@ -148,19 +191,30 @@ const BillSnap = () => {
 
         {/* Right Section: Results/Checkout */}
         <CommonCard grid={{ xs: 12, lg: 6, xl: 4 }} hideDivider paperProps={{ sx: { height: "100%", display: "flex", flexDirection: "column", minHeight: 480, p: 0, borderRadius: 6, border: "1px solid", borderColor: "divider" } }}>
-          <Box sx={{ p: 3, borderBottom: "1px solid", borderColor: "divider", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Receipt sx={{ color: "primary.main" }} />
-              <Typography variant="h6" sx={{ fontWeight: 800 }}>
-                Detected Items
-              </Typography>
-            </Stack>
-            <Typography variant="caption" sx={{ fontWeight: 800, bgcolor: "secondary.light", color: "text.secondary", px: 1, py: 0.5, borderRadius: 1, textTransform: "uppercase" }}>
-              {identifiedItems.length} found
-            </Typography>
+          <Box sx={{ p: 2, borderBottom: "1px solid", borderColor: "divider" }}>
+            <Grid container spacing={2} alignItems="center">
+              <Grid size={12}>
+                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <Receipt sx={{ color: "primary.main" }} />
+                    <Typography variant="h6" sx={{ fontWeight: 800 }}>
+                      Detected Items
+                    </Typography>
+                  </Stack>
+                  <Typography variant="caption" sx={{ fontWeight: 800, bgcolor: "secondary.light", color: "text.secondary", px: 1, py: 0.5, borderRadius: 1, textTransform: "uppercase" }}>
+                    {identifiedItems.length} found
+                  </Typography>
+                </Stack>
+              </Grid>
+              {identifiedItems.length > 0 && (
+                <Grid size={12}>
+                  <CommonSelect label="Select Product" options={GenerateOptions(ProductData?.data)} value={value} onChange={handleProductSelect} limitTags={1} disabled={selectedItemIdx === null} isLoading={ProductDataLoading} />
+                </Grid>
+              )}
+            </Grid>
           </Box>
 
-          <Box sx={{ p: 3, flex: 1, overflowY: "auto", maxHeight: 400 }}>
+          <Box sx={{ p: 2, flex: 1, overflowY: "auto", maxHeight: 400 }}>
             {isScanning ? (
               <Stack spacing={2}>
                 {[1, 2, 3].map((i) => (
@@ -170,7 +224,51 @@ const BillSnap = () => {
             ) : identifiedItems.length > 0 ? (
               <Stack spacing={1.5}>
                 {identifiedItems.map((item, idx) => (
-                  <Stack key={idx} direction="row" justifyContent="space-between" alignItems="center" sx={{ p: 2, borderRadius: 4, border: "1px solid", borderColor: item.matched ? "divider" : "error.light", bgcolor: item.matched ? "background.paper" : "error.lighter", transition: "all 0.2s", "&:hover": { transform: "translateX(4px)", borderColor: "primary.light" } }}>
+                  <Stack
+                    key={idx}
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    sx={{
+                      p: 1.5,
+                      borderRadius: 1.5,
+                      border: "1px solid",
+                      borderColor: selectedItemIdx === idx ? "primary.main" : item.matched ? "divider" : "error.light",
+                      bgcolor: selectedItemIdx === idx ? "rgba(70, 95, 255, 0.08)" : item.matched ? "background.paper" : "error.lighter",
+                      transition: "all 0.2s",
+                      "&:hover": { transform: "translateX(4px)", borderColor: "primary.light" },
+                      cursor: "pointer",
+                      position: "relative", // Needed for absolute positioning
+                    }}
+                    onClick={() => {
+                      if (!item.matched) {
+                        setSelectedItemIdx(idx);
+                      }
+                    }}
+                  >
+                    {!item.matched && (
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(ROUTES.PRODUCT.ADD_EDIT, { state: { data: { name: item.name, sku: item.name } } });
+                        }}
+                        sx={{
+                          position: "absolute",
+                          top: -12,
+                          right: -12,
+                          bgcolor: "primary.main",
+                          color: "white",
+                          boxShadow: 2,
+                          p: 0.5,
+                          "&:hover": { bgcolor: "primary.dark", transform: "scale(1.1)" },
+                          transition: "all 0.2s",
+                          zIndex: 10,
+                        }}
+                      >
+                        <Add sx={{ fontSize: "1.2rem", fontWeight: "bold" }} />
+                      </IconButton>
+                    )}
                     <Box>
                       <Stack direction="row" spacing={1} alignItems="center">
                         <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
@@ -186,13 +284,15 @@ const BillSnap = () => {
                         {item.sku_code !== "N/A" ? `SKU: ${item.sku_code}` : "Match manually"}
                       </Typography>
                     </Box>
-                    <Box textAlign="right">
+                    <Box textAlign="right" sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 1 }}>
                       <Typography variant="subtitle2" color="primary.main" sx={{ fontWeight: 800 }}>
                         ₹{item.price * item.quantity}
                       </Typography>
-                      <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700, textTransform: "uppercase" }}>
-                        {item.quantity} units
-                      </Typography>
+                      <Stack direction="row" spacing={1} alignItems="center">
+                        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700, textTransform: "uppercase" }}>
+                          {item.quantity} units
+                        </Typography>
+                      </Stack>
                     </Box>
                   </Stack>
                 ))}

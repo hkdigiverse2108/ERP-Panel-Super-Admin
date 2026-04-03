@@ -16,7 +16,7 @@ export const CommonValidationCreatableSelect: FC<CommonValidationCreatableSelect
       freeSolo
       size="small"
       options={localOptions}
-      value={field.value || []}
+      value={Array.isArray(field.value) ? field.value : []}
       disabled={disabled}
       onChange={(_, newValue) => {
         // Find newly added values

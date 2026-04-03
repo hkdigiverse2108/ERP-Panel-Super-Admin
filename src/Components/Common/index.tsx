@@ -6,7 +6,10 @@ import CommonUpload from "./CommonUploadImage";
 import CommonModal from "./Modal/CommonModal";
 import CommonActionColumn from "./CommonActionColumn";
 import CommonDeleteModal from "./Modal/CommonDeleteModal";
+import ProductRenameModal from "./Modal/ProductRenameModal";
 import CommonBottomActionBar from "./CommonBottomActionBar";
+
+
 import { DependentSelect } from "./DependentSelect";
 import { CommonImageBox } from "./CommonUploadImage/CommonImageBox";
 import { CommonPhoneColumns, CommonObjectNameColumn } from "./CommonDataGrid/CommonColumns";
@@ -42,7 +45,10 @@ export {
   CommonModal,
   CommonActionColumn,
   CommonDeleteModal,
+  ProductRenameModal,
   CommonBottomActionBar,
+
+
   CommonImageBox,
   CommonPhoneColumns,
   CommonObjectNameColumn,
