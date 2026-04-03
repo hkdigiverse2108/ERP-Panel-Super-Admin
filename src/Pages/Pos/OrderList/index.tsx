@@ -8,6 +8,7 @@ import type { AppGridColDef, PosOrderBase } from "../../../Types";
 import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
+import type { GridRenderCellParams } from "@mui/x-data-grid";
 
 const OrderList = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params, rowToDelete, setRowToDelete, advancedFilter, updateAdvancedFilter } = useDataGrid({});
@@ -58,6 +59,37 @@ const OrderList = () => {
       : []),
   ];
 
+  const accountingColumns: AppGridColDef<PosOrderBase>[] = [
+    { field: "orderNo", headerName: "Invoice No", flex: 1, minWidth: 150 },
+    {
+      field: "items",
+      headerName: "Product Name",
+      flex: 1,
+      minWidth: 150,
+      renderCell: (params: GridRenderCellParams<PosOrderBase>) => {
+        return <div>{params.row.items?.map((item) => item?.productId?.name).join(", ")}</div>;
+      },
+      exportFormatter: (_, row: PosOrderBase) => {
+        return row?.items?.map((item) => item?.productId?.name)?.join(", ") || "";
+      },
+    },
+    CommonObjectPropertyColumn<PosOrderBase>("customerId", "customerId", ["firstName", "lastName"], { headerName: "Customer Name", width: 150 }),
+    {
+      field: "state",
+      headerName: "State",
+      flex: 1,
+      minWidth: 150,
+      renderCell: (params: GridRenderCellParams<PosOrderBase>) => {
+        return <div>{params.row.customerId?.address?.[0].state?.name}</div>;
+      },
+      exportFormatter: (_, row: PosOrderBase) => {
+        return row?.customerId?.address?.[0].state?.name || "";
+      },
+    },
+    CommonObjectPropertyColumn<PosOrderBase>("paymentMethod", "paymentMethod", [], { headerName: "Payment Mode", width: 120, type: "format" }),
+    CommonObjectPropertyColumn<PosOrderBase>("created", "createdAt", [], { headerName: "Date", width: 120, type: "date" }), //
+  ];
+
   const CommonDataGridOption = {
     columns,
     rows: allOrders,
@@ -71,6 +103,7 @@ const OrderList = () => {
     onFilterModelChange: setFilterModel,
     fileName: PAGE_TITLE.POS.ORDER_LIST,
     onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
+    onAccountingExportAll: { accountingColumns: accountingColumns, onAccountingExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   return (
