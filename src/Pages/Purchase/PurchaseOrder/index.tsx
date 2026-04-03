@@ -12,12 +12,11 @@ import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDat
 import type { GridRenderCellParams } from "@mui/x-data-grid";
 import { CommonDateRangeSelector } from "../../../Attribute";
 
-
 const PurchaseOrder = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const navigate = useNavigate();
 
-  const [range, setRange] = useState({ start:  DateConfig.utc().startOf("day"), end:  DateConfig.utc().endOf("day") });
+  const [range, setRange] = useState({ start: DateConfig.utc().startOf("day"), end: DateConfig.utc().endOf("day") });
 
   const { data: purchaseOrderData, isLoading: purchaseOrderDataLoading, isFetching: purchaseOrderDataFetching } = Queries.useGetPurchaseOrder({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPurchaseOrder({ startDate: range.start.toISOString(), endDate: range.end.toISOString() }, false);
@@ -74,6 +73,8 @@ const PurchaseOrder = () => {
       },
     },
     CommonObjectPropertyColumn<PurchaseOrderBase>("supplierId", "supplierId", ["firstName", "lastName"], { headerName: "Supplier Name", width: 150 }),
+    { field: "netAmount", headerName: "Amount", flex: 1, minWidth: 110, type: "number", isSummary: true },
+
     {
       field: "state",
       headerName: "State",
@@ -122,10 +123,10 @@ const PurchaseOrder = () => {
     { label: "Completed", value: summaryData?.completed || 0, color: "info" },
     { label: "Cancelled", value: summaryData?.cancelled || 0, color: "warning" },
   ];
-    const topContent = (
+  const topContent = (
     <>
       <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
-        <CommonDateRangeSelector value={range} onChange={setRange} active="This Financial Year"/>
+        <CommonDateRangeSelector value={range} onChange={setRange} active="This Financial Year" />
       </Grid>
     </>
   );
