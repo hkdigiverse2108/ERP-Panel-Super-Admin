@@ -25,6 +25,7 @@ export interface RecipeFormValues {
   number?: string;
   type?: string;
   companyId?: string;
+  branchId?: string;
   rawProducts?: RawRecipeProduct[];
   rawrecipeId?: string;
   finalProducts?: FinalRecipeProduct;

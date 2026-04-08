@@ -2,6 +2,7 @@ import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 
 export interface StockFormValues {
   companyId?: string;
+  branchId?: string;
   productId?: string;
   uomId?: string;
   purchaseTaxId?: string;
@@ -28,7 +29,7 @@ export type AddStockBulkAdjustmentPayload = {
     qty: number | null;
     productId: string;
   }[];
-  type: string;
+  consumptionTypeId: string;
   companyId: string;
 };
 

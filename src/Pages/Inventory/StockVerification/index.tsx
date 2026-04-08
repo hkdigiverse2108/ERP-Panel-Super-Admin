@@ -20,6 +20,8 @@ const StockVerification = () => {
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetStockVerification({}, false);
   const { data: stockVerificationData, isLoading: stockVerificationDataLoading, isFetching: stockVerificationDataFetching } = Queries.useGetStockVerification(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+    const companyId = advancedFilter?.companyFilter?.[0] || "";
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
   const { mutate: deleteStockVerificationMutate, isPending: isDeleteLoading } = Mutations.useDeleteStockVerification();
 
   const allStock = useMemo(() => stockVerificationData?.data?.stockVerification_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [stockVerificationData]);
@@ -34,6 +36,7 @@ const StockVerification = () => {
 
   const columns: AppGridColDef<StockVerificationBase>[] = [
     CommonObjectNameColumn("companyId", { headerName: "Company Name", width: 200 }),
+    CommonObjectNameColumn("branchId", { headerName: "Branch Name", width: 200 }),
     { field: "stockVerificationNo", headerName: "Stock Verification No.", flex: 1, minWidth: 230 },
     CommonObjectPropertyColumn<StockVerificationBase>("createdAt", "createdAt", [], { headerName: "Stock Verification Date", width: 230, type: "date" }),
     { field: "totalProducts", headerName: "Total Products", width: 230, isSummary: true },
@@ -86,6 +89,7 @@ const StockVerification = () => {
 
   const filter = [
     CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }),
     CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, STOCK_VARIFICATION_STATUS, false, { xs: 12, sm: 6, md: 3 }),
   ];
 

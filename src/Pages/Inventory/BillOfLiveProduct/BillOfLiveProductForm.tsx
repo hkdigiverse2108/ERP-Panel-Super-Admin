@@ -5,7 +5,7 @@ import type { FormikProps } from "formik";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Mutations, Queries } from "../../../Api";
 import { CommonButton, CommonTextField, CommonValidationDatePicker, CommonValidationTextField, CommonDatePicker, CommonValidationSelect, CommonValidationSwitch } from "../../../Attribute";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonTable } from "../../../Components/Common";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonTable, DependentSelect } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { BillOfLiveProductBase, BillOfLiveProductFormValues, ProductBase, RecipeBase, CommonTableColumn, BillOfLiveProductDetail } from "../../../Types";
@@ -61,16 +61,6 @@ const CompanyWatcher = ({ onChange }: { onChange: (id: string) => void }) => {
   return null;
 };
 
-const BOLP_PREFIX = "BOLP";
-const parseBimNumber = (value?: string) => {
-  if (!value) return "";
-  const match = value.match(/\d+/);
-  return match ? match[0] : "";
-};
-const formatBimNumber = (num?: string | number) => {
-  if (!num) return "";
-  return `${BOLP_PREFIX} ${num}`;
-};
 const BillOfLiveProductForm = () => {
   const location = useLocation();
   const { data, no } = location.state as {
@@ -88,7 +78,6 @@ const BillOfLiveProductForm = () => {
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
 
   const pageMode = isEditing ? "EDIT" : "ADD";
-  const bomNumber = isEditing ? data?.number : String((Number(no) || 0) + 1);
 
   const { mutate: addBOM, isPending: isAddLoading } = Mutations.useAddBillOfLiveProduct();
   const { mutate: editBOM, isPending: isEditLoading } = Mutations.useEditBillOfLiveProduct();
@@ -238,7 +227,7 @@ const BillOfLiveProductForm = () => {
 
   const initialValues: BillOfLiveProductFormValues = {
     companyId: data?.companyId?._id || "",
-    number: isEditing ? parseBimNumber(data?.number) : bomNumber,
+    number: isEditing ? data?.number : "",
     date: isEditing ? data?.date : DateConfig.utc().toISOString(),
     allowReverseCalculation: data?.allowReverseCalculation ?? false,
     recipeId: data?.recipeId?.map((b: RecipeBase) => b._id) ?? [],
@@ -274,9 +263,9 @@ const BillOfLiveProductForm = () => {
     }));
 
     if (isEditing) {
-      editBOM({ billOfLiveProductId: data!._id, recipeId: values.recipeId, productDetails, number: formatBimNumber(values.number) }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
+      editBOM({ billOfLiveProductId: data!._id, recipeId: values.recipeId, productDetails }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
     } else {
-      addBOM({ companyId: values.companyId, number: formatBimNumber(values.number), date: values.date, allowReverseCalculation: values.allowReverseCalculation, recipeId: values.recipeId, productDetails }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
+      addBOM({ companyId: values.companyId, date: values.date, allowReverseCalculation: values.allowReverseCalculation, recipeId: values.recipeId, productDetails }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
     }
   };
   useEffect(() => {
@@ -297,9 +286,9 @@ const BillOfLiveProductForm = () => {
                   <Grid size={12}>
                     <Grid container spacing={2}>
                       <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 4 }} required />
+                      <DependentSelect name="branchId" label="Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4 }} />
                       <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 4 }} />
-                      <CommonValidationTextField name="text" label="BOLP" disabled grid={{ xs: 12, md: 4 }} />
-                      <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 4 }} />
+                      {isEditing && <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 4 }} />}
                       <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 4 }} options={GenerateOptions(recipeData?.data?.recipe_data || [])} isLoading={recipeLoading || recipeFetching} disabled={!values.companyId} />
                       <CommonValidationSwitch name="allowReverseCalculation" label="Allow Reverse Calculation" />
                     </Grid>

@@ -19,6 +19,8 @@ const Recipe = () => {
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetRecipe({}, false);
   const { data, isLoading, isFetching } = Queries.useGetRecipe(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const companyId = advancedFilter?.companyFilter?.[0] || "";
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
   const { mutate: deleteRecipe, isPending: isDeleteLoading } = Mutations.useDeleteRecipe();
   const { mutate: editRecipe, isPending: isEditLoading } = Mutations.useEditRecipe();
   const rows = useMemo(() => {
@@ -38,6 +40,7 @@ const Recipe = () => {
 
   const columns: AppGridColDef<RecipeBase>[] = [
     CommonObjectNameColumn<RecipeBase>("companyId", { headerName: "Company", width: 200 }),
+    CommonObjectNameColumn<RecipeBase>("branchId", { headerName: "Branch", width: 200 }),
     { field: "number", headerName: "Recipe No", width: 200 },
     { field: "name", headerName: "Recipe Name", width: 200 },
     CommonObjectPropertyColumn<RecipeBase>("date", "date", [], { headerName: "Recipe Date", width: 120, type: "date" }),
@@ -75,7 +78,10 @@ const Recipe = () => {
     onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }),
+  ];
 
   return (
     <>

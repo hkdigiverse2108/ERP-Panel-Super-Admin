@@ -23,9 +23,11 @@ const RecipeForm = () => {
   const { mutate: editRecipe, isPending: isEditLoading } = Mutations.useEditRecipe();
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
 
+
   // ✅ INITIAL VALUES
   const initialValues: RecipeFormValues = {
     companyId: data?.companyId?._id || "",
+    branchId: data?.branchId?._id || "",
     name: data?.name || "",
     number: data?.number || "",
     date: data?.date || DateConfig.utc().toISOString(),
@@ -72,6 +74,7 @@ const RecipeForm = () => {
                 <CommonCard title="Recipe Details">
                   <Box p={2} display="flex" flexWrap="wrap" gap={2}>
                     <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 4 }} required />
+                    <DependentSelect name="branchId" label="Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="name" label="Recipe Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationDatePicker name="date" label="Recipe Date" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="type" label="Recipe Type" options={RECIPE_TYPE_OPTIONS} required grid={{ xs: 12, md: 4 }} />

@@ -17,6 +17,8 @@ const Tax = () => {
   const dispatch = useDispatch();
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.TAX.BASE);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const companyId = advancedFilter?.companyFilter?.[0] || "";
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
   const { data: TaxData, isLoading: TaxDataLoading, isFetching: TaxDataFetching } = Queries.useGetTax(params);
   const { mutate: deleteTaxMutate } = Mutations.useDeleteTax();
   const { mutate: editTax, isPending: isEditLoading } = Mutations.useEditTax();
@@ -35,6 +37,7 @@ const Tax = () => {
 
   const columns: AppGridColDef<TaxBase>[] = [
     CommonObjectNameColumn<TaxBase>("companyId", { headerName: "Company", width: 200 }),
+    CommonObjectNameColumn<TaxBase>("branchId", { headerName: "Branch", width: 200 }),
     { field: "name", headerName: "Name", flex: 1, minWidth: 200 },
     { field: "percentage", headerName: "Percentage", flex: 1, minWidth: 200 },
     CommonObjectPropertyColumn<TaxBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
@@ -68,7 +71,10 @@ const Tax = () => {
     onFilterModelChange: setFilterModel,
     fileName: PAGE_TITLE.INVENTORY.TAX.BASE,
   };
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }),
+  ];
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.TAX.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.TAX.BASE} />

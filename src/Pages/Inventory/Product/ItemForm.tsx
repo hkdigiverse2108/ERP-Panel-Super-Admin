@@ -3,7 +3,7 @@ import { Form, Formik, useFormikContext, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { StockFormValues, TaxBase } from "../../../Types";
@@ -68,6 +68,7 @@ const ItemForm = () => {
 
   const initialValues: StockFormValues = {
     companyId: companyId,
+    branchId: "",
     productId: "",
     uomId: "",
     purchaseTaxId: "",
@@ -112,6 +113,7 @@ const ItemForm = () => {
                   <CommonCard hideDivider>
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       <CommonValidationSelect name="companyId" label="Select company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, sm: 6, xl: 4 }} required />
+                      <DependentSelect name="branchId" label="Select Brach" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, sm: 6, xl: 4 }} />
                       <CommonValidationSelect name="productId" label="Select Product" options={GenerateOptions(ProductData?.data)} isLoading={ProductDataLoading} grid={{ xs: 12, sm: 6, xl: 4 }} required />
                       <CommonValidationSelect name="uomId" label="Select UOM" options={GenerateOptions(UOMData?.data)} isLoading={UOMDataLoading} grid={{ xs: 12, sm: 6, xl: 4 }} required />
                       <CommonValidationSelect name="purchaseTaxId" label="Purchase Tax" isLoading={TaxDataLoading} syncFieldName="salesTaxId" options={GenerateOptions(TaxData?.data)} grid={{ xs: 12, sm: 6, xl: 4 }} required />

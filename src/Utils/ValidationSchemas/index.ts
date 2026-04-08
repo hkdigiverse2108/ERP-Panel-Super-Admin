@@ -207,7 +207,7 @@ export const ProductItemFormSchema = Yup.object({
 });
 
 export const ProductItemRemoveFormSchema = Yup.object({
-  type: Validation("string", "Consumption Type"),
+  consumptionTypeId: Validation("string", "Consumption Type"),
 });
 
 export const CompanyFormSchemas = Yup.object({
