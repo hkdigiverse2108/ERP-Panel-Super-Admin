@@ -882,3 +882,10 @@ export const CredentialsFormSchema = Yup.object({
   supabaseUrl: Validation("string", "Supabase URL"),
   isActive: Yup.boolean(),
 });
+
+export const BillOfLiveProductFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
+  branchId: Validation("string", "Branch"),
+  recipeId: Validation("array", "Recipe", { minItems: 1 }),
+  date: Validation("string", "Date"),
+});

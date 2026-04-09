@@ -1,3 +1,4 @@
+import type { BranchBase } from "./Branch";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { CompanyBase } from "./Company";
 import type { ProductBase } from "./Product";
@@ -30,6 +31,7 @@ export interface BillOfLiveProductDetail {
 
 export interface BillOfLiveProductFormValues {
   companyId?: string;
+  branchId?: string;
   date?: string;
   number?: string;
   recipeId?: string[];
@@ -45,11 +47,12 @@ export type EditBillOfLiveProductPayload = AddBillOfLiveProductPayload & { billO
 
 /* ================= BASE ================= */
 
-export interface BillOfLiveProductBase extends Omit<BillOfLiveProductFormValues, "recipeId" | "productId" | "productDetails" | "companyId">, CommonDataType {
+export interface BillOfLiveProductBase extends Omit<BillOfLiveProductFormValues, "recipeId" | "productId" | "productDetails" | "companyId" | "branchId">, CommonDataType {
   recipeId?: RecipeBase[];
   productId: ProductBase;
   productDetails?: BillOfLiveProductDetail[];
   companyId?: CompanyBase;
+  branchId?: BranchBase;
 }
 
 /* ================= API RESPONSE ================= */
