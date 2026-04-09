@@ -28,6 +28,7 @@ const BankTransactionForm = () => {
 
   const initialValues: BankTransactionFormValues = {
     companyId: typeof isEdit?.companyId === "object" ? isEdit?.companyId?._id : isEdit?.companyId || "",
+    branchId: typeof isEdit?.branchId === "object" ? isEdit?.branchId?._id : isEdit?.branchId || "",
     voucherNo: isEdit?.voucherNo || "",
     transactionDate: isEdit?.transactionDate || new Date().toISOString(),
     transactionType: isEdit?.transactionType || "deposit",
@@ -61,6 +62,7 @@ const BankTransactionForm = () => {
           <Form noValidate>
             <Grid container spacing={2} sx={{ p: 1 }}>
               <CommonValidationSelect name="companyId" label="Company" required isLoading={CompanyDataLoading} options={GenerateOptions(CompanyData?.data)} grid={{ xs: 12 }} />
+              <DependentSelect params={{ companyFilter: values?.companyId }} name="branchId" label="Branch" query={Queries.useGetBranchDropdown} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12 }} />
               <DependentSelect params={{ companyFilter: values?.companyId }} name="toAccount" label="To Account" required query={Queries.useGetBankDropdown} grid={{ xs: 12 }} disabled={!values?.companyId} />
               <DependentSelect params={{ companyFilter: values?.companyId }} name="fromAccount" label="From Account" required query={Queries.useGetBankDropdown} grid={{ xs: 12 }} disabled={!values?.companyId} />
               <CommonValidationTextField name="amount" label="Amount" type="number" required grid={{ xs: 12 }} />

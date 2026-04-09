@@ -13,10 +13,10 @@ const PurchaseDebitNoteTabs = ({ emptyRow }: { emptyRow: PurchaseDebitNoteProduc
   const [tabValue, setTabValue] = useState(0);
   const { values, setFieldValue } = useFormikContext<PurchaseDebitNoteFormValues>();
 
-  const isSupplierSelected = !!values?.supplierId;
+  const isSupplierSelected = !!values?.supplierId && !!values?.branchId;
 
-  const productParams = useMemo(() => ({ companyFilter: values?.companyId }), [values?.companyId]);
-  const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown(productParams, !!values?.companyId);
+  const productParams = useMemo(() => ({ companyFilter: values?.companyId, branchFilter: values?.branchId }), [values?.companyId, values?.branchId]);
+  const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown(productParams, !!values?.companyId && !!values?.branchId);
 
   const calculateRowValues = (index: number) => {
     const row = values?.productDetails?.[index];

@@ -22,6 +22,7 @@ const PurchaseDebitNote = () => {
   // Filter Data Queries
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
   const companyId = advancedFilter?.companyFilter?.[0];
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
   const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier", companyFilter: companyId });
 
   const allRows = useMemo(
@@ -47,6 +48,8 @@ const PurchaseDebitNote = () => {
   };
 
   const columns: AppGridColDef<PurchaseDebitNoteBase>[] = [
+    CommonObjectPropertyColumn<PurchaseDebitNoteBase>("companyId", "companyId", ["name"], { headerName: "Company", width: 150 }),
+    CommonObjectPropertyColumn<PurchaseDebitNoteBase>("branchId", "branchId", ["name"], { headerName: "Branch", width: 150 }),
     { field: "debitNoteNo", headerName: "Debit Note No", flex: 1, minWidth: 150 },
     CommonObjectPropertyColumn<PurchaseDebitNoteBase>("status", "status", [], { headerName: "Status", width: 150, type: "status" }),
     CommonObjectPropertyColumn<PurchaseDebitNoteBase>("supplierId", "supplierId", ["firstName", "lastName"], { headerName: "Supplier", width: 150 }),
@@ -63,7 +66,12 @@ const PurchaseDebitNote = () => {
     }),
   ];
 
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(companyData?.data), companyDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Supplier", "supplierFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(supplierData?.data), supplierDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, PURCHASE_DEBIT_NOTE_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(companyData?.data), companyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Supplier", "supplierFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(supplierData?.data), supplierDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, PURCHASE_DEBIT_NOTE_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 }),
+  ];
 
   // One state box for total amount specifically as requested
   const stats = [

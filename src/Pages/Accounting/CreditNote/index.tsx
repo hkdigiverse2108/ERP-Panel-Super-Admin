@@ -18,6 +18,8 @@ const CreditNote = () => {
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetCreditNote({}, false);
   const { data: creditNoteData, isLoading: creditNoteDataLoading, isFetching: creditNoteDataFetching } = Queries.useGetCreditNote(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const companyId = advancedFilter?.companyFilter?.[0] || "";
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
 
   const { mutate: deleteCreditNoteMutate } = Mutations.useDeleteCreditNote();
   const { mutate: editCreditNote, isPending: isEditLoading } = Mutations.useEditCreditNote();
@@ -34,6 +36,7 @@ const CreditNote = () => {
 
   const columns: GridColDef<CreditNoteBase>[] = [
     CommonObjectNameColumn<CreditNoteBase>("companyId", { headerName: "Company", width: 200 }),
+    CommonObjectNameColumn<CreditNoteBase>("branchId", { headerName: "Branch", width: 200 }),
     { field: "personName", headerName: "Person Name", width: 200 },
     { field: "amount", headerName: "Amount", width: 140 },
     CommonObjectPropertyColumn<CreditNoteBase>("date", "date", [], { headerName: "Date", width: 120, type: "date" }),
@@ -72,7 +75,10 @@ const CreditNote = () => {
     onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }), //
+  ];
 
   return (
     <>

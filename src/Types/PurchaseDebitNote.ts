@@ -4,6 +4,7 @@ import type { ContactBase } from "./Contacts";
 import type { TermsConditionBase } from "./TermsCondition";
 import type { TaxBase } from "./Tax";
 import type { UomBase } from "./Uom";
+import type { BranchBase } from "./Branch";
 
 /* ===================== PRODUCT (FORM) ===================== */
 
@@ -70,6 +71,7 @@ export interface PurchaseDebitNoteFormValues {
   notes?: string;
   status?: "open" | "closed" | "cancelled";
   companyId?: string;
+  branchId?: string;
   isActive?: boolean;
   _submitAction?: string;
 }
@@ -114,6 +116,7 @@ export interface PurchaseDebitNoteBase extends CommonDataType {
     _id: string;
     name?: string;
   };
+  branchId?: BranchBase;
   isActive?: boolean;
 }
 

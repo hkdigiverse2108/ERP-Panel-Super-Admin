@@ -10,6 +10,7 @@ import type { ContactBase } from "./Contacts";
 import type { TermsConditionBase } from "./TermsCondition";
 import type { UomBase } from "./Uom";
 import type { TaxBase } from "./Tax";
+import type { BranchBase } from "./Branch";
 
 /* ===================== SUPPLIER ===================== */
 
@@ -130,6 +131,7 @@ export interface SupplierBillFormValues {
   paymentStatus?: "paid" | "unpaid" | "partial";
   status?: "active" | "cancelled";
   companyId?: string;
+  branchId?: string;
   isActive?: boolean;
   _submitAction?: string;
 }
@@ -257,6 +259,7 @@ export interface SupplierBillBase extends CommonDataType {
     _id: string;
     name?: string;
   };
+  branchId?: BranchBase;
 
   isActive?: boolean;
 }
@@ -318,4 +321,5 @@ export interface SupplierBillTabsProps {
   isProductDisabled?: boolean;
   isTermsDisabled?: boolean;
   companyId?: string;
+  branchId?: string;
 }

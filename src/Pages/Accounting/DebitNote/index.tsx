@@ -19,6 +19,8 @@ const DebitNote = () => {
   const { data: debitNoteData, isLoading: debitNoteDataLoading, isFetching: debitNoteDataFetching } = Queries.useGetDebitNote(params);
   const { mutate: deleteDebitNoteMutate } = Mutations.useDeleteDebitNote();
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const companyId = advancedFilter?.companyFilter?.[0] || "";
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
 
   const { mutate: editDebitNote, isPending: isEditLoading } = Mutations.useEditDebitNote();
 
@@ -34,6 +36,7 @@ const DebitNote = () => {
 
   const columns: GridColDef<DebitNoteBase>[] = [
     CommonObjectNameColumn<DebitNoteBase>("companyId", { headerName: "Company", width: 200 }),
+    CommonObjectNameColumn<DebitNoteBase>("branchId", { headerName: "Branch", width: 200 }),
     { field: "personName", headerName: "Person Name", width: 200 },
     { field: "amount", headerName: "Amount", width: 140 },
     CommonObjectPropertyColumn<DebitNoteBase>("date", "date", [], { headerName: "Date", width: 120, type: "date" }),
@@ -71,7 +74,10 @@ const DebitNote = () => {
     fileName: PAGE_TITLE.DEBIT_NOTE.BASE,
     onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }),
+  ];
 
   return (
     <>

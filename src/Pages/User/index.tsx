@@ -32,6 +32,7 @@ const User = () => {
   const handleAdd = () => navigate(ROUTES.USER.ADD_EDIT);
   const columns: AppGridColDef<UserBase>[] = [
     CommonObjectNameColumn<UserBase>("companyId", { headerName: "Company", width: 200 }),
+    CommonObjectNameColumn<UserBase>("branchId", { headerName: "Branch", width: 200 }),
     { field: "username", headerName: "User Name", type: "string", width: 170 },
     { field: "fullName", headerName: "Full Name", width: 170 },
     { field: "designation", headerName: "Designation", width: 170 },

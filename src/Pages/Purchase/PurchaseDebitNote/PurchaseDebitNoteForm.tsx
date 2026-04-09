@@ -29,6 +29,7 @@ const PurchaseDebitNoteForm = () => {
   const initialValues: PurchaseDebitNoteFormValues = useMemo(() => {
     return {
       companyId: typeof data?.companyId === "object" ? data.companyId?._id : data?.companyId || "",
+      branchId: typeof data?.branchId === "object" ? data.branchId?._id : data?.branchId || "",
       supplierId: typeof data?.supplierId === "object" ? data.supplierId?._id : data?.supplierId || "",
       purchaseId: typeof data?.purchaseId === "object" ? data.purchaseId?._id : data?.purchaseId || "",
       debitNoteDate: data?.debitNoteDate || DateConfig.utc().toISOString(),
@@ -146,7 +147,7 @@ const PurchaseDebitNoteForm = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE_DEBIT_NOTE[pageMode]} breadcrumbs={BREADCRUMBS.PURCHASE_DEBIT_NOTE[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<PurchaseDebitNoteFormValues> initialValues={initialValues} validationSchema={PurchaseDebitNoteFormSchema} onSubmit={handleSubmit} enableReinitialize validateOnMount>
-          {({ setFieldValue, dirty, isValid, resetForm }) => (
+          {({ setFieldValue, dirty, resetForm }) => (
             <Form noValidate>
               <CommonSummaryWatcher summaryKey="summary" itemsKey="productDetails" priceKey="unitCost" taxAmountKey="tax" hasAdditionalCharges />
               <Grid container spacing={2}>
@@ -164,7 +165,7 @@ const PurchaseDebitNoteForm = () => {
                   </CommonCard>
                 </Box>
 
-                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty || !isValid} isLoading={isEditLoading || isAddLoading} onClear={() => (isEditing ? navigate(-1) : resetForm({ values: initialValues }))} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => (isEditing ? navigate(-1) : resetForm({ values: initialValues }))} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}

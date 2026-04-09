@@ -18,10 +18,10 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
   const [tabValue, setTabValue] = useState(0);
   const { values, setFieldValue } = useFormikContext<any>();
 
-  const isSupplierSelected = !!values?.supplierId && !!values?.companyId;
+  const isSupplierSelected = !!values?.supplierId && !!values?.companyId && !!values?.branchId;
 
-  const productParams = useMemo(() => ({ companyFilter: values?.companyId }), [values?.companyId]);
-  const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown(productParams, !!values?.companyId);
+  const productParams = useMemo(() => ({ companyFilter: values?.companyId, branchFilter: values?.branchId }), [values?.companyId, values?.branchId]);
+  const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown(productParams, !!values?.companyId && !!values?.branchId);
   const { data: taxData } = Queries.useGetTaxDropdown();
 
   const calculateRowValues = (index: number, isReturn: boolean = false) => {

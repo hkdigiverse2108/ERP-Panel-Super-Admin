@@ -1,3 +1,4 @@
+import type { BranchBase } from "./Branch";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { CompanyBase } from "./Company";
 import type { ContactBase } from "./Contacts";
@@ -12,6 +13,7 @@ export interface ExpenseFormValues {
   amount?: number;
   isActive?: boolean;
   companyId?: string;
+  branchId?: string;
   description?: string;
   status?: string;
   _submitAction?: string;
@@ -29,11 +31,12 @@ export type EditExpensePayload = AddExpensePayload & {
 };
 
 /* ================= BASE MODEL ================= */
-export type ExpenseBase = Omit<ExpenseFormValues, "partyId" | "companyId"> &
+export type ExpenseBase = Omit<ExpenseFormValues, "partyId" | "companyId" | "branchId"> &
   CommonDataType & {
     partyId?: ContactBase | UserBase;
     companyId?: CompanyBase;
     total?: SalaryBase;
+    branchId?: BranchBase;
   };
 
 /* ================= API RESPONSES ================= */
