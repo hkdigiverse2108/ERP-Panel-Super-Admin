@@ -5,7 +5,7 @@ import type { CommonDataGridProps } from "../../../Types";
 import CustomToolbar from "./CustomToolbar";
 import NoRowsOverlay from "./NoRowsOverlay";
 
-const CommonDataGrid: FC<CommonDataGridProps> = ({onExportAll, isToolbar = true, slots, slotProps, isExport, pagination, fileName, columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, defaultHidden = [], BoxClass, handleAdd, isActive, setActive }) => {
+const CommonDataGrid: FC<CommonDataGridProps> = ({ onAccountingExportAll, onExportAll, isToolbar = true, slots, slotProps, isExport, pagination, fileName, columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, defaultHidden = [], BoxClass, handleAdd, isActive, setActive }) => {
   const apiRef = useGridApiRef();
 
   const visibilityModel = useMemo(() => {
@@ -38,6 +38,23 @@ const CommonDataGrid: FC<CommonDataGridProps> = ({onExportAll, isToolbar = true,
       ...columnsWithFallback,
     ];
   }, [columnsWithFallback, paginationModel, rows]);
+  const accountingColumnsWithFallback = useMemo<GridColDef[]>(() => (onAccountingExportAll?.accountingColumns ?? []).map(withFallbackValueGetter), [onAccountingExportAll?.accountingColumns]);
+
+  const accountingColumns = useMemo<GridColDef[]>(() => {
+    return [
+      {
+        field: "srNo",
+        headerName: "Sr No",
+        width: 60,
+        sortable: false,
+        filterable: false,
+        valueGetter: (_value, row) => (paginationModel ? paginationModel.page * paginationModel.pageSize + rows.findIndex((r) => r.id === row.id) + 1 : rows.findIndex((r) => r.id === row.id) + 1),
+      },
+      ...accountingColumnsWithFallback,
+    ];
+  }, [accountingColumnsWithFallback, paginationModel, rows]);
+
+  const onAccountingExportAllData = onAccountingExportAll ? { ...onAccountingExportAll, accountingColumns } : undefined;
 
   return (
     <div className={`${BoxClass} min-w-full overflow-auto`}>
@@ -48,7 +65,7 @@ const CommonDataGrid: FC<CommonDataGridProps> = ({onExportAll, isToolbar = true,
         rowCount={rowCount}
         loading={loading}
         slots={{
-          toolbar: () => isToolbar && <CustomToolbar onExportAll={onExportAll} filterModel={filterModel} onFilterModelChange={onFilterModelChange} isExport={isExport} fileName={fileName} apiRef={apiRef} columns={fixedColumns} rows={rows} rowCount={rowCount} handleAdd={handleAdd} isActive={isActive} setActive={setActive} />,
+          toolbar: () => isToolbar && <CustomToolbar onAccountingExportAll={onAccountingExportAllData} onExportAll={onExportAll} filterModel={filterModel} onFilterModelChange={onFilterModelChange} isExport={isExport} fileName={fileName} apiRef={apiRef} columns={fixedColumns} rows={rows} rowCount={rowCount} handleAdd={handleAdd} isActive={isActive} setActive={setActive} />,
           noRowsOverlay: () => <NoRowsOverlay />,
           bottomContainer: (props) => <>{slots?.bottomContainer?.(props)}</>,
         }}

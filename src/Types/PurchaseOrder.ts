@@ -19,15 +19,17 @@ export interface PurchaseOrderSummary {
   taxSummary?: { name: string; rate: number; amount: number }[];
 }
 
-export interface PurchaseOrderBase extends Omit<PurchaseOrderFormValues, "supplierId">, CommonDataType {
+export interface PurchaseOrderBase extends Omit<PurchaseOrderFormValues, "supplierId" | "items">, CommonDataType {
   _id: string;
   supplierId?: ContactBase;
+  items?: (Omit<PurchaseOrderItem, "productId"> & { productId: ProductBase })[];
 }
 export type Supplier = ContactBase;
 
 export interface PurchaseOrderItem {
   productId: string | ProductBase;
   qty: number;
+  name?: string;
   freeQty?: number;
   mrp?: number | string;
   sellingPrice?: number | string;

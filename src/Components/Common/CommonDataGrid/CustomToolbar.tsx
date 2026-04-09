@@ -14,8 +14,7 @@ import { ExportDataGridToExcel } from "./ExportDataGridToExcel";
 import { ExportDataGridToPDF } from "./ExportDataGridToPDF";
 import { PAGE_TITLE } from "../../../Constants";
 
-
-const CustomToolbar: FC<CustomToolbarProps> = ({ onExportAll, isExport = true, fileName, apiRef, columns, rows, handleAdd, isActive, setActive, filterModel, onFilterModelChange }) => {
+const CustomToolbar: FC<CustomToolbarProps> = ({ onAccountingExportAll, onExportAll, isExport = true, fileName, apiRef, columns, rows, handleAdd, isActive, setActive, filterModel, onFilterModelChange }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [searchText, setSearchText] = useState(filterModel?.quickFilterValues?.[0] || "");
 
@@ -47,7 +46,19 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ onExportAll, isExport = true, f
       ...(fileName === PAGE_TITLE.POS.SALES_REGISTER && { shortExceed: (item.physicalDrawerCash || 0) - (item.totalCashInDrawer || 0) }),
       ...(fileName === PAGE_TITLE.INVOICE.BASE && { dueAmount: Number(((item.transactionSummary?.netAmount || 0) - (item.paidAmount || 0)).toFixed(2)) }),
     }));
-    ExportDataGridToExcel({ columns, rows: finalData, fileName: exportAllFileName ,title: fileName});
+    ExportDataGridToExcel({ columns, rows: finalData, fileName: exportAllFileName, title: fileName });
+  };
+  const handleAccountingExportAll = async (type: "excel" | "pdf") => {
+    if (!onAccountingExportAll) return;
+    const res: any = await onAccountingExportAll.onAccountingExportAll();
+    const raw = res?.data?.data ?? res?.data;
+    const list = extractArray(raw);
+    const finalData = list.map((item) => ({ ...item, id: item?._id || item?.id }));
+    if (type === "excel") {
+      ExportDataGridToExcel({ columns: onAccountingExportAll.accountingColumns, rows: finalData, fileName: exportAllFileName, title: fileName });
+    } else {
+      ExportDataGridToPDF({ isAccounting: true, columns: onAccountingExportAll.accountingColumns, rows: finalData, fileName: exportAllFileName, title: fileName });
+    }
   };
 
   return (
@@ -161,6 +172,18 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ onExportAll, isExport = true, f
               <PictureAsPdfIcon fontSize="small" sx={{ mr: 1 }} />
               PDF
             </MenuItem>
+            {onAccountingExportAll && (
+              <MenuItem onClick={() => handleAccountingExportAll("excel")} disabled={onAccountingExportAll?.isFetching}>
+                <GridOnIcon fontSize="small" sx={{ mr: 1 }} />
+                {onAccountingExportAll?.isFetching ? "Loading..." : "Accounting Excel"}
+              </MenuItem>
+            )}
+            {onAccountingExportAll && (
+              <MenuItem onClick={() => handleAccountingExportAll("pdf")} disabled={onAccountingExportAll?.isFetching}>
+                <PictureAsPdfIcon fontSize="small" sx={{ mr: 1 }} />
+                {onAccountingExportAll?.isFetching ? "Loading..." : "Accounting PDF"}
+              </MenuItem>
+            )}
           </Menu>
           {handleAdd && (
             <Grid size="auto">
