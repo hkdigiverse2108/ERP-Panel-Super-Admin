@@ -1,3 +1,4 @@
+import type { BranchBase } from "./Branch";
 import type { AdditionalChargeItem, CommonDataType, MessageStatus, PageStatus, ShippingDetails, TransactionSummary } from "./Common";
 import type { CompanyBase } from "./Company";
 import type { Address, ContactBase } from "./Contacts";
@@ -32,6 +33,7 @@ export interface SalesOrderItem {
 
 export interface SalesOrderFormValues {
   companyId?: string;
+  branchId?: string;
   date?: string;
   dueDate?: string;
   customerId?: string;
@@ -60,10 +62,11 @@ export type AddSalesOrderPayload = SalesOrderFormValues;
 
 export type EditSalesOrderPayload = SalesOrderFormValues & { salesOrderId?: string };
 
-export interface SalesOrderBase extends Omit<SalesOrderFormValues, "customerId" | "companyId" | "termsAndConditionIds" | "additionalCharges" | "billingAddress" | "shippingAddress">, CommonDataType {
+export interface SalesOrderBase extends Omit<SalesOrderFormValues, "customerId" | "companyId" | "termsAndConditionIds" | "additionalCharges" | "billingAddress" | "shippingAddress" | "branchId">, CommonDataType {
   salesOrderNo: string;
   estimateNo: string;
   companyId: CompanyBase;
+  branchId: BranchBase;
   customerId: ContactBase;
   termsAndConditionIds: TermsConditionBase[];
   additionalCharges: AdditionalChargeItem[];

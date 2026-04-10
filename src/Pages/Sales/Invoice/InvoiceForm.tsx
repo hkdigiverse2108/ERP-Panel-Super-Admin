@@ -38,6 +38,7 @@ const InvoiceForm = () => {
 
   const initialValues: InvoiceFormValues = {
     companyId: typeof data?.companyId === "object" ? data.companyId?._id : data?.companyId || "",
+    branchId: typeof data?.branchId === "object" ? data.branchId?._id : data?.branchId || "",
     date: data?.date || DateConfig.utc().toISOString(),
     dueDate: data?.dueDate || "",
     customerId: typeof data?.customerId === "object" ? data.customerId?._id : data?.customerId || "",
@@ -192,7 +193,7 @@ const InvoiceForm = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.INVOICE[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.INVOICE[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<InvoiceFormValues> initialValues={initialValues} validationSchema={InvoiceFormSchema} onSubmit={handleSubmit} enableReinitialize={isEditing} validateOnMount>
-          {({ setFieldValue, dirty, isValid, resetForm }) => (
+          {({ setFieldValue, dirty, resetForm }) => (
             <Form noValidate>
               <CommonSummaryWatcher summaryKey="transactionSummary" priceKey="price" hasAdditionalCharges />
               <Grid container spacing={2}>
@@ -213,7 +214,7 @@ const InvoiceForm = () => {
                 <CommonBottomActionBar 
                   save={isEditing} 
                   clear={!isEditing} 
-                  disabled={!dirty || !isValid} 
+                  disabled={!dirty} 
                   isLoading={isEditLoading || isAddLoading} 
                   onClear={() => resetForm({ values: initialValues })} 
                   onSave={() => setFieldValue("_submitAction", "save")} 

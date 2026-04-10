@@ -20,7 +20,6 @@ const BankForm = () => {
   // const { user } = useAppSelector((state) => state.auth);
   const permission = usePagePermission(PAGE_TITLE.BANK.BASE);
 
-  const { data: branchData, isLoading: branchDataLoading } = Queries.useGetBranchDropdown();
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
 
   const { mutate: addBank, isPending: isAddLoading } = Mutations.useAddBank();
@@ -113,7 +112,8 @@ const BankForm = () => {
                     <CommonValidationTextField name="accountHolderName" label="Account Holder Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="bankAccountNumber" label="Account Number" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="upiId" label="UPI ID" grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationSelect name="branchIds" label="Branches" grid={{ xs: 12, md: 4 }} options={GenerateOptions(branchData?.data)} isLoading={branchDataLoading} multiple />
+                    <DependentSelect name="branchIds" label="Select Branches" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4 }} multiple />
+                    {/* <CommonValidationSelect name="branchIds" label="Branches" grid={{ xs: 12, md: 4 }} options={GenerateOptions(branchData?.data)} isLoading={branchDataLoading} multiple /> */}
                     <CommonValidationTextField name="openingBalance.creditBalance" label="Credit Balance" type="number" grid={{ xs: 12, sm: 2 }} />
                     <CommonValidationTextField name="openingBalance.debitBalance" label="Debit Balance" type="number" grid={{ xs: 12, sm: 2 }} />
                     <CommonValidationTextField name="address.addressLine1" label="Address Line 1" multiline grid={{ xs: 12, md: 8 }} required />

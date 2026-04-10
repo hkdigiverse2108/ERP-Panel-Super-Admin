@@ -101,15 +101,15 @@ const EstimateDetails = () => {
       </Grid>
 
       <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 2, md: 2 } }}>
-        <CommonValidationSelect name="customerId" label="Select Customer" required options={GenerateOptions(customers)} disabled={!values.companyId} isLoading={isCustomerLoading || isCustomerFetching} />
+        <DependentSelect name="branchId" label="Select Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12 }} required />
       </Grid>
 
       <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 3, md: 3 } }}>
-        <CommonValidationDatePicker name="date" label="Estimate Date" required />
+        <CommonValidationSelect name="customerId" label="Select Customer" required options={GenerateOptions(customers)} disabled={!values.companyId} isLoading={isCustomerLoading || isCustomerFetching} />
       </Grid>
 
       <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 4, md: 4 } }}>
-        <DependentSelect name="paymentTermsId" label="Payment Term" query={Queries.useGetPaymentTermsDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12 }} />
+        <CommonValidationDatePicker name="date" label="Estimate Date" required />
       </Grid>
 
       <Grid size={{ xs: 12, md: 3 }} container spacing={2} sx={{ order: { xs: 10, md: 5 } }}>
@@ -170,15 +170,19 @@ const EstimateDetails = () => {
         </Grid>
       </Grid>
 
-      <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 5, md: 5 } }}>
+      <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 6, md: 6 } }}>
+        <DependentSelect name="paymentTermsId" label="Payment Term" query={Queries.useGetPaymentTermsDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12 }} />
+      </Grid>
+
+      <Grid size={{ xs: 12, md: 2 }} sx={{ order: { xs: 7, md: 7 } }}>
         <CommonValidationDatePicker name="dueDate" label="Due Date" required />
       </Grid>
 
-      <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 6, md: 6 } }}>
+      <Grid size={{ xs: 12, md: 2 }} sx={{ order: { xs: 8, md: 8 } }}>
         <CommonValidationSelect name="taxType" label="Tax Type" options={TAX_TYPE} />
       </Grid>
 
-      <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 7, md: 7 } }}>
+      <Grid size={{ xs: 12, md: 2 }} sx={{ order: { xs: 9, md: 9 } }}>
         <CommonValidationSelect name="reverseCharge" label="Reverse Charge" options={REVERSE_CHARGE} />
       </Grid>
 

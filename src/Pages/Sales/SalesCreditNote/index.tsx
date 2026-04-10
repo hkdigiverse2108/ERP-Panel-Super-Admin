@@ -21,6 +21,7 @@ const SalesCreditNote = () => {
   // Filter Data Queries
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
   const companyId = advancedFilter?.companyFilter?.[0];
+  const { data: branchData, isLoading: branchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
   const { data: customerData, isLoading: customerDataLoading } = Queries.useGetContactDropdown({ typeFilter: "customer", companyFilter: companyId });
 
   const allSalesCreditNote = useMemo(
@@ -48,6 +49,8 @@ const SalesCreditNote = () => {
   const handleAdd = () => navigate(ROUTES.SALES_CREDIT_NOTE.ADD_EDIT);
 
   const columns: AppGridColDef<SalesCreditNoteBase>[] = [
+    CommonObjectPropertyColumn<SalesCreditNoteBase>("companyId", "companyId", ["name"], { headerName: "Company Name", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<SalesCreditNoteBase>("branchId", "branchId", ["name"], { headerName: "Branch Name", flex: 1, minWidth: 150 }),
     { field: "creditNoteNo", headerName: "Credit Note No.", flex: 1, minWidth: 150 },
     CommonObjectPropertyColumn<SalesCreditNoteBase>("creditNoteDate", "creditNoteDate", [], { headerName: "Credit Note Date", flex: 1, minWidth: 120, type: "date" }),
     CommonObjectPropertyColumn<SalesCreditNoteBase>("dueDate", "dueDate", [], { headerName: "Due Date", flex: 1, minWidth: 120, type: "date" }),
@@ -87,7 +90,11 @@ const SalesCreditNote = () => {
     onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(companyData?.data), companyDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Customer", "customerFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(customerData?.data), customerDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, SALES_CREDIT_NOTE_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(companyData?.data), companyDataLoading, { xs: 12, sm: 6, md: 3 }),//
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(branchData?.data), branchDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Customer", "customerFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(customerData?.data), customerDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, SALES_CREDIT_NOTE_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];
 
   const STATUS_COLOR: Record<string, string> = {
     all: "primary",

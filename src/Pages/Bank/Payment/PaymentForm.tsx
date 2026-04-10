@@ -151,7 +151,7 @@ const PaymentForm = () => {
                       <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 3 }} />
                       <DependentSelect name="branchId" label="Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} required grid={{ xs: 12, md: 3 }} />
                       <DependentSelect
-                        params={{ companyFilter: values?.companyId }}
+                        params={{typeFilter: "customer", companyFilter: values?.companyId }}
                         value={values.partyId ? [values.partyId] : []}
                         name="partyId"
                         label="Party"

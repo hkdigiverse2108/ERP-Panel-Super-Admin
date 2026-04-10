@@ -32,6 +32,7 @@ export interface DeliveryChallanItem {
 
 export interface DeliveryChallanBase extends CommonDataType {
   companyId: string;
+  branchId: string;
   deliveryChallanNo: string;
   date: string;
   dueDate: string;
@@ -63,6 +64,7 @@ export interface DeliveryChallanFormValues extends Omit<
   | "companyId"
 > {
   companyId: string;
+  branchId: string;
   deliveryChallanNo?: string;
   customerId: string;
   items: DeliveryChallanItem[];

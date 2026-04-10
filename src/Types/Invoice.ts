@@ -35,6 +35,7 @@ export interface InvoiceItem {
 
 export interface InvoiceBase extends CommonDataType {
   companyId: string;
+  branchId: string;
   invoiceNo: string;
   date: string;
   dueDate: string;
@@ -75,6 +76,7 @@ export interface InvoiceFormValues extends Omit<
   | "reverseCharge"
 > {
   companyId: string;
+  branchId: string;
   invoiceNo?: string;
   customerId: string;
   salesManId?: string;

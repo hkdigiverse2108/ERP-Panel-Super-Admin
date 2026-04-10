@@ -21,6 +21,7 @@ const SalesOrder = () => {
   // Filter Data Queries
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
   const companyId = advancedFilter?.companyFilter?.[0];
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
   const { data: customerData, isLoading: customerDataLoading } = Queries.useGetContactDropdown({ typeFilter: "customer", companyFilter: companyId });
 
   const allSalesOrder = useMemo(() => salesOrder?.data?.salesOrder_data?.map((salesOrder) => ({ ...salesOrder, id: salesOrder._id, netAmount: salesOrder.transactionSummary?.netAmount || 0, taxAmount: salesOrder.transactionSummary?.taxAmount || 0 })) || [], [salesOrder]);
@@ -38,6 +39,8 @@ const SalesOrder = () => {
   const handleAdd = () => navigate(ROUTES.SALES_ORDER.ADD_EDIT);
 
   const columns: AppGridColDef<SalesOrderBase>[] = [
+    CommonObjectPropertyColumn<SalesOrderBase>("companyId", "companyId", ["name"], { headerName: "Company Name", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<SalesOrderBase>("branchId", "branchId", ["name"], { headerName: "Branch Name", flex: 1, minWidth: 150 }),
     { field: "salesOrderNo", headerName: "Sales Order No", flex: 1, minWidth: 150 },
     CommonObjectPropertyColumn<SalesOrderBase>("date", "date", [], { headerName: "Sales Order Date", flex: 1, minWidth: 120, type: "date" }),
     CommonObjectPropertyColumn<SalesOrderBase>("dueDate", "dueDate", [], { headerName: "Due Date", flex: 1, minWidth: 120, type: "date" }),
@@ -75,7 +78,12 @@ const SalesOrder = () => {
     onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(companyData?.data), companyDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Customer", "customerFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(customerData?.data), customerDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, SALES_ORDER_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(companyData?.data), companyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Customer", "customerFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(customerData?.data), customerDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, SALES_ORDER_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 }),
+  ];
 
   // const stats = [
   //     { label: "All Orders", value: totalRows || 0, color: "primary" },

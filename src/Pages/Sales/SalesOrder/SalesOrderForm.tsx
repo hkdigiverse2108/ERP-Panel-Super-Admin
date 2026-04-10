@@ -22,6 +22,7 @@ const SalesOrderForm = () => {
 
   const initialValues: SalesOrderFormValues = {
     companyId: typeof data?.companyId === "object" ? data.companyId?._id : data?.companyId || "",
+    branchId: typeof data?.branchId === "object" ? data.branchId?._id : data?.branchId || "",
     date: data?.date || DateConfig.utc().toISOString(),
     dueDate: data?.dueDate || "",
     customerId: typeof data?.customerId === "object" ? data.customerId?._id : data?.customerId || "",
@@ -158,7 +159,7 @@ const SalesOrderForm = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.SALES_ORDER[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.SALES_ORDER[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<SalesOrderFormValues> initialValues={initialValues} validationSchema={SalesOrderFormSchema} onSubmit={handleSubmit} enableReinitialize={isEditing} validateOnMount>
-          {({ setFieldValue, dirty, isValid, resetForm }) => (
+          {({ setFieldValue, dirty, resetForm }) => (
             <Form noValidate>
               <CommonSummaryWatcher summaryKey="transactionSummary" priceKey="price" hasAdditionalCharges />
               <Grid container spacing={2}>
@@ -176,7 +177,7 @@ const SalesOrderForm = () => {
                   </CommonCard>
                 </Box>
 
-                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty || !isValid} isLoading={isEditLoading || isAddLoading} onClear={() => (isEditing ? navigate(-1) : resetForm({ values: initialValues }))} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => (isEditing ? navigate(-1) : resetForm({ values: initialValues }))} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}

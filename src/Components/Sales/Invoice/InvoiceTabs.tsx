@@ -14,8 +14,8 @@ const InvoiceTabs = ({ emptyRow }: { emptyRow: InvoiceItem }) => {
   const [tabValue, setTabValue] = useState(0);
   const { values, setFieldValue } = useFormikContext<InvoiceFormValues>();
 
-  const isCustomerSelected = !!values?.customerId;
-  const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown({ companyFilter: values?.companyId }, !!values?.companyId);
+  const isCustomerSelected = !!values?.customerId && !!values?.branchId;
+  const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId }, !!values?.companyId && !!values?.branchId);
 
   const calculateRowValues = (index: number) => {
     const row = values?.items?.[index];

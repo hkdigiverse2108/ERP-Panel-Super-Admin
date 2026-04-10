@@ -85,7 +85,7 @@ const ReceiptForm = () => {
             // const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown({ companyId: values?.companyId }, Boolean(values?.companyId));
 
             const handleTableChange = (key: string, value: string | number | undefined) => {
-              let newValues:any = { ...values, [key]: value };
+              let newValues: any = { ...values, [key]: value };
               if (key === "posOrderId") {
                 const selectedOrder = posOrderDropdown?.data?.find((item: PosOrderBase) => item._id === value);
                 if (selectedOrder) {
@@ -155,7 +155,7 @@ const ReceiptForm = () => {
                       <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 3 }} />
                       <DependentSelect name="branchId" label="Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} required grid={{ xs: 12, md: 3 }} />
                       <DependentSelect
-                        params={{ companyFilter: values?.companyId}}
+                        params={{ typeFilter: "customer", companyFilter: values?.companyId }}
                         value={values.partyId ? [values.partyId] : []}
                         name="partyId"
                         label="Party"

@@ -18,6 +18,8 @@ const User = () => {
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetUser({}, false);
   const { data: userData, isLoading: userDataLoading, isFetching: userDataFetching } = Queries.useGetUser(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const companyId = advancedFilter?.companyFilter?.[0] || "";
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
   const { mutate: deleteUserMutate } = Mutations.useDeleteUser();
   const { mutate: editUser, isPending: isEditLoading } = Mutations.useEditUser();
 
@@ -72,7 +74,10 @@ const User = () => {
     fileName: PAGE_TITLE.USER.BASE,
     onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }),
+  ];
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.USER.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.USER.BASE} />

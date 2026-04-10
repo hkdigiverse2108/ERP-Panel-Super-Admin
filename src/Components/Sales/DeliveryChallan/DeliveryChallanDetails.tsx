@@ -206,6 +206,7 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
       </Grid>
 
       <Grid size={{ xs: 12, md: 9 }} container spacing={2}>
+        <DependentSelect name="branchId" label="Select Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4 }} required />
         <CommonValidationSelect name="customerId" label="Select Customer" required options={GenerateOptions(customers)} disabled={!values.companyId} isLoading={isCustomerLoading || isCustomerFetching} grid={{ xs: 12, md: 4 }} />
 
         <CommonValidationDatePicker name="date" label="Delivery Challan Date" required grid={{ xs: 12, md: 4 }} />
