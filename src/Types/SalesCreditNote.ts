@@ -78,6 +78,7 @@ export interface SalesCreditNoteBase
     SalesCreditNoteFormValues,
     | "customerId"
     | "companyId"
+    | "branchId"
     | "termsAndConditionIds"
     | "additionalCharges"
     | "billingAddress"

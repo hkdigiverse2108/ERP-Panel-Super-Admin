@@ -71,7 +71,7 @@ const BranchWatcher = ({ onChange }: { onChange: (id: string) => void }) => {
 
 const BillOfLiveProductForm = () => {
   const location = useLocation();
-  const { data, no } = location.state as {
+  const { data } = location.state as {
     data?: BillOfLiveProductBase;
     no?: number;
   };

@@ -34,7 +34,7 @@ export type AddStockVerificationPayload = StockVerificationFormValues;
 
 export type EditStockVerificationPayload = AddStockVerificationPayload & { stockVerificationId?: string };
 
-export interface StockVerificationBase extends Omit<StockVerificationFormValues, "items" | "companyId">, CommonDataType {
+export interface StockVerificationBase extends Omit<StockVerificationFormValues, "items" | "companyId" | "branchId">, CommonDataType {
   companyId?: { _id: string; name: string };
   branchId?: BranchBase;
   items: (Omit<StockVerificationItem, "productId"> & {
