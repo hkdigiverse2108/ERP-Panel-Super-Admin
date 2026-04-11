@@ -21,7 +21,7 @@ const StockTransferForm = () => {
   const updateData = location.state?.data;
   const id = urlId || updateData?._id;
 
-  const { data: stockTransferData, isLoading: stockTransferLoading } = Queries.useGetSingleStockTransfer(id);
+  const { data: stockTransferData } = Queries.useGetSingleStockTransfer(id);
   const { mutate: addStockTransfer, isPending: isAddLoading } = Mutations.useAddStockTransfer();
   const { mutate: editStockTransfer, isPending: isEditLoading } = Mutations.useEditStockTransfer();
 
@@ -61,8 +61,6 @@ const StockTransferForm = () => {
   };
 
   const emptyRow = { productId: "", requestedQty: 0, price: 0, qty: 0 };
-
-  if (id && stockTransferLoading) return null; // Or a proper loader
 
   return (
     <>
