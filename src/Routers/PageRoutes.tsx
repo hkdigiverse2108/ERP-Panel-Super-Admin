@@ -255,7 +255,7 @@ export const PageRoutes = [
 
   { path: ROUTES.STOCK_TRANSFER.BASE, name: PAGE_TITLE.INVENTORY.STOCK_TRANSFER.BASE, element: <StockTransfer /> },
   { path: ROUTES.STOCK_TRANSFER.ADD_EDIT, name: PAGE_TITLE.INVENTORY.STOCK_TRANSFER.BASE, element: <StockTransferForm /> },
-  { path: ROUTES.STOCK_TRANSFER.VIEW + "/:id", name: PAGE_TITLE.INVENTORY.STOCK_TRANSFER.BASE, element: <StockTransferDetails /> },
+  { path: ROUTES.STOCK_TRANSFER.VIEW, name: PAGE_TITLE.INVENTORY.STOCK_TRANSFER.BASE, element: <StockTransferDetails /> },
 ];
 
 export const AuthRoutes = [

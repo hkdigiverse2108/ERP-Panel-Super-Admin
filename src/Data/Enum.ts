@@ -445,7 +445,7 @@ export const STOCK_TRANSFER_STATUS_OPTIONS = [
   { label: "Partially Approved", value: "partially_approved" },
   { label: "Rejected", value: "rejected" },
   { label: "Completed", value: "completed" },
-  { label: "Cancelled", value: "cancelled" },
+  // { label: "Cancelled", value: "cancelled" },
 ];
 
 export const STOCK_TRANSFER_TYPE_OPTIONS = [

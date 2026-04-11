@@ -46,6 +46,7 @@ const StockTransfer = () => {
 
   const columns: AppGridColDef<StockTransferBase>[] = [
     { field: "transferNo", headerName: "Transfer No.", flex: 1, minWidth: 150 },
+    CommonObjectPropertyColumn<StockTransferBase>("type", "type", [], { headerName: "Type", width: 150, type: "status" }),
     CommonObjectPropertyColumn<StockTransferBase>("companyId", "companyId", ["name"], { headerName: "Company", flex: 1, minWidth: 150 }),
     CommonObjectPropertyColumn<StockTransferBase>("requestedByBranchId", "requestedByBranchId", ["name"], { headerName: "From Branch", flex: 1, minWidth: 150 }),
     CommonObjectPropertyColumn<StockTransferBase>("requestedToBranchId", "requestedToBranchId", ["name"], { headerName: "To Branch", flex: 1, minWidth: 150 }),

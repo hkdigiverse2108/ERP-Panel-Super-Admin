@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Queries } from "../../../Api";
 import { CommonBreadcrumbs, CommonCard, CommonBottomActionBar } from "../../../Components/Common";
@@ -11,11 +11,12 @@ import { GenerateOptions } from "../../../Utils";
 import { ApproveModal, RejectModal, ConfirmReceiptModal } from "./modals/ActionModals";
 
 const StockTransferDetails = () => {
-  const { id } = useParams();
+  const location = useLocation();
+  const id = (location.state as { id?: string })?.id;
   const { user } = useAppSelector((state) => state.auth);
   const [activeModal, setActiveModal] = useState<"approve" | "reject" | "confirm" | null>(null);
 
-  const { data: response,  refetch } = Queries.useGetSingleStockTransfer(id);
+  const { data: response, refetch } = Queries.useGetSingleStockTransfer(id);
   const data = response?.data;
 
   const [selectedCompanyId, setSelectedCompanyId] = useState<string>("");
@@ -54,7 +55,7 @@ const StockTransferDetails = () => {
   return (
     <>
       <CommonBreadcrumbs title="Stock Transfer Details" maxItems={1} breadcrumbs={BREADCRUMBS.STOCK_TRANSFER.BASE} />
-      <Box sx={{ p: { xs: 2, md: 3 }, pb: 6, display: "grid", gap: 3 }}>
+      <Box sx={{ p: { xs: 2, md: 3 }, mb: showAction ? 10 : 0, display: "grid", gap: 3 }}>
         <CommonCard title="Select Branch">
           <Grid container spacing={2} sx={{ p: 2 }}>
             <CommonSelect
@@ -108,17 +109,15 @@ const StockTransferDetails = () => {
                       <td className="p-3 font-medium">{item.productId.name}</td>
                       <td className="p-3 text-right">{item.price.toLocaleString()}</td>
                       <td className="p-3 text-center">{item.requestedQty}</td>
-                      {data?.status !== STOCK_TRANSFER_STATUS.PENDING && (
-                        <td className="p-3 text-center font-semibold text-blue-600">{item.approvedQty}</td>
-                      )}
-                      {data?.status === STOCK_TRANSFER_STATUS.COMPLETED && (
-                        <td className="p-3 text-center font-semibold text-green-600">{item.receivedQty}</td>
-                      )}
+                      {data?.status !== STOCK_TRANSFER_STATUS.PENDING && <td className="p-3 text-center font-semibold text-blue-600">{item.approvedQty}</td>}
+                      {data?.status === STOCK_TRANSFER_STATUS.COMPLETED && <td className="p-3 text-center font-semibold text-green-600">{item.receivedQty}</td>}
                     </tr>
                   ))}
                   {(!data?.items || data.items.length === 0) && (
                     <tr>
-                      <td colSpan={6} className="p-4 text-center text-gray-500 italic">No items found</td>
+                      <td colSpan={6} className="p-4 text-center text-gray-500 italic">
+                        No items found
+                      </td>
                     </tr>
                   )}
                 </tbody>

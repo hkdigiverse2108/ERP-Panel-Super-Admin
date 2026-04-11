@@ -28,7 +28,7 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean; credit
       <Grid container spacing={1} className="flex items-center justify-center w-full">
         {viewRoute && (
           <Grid size="auto">
-            <Link to={`${viewRoute}/${params.row._id}`}>
+            <Link to={viewRoute} state={{ id: params.row._id }}>
               <IconButton className="iconButtonStyle" size="small" color="primary">
                 <OpenInNewIcon fontSize="small" />
               </IconButton>
