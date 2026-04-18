@@ -277,7 +277,7 @@ export const TAX_TYPE = [
   { label: "Out Of Scope", value: "out_of_scope" },
 ];
 
-export const BANK_UI_FIELDS: (keyof BranchFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber"];
+export const BANK_UI_FIELDS: (keyof BranchFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber","upiId"];
 
 export const PAYMENT_STATUS_OPTIONS = [
   { label: "All", value: "" },
