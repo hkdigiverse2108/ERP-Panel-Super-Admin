@@ -124,8 +124,8 @@ const UserForm = () => {
                 {/* BASIC DETAILS */}
                 <CommonCard title="Basic Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(companyData?.data)} isLoading={companyDataLoading} grid={{ xs: 12, md: 4 }} />
-                    <DependentSelect name="branchId" label="Branch Name" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(companyData?.data)} isLoading={companyDataLoading} grid={{ xs: 12, md: 4 }} required/>
+                    <DependentSelect name="branchId" label="Branch Name" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4 }} required/>
                     <CommonValidationTextField name="designation" label="User designation" grid={{ xs: 12, md: 4 }} />
                     <DependentSelect name="role" label="role Name" query={Queries.useGetRoleDropdown} params={{ companyFilter: values.companyId }} grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="fullName" label="Full Name" required grid={{ xs: 12, md: 4 }} />
