@@ -153,6 +153,8 @@ const PurchaseDebitNoteDetails = () => {
       </Grid>
 
       <Grid size={{ xs: 12, md: 9 }} container spacing={2}>
+        <DependentSelect name="branchId" label="Select Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4 }} required />
+
         <CommonValidationSelect name="supplierId" label="Select Supplier" required options={GenerateOptions(suppliers)} disabled={!values.companyId} isLoading={isSupplierLoading || isSupplierFetching} grid={{ xs: 12, md: 4 }} />
 
         <CommonValidationDatePicker name="debitNoteDate" label="Debit Note Date" required grid={{ xs: 12, md: 4 }} />

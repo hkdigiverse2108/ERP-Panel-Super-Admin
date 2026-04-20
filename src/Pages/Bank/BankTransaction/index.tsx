@@ -23,6 +23,8 @@ const BankTransaction = () => {
   const { mutate: deleteBankTransactionMutate } = Mutations.useDeleteBankTransaction();
   const { mutate: editBankTransaction, isPending: isEditLoading } = Mutations.useEditBankTransaction();
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const companyId = advancedFilter?.companyFilter?.[0] || "";
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
 
   const allBankTransactions = useMemo(() => bankTransaction_data?.data?.bankTransaction_data?.map((transaction: BankTransactionBase) => ({ ...transaction, id: transaction?._id })) || [], [bankTransaction_data]);
   const totalRows = bankTransaction_data?.data?.totalData || 0;
@@ -38,6 +40,7 @@ const BankTransaction = () => {
 
   const columns: AppGridColDef<BankTransactionBase>[] = [
     CommonObjectNameColumn<BankTransactionBase>("companyId", { headerName: "Company", width: 200 }),
+    CommonObjectNameColumn<BankTransactionBase>("branchId", { headerName: "Branch", width: 200 }),
     { field: "voucherNo", headerName: "Voucher No", width: 150 },
     CommonObjectPropertyColumn<BankTransactionBase>("transactionDate", "transactionDate", [], { headerName: "Transaction Date", flex: 1, minWidth: 150, type: "date" }),
     CommonObjectPropertyColumn<BankTransactionBase>("transactionType", "transactionType", [], { headerName: "Transaction Type", flex: 1, minWidth: 150, type: "format" }),
@@ -76,7 +79,10 @@ const BankTransaction = () => {
     fileName: PAGE_TITLE.BANK_TRANSACTION.BASE,
     onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }),//
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }),
+  ];
 
   return (
     <>

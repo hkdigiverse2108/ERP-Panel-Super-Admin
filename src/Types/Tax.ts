@@ -1,3 +1,4 @@
+import type { BranchBase } from "./Branch";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { CompanyBase } from "./Company";
 
@@ -6,6 +7,7 @@ export interface TaxFormValues {
   percentage?: number | "";
   isActive?: boolean;
   companyId?: string | CompanyBase;
+  branchId?: string | BranchBase;
 }
 
 export type AddTaxPayload = TaxFormValues;

@@ -15,6 +15,8 @@ const Stock = () => {
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetStock({}, false);
   const { data: stockData, isLoading: stockDataLoading, isFetching: stockDataFetching } = Queries.useGetStock(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const companyId = advancedFilter?.companyFilter?.[0] || "";
+  const { data: branchData, isLoading: branchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
   const { data: brandData, isLoading: brandDataLoading } = Queries.useGetBrandDropdown();
   const { data: categoryData, isLoading: categoryDataLoading } = Queries.useGetCategoryDropdown();
 
@@ -23,6 +25,7 @@ const Stock = () => {
 
   const columns: AppGridColDef<StockBase>[] = [
     CommonObjectNameColumn("companyId", { headerName: "Company Name", width: 200 }), //
+    CommonObjectNameColumn("branchId", { headerName: "Branch Name", width: 200 }), //
     { field: "name", headerName: "Product Name", width: 320 },
     CommonObjectNameColumn("categoryId", { headerName: "Category Name", width: 230 }),
     CommonObjectNameColumn("subCategoryId", { headerName: "Sub Category Name", width: 230 }),
@@ -51,6 +54,7 @@ const Stock = () => {
 
   const filter = [
     CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(branchData?.data), branchDataLoading, { xs: 12, sm: 6, md: 3 }),
     CreateFilter("Select Brand", "brandFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(brandData?.data), brandDataLoading, { xs: 12, sm: 6, md: 3 }), //
     CreateFilter("Select Sub Brand", "subBrandFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(brandData?.data), brandDataLoading, { xs: 12, sm: 6, md: 3 }), //
     CreateFilter("Select Category", "categoryFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(categoryData?.data), categoryDataLoading, { xs: 12, sm: 6, md: 3 }), //

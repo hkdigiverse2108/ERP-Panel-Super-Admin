@@ -21,7 +21,8 @@ const DeliveryChallan = () => {
   // Filter Data Queries
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
   const companyId = advancedFilter?.companyFilter?.[0];
-  const { data: customerData, isLoading: customerDataLoading } = Queries.useGetContactDropdown({ typeFilter: "customer", companyFilter: companyId });
+  const { data: branchData, isLoading: branchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
+  const { data: customerData, isLoading: customerDataLoading } = Queries.useGetContactDropdown({ typeFilter: "customer", companyFilter: companyId }, Boolean(companyId));
 
   const allChallan = useMemo(
     () =>
@@ -48,6 +49,8 @@ const DeliveryChallan = () => {
   const handleAdd = () => navigate(ROUTES.DELIVERY_CHALLAN.ADD_EDIT);
 
   const columns: AppGridColDef<DeliveryChallanBase>[] = [
+    CommonObjectPropertyColumn<DeliveryChallanBase>("companyId", "companyId", ["name"], { headerName: "Company Name", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<DeliveryChallanBase>("branchId", "branchId", ["name"], { headerName: "Branch Name", flex: 1, minWidth: 150 }),
     { field: "deliveryChallanNo", headerName: "Delivery Challan No.", flex: 1, minWidth: 200 },
     CommonObjectPropertyColumn<DeliveryChallanBase>("date", "date", [], { headerName: "Delivery Challan Date", flex: 1, minWidth: 120, type: "date" }),
     CommonObjectPropertyColumn<DeliveryChallanBase>("dueDate", "dueDate", [], { headerName: "Due Date", flex: 1, minWidth: 120, type: "date" }),
@@ -85,7 +88,11 @@ const DeliveryChallan = () => {
     onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(companyData?.data), companyDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Customer", "customerFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(customerData?.data), customerDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, DELIVERY_CHALLAN_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(companyData?.data), companyDataLoading, { xs: 12, sm: 6, md: 3 }),//
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(branchData?.data), branchDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Customer", "customerFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(customerData?.data), customerDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, DELIVERY_CHALLAN_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];
 
   const stats = [
     { label: "All Challans", value: totalRows || 0, color: "primary" },

@@ -20,6 +20,8 @@ const OrderList = () => {
    const { data: orderData, isLoading: orderDataLoading, isFetching: orderDataFetching } = Queries.useGetPosOrder({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
   const { refetch: fetchAllOrders, isFetching: orderDataAllFetching, isLoading: orderDataAllLoading } = Queries.useGetPosOrder({ startDate: range.start.toISOString(), endDate: range.end.toISOString() }, false);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+    const companyId = advancedFilter?.companyFilter?.[0] || "";
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
   const { mutate: deleteOrder, isPending: isDeleteLoading } = Mutations.useDeletePosOrder();
   const { mutate: editOrder, isPending: isEditLoading } = Mutations.useEditPosOrder();
 
@@ -33,10 +35,15 @@ const OrderList = () => {
     });
   };
 
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ORDER_STATUS, false, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ORDER_STATUS, false, { xs: 12, sm: 6, md: 3 }),
+  ];
 
   const columns: AppGridColDef<PosOrderBase>[] = [
     CommonObjectNameColumn<PosOrderBase>("companyId", { headerName: "Company", width: 200 }),
+    CommonObjectNameColumn<PosOrderBase>("branchId", { headerName: "Branch", width: 200 }),
     { field: "orderNo", headerName: "Invoice No", width: 150 },
     CommonObjectPropertyColumn<PosOrderBase>("created", "createdAt", [], { headerName: "Date", width: 120, type: "date" }),
     CommonObjectPropertyColumn<PosOrderBase>("dueDate", "payLater", ["dueDate"], { headerName: "Due Date", width: 120, type: "date" }),

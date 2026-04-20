@@ -21,6 +21,7 @@ const Invoice = () => {
   // Filter Data Queries
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
   const companyId = advancedFilter?.companyFilter?.[0];
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
   const { data: customerData, isLoading: customerDataLoading } = Queries.useGetContactDropdown({ typeFilter: "customer", companyFilter: companyId });
 
   const allInvoice = useMemo(
@@ -49,6 +50,8 @@ const Invoice = () => {
   const handleAdd = () => navigate(ROUTES.INVOICE.ADD_EDIT);
 
   const columns: AppGridColDef<InvoiceBase>[] = [
+    CommonObjectPropertyColumn<InvoiceBase>("companyId", "companyId", ["name"], { headerName: "Company Name", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<InvoiceBase>("branchId", "branchId", ["name"], { headerName: "Branch Name", flex: 1, minWidth: 150 }),
     { field: "invoiceNo", headerName: "Invoice No", flex: 1, minWidth: 120 },
     CommonObjectPropertyColumn<InvoiceBase>("date", "date", [], { headerName: "Invoice Date", flex: 1, minWidth: 120, type: "date" }),
     CommonObjectPropertyColumn<InvoiceBase>("dueDate", "dueDate", [], { headerName: "Due Date", flex: 1, minWidth: 120, type: "date" }),
@@ -89,7 +92,12 @@ const Invoice = () => {
     onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(companyData?.data), companyDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Customer", "customerFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(customerData?.data), customerDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, INVOICE_STATUS, false, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(companyData?.data), companyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Customer", "customerFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(customerData?.data), customerDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, INVOICE_STATUS, false, { xs: 12, sm: 6, md: 3 }),
+  ];
 
   // const stats = [
   //   { label: "All Invoices", value: totalRows || 0, color: "primary" },

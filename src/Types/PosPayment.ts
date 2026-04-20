@@ -1,4 +1,5 @@
 import type { BankBase } from "./Bank";
+import type { BranchBase } from "./Branch";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { CompanyBase } from "./Company";
 import type { ContactBase } from "./Contacts";
@@ -20,6 +21,7 @@ export interface PosPaymentFormValues {
   isNonGST?: boolean;
   isActive?: boolean;
   companyId?: string;
+  branchId?: string;
   remark?: string;
   status?: string;
   voucherDetails?: VoucherRow[];
@@ -38,12 +40,13 @@ export type EditPosPaymentPayload = AddPosPaymentPayload & {
 };
 
 /* ================= BASE MODEL ================= */
-export type PosPaymentBase = Omit<PosPaymentFormValues, "partyId" | "bankId" | "posOrderId" | "companyId"> &
+export type PosPaymentBase = Omit<PosPaymentFormValues, "partyId" | "bankId" | "posOrderId" | "companyId" | "branchId"> &
   CommonDataType & {
     partyId?: ContactBase;
     bankId?: BankBase;
     posOrderId?: PosOrderBase;
     companyId?: CompanyBase;
+    branchId?: BranchBase;
   };
 
 /* ================= API RESPONSES ================= */

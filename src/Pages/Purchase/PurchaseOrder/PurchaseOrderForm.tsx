@@ -26,6 +26,7 @@ const PurchaseOrderForm = () => {
 
   const initialValues: PurchaseOrderFormValues = {
     companyId: typeof data?.companyId === "object" ? data.companyId?._id : data?.companyId || "",
+    branchId: typeof data?.branchId === "object" ? data.branchId?._id : data?.branchId || "",
 
     supplierId: typeof data?.supplierId === "object" ? data.supplierId?._id : data?.supplierId || "",
     orderDate: data?.orderDate || data?.date || "",
@@ -112,7 +113,7 @@ const PurchaseOrderForm = () => {
 
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 14 }}>
         <Formik<PurchaseOrderFormValues> initialValues={initialValues} validationSchema={PurchaseOrderFormSchema} onSubmit={handleSubmit} enableReinitialize={isEditing} validateOnMount>
-          {({ setFieldValue, dirty, isValid, resetForm }) => (
+          {({ setFieldValue, dirty, resetForm }) => (
             <Form noValidate>
               <CommonSummaryWatcher summaryKey="summary" priceKey="unitCost" taxAmountKey="taxAmount" />
               <Grid container spacing={2}>
@@ -130,7 +131,7 @@ const PurchaseOrderForm = () => {
                   </CommonCard>
                 </Box>
 
-                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty || !isValid} isLoading={addLoading || editLoading} onClear={() => (isEditing ? navigate(-1) : resetForm())} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={addLoading || editLoading} onClear={() => (isEditing ? navigate(-1) : resetForm())} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}

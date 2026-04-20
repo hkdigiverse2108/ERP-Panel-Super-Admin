@@ -153,6 +153,7 @@ const SupplierBillDetails = () => {
         </Grid>
 
         <Grid container spacing={2} size={{ xs: 12, md: 9 }}>
+          <DependentSelect name="branchId" label="Select Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} required grid={{ xs: 12, md: 4, xl: 3 }} />
           <CommonValidationSelect name="supplierId" label="Select Supplier" required isLoading={supplierDataLoading || supplierDataFetching} options={supplierOptions} grid={{ xs: 12, md: 4, xl: 3 }} disabled={!values.companyId} />
           <CommonValidationDatePicker name="supplierBillDate" label="Supplier Bill Date" required grid={{ xs: 12, md: 4, xl: 3 }} />
           <CommonValidationTextField name="referenceBillNo" label="Reference Bill No." grid={{ xs: 12, md: 4, xl: 3 }} />

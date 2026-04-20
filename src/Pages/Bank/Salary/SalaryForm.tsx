@@ -31,6 +31,7 @@ const SalaryForm = () => {
 
   const initialValues: SalaryFormValues = {
     companyId: data?.companyId?._id || "",
+    branchId: data?.branchId?._id || "",
     partyId: data?.partyId?._id || "",
     fromDate: data?.fromDate || null,
     toDate: data?.toDate || null,
@@ -111,7 +112,8 @@ const SalaryForm = () => {
                   <CommonCard grid={{ xs: 12 }}>
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
-                      <DependentSelect params={{ companyFilter: values?.companyId }} name="partyId" label="Party" required query={Queries.useGetUserDropdown} grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} />
+                      <DependentSelect params={{ companyFilter: values?.companyId }} name="branchId" label="Branch" query={Queries.useGetBranchDropdown} enabled={Boolean(values.companyId)} disabled={!values.companyId} required grid={{ xs: 12, md: 4 }} />
+                      <DependentSelect params={{ companyFilter: values?.companyId, branchFilter: values?.branchId }} name="partyId" label="Party" required query={Queries.useGetUserDropdown} grid={{ xs: 12, md: 4 }} disabled={!values?.companyId || !values?.branchId} />
                       <CommonValidationSelect name="type" label="Expense Type" grid={{ xs: 12, md: 4 }} options={EXPENSE_TYPE_OPTIONS} required />
                       <CommonValidationDatePicker name="fromDate" label="From Date" required grid={{ xs: 12, md: 4 }} />
                       <CommonValidationDatePicker name="toDate" label="To Date" required grid={{ xs: 12, md: 4 }} />

@@ -76,14 +76,14 @@ export const SigninSchema = Yup.object({
 
 export const UserFormSchema = Yup.object({
   // ---------- BASIC DETAILS ----------
-  companyId: Validation("string", "Company Name", { required: false }),
+  companyId: Validation("string", "Company Name"),
   fullName: Validation("string", "FullName"),
   username: Validation("string", "Username"),
   designation: Validation("string", "Designation", { required: false }),
   role: Validation("string", "Role"),
   phoneNo: PhoneValidation(),
   email: Validation("string", "Email", { required: true, extraRules: (s) => s.trim().email("Invalid email address") }),
-  branchId: Validation("string", "Branch Name", { required: false }),
+  branchId: Validation("string", "Branch Name"),
   panNumber: Validation("string", "PAN Number", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
   password: Validation("string", "Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
 
@@ -207,7 +207,7 @@ export const ProductItemFormSchema = Yup.object({
 });
 
 export const ProductItemRemoveFormSchema = Yup.object({
-  type: Validation("string", "Consumption Type"),
+  consumptionTypeId: Validation("string", "Consumption Type"),
 });
 
 export const CompanyFormSchemas = Yup.object({
@@ -299,6 +299,7 @@ export const AccountFormSchema = Yup.object({
 
 export const DebitNoteFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
+  branchId: Validation("string", "Branch"),
   personName: Validation("string", "Person Name", { required: false }),
   date: Validation("string", "Date"),
   bankAccountId: Validation("string", "Bank Account"),
@@ -309,6 +310,7 @@ export const DebitNoteFormSchema = Yup.object({
 
 export const CreditNoteFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
+  branchId: Validation("string", "Branch"),
   personName: Validation("string", "Person Name", { required: false }),
   date: Validation("string", "Date"),
   bankAccountId: Validation("string", "Bank Account"),
@@ -326,6 +328,8 @@ export const MaterialConsumptionFormSchema = Yup.object({
 });
 
 export const PurchaseOrderFormSchema = Yup.object({
+  branchId: Validation("string", "Branch"),
+  companyId: Validation("string", "Company"),
   supplierId: Validation("string", "Supplier"),
   orderDate: Validation("string", "Order Date"),
   shippingDate: Validation("string", "Shipping Date"),
@@ -472,10 +476,14 @@ export const BankFormSchema = Yup.object().shape({
 
 export const BankTransactionFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
+  branchId: Validation("string", "Branch"),
   transactionDate: Validation("string", "Transaction Date"),
   transactionType: Validation("string", "Transaction Type"),
   fromAccount: Validation("string", "From Account"),
-  toAccount: Validation("string", "To Account"),
+  toAccount: Validation("string", "To Account").test("not-same-account", "From Account and To Account cannot be same", function (value) {
+    const { fromAccount } = this.parent;
+    return !value || value !== fromAccount;
+  }),
   amount: Validation("number", "Amount"),
   description: Validation("string", "Description", { required: false }),
 });
@@ -610,6 +618,7 @@ export const ProductTypeFormSchema = Yup.object({
 
 export const PaymentFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
+  branchId: Validation("string", "Branch"),
   partyId: Validation("string", "Party"),
   date: Yup.mixed().required("Payment Date is required"),
   paymentType: Validation("string", "Payment Type"),
@@ -630,6 +639,7 @@ export const PaymentFormSchema = Yup.object({
 
 export const ReciptFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
+  branchId: Validation("string", "Branch"),
   partyId: Validation("string", "Party"),
   date: Yup.mixed().required("Receipt Date is required"),
   paymentType: Validation("string", "Payment Type"),
@@ -650,6 +660,7 @@ export const ReciptFormSchema = Yup.object({
 
 export const ExpenseFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
+  branchId: Validation("string", "Branch"),
   partyId: Validation("string", "Party"),
   image: Validation("string", "Image", { required: false }),
   fromDate: Validation("string", "Date"),
@@ -664,6 +675,7 @@ export const ExpenseFormSchema = Yup.object({
 
 export const SalaryFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
+  branchId: Validation("string", "Branch"),
   partyId: Validation("string", "Party"),
   image: Validation("string", "Image", { required: false }),
   fromDate: Validation("string", "Date"),
@@ -680,6 +692,7 @@ export const SalaryFormSchema = Yup.object({
 
 export const EstimateFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
+  branchId: Validation("string", "Branch"),
   customerId: Validation("string", "Customer"),
   date: Validation("string", "Date"),
   dueDate: Validation("string", "Due Date"),
@@ -696,6 +709,7 @@ export const EstimateFormSchema = Yup.object({
 
 export const SalesOrderFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
+  branchId: Validation("string", "Branch"),
   customerId: Validation("string", "Customer"),
   date: Validation("string", "Date"),
   dueDate: Validation("string", "Due Date", { required: false }),
@@ -711,6 +725,7 @@ export const SalesOrderFormSchema = Yup.object({
 });
 export const InvoiceFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
+  branchId: Validation("string", "Branch"),
   customerId: Validation("string", "Customer"),
   date: Validation("string", "Date"),
   dueDate: Validation("string", "Due Date", { required: false }),
@@ -727,6 +742,7 @@ export const InvoiceFormSchema = Yup.object({
 
 export const DeliveryChallanFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
+  branchId: Validation("string", "Branch"),
   customerId: Validation("string", "Customer"),
   date: Validation("string", "Date"),
   dueDate: Validation("string", "Due Date"),
@@ -743,6 +759,7 @@ export const DeliveryChallanFormSchema = Yup.object({
 
 export const SalesCreditNoteFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
+  branchId: Validation("string", "Branch"),
   customerId: Validation("string", "Customer"),
   creditNoteDate: Validation("string", "Credit Note Date"),
   dueDate: Validation("string", "Due Date", { required: false }),
@@ -764,6 +781,7 @@ export const SalesCreditNoteFormSchema = Yup.object({
 
 export const SupplierBillFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
+  branchId: Validation("string", "Branch"),
   supplierId: Validation("string", "Supplier"),
   supplierBillDate: Validation("string", "Supplier Bill Date"),
   dueDate: Validation("string", "Due Date"),
@@ -782,6 +800,7 @@ export const SupplierBillFormSchema = Yup.object({
 
 export const PurchaseDebitNoteFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
+  branchId: Validation("string", "Branch"),
   supplierId: Validation("string", "Supplier"),
   debitNoteDate: Validation("string", "Debit Note Date"),
   dueDate: Validation("string", "Due Date", { required: false }),
@@ -881,4 +900,11 @@ export const CredentialsFormSchema = Yup.object({
   publishableKey: Validation("string", "Publishable Key"),
   supabaseUrl: Validation("string", "Supabase URL"),
   isActive: Yup.boolean(),
+});
+
+export const BillOfLiveProductFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
+  branchId: Validation("string", "Branch"),
+  recipeId: Validation("array", "Recipe", { minItems: 1 }),
+  date: Validation("string", "Date"),
 });

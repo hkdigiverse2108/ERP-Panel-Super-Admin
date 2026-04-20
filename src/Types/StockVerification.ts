@@ -1,3 +1,4 @@
+import type { BranchBase } from "./Branch";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { ProductBase } from "./Product";
 
@@ -26,14 +27,16 @@ export interface StockVerificationFormValues {
   status?: "pending" | "approved" | "rejected" | string;
   remark?: string;
   companyId?: string;
+  branchId?: string;
 }
 
 export type AddStockVerificationPayload = StockVerificationFormValues;
 
 export type EditStockVerificationPayload = AddStockVerificationPayload & { stockVerificationId?: string };
 
-export interface StockVerificationBase extends Omit<StockVerificationFormValues, "items" | "companyId">, CommonDataType {
+export interface StockVerificationBase extends Omit<StockVerificationFormValues, "items" | "companyId" | "branchId">, CommonDataType {
   companyId?: { _id: string; name: string };
+  branchId?: BranchBase;
   items: (Omit<StockVerificationItem, "productId"> & {
     productId: ProductBase;
   })[];

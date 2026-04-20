@@ -19,6 +19,8 @@ const Salary = () => {
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetSalary({}, false);
   const { data, isLoading, isFetching } = Queries.useGetSalary(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const companyId = advancedFilter?.companyFilter?.[0] || "";
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
   const { mutate: deleteSalary, isPending: isDeleteLoading } = Mutations.useDeleteSalary();
   const { mutate: editSalary, isPending: isEditLoading } = Mutations.useEditSalary();
   const rows = useMemo(() => {
@@ -38,6 +40,7 @@ const Salary = () => {
 
   const columns: AppGridColDef<SalaryBase>[] = [
     CommonObjectNameColumn<SalaryBase>("companyId", { headerName: "Company", width: 200 }),
+    CommonObjectPropertyColumn<SalaryBase>("branchId", "branchId", ["name"], { headerName: "Branch", flex: 1, minWidth: 150 }),
     CommonObjectPropertyColumn<SalaryBase>("partyId", "partyId", ["firstName", "lastName", "fullName"], { headerName: "Party Name", flex: 1, minWidth: 150 }),
     CommonObjectPropertyColumn<SalaryBase>("fromDate", "fromDate", [], { headerName: "From Date", flex: 1, minWidth: 150, type: "date" }),
     CommonObjectPropertyColumn<SalaryBase>("toDate", "toDate", [], { headerName: "To Date", flex: 1, minWidth: 150, type: "date" }),
@@ -78,7 +81,10 @@ const Salary = () => {
     onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }),
+  ];
 
   return (
     <>

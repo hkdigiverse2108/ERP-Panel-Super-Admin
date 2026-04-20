@@ -52,6 +52,7 @@ export interface PurchaseOrderFormValues {
   supplierId?: string;
   contactId?: string;
   companyId?: string;
+  branchId?: string;
 
   date?: string | Date;
   orderDate?: string | Date;

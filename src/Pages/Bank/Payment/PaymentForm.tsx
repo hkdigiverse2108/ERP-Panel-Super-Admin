@@ -26,13 +26,14 @@ const PaymentForm = () => {
 
   const initialValues: PosPaymentFormValues = {
     companyId: data?.companyId?._id || "",
+    branchId: data?.branchId?._id || "",
     voucherType: data?.voucherType || "purchase",
     paymentType: data?.paymentType || "advance",
     partyId: data?.partyId?._id || "",
     bankId: data?.bankId?._id || data?.bankId || "",
     posOrderId: data?.posOrderId?._id || data?.posOrderId || "",
     paymentMode: data?.paymentMode || "cash",
-    date: data?.paymentDate || null,
+    date: data?.date || null,
     amount: data?.amount || 0,
     totalAmount: data?.totalAmount || 0,
     paidAmount: data?.paidAmount || 0,
@@ -46,7 +47,7 @@ const PaymentForm = () => {
   const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: partyId, duePaymentFilter: true }, Boolean(partyId));
 
   const handleSubmit = async (values: PosPaymentFormValues, { resetForm }: FormikHelpers<PosPaymentFormValues>) => {
-    const { _submitAction, voucherDetails, ...rest } = values;
+    const { _submitAction, ...rest } = values;
     const payload = { ...rest };
     if (values.paymentMode?.toLowerCase() === "cash") {
       delete payload.bankId;
@@ -80,7 +81,7 @@ const PaymentForm = () => {
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={PaymentFormSchema} enableReinitialize>
           {({ resetForm, setFieldValue, dirty, values }) => {
             const handleTableChange = (key: string, value: string | number | undefined) => {
-              let newValues = { ...values, [key]: value };
+              let newValues: any = { ...values, [key]: value };
               if (key === "posOrderId") {
                 const selectedOrder = posOrderDropdown?.data?.find((item: PosOrderBase) => item._id === value);
                 if (selectedOrder) {
@@ -147,15 +148,16 @@ const PaymentForm = () => {
                 <Grid container spacing={2}>
                   <CommonCard title="Payment Details" grid={{ xs: 12 }}>
                     <Grid container spacing={2} sx={{ p: 2 }}>
-                      <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
+                      <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 3 }} />
+                      <DependentSelect name="branchId" label="Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} required grid={{ xs: 12, md: 3 }} />
                       <DependentSelect
-                        params={{ companyFilter: values?.companyId }}
+                        params={{typeFilter: "customer", companyFilter: values?.companyId }}
                         value={values.partyId ? [values.partyId] : []}
                         name="partyId"
                         label="Party"
                         required
                         query={Queries.useGetContactDropdown}
-                        grid={{ xs: 12, md: 4 }}
+                        grid={{ xs: 12, md: 3 }}
                         onChange={(val) => {
                           const selected = val?.[0] || "";
                           setFieldValue("partyId", selected);
@@ -163,7 +165,7 @@ const PaymentForm = () => {
                         }}
                         disabled={!values?.companyId}
                       />
-                      <CommonValidationDatePicker name="date" label="Payment Date" required grid={{ xs: 12, md: 4 }} />
+                      <CommonValidationDatePicker name="date" label="Payment Date" required grid={{ xs: 12, md: 3 }} />
                       <Grid size={{ xs: 12 }}>
                         <CommonStatsCard
                           variant="radio"

@@ -68,7 +68,9 @@ const Tax = () => {
     onFilterModelChange: setFilterModel,
     fileName: PAGE_TITLE.INVENTORY.TAX.BASE,
   };
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+  ];
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.TAX.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.TAX.BASE} />

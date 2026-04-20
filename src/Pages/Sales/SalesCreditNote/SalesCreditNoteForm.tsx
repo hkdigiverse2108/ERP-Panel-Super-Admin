@@ -34,6 +34,7 @@ const SalesCreditNoteForm = () => {
 
     return {
       companyId: typeof data?.companyId === "object" ? data.companyId?._id : data?.companyId || "",
+      branchId: typeof data?.branchId === "object" ? data.branchId?._id : data?.branchId || "",
       creditNoteDate: data?.creditNoteDate || DateConfig.utc().toISOString(),
       dueDate: data?.dueDate || "",
       customerId: typeof data?.customerId === "object" ? data.customerId?._id : data?.customerId || "",
@@ -178,7 +179,7 @@ const SalesCreditNoteForm = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.SALES_CREDIT_NOTE[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.SALES_CREDIT_NOTE[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<SalesCreditNoteFormValues> initialValues={initialValues} validationSchema={SalesCreditNoteFormSchema} onSubmit={handleSubmit} enableReinitialize validateOnMount>
-          {({ setFieldValue, dirty, isValid, resetForm }) => (
+          {({ setFieldValue, dirty, resetForm }) => (
             <Form noValidate>
               <CommonSummaryWatcher summaryKey="summary" itemsKey="productDetails" priceKey="price" taxAmountKey="tax" hasAdditionalCharges />
               <Grid container spacing={2}>
@@ -196,7 +197,7 @@ const SalesCreditNoteForm = () => {
                   </CommonCard>
                 </Box>
 
-                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty || !isValid} isLoading={isEditLoading || isAddLoading} onClear={() => (isEditing ? navigate(-1) : resetForm({ values: initialValues }))} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => (isEditing ? navigate(-1) : resetForm({ values: initialValues }))} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}

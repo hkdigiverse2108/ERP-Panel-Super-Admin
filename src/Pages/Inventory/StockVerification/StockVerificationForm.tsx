@@ -21,6 +21,16 @@ const CompanyWatcher = ({ currentCompanyId, onChange }: { currentCompanyId: stri
   return null;
 };
 
+const BranchWatcher = ({ currentBranchId, onChange }: { currentBranchId: string; onChange: (id: string) => void }) => {
+  const { values } = useFormikContext<{ branchId: string }>();
+  useEffect(() => {
+    if (values.branchId !== currentBranchId) {
+      onChange(values.branchId);
+    }
+  }, [values.branchId, currentBranchId, onChange]);
+  return null;
+};
+
 const StockVerificationForm = () => {
   const [searchValue, setSearchValue] = useState<string[]>([""]);
   const location = useLocation();
@@ -34,8 +44,10 @@ const StockVerificationForm = () => {
   const isEditing = Boolean(updateData?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
   const [selectedCompany, setSelectedCompany] = useState(updateData?.companyId?._id || (typeof updateData?.companyId === "string" ? updateData?.companyId : ""));
+  const [selectedBranch, setSelectedBranch] = useState(updateData?.branchId?._id || (typeof updateData?.branchId === "string" ? updateData?.branchId : ""));
 
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: selectedCompany }, Boolean(selectedCompany));
   const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true });
   const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true });
   const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown({ companyFilter: selectedCompany }, Boolean(selectedCompany));
@@ -80,10 +92,14 @@ const StockVerificationForm = () => {
     differenceQty: 0 - (product.qty ?? 0),
     differenceAmount: (product.landingCost ?? 0) * (0 - (product.qty ?? 0)),
   });
-
   useEffect(() => {
     if (productListData?.data?.length) {
-      setRows((prev) => [...prev, ...(productListData?.data?.map((item) => createRowFromProduct(item)) ?? [])]);
+      setRows((prev) => [
+        ...prev,
+        ...productListData.data
+          .filter((item) => !prev.some((r) => r.productId === item._id)) // 👈 skip duplicates
+          .map((item) => createRowFromProduct(item)),
+      ]);
     }
   }, [productListData]);
 
@@ -106,7 +122,7 @@ const StockVerificationForm = () => {
 
   const totalDifferenceAmount = rows.reduce((sum, r) => sum + r?.differenceAmount, 0);
 
-  const handleSubmit = (values: { companyId: string; categoryId: string; brandId: string }) => setFilter({ companyFilter: values.companyId, categoryFilter: values.categoryId, brandFilter: values.brandId });
+  const handleSubmit = (values: { companyId: string; branchId: string; categoryId: string; brandId: string }) => setFilter({ companyFilter: values.companyId, branchFilter: values.branchId, categoryFilter: values.categoryId, brandFilter: values.brandId });
 
   const handleStockSubmit = async () => {
     const items = rows.map((r) => ({
@@ -122,6 +138,7 @@ const StockVerificationForm = () => {
     }));
     const payload: StockVerificationFormValues = {
       companyId: selectedCompany,
+      branchId: selectedBranch,
       items,
       totalProducts: rows.length,
       totalPhysicalQty: totalDifferenceQty,
@@ -188,12 +205,14 @@ const StockVerificationForm = () => {
           <Grid container spacing={2} sx={{ p: 2 }}>
             {!isEditing && (
               <Grid size={12}>
-                <Formik enableReinitialize initialValues={{ companyId: "", categoryId: "", brandId: "" }} onSubmit={handleSubmit}>
-                  {() => (
+                <Formik enableReinitialize initialValues={{ companyId: "", branchId: "", categoryId: "", brandId: "" }} onSubmit={handleSubmit}>
+                  {({ values }) => (
                     <Form noValidate>
                       <CompanyWatcher currentCompanyId={selectedCompany} onChange={setSelectedCompany} />
+                      <BranchWatcher currentBranchId={selectedBranch} onChange={setSelectedBranch} />
                       <Grid container spacing={2}>
-                        <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 3 }} required />
+                        <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 2 }} />
+                        <CommonValidationSelect name="branchId" label="Branch" options={GenerateOptions(BranchData?.data)} isLoading={BranchDataLoading} disabled={!values.companyId} grid={{ xs: 12, md: 2 }} />
                         <CommonValidationSelect name="categoryId" label="Category" placeholder="Category Selection" options={GenerateOptions(CategoryData?.data)} isLoading={CategoryDataLoading} grid={{ xs: 12, md: 3 }} />
                         <CommonValidationSelect name="brandId" label="Brand" placeholder="Brand Selection" options={GenerateOptions(BrandsData?.data)} isLoading={BrandsDataLoading} grid={{ xs: 12, md: 3 }} />
 
@@ -207,7 +226,8 @@ const StockVerificationForm = () => {
             <Grid size={12}>
               <Grid container spacing={2}>
                 {isEditing && <CommonSelect label="Company" options={GenerateOptions(CompanyData?.data)} value={selectedCompany ? [selectedCompany] : []} onChange={(e) => setSelectedCompany(e[0])} grid={{ xs: 12, sm: 3 }} isLoading={CompanyDataLoading} required />}
-                {isEditing && <CommonSelect label="Status" options={DATA_STATUS} value={status} onChange={(e) => setStatus(e)} grid={{ xs: 12, sm: 2 }} />}
+                {isEditing && <CommonSelect label="Branch" options={GenerateOptions(BranchData?.data)} value={selectedBranch ? [selectedBranch] : []} onChange={(e) => setSelectedBranch(e[0])} grid={{ xs: 12, sm: 3 }} isLoading={BranchDataLoading} required />}
+                {isEditing && <CommonSelect label="Status" options={DATA_STATUS} value={status} onChange={(e) => setStatus(e)} grid={{ xs: 12, sm: 3 }} />}
                 <CommonSelect
                   value={searchValue}
                   label="Search Product"
@@ -215,6 +235,7 @@ const StockVerificationForm = () => {
                   options={GenerateOptions(productData?.data)}
                   grid={{ xs: 12, sm: isEditing ? 3 : 6 }}
                   isLoading={productDataLoading}
+                  disabled={!selectedCompany || !selectedBranch}
                   onChange={(selected: string[]) => {
                     setSearchValue(selected);
                     if (!selected.length) return;
@@ -235,7 +256,7 @@ const StockVerificationForm = () => {
                     });
                   }}
                 />
-                <CommonTextField label="Enter Remark" placeholder="Enter Remark" grid={{ xs: 12, sm: isEditing ? 4 : 6 }} value={enterRemark} onChange={(e) => setEnterRemark(e)} multiline />
+                <CommonTextField label="Enter Remark" placeholder="Enter Remark" grid={{ xs: 12, sm: isEditing ? 12 : 6 }} value={enterRemark} onChange={(e) => setEnterRemark(e)} multiline />
               </Grid>
             </Grid>
 

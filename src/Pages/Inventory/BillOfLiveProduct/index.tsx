@@ -17,6 +17,8 @@ const BillOfLiveProduct = () => {
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetBillOfLiveProduct({}, false);
   const { data, isLoading, isFetching } = Queries.useGetBillOfLiveProduct(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const companyId = advancedFilter?.companyFilter?.[0] || "";
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
   const { mutate: deleteBOM, isPending: isDeleteLoading } = Mutations.useDeleteBillOfLiveProduct();
   const { mutate: editBOM, isPending: isEditLoading } = Mutations.useEditBillOfLiveProduct();
 
@@ -37,6 +39,7 @@ const BillOfLiveProduct = () => {
 
   const columns: AppGridColDef<BillOfLiveProductBase>[] = [
     CommonObjectNameColumn<BillOfLiveProductBase>("companyId", { headerName: "Company Name", width: 280 }),
+    CommonObjectNameColumn<BillOfLiveProductBase>("branchId", { headerName: "Branch Name", width: 280 }),
     { field: "number", headerName: "Bill Of Live Product No.", width: 280 },
     CommonObjectPropertyColumn<BillOfLiveProductBase>("date", "date", ["dueDate"], { headerName: "Bill Of Live Product Date", flex: 1, minWidth: 200, type: "date" }),
     CommonObjectPropertyColumn<BillOfLiveProductBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
@@ -69,7 +72,10 @@ const BillOfLiveProduct = () => {
     onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }),
+  ];
 
   return (
     <>

@@ -19,7 +19,6 @@ const TaxForm = () => {
   const dispatch = useDispatch();
   const { isTaxModal } = useAppSelector((state) => state.modal);
   const isEdit = isTaxModal.data;
-  console.log(isEdit)
   const openModal = isTaxModal.open;
   const isEditing = Boolean(isEdit?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
@@ -54,7 +53,6 @@ const TaxForm = () => {
           <Form noValidate>
             <Grid container spacing={2} sx={{ p: 1 }}>
               <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12 }} />
-
               <CommonValidationTextField name="name" label="Tax Name" required grid={{ xs: 12 }} />
               <CommonValidationTextField name="percentage" label="percentage" type="number" required grid={{ xs: 12 }} />
 

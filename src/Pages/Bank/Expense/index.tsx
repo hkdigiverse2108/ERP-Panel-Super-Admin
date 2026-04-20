@@ -22,6 +22,8 @@ const Expense = () => {
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetExpense({}, false);
   const { data, isLoading, isFetching } = Queries.useGetExpense({ ...params, avoidSalary: false });
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+    const companyId = advancedFilter?.companyFilter?.[0] || "";
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
   const { mutate: deleteExpense, isPending: isDeleteLoading } = Mutations.useDeleteExpense();
   const { mutate: editExpense, isPending: isEditLoading } = Mutations.useEditExpense();
 
@@ -46,6 +48,7 @@ const Expense = () => {
 
   const columns: AppGridColDef<ExpenseBase>[] = [
     CommonObjectNameColumn<ExpenseBase>("companyId", { headerName: "Company", width: 200 }),
+    CommonObjectPropertyColumn<ExpenseBase>("branchId", "branchId", ["name"], { headerName: "Branch", flex: 1, minWidth: 150 }),
     CommonObjectPropertyColumn<ExpenseBase>("partyId", "partyId", ["fullName"], { headerName: "Party Name", flex: 1, minWidth: 150 }),
     CommonObjectPropertyColumn<ExpenseBase>("salary", "total", [], { headerName: "Salary", flex: 1, minWidth: 150 }),
     CommonObjectPropertyColumn<ExpenseBase>("fromDate", "fromDate", [], { headerName: "Expense Date", flex: 1, minWidth: 150, type: "date" }),
@@ -101,6 +104,7 @@ const Expense = () => {
 
   const filter = [
     CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }),
     CreateFilter("Select Expense Type", "typeFilter", advancedFilter, updateAdvancedFilter, EXPENSE_TYPE_OPTIONS, false, { xs: 12, sm: 6, md: 3 }),
   ];
 

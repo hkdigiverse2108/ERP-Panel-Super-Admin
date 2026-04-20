@@ -25,6 +25,7 @@ const EstimateForm = () => {
 
   const initialValues: EstimateFormValues = {
     companyId: typeof data?.companyId === "object" ? data.companyId?._id : data?.companyId || "",
+    branchId: typeof data?.branchId === "object" ? data.branchId?._id : data?.branchId || "",
     date: data?.date || DateConfig.utc().toISOString(),
     dueDate: data?.dueDate || "",
     customerId: typeof data?.customerId === "object" ? data.customerId?._id : data?.customerId || "",
@@ -175,7 +176,7 @@ const EstimateForm = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.ESTIMATE[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.ESTIMATE[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<EstimateFormValues> initialValues={initialValues} validationSchema={EstimateFormSchema} onSubmit={handleSubmit} enableReinitialize={isEditing} validateOnMount>
-          {({ setFieldValue, dirty, isValid, resetForm }) => (
+          {({ setFieldValue, dirty, resetForm }) => (
             <Form noValidate>
               <CommonSummaryWatcher summaryKey="transactionSummary" priceKey="price" hasAdditionalCharges />
               <Grid container spacing={2}>
@@ -193,7 +194,7 @@ const EstimateForm = () => {
                   </CommonCard>
                 </Box>
 
-                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty || !isValid} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}

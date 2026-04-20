@@ -1,3 +1,4 @@
+import type { BranchBase } from "./Branch";
 import type {
   AdditionalChargeItem,
   CommonDataType,
@@ -43,6 +44,7 @@ export interface SalesCreditNoteItem {
 
 export interface SalesCreditNoteFormValues {
   companyId?: string;
+  branchId?: string;
   customerId?: string;
   placeOfSupply?: string;
   billingAddress?: string;
@@ -76,6 +78,7 @@ export interface SalesCreditNoteBase
     SalesCreditNoteFormValues,
     | "customerId"
     | "companyId"
+    | "branchId"
     | "termsAndConditionIds"
     | "additionalCharges"
     | "billingAddress"
@@ -84,6 +87,7 @@ export interface SalesCreditNoteBase
   CommonDataType {
   creditNoteNo: string;
   companyId: CompanyBase;
+  branchId: BranchBase;
   customerId: ContactBase;
   termsAndConditionIds: TermsConditionBase[];
   additionalCharges: AdditionalChargeItem[];

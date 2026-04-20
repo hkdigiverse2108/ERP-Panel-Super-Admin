@@ -22,11 +22,13 @@ const Product = () => {
   const [gridRows, setGridRows] = useState<ProductWithRemoveQty[]>([]);
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.PRODUCT.BASE);
   const permissionItem = usePagePermission(PAGE_TITLE.INVENTORY.STOCK.BASE);
-  
+
   const { data: consumptionData, isLoading: consumptionLoading } = Queries.useGetConsumptionTypeDropdown();
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetProduct({}, false);
   const { data: productData, isLoading: productDataLoading, isFetching: productDataFetching } = Queries.useGetProduct(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const companyId = advancedFilter?.companyFilter?.[0] || "";
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
   const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true });
   const brandId = advancedFilter?.brandFilter?.[0] || "";
   const { data: subBrandData, isLoading: subBrandDataLoading } = Queries.useGetBrandDropdown({ parentBrandFilter: brandId }, Boolean(brandId));
@@ -55,10 +57,10 @@ const Product = () => {
     deleteProductMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
   };
 
-  const handleRemoveItem = async (values: { type: string }) => {
+  const handleRemoveItem = async (values: { consumptionTypeId: string }) => {
     const obj = {
       items: data,
-      type: values.type,
+      consumptionTypeId: values.consumptionTypeId,
       companyId: advancedFilter?.companyFilter?.[0] || "",
     };
     await addStockBulkAdjustment(obj, {
@@ -70,6 +72,8 @@ const Product = () => {
   };
 
   const columns: AppGridColDef<ProductBase>[] = [
+    CommonObjectNameColumn<ProductBase>("companyId", { headerName: "Company", width: 200 }),
+    CommonObjectNameColumn<ProductBase>("branchId", { headerName: "Branch", width: 200 }),
     { field: "name", headerName: "Name", width: 200 },
     CommonObjectNameColumn<ProductBase>("categoryId", { headerName: "Category", width: 200 }),
     CommonObjectNameColumn<ProductBase>("brandId", { headerName: "Brand", width: 200 }),
@@ -134,6 +138,7 @@ const Product = () => {
 
   const filter = [
     CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), // categoryFilter
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }), // categoryFilter
     CreateFilter("Select Category", "categoryFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CategoryData?.data), CategoryDataLoading, { xs: 12, sm: 6, md: 3 }), // categoryFilter
     CreateFilter("Select Sub Category", "subCategoryFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(subCategoryData?.data), subCategoryDataLoading, { xs: 12, sm: 6, md: 3 }), // subCategoryFilter
     CreateFilter("Select Brand", "brandFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BrandsData?.data), BrandsDataLoading, { xs: 12, sm: 6, md: 3 }), // brandFilter
@@ -141,7 +146,7 @@ const Product = () => {
     CreateFilter("Select Purchase Tax", "purchaseTaxFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(TaxData?.data), TaxDataLoading, { xs: 12, sm: 6, md: 3 }), // purchaseTaxFilter
     CreateFilter("Select Sales Tax", "salesTaxFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(TaxData?.data), TaxDataLoading, { xs: 12, sm: 6, md: 3 }), // salesTaxFilter
     CreateFilter("Select Product Type", "productTypeFilter", advancedFilter, updateAdvancedFilter, PRODUCT_TYPE_OPTIONS, false, { xs: 12, sm: 6, md: 3 }), // productTypeFilter
-    CreateFilter("Select Product Type", "productTypeIdFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(ProductTypeData?.data), ProductTypeDataLoading, { xs: 12, sm: 6, md: 3 }), // productTypeIdFilter
+    CreateFilter("Select Type", "productTypeIdFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(ProductTypeData?.data), ProductTypeDataLoading, { xs: 12, sm: 6, md: 3 }), // productTypeIdFilter
   ];
 
   const topContent = (
@@ -178,10 +183,10 @@ const Product = () => {
         </CommonCard>
         <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
         <CommonModal title="Remove Item" isOpen={openModal} onClose={() => setOpenModal(!openModal)} className="max-w-125 m-2 sm:m-5">
-          <Formik initialValues={{ type: "" }} enableReinitialize validationSchema={ProductItemRemoveFormSchema} onSubmit={handleRemoveItem}>
+          <Formik initialValues={{ consumptionTypeId: "" }} enableReinitialize validationSchema={ProductItemRemoveFormSchema} onSubmit={handleRemoveItem}>
             <Form noValidate>
               <Grid sx={{ p: 1 }} container spacing={2}>
-                <CommonValidationSelect name="consumptionTypeId" label="Select Type" options={GenerateOptions(consumptionData?.data)} isLoading={consumptionLoading} grid={{ xs: 12, sm: 6, md: 4 }} />
+                <CommonValidationSelect name="consumptionTypeId" label="Select Type" options={GenerateOptions(consumptionData?.data)} isLoading={consumptionLoading} grid={{ xs: 12}} />
                 <CommonButton type="submit" variant="contained" title="Save" size="medium" loading={isAddLoading} fullWidth grid={{ xs: 12 }} />
               </Grid>
             </Form>

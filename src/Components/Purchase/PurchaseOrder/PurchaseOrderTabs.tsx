@@ -15,7 +15,7 @@ const PurchaseOrderTabs = ({ emptyRow }: { emptyRow: PurchaseOrderItem }) => {
   const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
 
   const isSupplierSelected = !!values?.supplierId;
-  const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown({ companyFilter: values?.companyId }, !!values?.companyId);
+  const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId }, !!values?.companyId && !!values?.branchId);
   const { data: taxData } = Queries.useGetTaxDropdown();
 
   const calculateRowValues = (index: number) => {
@@ -201,7 +201,7 @@ const PurchaseOrderTabs = ({ emptyRow }: { emptyRow: PurchaseOrderItem }) => {
                       key: "productId",
                       header: "Product",
                       bodyClass: " min-w-[250px]",
-                      render: (_, index) => <CommonValidationSelect name={`items.${index}.productId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isSupplierSelected} />,
+                      render: (_, index) => <CommonValidationSelect name={`items.${index}.productId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isSupplierSelected || !values.branchId} />,
                     },
                     {
                       key: "qty",

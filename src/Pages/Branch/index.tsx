@@ -76,7 +76,7 @@ const Branch = () => {
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.BRANCH.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.BRANCH.BASE} />
-      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap:  2 }}>
         <AdvancedSearch filter={filter} />
 
         <CommonCard hideDivider>

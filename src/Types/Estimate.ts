@@ -32,6 +32,7 @@ export interface EstimateItem {
 
 export interface EstimateFormValues {
   companyId?: string;
+  branchId?: string;
   date?: string;
   dueDate?: string;
   customerId?: string;

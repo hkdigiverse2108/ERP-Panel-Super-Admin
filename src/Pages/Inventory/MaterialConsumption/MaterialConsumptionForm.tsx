@@ -62,7 +62,7 @@ const MaterialConsumptionForm = () => {
   });
 
   const ProductSelect = ({ id }: { id?: string }) => {
-    const { data: productData, isLoading: productLoading } = Queries.useGetProductDropdown({ companyFilter: id }, Boolean(id));
+    const { data: productData, isLoading: productLoading } = Queries.useGetProductDropdown({ branchFilter: id }, Boolean(id));
     return (
       <Grid container spacing={2} sx={{ p: 2 }}>
         <CommonSelect
@@ -158,7 +158,7 @@ const MaterialConsumptionForm = () => {
               </Form>
               <Grid container>
                 <CommonCard title="Product Details" grid={{ xs: 12 }}>
-                  <ProductSelect id={values.companyId} />
+                  <ProductSelect id={values.branchId} />
                   <Grid size={12}>
                     <div className="w-full">
                       <div className="lg:max-h-[500px] min-h-auto! overflow-x-auto custom-scrollbar border-t border-gray-200 dark:border-gray-600 rounded-b-md ">

@@ -1,9 +1,11 @@
+import type { BranchBase } from "./Branch";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { CompanyBase } from "./Company";
 import type { UserBase } from "./User";
 
 export interface SalaryFormValues {
   companyId?: string;
+  branchId?: string;
   amount?: number;
   image?: string | File | null;
   description?: string;
@@ -20,10 +22,11 @@ export interface SalaryFormValues {
 export type AddSalaryPayload = SalaryFormValues;
 
 export type EditSalaryPayload = AddSalaryPayload & { salaryId?: string };
-export type SalaryBase = Omit<SalaryFormValues, "partyId" | "companyId" > &
+export type SalaryBase = Omit<SalaryFormValues, "partyId" | "companyId" | "branchId"> &
   CommonDataType & {
     partyId?: UserBase;
     companyId?: CompanyBase;
+    branchId?: BranchBase;
   };
 
 export interface SalaryDataResponse extends PageStatus {

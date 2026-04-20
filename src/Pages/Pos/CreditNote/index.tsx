@@ -19,6 +19,9 @@ const CreditNoteList = () => {
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPosCreditNote({}, false);
   const { data: branchData, isLoading: branchDataLoading, isFetching: branchDataFetching } = Queries.useGetPosCreditNote(params, true);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const companyId = advancedFilter?.companyFilter?.[0] || "";
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
+
   const allBranches = useMemo(() => branchData?.data?.posCreditNote_data.map((branch) => ({ ...branch, id: branch?._id })) || [], [branchData]);
   const totalRows = branchData?.data?.totalData || 0;
 
@@ -35,6 +38,7 @@ const CreditNoteList = () => {
 
   const columns: AppGridColDef<PosCreditNoteBase>[] = [
     CommonObjectNameColumn<PosCreditNoteBase>("companyId", { headerName: "Company", width: 200 }),
+    CommonObjectNameColumn<PosCreditNoteBase>("branchId", { headerName: "Branch", width: 200 }),
     { field: "creditNoteNo", headerName: "Credit Note No.", width: 180 },
     CommonObjectPropertyColumn<PosCreditNoteBase>("customerId", "customerId", ["firstName", "lastName"], { headerName: "Customer Name", width: 150 }),
     CommonObjectPropertyColumn<PosCreditNoteBase>("created", "createdAt", [], { headerName: "Date", width: 120, type: "date" }),
@@ -66,6 +70,7 @@ const CreditNoteList = () => {
   };
   const filter = [
     CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }),
     CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, CREDIT_NOTE_STATUS, false, { xs: 12, sm: 6, md: 3 }),
   ];
 
