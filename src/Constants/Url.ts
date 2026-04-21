@@ -431,4 +431,14 @@ export const URL_KEYS = {
   AI: {
     ANALYZE: "/ai/analyze",
   },
+  STOCK_TRANSFER: {
+    BASE: "/stock-transfer",
+    ALL: "/stock-transfer/all",
+    REQUEST: "/stock-transfer/request",
+    EDIT: "/stock-transfer/edit",
+    DELETE: "/stock-transfer/delete",
+    APPROVE: "/stock-transfer/approve",
+    REJECT: "/stock-transfer/reject",
+    CONFIRM_RECEIPT: "/stock-transfer/confirm-receipt",
+  },
 } as const;

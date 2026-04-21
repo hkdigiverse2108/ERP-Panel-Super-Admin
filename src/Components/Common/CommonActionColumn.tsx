@@ -3,6 +3,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import KeyIcon from "@mui/icons-material/Key";
 import PrintIcon from "@mui/icons-material/Print";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import RotateLeftIcon from "@mui/icons-material/RotateLeft";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -11,12 +12,12 @@ import type { GridColDef } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import type { CommonActionColumnProps } from "../../Types";
 
-const CommonActionColumn = <T extends { _id?: string; isActive?: boolean; creditsRemaining?: number }>({ onSalesInvoice, onPrint, active, editRoute, onDelete, onEdit, onRefund, permissionRoute }: CommonActionColumnProps<T>): GridColDef<T> => ({
+const CommonActionColumn = <T extends { _id?: string; isActive?: boolean; creditsRemaining?: number }>({ onSalesInvoice, onPrint, active, editRoute, viewRoute, onDelete, onEdit, onRefund, permissionRoute }: CommonActionColumnProps<T>): GridColDef<T> => ({
   field: "actions",
   headerName: "Actions",
   headerAlign: "center",
   align: "center",
-  width: permissionRoute ? 240 : 180,
+  width: permissionRoute ? 240 : 220,
   minWidth: 100,
   sortable: false,
   filterable: false,
@@ -25,6 +26,15 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean; credit
     const isActive = params.row.isActive;
     return (
       <Grid container spacing={1} className="flex items-center justify-center w-full">
+        {viewRoute && (
+          <Grid size="auto">
+            <Link to={viewRoute} state={{ id: params.row._id }}>
+              <IconButton className="iconButtonStyle" size="small" color="primary">
+                <OpenInNewIcon fontSize="small" />
+              </IconButton>
+            </Link>
+          </Grid>
+        )}
         {active && (
           <Grid size="auto">
             <IconButton className="iconButtonStyle" size="small" color={isActive ? "success" : "error"} onClick={() => active(params.row)}>

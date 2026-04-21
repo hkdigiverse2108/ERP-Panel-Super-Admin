@@ -430,6 +430,29 @@ export const SALES_CREDIT_NOTE_STATUS_OPTIONS = [
   { label: "Due", value: "due" },
 ];
 
+export const STOCK_TRANSFER_STATUS = {
+  PENDING: "pending",
+  APPROVED: "approved",
+  PARTIALLY_APPROVED: "partially_approved",
+  REJECTED: "rejected",
+  COMPLETED: "completed",
+  CANCELLED: "cancelled",
+} as const;
+
+export const STOCK_TRANSFER_STATUS_OPTIONS = [
+  { label: "Pending", value: "pending" },
+  { label: "Approved", value: "approved" },
+  { label: "Partially Approved", value: "partially_approved" },
+  { label: "Rejected", value: "rejected" },
+  { label: "Completed", value: "completed" },
+  // { label: "Cancelled", value: "cancelled" },
+];
+
+export const STOCK_TRANSFER_TYPE_OPTIONS = [
+  { label: "Outgoing", value: "outgoing" },
+  { label: "Incoming", value: "incoming" },
+];
+
 export const SALES_CREDIT_NOTE_PRODUCT_TYPE_OPTIONS = [
   { label: "All", value: "all" },
   { label: "Expiry", value: "expiry" },

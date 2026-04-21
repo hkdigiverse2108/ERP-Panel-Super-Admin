@@ -3,13 +3,13 @@ import { useField, useFormikContext } from "formik";
 import { type FC } from "react";
 import type { CommonSelectProps, CommonValidationSelectProps, SelectOptionType } from "../../Types";
 
-export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, label, required, options, multiple = false, limitTags, size = "small", grid, disabled,readOnly, syncFieldName, isLoading,placeholder, ...props }) => {
+export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, label, required, options, multiple = false, limitTags, size = "small", grid, disabled, readOnly, syncFieldName, isLoading, placeholder, onChange, ...props }) => {
   const [field, meta, helpers] = useField<any>({ name });
   const { setFieldValue } = useFormikContext<any>();
   // Normalize value
-  const safeValue = multiple ? (Array.isArray(field.value) ? field.value : []) : field.value ?? "";
+  const safeValue = multiple ? (Array.isArray(field.value) ? field.value : []) : (field.value ?? "");
 
-  const valueObjects = multiple ? safeValue?.map((v: string) => options.find((o) => o.value === v)).filter(Boolean) : options.find((o) => o.value === safeValue) ?? null;
+  const valueObjects = multiple ? safeValue?.map((v: string) => options.find((o) => o.value === v)).filter(Boolean) : (options.find((o) => o.value === safeValue) ?? null);
 
   const Input = (
     <Autocomplete
@@ -28,10 +28,12 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
           const values = (newValues as SelectOptionType[]).map((o) => o.value);
           helpers.setValue(values);
           if (syncFieldName) setFieldValue(syncFieldName, values);
+          if (onChange) onChange(values);
         } else {
           const value = (newValues as SelectOptionType | null)?.value ?? "";
           helpers.setValue(value);
           if (syncFieldName) setFieldValue(syncFieldName, value);
+          if (onChange) onChange(value ? [value] : []);
         }
       }}
       onBlur={() => helpers.setTouched(true)}
@@ -50,8 +52,8 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
   return grid ? <Grid size={grid}>{Input}</Grid> : Input;
 };
 
-export const CommonSelect: FC<CommonSelectProps> = ({ label, options = [], value, onChange, multiple = false, limitTags, size, grid, disabled,readOnly, isLoading,placeholder, ...props }) => {
-  const selectedValue = multiple ? (value || []).map((v) => options.find((o) => o.value === v)).filter((v): v is SelectOptionType => Boolean(v)) : options.find((o) => o.value === value?.[0]) ?? null;
+export const CommonSelect: FC<CommonSelectProps> = ({ label, options = [], value, onChange, multiple = false, limitTags, size, grid, disabled, readOnly, isLoading, placeholder, ...props }) => {
+  const selectedValue = multiple ? (value || []).map((v) => options.find((o) => o.value === v)).filter((v): v is SelectOptionType => Boolean(v)) : (options.find((o) => o.value === value?.[0]) ?? null);
 
   const Input = (
     <Autocomplete

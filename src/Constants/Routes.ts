@@ -104,6 +104,11 @@ export const ROUTES = {
     BASE: "/stock-verification",
     ADD_EDIT: "/stock-verification/add-edit",
   },
+  STOCK_TRANSFER: {
+    BASE: "/stock-transfer",
+    ADD_EDIT: "/stock-transfer/add-edit",
+    VIEW: "/stock-transfer/view",
+  },
   BILL_OF_LIVE_PRODUCT: {
     BASE: "/bill-of-live-product",
     ADD_EDIT: "/bill-of-live-product/add-edit",

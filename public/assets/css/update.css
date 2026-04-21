@@ -143,6 +143,7 @@ input[type="number"] {
 
 .status-pending,
 .status-partial,
+.status-partially_approved,
 .status-partial_invoice_created,
 .status-partial_delivery_challan_created {
   @apply text-white capitalize text-center w-full bg-amber-500 dark:bg-amber-600 h-6 leading-6 rounded-sm px-2;
@@ -154,7 +155,8 @@ input[type="number"] {
 .status-delivered,
 .status-approved,
 .status-completed,
-.status-available {
+.status-available,
+.status-incoming {
   @apply text-white capitalize text-center w-full bg-green-500 dark:bg-green-600 h-6 leading-6 rounded-sm px-2;
 }
 .status-inactive,
@@ -179,7 +181,8 @@ input[type="number"] {
 .status-invoiced,
 .status-invoice_created,
 .status-hold,
-.status-invoice-created {
+.status-invoice-created,
+.status-outgoing {
   @apply text-white capitalize text-center w-full bg-blue-500 dark:bg-blue-600 h-6 leading-6 rounded-sm px-2;
 }
 .status-partially_cancelled {

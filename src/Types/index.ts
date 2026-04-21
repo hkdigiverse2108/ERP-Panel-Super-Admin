@@ -1,6 +1,8 @@
 export * from "./AdditionalCharges";
 export * from "./AdminSetting";
 export * from "./Announcement";
+export * from "./Ai";
+export * from "./StockTransfer";
 export * from "./Api";
 export * from "./Auth";
 export * from "./Bank";
@@ -55,4 +57,3 @@ export * from "./ConsumptionType";
 export * from "./PaymentTerms";
 export * from "./Specials";
 export * from "./Credentials";
-export * from "./Ai";

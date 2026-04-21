@@ -908,3 +908,69 @@ export const BillOfLiveProductFormSchema = Yup.object({
   recipeId: Validation("array", "Recipe", { minItems: 1 }),
   date: Validation("string", "Date"),
 });
+
+export const StockTransferFormSchema = Yup.object({
+  companyId: Validation("string", "Company"),
+  branchId: Validation("string", "From Branch"),
+  requestedToBranchId: Validation("string", "To Branch", {
+    extraRules: (s) =>
+      s.test("not-same-branch", "Stock cannot be transferred to the same branch", function (value) {
+        return value !== this.parent.branchId;
+      }),
+  }),
+  requestNote: Validation("string", "Request Note", { required: false }),
+  items: Yup.array()
+    .of(
+      Yup.object({
+        productId: Validation("string", "Product"),
+        price: Validation("number", "Price", { required: false, extraRules: (s) => s.min(0, "Price must be positive") }),
+        requestedQty: Validation("number", "Requested Qty", {
+          extraRules: (s) =>
+            s.min(0, "Quantity cannot be negative").test("max-available", "Exceeds available stock", function (value) {
+              return (value || 0) <= (this.parent.qty || 0);
+            }),
+        }),
+      }),
+    )
+    .min(1, "At least one item is required"),
+  isActive: Yup.boolean(),
+});
+
+export const ApproveStockTransferSchema = Yup.object({
+  approvalNote: Validation("string", "Approval Note", { required: false }),
+  items: Yup.array()
+    .of(
+      Yup.object({
+        productId: Validation("string", "Product"),
+        approvedQty: Validation("number", "Approved Qty", { extraRules: (s) => s.min(0, "Quantity cannot be negative") }),
+        price: Validation("number", "Price", { extraRules: (s) => s.min(0, "Price must be positive") }),
+      }),
+    )
+    .min(1, "At least one item is required"),
+});
+
+export const RejectStockTransferSchema = Yup.object({
+  approvalNote: Validation("string", "Rejection Reason"),
+});
+
+export const ConfirmReceiptStockTransferSchema = Yup.object({
+  receiptNote: Yup.string().when("items", {
+    is: (items: any[]) => items?.some((item) => (item.receivedQty || 0) < (item.approvedQty || 0)),
+    then: (schema) => schema.required("Receipt Note is required when some items are received less than approved"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  items: Yup.array()
+    .of(
+      Yup.object({
+        productId: Validation("string", "Product"),
+        approvedQty: Validation("number", "Approved Qty"),
+        receivedQty: Validation("number", "Received Qty", {
+          extraRules: (s) =>
+            s.min(0, "Quantity cannot be negative").test("max-approved", "Received quantity cannot exceed approved quantity", function (value) {
+              return (value || 0) <= (this.parent.approvedQty || 0);
+            }),
+        }),
+      }),
+    )
+    .min(1, "At least one item is required"),
+});
