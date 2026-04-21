@@ -30,6 +30,10 @@ export const ROUTES = {
     BASE: "/admin-setting",
     ADD_EDIT: "/admin-setting/add-edit",
   },
+  REPORT_FORMAT: {
+    BASE: "/report-format",
+    ADD_EDIT: "/report-format/add-edit",
+  },
   BRAND: {
     BASE: "/brand",
   },

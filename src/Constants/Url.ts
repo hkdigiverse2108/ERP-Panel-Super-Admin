@@ -17,6 +17,13 @@ export const URL_KEYS = {
     UPDATE: "/settings/update",
   },
 
+  REPORT_FORMAT: {
+    BASE: "/settings/report-format",
+    ALL: "/settings/report-format/all",
+    ADD: "/settings/report-format/add",
+    EDIT: "/settings/report-format/edit",
+  },
+
   COMPANY: {
     BASE: "/company",
     DROPDOWN: "/company/dropdown",

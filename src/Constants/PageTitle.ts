@@ -159,6 +159,11 @@ export const PAGE_TITLE = {
       ADD: "Add Admin Settings",
       EDIT: "Edit Admin Settings",
     },
+    REPORT_FORMAT: {
+      BASE: "Report Format",
+      ADD: "Add Report Format",
+      EDIT: "Edit Report Format",
+    },
     PREFIX: {
       BASE: "Prefix",
       ADD: "Add Prefix",

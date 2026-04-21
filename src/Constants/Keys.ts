@@ -12,6 +12,13 @@ export const KEYS = {
     UPDATE: "admin-setting-update",
   },
 
+  REPORT_FORMAT: {
+    BASE: "report-format",
+    ADD: "report-format-add",
+    EDIT: "report-format-edit",
+    DELETE: "report-format-delete",
+  },
+
   UPLOAD: {
     ALL_IMAGE: "upload-image",
     ALL_PDF: "upload-pdf",

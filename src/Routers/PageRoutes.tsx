@@ -100,6 +100,8 @@ import BillSnap from "../Pages/Settings/BillSnap";
 import StockTransfer from "../Pages/Inventory/StockTransfer";
 import StockTransferForm from "../Pages/Inventory/StockTransfer/StockTransferForm";
 import StockTransferDetails from "../Pages/Inventory/StockTransfer/StockTransferDetails";
+import ReportFormat from "../Pages/Settings/ReportFormat";
+import ReportFormatForm from "../Pages/Settings/ReportFormat/ReportFormatForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -204,6 +206,9 @@ export const PageRoutes = [
   { path: ROUTES.BANK_TRANSACTION.ADD_EDIT, name: PAGE_TITLE.BANK_TRANSACTION.BASE, element: <BankTransactionForm /> },
 
   { path: ROUTES.ADMIN_SETTING.BASE, name: PAGE_TITLE.SETTINGS.ADMIN_SETTING.BASE, element: <AdminSetting /> },
+
+  { path: ROUTES.REPORT_FORMAT.BASE, name: PAGE_TITLE.SETTINGS.REPORT_FORMAT.BASE, element: <ReportFormat /> },
+  { path: ROUTES.REPORT_FORMAT.ADD_EDIT, name: PAGE_TITLE.SETTINGS.REPORT_FORMAT.BASE, element: <ReportFormatForm /> },
 
   { path: ROUTES.SALES_REGISTER.BASE, name: PAGE_TITLE.POS.SALES_REGISTER, element: <SalesRegister /> },
   { path: ROUTES.POS_CREDIT_NOTE.BASE, name: PAGE_TITLE.POS.CREDIT_NOTE, element: <CreditNoteList /> },
