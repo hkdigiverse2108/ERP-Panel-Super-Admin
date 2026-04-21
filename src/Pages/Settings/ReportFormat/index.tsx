@@ -1,22 +1,27 @@
 import { Mutations, Queries } from "../../../Api";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import type { AppGridColDef, ReportFormatBase } from "../../../Types";
-import { PAGE_TITLE } from "../../../Constants";
+import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
 import { Box } from "@mui/material";
 import { BREADCRUMBS } from "../../../Data";
+import { useNavigate } from "react-router-dom";
 
 const ReportFormat = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+
+  const navigate = useNavigate();
+
   const { data: reportFormatData, isLoading: reportFormatDataLoading, isFetching: reportFormatDataFetching } = Queries.useGetReportFormat(params);
 
-  //   const dispatch = useDispatch();
-  const { mutate: deleteReportFormatMutate, isPending: isDeleteLoading } = Mutations.useDeleteReportFormat();
+  const { mutate: deleteReportFormatMutate } = Mutations.useDeleteReportFormat();
   const { mutate: editReportFormat, isPending: isEditLoading } = Mutations.useEditReportFormat();
+  
   const allRows = reportFormatData?.data?.map((reportFormat: ReportFormatBase) => ({ ...reportFormat, id: reportFormat._id })) || [];
   const totalRows = reportFormatData?.data?.length || 0;
+ 
   const permission = usePagePermission(PAGE_TITLE.SETTINGS.REPORT_FORMAT.BASE);
-  console.log("allRows", allRows);
+  
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
     deleteReportFormatMutate(rowToDelete?._id as string, {
@@ -24,21 +29,16 @@ const ReportFormat = () => {
     });
   };
 
-  const handleAdd = () => {
-    // dispatch(setAdditionalChargeModal({ open: true, data: null }));
-  };
-  const handleEdit = () => {
-    // dispatch(setAdditionalChargeModal({ open: true, data: row }));
-  };
+  const handleAdd = () => navigate(ROUTES.REPORT_FORMAT.ADD_EDIT);
 
   const columns: AppGridColDef<ReportFormatBase>[] = [
     { field: "type", headerName: "Type", flex: 1, minWidth: 150 },
-    { field: "formats.name", headerName: "Name", flex: 1, minWidth: 150 },
+    { field: "formats.length", headerName: "Total Formats", flex: 1, minWidth: 150, renderCell: (params) => params.row?.formats?.length },
 
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<ReportFormatBase>({
-            ...(permission?.edit && { active: (row) => editReportFormat({ reportFormatId: row._id, isActive: !row.isActive }), onEdit: { handleEdit: () => handleEdit() } }),
+            ...(permission?.edit && { active: (row) => editReportFormat({ reportFormatId: row._id, isActive: !row.isActive }), editRoute: ROUTES.REPORT_FORMAT.ADD_EDIT }),
             ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.type }) }),
           }),
         ]

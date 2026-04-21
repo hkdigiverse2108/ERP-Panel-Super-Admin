@@ -974,3 +974,17 @@ export const ConfirmReceiptStockTransferSchema = Yup.object({
     )
     .min(1, "At least one item is required"),
 });
+
+export const ReportFormatFormSchema = Yup.object({
+  type: Validation("string", "Type"),
+  formats: Yup.array()
+    .of(
+      Yup.object({
+        name: Validation("string", "Name"),
+        isSelected: Yup.boolean().default(false),
+        isActive: Yup.boolean().default(true),
+      }),
+    )
+    .min(1, "At least one format is required"),
+  isActive: Yup.boolean().default(true),
+});
