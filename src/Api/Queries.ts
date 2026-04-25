@@ -135,7 +135,6 @@ export const Queries = {
 
   //************ Report Format ********/
   useGetReportFormat: (params?: Params) => useQueries<ReportFormatApiResponse>([KEYS.REPORT_FORMAT.BASE, params], () => Get(URL_KEYS.REPORT_FORMAT.ALL, params)),
-  // useGetReportFormat: (params?: Params) => useQueries<any>([KEYS.REPORT_FORMAT.BASE, params], () => Get(URL_KEYS.REPORT_FORMAT.ALL, params)),
 
   //***************bank transaction**************** */
   useGetBankTransaction: (params?: Params, enabled?: boolean) => useQueries<BankTransactionApiResponse>([KEYS.BANK_TRANSACTION.BASE, params], () => Get(URL_KEYS.BANK_TRANSACTION.ALL, params), { enabled: enabled }),
@@ -177,10 +176,12 @@ export const Queries = {
   useGetInvoice: (params?: Params, enabled?: boolean) => useQueries<InvoiceApiResponse>([KEYS.INVOICE.BASE, params], () => Get(URL_KEYS.INVOICE.ALL, params), { enabled: enabled }),
   useGetSingleInvoice: (id?: string) => useQueries<SingleInvoiceApiResponse>([KEYS.INVOICE.BASE, id], () => Get(`${URL_KEYS.INVOICE.BASE}/${id}`), { enabled: !!id }),
   useGetInvoiceDropdown: (params?: Params, enabled?: boolean) => useQueries<InvoiceDropdownApiResponse>([KEYS.INVOICE.DROPDOWN, params], () => Get(URL_KEYS.INVOICE.DROPDOWN, params), { enabled: enabled }),
+  
   //*************** Delivery Challan **************** */
   useGetDeliveryChallan: (params?: Params, enabled?: boolean) => useQueries<DeliveryChallanApiResponse>([KEYS.DELIVERY_CHALLAN.BASE, params], () => Get(URL_KEYS.DELIVERY_CHALLAN.ALL, params), { enabled: enabled }),
   useGetSingleDeliveryChallan: (id?: string) => useQueries<SingleDeliveryChallanApiResponse>([KEYS.DELIVERY_CHALLAN.BASE, id], () => Get(`${URL_KEYS.DELIVERY_CHALLAN.BASE}/${id}`), { enabled: !!id }),
   useGetDeliveryChallanDropdown: (params?: Params, enabled?: boolean) => useQueries<DeliveryChallanDropdownApiResponse>([KEYS.DELIVERY_CHALLAN.DROPDOWN, params], () => Get(URL_KEYS.DELIVERY_CHALLAN.DROPDOWN, params), { enabled: enabled }),
+  
   //*************** Sales Credit Note **************** */
   useGetSalesCreditNote: (params?: Params, enabled?: boolean) => useQueries<SalesCreditNoteApiResponse>([KEYS.SALES_CREDIT_NOTE.BASE, params], () => Get(URL_KEYS.SALES_CREDIT_NOTE.ALL, params), { enabled: enabled }),
   useGetSingleSalesCreditNote: (id?: string) => useQueries<SingleSalesCreditNoteApiResponse>([KEYS.SALES_CREDIT_NOTE.BASE, id], () => Get(`${URL_KEYS.SALES_CREDIT_NOTE.BASE}/${id}`), { enabled: !!id }),
