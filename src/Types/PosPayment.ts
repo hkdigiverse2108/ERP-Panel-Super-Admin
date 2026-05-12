@@ -11,6 +11,8 @@ export interface PosPaymentFormValues {
   partyId?: string;
   bankId?: string;
   posOrderId?: string;
+  purchaseBillId?: string;
+  posCreditNoteId?: string;
   paymentMode?: string;
   date?: string | Date | null;
   totalAmount?: number;

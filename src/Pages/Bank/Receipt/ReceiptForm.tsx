@@ -6,7 +6,7 @@ import { Mutations, Queries } from "../../../Api";
 import { CommonSelect, CommonTextField, CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonStatsCard, CommonTable, DependentSelect } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { BREADCRUMBS, PAYMENT_MODE } from "../../../Data";
+import { BREADCRUMBS, PAYMENT_MODE, POS_PAYMENT_METHOD } from "../../../Data";
 import type { CommonTableColumn, PosOrderBase, PosPaymentFormValues } from "../../../Types";
 import { GenerateOptions, GetChangedFields, ReciptFormSchema, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
@@ -50,16 +50,11 @@ const ReceiptForm = () => {
   const handleSubmit = async (values: PosPaymentFormValues, { resetForm }: FormikHelpers<PosPaymentFormValues>) => {
     const { _submitAction, ...rest } = values;
     const payload = { ...rest };
-    if (values.paymentMode?.toLowerCase() === "cash") {
-      delete payload.bankId;
-    }
+    if (values.paymentMode?.toLowerCase() === "cash") delete payload.bankId;
 
     const handleSuccess = () => {
-      if (_submitAction === "saveAndNew") {
-        resetForm();
-      } else {
-        navigate(-1);
-      }
+      if (_submitAction === "saveAndNew") resetForm();
+      else navigate(-1);
     };
 
     if (isEditing) {
@@ -81,11 +76,8 @@ const ReceiptForm = () => {
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={ReciptFormSchema} enableReinitialize>
           {({ resetForm, setFieldValue, dirty, values }) => {
-            // const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: values.partyId, duePaymentFilter: true }, Boolean(values.partyId));
-            // const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown({ companyId: values?.companyId }, Boolean(values?.companyId));
-
             const handleTableChange = (key: string, value: string | number | undefined) => {
-              let newValues: any = { ...values, [key]: value };
+              const newValues = { ...values, [key]: value };
               if (key === "posOrderId") {
                 const selectedOrder = posOrderDropdown?.data?.find((item: PosOrderBase) => item._id === value);
                 if (selectedOrder) {
@@ -94,12 +86,6 @@ const ReceiptForm = () => {
                   newValues.pendingAmount = selectedOrder.dueAmount ?? 0;
                   newValues.amount = selectedOrder.dueAmount ?? 0;
                   newValues.kasar = 0;
-                }
-              }
-
-              if (key === "paymentMode") {
-                if (typeof value === "string" && value.toLowerCase() === "cash") {
-                  newValues.bankId = "";
                 }
               }
 
@@ -129,17 +115,6 @@ const ReceiptForm = () => {
             const voucherColumns: CommonTableColumn<PosPaymentFormValues>[] = [
               { key: "sr", header: "#", render: () => 1, bodyClass: "w-10" },
               { key: "posOrderId", header: "Sales", bodyClass: "min-w-40", render: (r) => <CommonSelect options={GenerateOptions(posOrderDropdown?.data?.map((item) => ({ ...item, name: item.orderNo })))} isLoading={posOrderDropdownLoading} placeholder="Select Sales" value={r.posOrderId ? [r.posOrderId] : []} onChange={(v) => handleTableChange("posOrderId", v[0] || "")} disabled={!r.partyId} /> },
-              { key: "paymentMode", header: "Payment Mode", bodyClass: "min-w-40", render: (r) => <CommonSelect options={PAYMENT_MODE} placeholder="Payment Mode" value={r.paymentMode ? [r.paymentMode] : []} onChange={(v) => handleTableChange("paymentMode", v[0] || "")} /> },
-              ...(values.paymentMode?.toLowerCase() !== "cash"
-                ? [
-                    {
-                      key: "bankId",
-                      header: "Bank",
-                      bodyClass: "min-w-40",
-                      render: () => <DependentSelect params={{ companyFilter: values?.companyId }} name="bankId" label="Bank" query={Queries.useGetBankDropdown} grid={{ xs: 12 }} disabled={!values?.companyId} />,
-                    } as CommonTableColumn<PosPaymentFormValues>,
-                  ]
-                : []),
               { key: "totalAmount", header: "Total Payment", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.totalAmount || 0} disabled /> },
               { key: "paidAmount", header: "Paid Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.paidAmount || 0} disabled /> },
               { key: "pendingAmount", header: "Pending Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.pendingAmount || 0} disabled /> },
@@ -152,8 +127,8 @@ const ReceiptForm = () => {
                 <Grid container spacing={2}>
                   <CommonCard title="Receipt Details" grid={{ xs: 12 }}>
                     <Grid container spacing={2} sx={{ p: 2 }}>
-                      <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 3 }} />
-                      <DependentSelect name="branchId" label="Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} required grid={{ xs: 12, md: 3 }} />
+                      <CommonValidationSelect name="companyId" label="Company Name" required isLoading={companyDataLoading} options={GenerateOptions(companyData?.data)} grid={{ xs: 12, md: 4 }} />
+                      <DependentSelect name="branchId" label="Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} required grid={{ xs: 12, md: 4 }} />
                       <DependentSelect
                         params={{ typeFilter: "customer", companyFilter: values?.companyId }}
                         value={values.partyId ? [values.partyId] : []}
@@ -161,7 +136,7 @@ const ReceiptForm = () => {
                         label="Party"
                         required
                         query={Queries.useGetContactDropdown}
-                        grid={{ xs: 12, md: 3 }}
+                        grid={{ xs: 12, md: 4 }}
                         onChange={(val) => {
                           const selected = val?.[0] || "";
                           setFieldValue("partyId", selected);
@@ -169,7 +144,9 @@ const ReceiptForm = () => {
                         }}
                         disabled={!values?.companyId}
                       />
-                      <CommonValidationDatePicker name="date" label="Receipt Date" required grid={{ xs: 12, md: 3 }} />
+                      <CommonValidationDatePicker name="date" label="Receipt Date" required grid={{ xs: 12, md: 4 }} />
+                      <CommonValidationSelect name="paymentMode" label="Payment Mode" required options={PAYMENT_MODE} grid={{ xs: 12, md: 4 }} />
+                      {values.paymentMode !== POS_PAYMENT_METHOD.CASH && <DependentSelect params={{ companyFilter: values?.companyId }} name="bankId" label="Bank" query={Queries.useGetBankDropdown} grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} required />}
                       <Grid size={{ xs: 12 }}>
                         <CommonStatsCard
                           variant="radio"
@@ -195,19 +172,7 @@ const ReceiptForm = () => {
                     </Grid>
                   </CommonCard>
 
-                  <CommonBottomActionBar
-                    save={isEditing}
-                    clear={!isEditing}
-                    disabled={!dirty}
-                    isLoading={isAddLoading || isEditLoading}
-                    onClear={() => resetForm({ values: initialValues })}
-                    onSave={() => {
-                      setFieldValue("_submitAction", "save");
-                    }}
-                    onSaveAndNew={() => {
-                      setFieldValue("_submitAction", "saveAndNew");
-                    }}
-                  />
+                  <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isAddLoading || isEditLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
                 </Grid>
               </Form>
             );

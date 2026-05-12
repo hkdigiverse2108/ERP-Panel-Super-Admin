@@ -151,6 +151,14 @@ export const PAYMENT_TYPE = [
   { label: "Against Bill", value: "againstBill" },
 ];
 
+export const POS_PAYMENT_METHOD = {
+  CASH: "cash",
+  CARD: "card",
+  UPI: "upi",
+  MULTI_PAY: "multipay",
+  PAY_LATER: "pay_later",
+};
+
 export const PAYMENT_MODE = [
   { label: "Cash", value: "cash" },
   { label: "Card", value: "card" },
@@ -277,7 +285,7 @@ export const TAX_TYPE = [
   { label: "Out Of Scope", value: "out_of_scope" },
 ];
 
-export const BANK_UI_FIELDS: (keyof BranchFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber","upiId"];
+export const BANK_UI_FIELDS: (keyof BranchFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber", "upiId"];
 
 export const PAYMENT_STATUS_OPTIONS = [
   { label: "All", value: "" },

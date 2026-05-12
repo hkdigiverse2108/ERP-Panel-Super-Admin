@@ -197,8 +197,8 @@ export const Mutations = {
   useDeleteDiscount: () => useMutations<string, void>([KEYS.DISCOUNT.DELETE, KEYS.DISCOUNT.BASE], (id) => Delete(`${URL_KEYS.DISCOUNT.BASE}/${id}`)),
 
   //*************** POS Payment **************** */
-  useAddPosPayment: () => useMutations<AddPosPaymentPayload, void>([KEYS.POS_PAYMENT.ADD, KEYS.POS_PAYMENT.BASE], (input) => Post(URL_KEYS.POS_PAYMENT.ADD, input)),
-  useEditPosPayment: () => useMutations<EditPosPaymentPayload, void>([KEYS.POS_PAYMENT.EDIT, KEYS.POS_PAYMENT.BASE], (input) => Put(URL_KEYS.POS_PAYMENT.EDIT, input)),
+  useAddPosPayment: () => useMutations<AddPosPaymentPayload, void>([KEYS.POS_PAYMENT.ADD, KEYS.POS_PAYMENT.BASE, KEYS.POS_CREDIT_NOTE.DROPDOWN, KEYS.SUPPLIER_BILL.DROPDOWN], (input) => Post(URL_KEYS.POS_PAYMENT.ADD, input)),
+  useEditPosPayment: () => useMutations<EditPosPaymentPayload, void>([KEYS.POS_PAYMENT.EDIT, KEYS.POS_PAYMENT.BASE, KEYS.POS_CREDIT_NOTE.DROPDOWN, KEYS.SUPPLIER_BILL.DROPDOWN], (input) => Put(URL_KEYS.POS_PAYMENT.EDIT, input)),
   useDeletePosPayment: () => useMutations<string, void>([KEYS.POS_PAYMENT.DELETE, KEYS.POS_PAYMENT.BASE], (id) => Delete(`${URL_KEYS.POS_PAYMENT.BASE}/${id}`)),
 
   //*************** Expense **************** */
@@ -261,7 +261,7 @@ export const Mutations = {
   useAddCredential: () => useMutations<AddCredentialPayload, void>([KEYS.CREDENTIALS.ADD, KEYS.CREDENTIALS.BASE], (input) => Post(URL_KEYS.CREDENTIALS.ADD, input)),
   useEditCredential: () => useMutations<EditCredentialPayload, void>([KEYS.CREDENTIALS.EDIT, KEYS.CREDENTIALS.BASE], (input) => Put(URL_KEYS.CREDENTIALS.EDIT, input)),
   useDeleteCredential: () => useMutations<string, void>([KEYS.CREDENTIALS.DELETE, KEYS.CREDENTIALS.BASE], (id) => Delete(`${URL_KEYS.CREDENTIALS.DELETE}/${id}`)),
-  
+
   // ************ AI ***********
   useAnalyzeTable: () => useMutations<AnalyzeTablePayload, any>([KEYS.AI.ANALYZE], (input) => Post(URL_KEYS.AI.ANALYZE, input)),
 };

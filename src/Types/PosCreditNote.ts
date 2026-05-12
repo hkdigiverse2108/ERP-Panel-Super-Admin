@@ -39,5 +39,5 @@ export interface PosCreditNoteApiResponse extends MessageStatus {
 }
 
 export interface PosCreditNoteDropdownApiResponse extends MessageStatus {
-  data: PosCreditNoteBase[];
+  data: (PosCreditNoteBase & { amount: number })[];
 }

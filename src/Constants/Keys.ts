@@ -209,6 +209,7 @@ export const KEYS = {
     ADD: "supplier-bill-add",
     EDIT: "supplier-bill-edit",
     DELETE: "supplier-bill-delete",
+    DROPDOWN: "supplier-bill-dropdown",
   },
   PURCHASE_DEBIT_NOTE: {
     BASE: "purchase-debit-note",
@@ -272,6 +273,7 @@ export const KEYS = {
     EDIT: "pos-credit-note-edit",
     DELETE: "pos-credit-note-delete",
     REFUND: "pos-credit-note-refund",
+    DROPDOWN: "pos-credit-note-dropdown",
   },
   RETURN_POS_ORDER: {
     BASE: "return-pos-order",
