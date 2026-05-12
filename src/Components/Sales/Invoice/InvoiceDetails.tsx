@@ -18,31 +18,9 @@ const InvoiceDetails = ({ isEditing = false }: { isEditing?: boolean }) => {
   const { data: paymentTermsData } = Queries.useGetPaymentTermsDropdown();
   const { data: customerData, isLoading: isCustomerLoading, isFetching: isCustomerFetching } = Queries.useGetContactDropdown({ typeFilter: "customer", companyFilter: values?.companyId }, !!values?.companyId);
 
-  const {
-    data: salesOrderData,
-    isLoading: isSalesOrderLoading,
-    isFetching: isSalesOrderFetching,
-  } = Queries.useGetSalesOrderDropdown(
-    {
-      companyFilter: values?.companyId,
-      customerFilter: values?.customerId,
-      ...(isEditing ? {} : { statusFilter: "pending" }),
-    },
-    !!values?.companyId && !!values?.customerId,
-  );
+  const { data: salesOrderData, isLoading: isSalesOrderLoading, isFetching: isSalesOrderFetching } = Queries.useGetSalesOrderDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId, customerId: values?.customerId, includeId: values?.selectedSalesOrderId?.join(","), statusFilter: "pending" }, !!values?.companyId && !!values?.branchId && !!values?.customerId);
 
-  const {
-    data: deliveryChallanData,
-    isLoading: isDeliveryChallanLoading,
-    isFetching: isDeliveryChallanFetching,
-  } = Queries.useGetDeliveryChallanDropdown(
-    {
-      companyFilter: values?.companyId,
-      customerFilter: values?.customerId,
-      ...(isEditing ? {} : { statusFilter: "pending" }),
-    },
-    !!values?.companyId && !!values?.customerId,
-  );
+  const { data: deliveryChallanData, isLoading: isDeliveryChallanLoading, isFetching: isDeliveryChallanFetching } = Queries.useGetDeliveryChallanDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId, customerFilter: values?.customerId, includeId: values?.selectedDeliveryChallanId?.join(","), statusFilter: "delivered" }, !!values?.companyId && !!values?.branchId && !!values?.customerId);
 
   const { data: salesPersonData, isLoading: isSalesPersonLoading, isFetching: isSalesPersonFetching } = Queries.useGetUserDropdown({ companyFilter: values?.companyId }, !!values?.companyId);
 
@@ -130,12 +108,12 @@ const InvoiceDetails = ({ isEditing = false }: { isEditing?: boolean }) => {
 
   useEffect(() => {
     if (values.createdFrom === "") {
-      setFieldValue("selectedSalesOrderId", "");
-      setFieldValue("selectedDeliveryChallanId", "");
+      setFieldValue("selectedSalesOrderId", []);
+      setFieldValue("selectedDeliveryChallanId", []);
     } else if (values.createdFrom === "sales-order") {
-      setFieldValue("selectedDeliveryChallanId", "");
+      setFieldValue("selectedDeliveryChallanId", []);
     } else if (values.createdFrom === "delivery-challan") {
-      setFieldValue("selectedSalesOrderId", "");
+      setFieldValue("selectedSalesOrderId", []);
     }
   }, [values.createdFrom, setFieldValue]);
 
@@ -211,7 +189,7 @@ const InvoiceDetails = ({ isEditing = false }: { isEditing?: boolean }) => {
       </Grid>
 
       <Grid size={{ xs: 12, md: 9 }} container spacing={2}>
-        <DependentSelect name="branchId" label="Select Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4 }} required/>
+        <DependentSelect name="branchId" label="Select Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4 }} required />
         <CommonValidationSelect name="customerId" label="Select Customer" required options={GenerateOptions(customers)} disabled={!values.companyId} isLoading={isCustomerLoading || isCustomerFetching} grid={{ xs: 12, md: 4 }} />
 
         <CommonValidationDatePicker name="date" label="Invoice Date" required grid={{ xs: 12, md: 4 }} />

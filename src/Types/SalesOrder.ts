@@ -87,6 +87,10 @@ export interface SalesOrderDropdownApiResponse extends MessageStatus {
   data: SalesOrderBase[];
 }
 
+export interface SingleSalesOrderApiResponse extends MessageStatus {
+  data: SalesOrderBase;
+}
+
 /* ===================== NEW UI TYPES ===================== */
 
 export interface SalesOrderDetailsProps {

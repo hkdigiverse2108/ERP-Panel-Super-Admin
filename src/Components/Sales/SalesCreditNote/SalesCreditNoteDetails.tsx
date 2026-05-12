@@ -9,7 +9,7 @@ import { AddressSelectionModal, DependentSelect } from "../../Common";
 import { Queries } from "../../../Api";
 import { GenerateOptions } from "../../../Utils";
 
-const SalesCreditNoteDetails = () => {
+const SalesCreditNoteDetails = ({ isEditing }: { isEditing: boolean }) => {
   const { values, setFieldValue } = useFormikContext<SalesCreditNoteFormValues>();
   const [modalType, setModalType] = useState<"billing" | "shipping" | null>(null);
 
@@ -18,7 +18,7 @@ const SalesCreditNoteDetails = () => {
 
   const { data: customerData, isLoading: isCustomerLoading, isFetching: isCustomerFetching } = Queries.useGetContactDropdown({ typeFilter: "customer", companyFilter: values?.companyId }, !!values?.companyId);
 
-  const { data: invoiceData, isLoading: isInvoiceLoading, isFetching: isInvoiceFetching } = Queries.useGetInvoiceDropdown({ companyFilter: values?.companyId, customerFilter: values?.customerId }, !!values?.companyId && !!values?.customerId);
+  const { data: invoiceData, isLoading: isInvoiceLoading, isFetching: isInvoiceFetching } = Queries.useGetInvoiceDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId, customerId: values?.customerId, includeId: values?.salesId, statusFilter: "invoiced", isCreditNoteCreated: true }, !!values?.companyId && !!values?.branchId && !!values?.customerId);
 
   const { data: salesPersonData, isLoading: isSalesPersonLoading, isFetching: isSalesPersonFetching } = Queries.useGetUserDropdown({ companyFilter: values?.companyId }, !!values?.companyId);
 
@@ -149,7 +149,7 @@ const SalesCreditNoteDetails = () => {
 
         <CommonValidationDatePicker name="dueDate" label="Due Date" grid={{ xs: 12, md: 4 }} />
 
-        <CommonValidationSelect name="salesId" label="Select Sales" options={invoiceOptions} disabled={!values.companyId || !values.customerId} isLoading={isInvoiceLoading || isInvoiceFetching} grid={{ xs: 12, md: 4 }} />
+        <CommonValidationSelect name="salesId" label="Select Sales" options={invoiceOptions} disabled={!values.companyId || !values.customerId || isEditing} isLoading={isInvoiceLoading || isInvoiceFetching} grid={{ xs: 12, md: 4 }} />
 
         <CommonValidationSelect name="salesManId" label="Sales Person" options={salesPersonOptions} disabled={!values.companyId} isLoading={isSalesPersonLoading || isSalesPersonFetching} grid={{ xs: 12, md: 4 }} />
 

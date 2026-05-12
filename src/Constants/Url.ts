@@ -226,6 +226,7 @@ export const URL_KEYS = {
     ADD: "/supplier-bill/add",
     EDIT: "/supplier-bill/edit",
     ALL: "/supplier-bill/all",
+    DROPDOWN: "/supplier-bill/dropdown",
   },
   PURCHASE_DEBIT_NOTE: {
     BASE: "/purchase-debit-note",
@@ -296,6 +297,7 @@ export const URL_KEYS = {
     EDIT: "/pos-credit-note/edit",
     DELETE: "/pos-credit-note/delete",
     REFUND: "/pos-credit-note/refund",
+    DROPDOWN: "/pos-credit-note/dropdown",
   },
 
   RETURN_POS_ORDER: {
@@ -327,6 +329,8 @@ export const URL_KEYS = {
     EDIT: "/pos-payment/edit",
     DELETE: "/pos-payment/delete",
     ALL: "/pos-payment/all",
+    PENDING_PAYMENT_DROPDOWN: "/pos-payment/pending-payment/dropdown",
+    PENDING_CREDIT_DROPDOWN: "/pos-payment/pending-credit/dropdown",
   },
   RECEIPT: {
     BASE: "/receipt",

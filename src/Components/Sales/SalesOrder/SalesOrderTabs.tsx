@@ -9,14 +9,39 @@ import { GenerateOptions } from "../../../Utils";
 import { FieldArray, useFormikContext } from "formik";
 import type { SalesOrderItem, SalesOrderFormValues, ProductBase, CommonTableColumn } from "../../../Types";
 
-const SalesOrderTabs = ({ emptyRow }: { emptyRow: SalesOrderItem }) => {
+const SalesOrderTabs = ({ emptyRow, isEditing }: { emptyRow: SalesOrderItem; isEditing: boolean }) => {
   const [tabValue, setTabValue] = useState(0);
   const { values, setFieldValue } = useFormikContext<SalesOrderFormValues>();
 
   const isCustomerSelected = !!values?.customerId && !!values?.branchId;
-  
+  const { data: singleEstimate, isLoading: isSingleEstimateLoading, isFetching: isSingleEstimateFetching } = Queries.useGetSingleEstimate(values?.selectedEstimateId, !!values?.selectedEstimateId && !isEditing);
+
   const productParams = useMemo(() => ({ companyFilter: values?.companyId, branchFilter: values?.branchId }), [values?.companyId, values?.branchId]);
   const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown(productParams, !!values?.companyId && !!values?.branchId);
+
+  useEffect(() => {
+    if (!values?.selectedEstimateId) return;
+    if (isEditing) return;
+    if (isSingleEstimateFetching) return;
+    const estimateItems = singleEstimate?.data?.items || [];
+    if (!estimateItems.length) return;
+    const mappedItems = estimateItems.map((item: any) => ({
+      productId: item?.productId?._id || item?.productId || "",
+      qty: item?.qty || 1,
+      freeQty: item?.freeQty || 0,
+      price: item?.price || 0,
+      discount1: item?.discount1 || 0,
+      tax: item?.tax || 0,
+      taxId: item?.taxId?._id || item?.taxId || "",
+      taxableAmount: item?.taxableAmount || 0,
+      totalAmount: item?.totalAmount || 0,
+      uomId: item?.uomId?._id || item?.uomId || "",
+      unit: item?.unit || "",
+    }));
+    const existingItems = (values?.items || []).filter((item) => item?.productId);
+    const finalItems = [...existingItems, ...mappedItems];
+    setFieldValue("items", finalItems);
+  }, [singleEstimate?.data?.items]);
 
   const calculateRowValues = (index: number) => {
     const row = values?.items?.[index];
@@ -79,15 +104,10 @@ const SalesOrderTabs = ({ emptyRow }: { emptyRow: SalesOrderItem }) => {
         const taxRate = Number(product?.salesTaxId?.percentage || 0);
         const isProductInclusive = typeof product?.isSalesTaxIncluding === "boolean" ? product.isSalesTaxIncluding : false;
 
-        if (values?.taxType === "tax_exclusive") {
-          desiredPrice = isProductInclusive ? desiredPrice / (1 + taxRate / 100) : desiredPrice;
-        } else if (values?.taxType === "tax_inclusive") {
-          desiredPrice = !isProductInclusive ? desiredPrice * (1 + taxRate / 100) : desiredPrice;
-        } else if (values?.taxType === "out_of_scope") {
-          desiredPrice = Number(product?.mrp || 0);
-        } else {
-          desiredPrice = Number(product?.mrp || 0);
-        }
+        if (values?.taxType === "tax_exclusive") desiredPrice = isProductInclusive ? desiredPrice / (1 + taxRate / 100) : desiredPrice;
+        else if (values?.taxType === "tax_inclusive") desiredPrice = !isProductInclusive ? desiredPrice * (1 + taxRate / 100) : desiredPrice;
+        else if (values?.taxType === "out_of_scope") desiredPrice = Number(product?.mrp || 0);
+        else desiredPrice = Number(product?.mrp || 0);
 
         desiredPrice = Number(desiredPrice.toFixed(2));
         if (currentPrice !== desiredPrice) {
@@ -100,7 +120,6 @@ const SalesOrderTabs = ({ emptyRow }: { emptyRow: SalesOrderItem }) => {
       if (item.uomId !== product?.uomId?._id) setFieldValue(`items.${index}.uomId`, product?.uomId?._id || "");
       if (item.unit !== uomName) setFieldValue(`items.${index}.unit`, uomName);
       if (item.taxId !== product?.salesTaxId?._id) setFieldValue(`items.${index}.taxId`, product?.salesTaxId?._id || "");
-      
       if (Math.abs((Number(item.tax) || 0) - taxAmount) > 0.01) setFieldValue(`items.${index}.tax`, taxAmount);
       if (Math.abs((Number(item.taxableAmount) || 0) - taxableAmount) > 0.01) setFieldValue(`items.${index}.taxableAmount`, taxableAmount);
       if (Math.abs((Number(item.totalAmount) || 0) - totalAmount) > 0.01) setFieldValue(`items.${index}.totalAmount`, totalAmount);
@@ -241,7 +260,7 @@ const SalesOrderTabs = ({ emptyRow }: { emptyRow: SalesOrderItem }) => {
                     },
                   ];
 
-                  return <CommonTable showFooter data={values.items || []} columns={columns} rowKey={(_row, index) => index.toString()} getRowClass={() => "align-top"} />;
+                  return <CommonTable isLoading={isSingleEstimateLoading || isSingleEstimateFetching} showFooter data={values.items || []} columns={columns} rowKey={(_row, index) => index.toString()} getRowClass={() => "align-top"} />;
                 }}
               </FieldArray>
             </Box>

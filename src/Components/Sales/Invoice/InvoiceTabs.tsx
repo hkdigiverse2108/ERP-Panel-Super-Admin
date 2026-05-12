@@ -10,12 +10,49 @@ import { FieldArray, useFormikContext } from "formik";
 import type { InvoiceItem, InvoiceFormValues } from "../../../Types/Invoice";
 import type { CommonTableColumn, ProductBase } from "../../../Types";
 
-const InvoiceTabs = ({ emptyRow }: { emptyRow: InvoiceItem }) => {
+const InvoiceTabs = ({ emptyRow, isEditing }: { emptyRow: InvoiceItem; isEditing: boolean }) => {
   const [tabValue, setTabValue] = useState(0);
   const { values, setFieldValue } = useFormikContext<InvoiceFormValues>();
 
   const isCustomerSelected = !!values?.customerId && !!values?.branchId;
   const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId }, !!values?.companyId && !!values?.branchId);
+
+  const salesOrderId = values?.selectedSalesOrderId?.[values?.selectedSalesOrderId?.length - 1] || "";
+  const deliveryChallanId = values?.selectedDeliveryChallanId?.[values?.selectedDeliveryChallanId?.length - 1] || "";
+
+  const { data: singleSalesOrder, isLoading: isSingleSalesOrderLoading, isFetching: isSingleSalesOrderFetching } = Queries.useGetSingleSalesOrder(salesOrderId, Boolean(salesOrderId) && !isEditing);
+  const { data: singleDeliveryChallan, isLoading: isSingleDeliveryChallanLoading, isFetching: isSingleDeliveryChallanFetching } = Queries.useGetSingleDeliveryChallan(deliveryChallanId, Boolean(deliveryChallanId) && !isEditing);
+
+  const mapItems = (items: any[] = []) =>
+    items.map((item) => ({
+      productId: item?.productId?._id || item?.productId || "",
+      qty: item?.qty || 1,
+      freeQty: item?.freeQty || 0,
+      price: item?.price || 0,
+      discount1: item?.discount1 || 0,
+      tax: item?.tax || 0,
+      taxId: item?.taxId?._id || item?.taxId || "",
+      taxableAmount: item?.taxableAmount || 0,
+      totalAmount: item?.totalAmount || 0,
+      uomId: item?.uomId?._id || item?.uomId || "",
+      unit: item?.uomId?.name || item?.unit || "",
+    }));
+
+  useEffect(() => {
+    if ((!salesOrderId && !deliveryChallanId) || isEditing) return;
+
+    if (salesOrderId && singleSalesOrder?.data) {
+      const existingItems = (values?.items || []).filter((item) => item?.productId);
+      const finalItems = [...existingItems, ...mapItems(singleSalesOrder?.data?.items)];
+      setFieldValue("items", finalItems);
+    }
+
+    if (deliveryChallanId && singleDeliveryChallan?.data) {
+      const existingItems = (values?.items || []).filter((item) => item?.productId);
+      const finalItems = [...existingItems, ...mapItems(singleDeliveryChallan?.data?.items)];
+      setFieldValue("items", finalItems);
+    }
+  }, [singleSalesOrder, singleDeliveryChallan]);
 
   const calculateRowValues = (index: number) => {
     const row = values?.items?.[index];
@@ -197,7 +234,7 @@ const InvoiceTabs = ({ emptyRow }: { emptyRow: InvoiceItem }) => {
                       key: "discount1",
                       header: "Discount",
                       bodyClass: "min-w-28",
-                      render: (_, index) => <CommonValidationTextField name={`items.${index}.discount1`} type="number" size="small" />
+                      render: (_, index) => <CommonValidationTextField name={`items.${index}.discount1`} type="number" size="small" />,
                     },
                     {
                       key: "taxAmount",
@@ -235,7 +272,7 @@ const InvoiceTabs = ({ emptyRow }: { emptyRow: InvoiceItem }) => {
                     },
                   ];
 
-                  return <CommonTable showFooter data={values.items || []} columns={columns} rowKey={(_row, index) => index.toString()} getRowClass={() => "align-top"} />;
+                  return <CommonTable isLoading={isSingleSalesOrderLoading || isSingleSalesOrderFetching || isSingleDeliveryChallanLoading || isSingleDeliveryChallanFetching} showFooter data={values.items || []} columns={columns} rowKey={(_row, index) => index.toString()} getRowClass={() => "align-top"} />;
                 }}
               </FieldArray>
             </Box>
