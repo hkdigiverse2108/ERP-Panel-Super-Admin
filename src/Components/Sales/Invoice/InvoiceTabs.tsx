@@ -272,7 +272,7 @@ const InvoiceTabs = ({ emptyRow, isEditing }: { emptyRow: InvoiceItem; isEditing
                     },
                   ];
 
-                  return <CommonTable showFooter data={values.items || []} columns={columns} rowKey={(_row, index) => index.toString()} getRowClass={() => "align-top"} />;
+                  return <CommonTable isLoading={isSingleSalesOrderLoading || isSingleSalesOrderFetching || isSingleDeliveryChallanLoading || isSingleDeliveryChallanFetching} showFooter data={values.items || []} columns={columns} rowKey={(_row, index) => index.toString()} getRowClass={() => "align-top"} />;
                 }}
               </FieldArray>
             </Box>
@@ -280,7 +280,7 @@ const InvoiceTabs = ({ emptyRow, isEditing }: { emptyRow: InvoiceItem; isEditing
         </CommonTabPanel>
 
         <CommonTabPanel value={tabValue} index={1}>
-          <CommonTermsAndCondition isLoading={isSingleSalesOrderLoading || isSingleSalesOrderFetching || isSingleDeliveryChallanLoading || isSingleDeliveryChallanFetching} selectedTermIds={values.termsAndConditionIds || []} onChange={(ids: string[]) => setFieldValue("termsAndConditionIds", ids)} companyId={values.companyId} isView={!values.companyId} />
+          <CommonTermsAndCondition selectedTermIds={values.termsAndConditionIds || []} onChange={(ids: string[]) => setFieldValue("termsAndConditionIds", ids)} companyId={values.companyId} isView={!values.companyId} />
         </CommonTabPanel>
 
         <CommonTabPanel value={tabValue} index={2}>

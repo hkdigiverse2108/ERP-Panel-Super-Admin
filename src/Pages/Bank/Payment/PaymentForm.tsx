@@ -79,8 +79,8 @@ const PaymentForm = () => {
     const { values, setFieldValue } = useFormikContext<PosPaymentFormValues>();
     const { data: contactData } = Queries.useGetContactDropdown({ typeFilter: "customer,supplier", companyFilter: values?.companyId });
     const isCustomer = contactData?.data?.find((item) => item._id === partyId)?.contactType?.includes("customer") ?? false;
-    const { data: posSupplierBillDropdown, isLoading: isPosSupplierBillDropdownLoading, isFetching: isPosSupplierBillDropdownFetching } = Queries.useGetSupplierBillDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId, paymentStatus: "unpaid,partial", supplierId: partyId, includeId: values?.purchaseBillId }, Boolean(partyId && !isCustomer));
-    const { data: pendingCreditData, isLoading: pendingCreditLoading, isFetching: pendingCreditFetching } = Queries.useGetPendingCreditDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId, customerId: partyId, includeId: values?.posCreditNoteId }, Boolean(partyId && isCustomer));
+    const { data: posSupplierBillDropdown, isLoading: isPosSupplierBillDropdownLoading, isFetching: isPosSupplierBillDropdownFetching } = Queries.useGetSupplierBillDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId, paymentStatus: "unpaid,partial", supplierId: partyId, ...(isEditing && { includeId: values?.purchaseBillId }) }, Boolean(partyId && !isCustomer));
+    const { data: pendingCreditData, isLoading: pendingCreditLoading, isFetching: pendingCreditFetching } = Queries.useGetPendingCreditDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId, customerId: partyId, ...(isEditing && { includeId: values?.posCreditNoteId }) }, Boolean(partyId && isCustomer));
 
     const handleTableChange = (key: string, value: string | number | undefined) => {
       const newValues = { ...values, [key]: value };
