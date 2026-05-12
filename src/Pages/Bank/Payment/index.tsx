@@ -21,6 +21,8 @@ const Payment = () => {
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPosPayment({}, false);
   const { data, isLoading, isFetching } = Queries.useGetPosPayment({ ...params, voucherTypeFilter: "purchase" });
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const companyId = advancedFilter?.companyFilter?.[0] || "";
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
   const { mutate: deletePayment, isPending: isDeleteLoading } = Mutations.useDeletePosPayment();
   const { mutate: editPayment, isPending: isEditLoading } = Mutations.useEditPosPayment();
   const rows = useMemo(() => {
@@ -40,6 +42,7 @@ const Payment = () => {
 
   const columns: AppGridColDef<PosPaymentBase>[] = [
     CommonObjectNameColumn<PosPaymentBase>("companyId", { headerName: "Company", width: 200 }),
+    CommonObjectNameColumn<PosPaymentBase>("branchId", { headerName: "Branch", width: 200 }),
     CommonObjectPropertyColumn<PosPaymentBase>("voucherType", "voucherType", [], { headerName: "Payment No", flex: 1, minWidth: 150, type: "format" }),
     CommonObjectPropertyColumn<PosPaymentBase>("partyId", "partyId", ["firstName", "lastName"], { headerName: "Party Name", flex: 1, minWidth: 150 }),
     CommonObjectPropertyColumn<PosPaymentBase>("paymentMode", "paymentMode", [], { headerName: "Payment Mode", flex: 1, minWidth: 150, type: "format" }),
@@ -82,6 +85,7 @@ const Payment = () => {
 
   const filter = [
     CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }), //
     CreateFilter("Select Payment Type", "paymentTypeFilter", advancedFilter, updateAdvancedFilter, PAYMENT_TYPE_OPTIONS, false, { xs: 12, sm: 6, md: 3 }),
     CreateFilter("Select party", "partyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(contactData?.data), contactDataLoading, { xs: 12, sm: 6, md: 3 }),
   ];

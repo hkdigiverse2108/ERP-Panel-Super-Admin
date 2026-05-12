@@ -35,6 +35,8 @@ const Prefix = () => {
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPrefix({}, false);
   const { data: prefixData, isLoading: prefixDataLoading, isFetching: prefixDataFetching } = Queries.useGetPrefix(prefixParams);
   const { data: companyData, isLoading: companyLoading } = Queries.useGetCompanyDropdown();
+  const companyId = advancedFilter?.companyFilter?.[0] || "";
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
   const { mutate: deletePrefix, isPending: deleteLoading } = Mutations.useDeletePrefix();
   const { mutate: editPrefix, isPending: editLoading } = Mutations.useEditPrefix();
 
@@ -54,6 +56,7 @@ const Prefix = () => {
 
   const columns: AppGridColDef<PrefixBase>[] = [
     CommonObjectNameColumn<PrefixBase>("companyId", { headerName: "Company", width: 200 }),
+    CommonObjectNameColumn<PrefixBase>("branchId", { headerName: "Branch", width: 200 }),
     { field: "prefixType", headerName: "Prefix Type", flex: 1, minWidth: 200, valueGetter: (_value, row: PrefixBase) => row.prefixType?.split("_").join(" ") || "-" },
     { field: "prefix", headerName: "Prefix", flex: 1, minWidth: 200 },
     { field: "sequenceNumber", headerName: "Sequence No.", flex: 1, minWidth: 150 },
@@ -72,7 +75,10 @@ const Prefix = () => {
       : []),
   ];
 
-  const filters = [CreateFilter("Company", "companyFilter", advancedFilter, updateAdvancedFilter, WithAllOption(GenerateOptions(companyData?.data), "All", ""), companyLoading, { xs: 12, sm: 12, md: 4 })];
+  const filters = [
+    CreateFilter("Company", "companyFilter", advancedFilter, updateAdvancedFilter, WithAllOption(GenerateOptions(companyData?.data), "All", ""), companyLoading, { xs: 12, sm: 12, md: 4 }), //
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }),
+  ];
 
   const CommonDataGridOption = {
     columns,

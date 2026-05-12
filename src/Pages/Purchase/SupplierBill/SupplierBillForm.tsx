@@ -37,6 +37,7 @@ const SupplierBillForm = () => {
 
   const initialValues: SupplierBillFormValues = {
     companyId: typeof data?.companyId === "object" ? data.companyId?._id : data?.companyId || "",
+    branchId: typeof data?.branchId === "object" ? data.branchId?._id : data?.branchId || "",
     supplierId: typeof data?.supplierId === "object" ? data.supplierId?._id : data?.supplierId || "",
     supplierBillNo: data?.supplierBillNo || "",
     referenceBillNo: data?.referenceBillNo || "",
@@ -194,7 +195,7 @@ const SupplierBillForm = () => {
 
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 14 }}>
         <Formik<SupplierBillFormValues> initialValues={initialValues} validationSchema={SupplierBillFormSchema} onSubmit={handleSubmit} enableReinitialize={isEditing} validateOnMount>
-          {({ setFieldValue, dirty, isValid, resetForm }) => (
+          {({ setFieldValue, dirty, resetForm }) => (
             <Form noValidate>
               <CommonSummaryWatcher itemsKey="productDetails" summaryKey="summary" priceKey="unitCost" taxAmountKey="taxAmount" hasAdditionalCharges />
               <Grid container spacing={2}>
@@ -212,7 +213,7 @@ const SupplierBillForm = () => {
                   </CommonCard>
                 </Box>
 
-                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty || !isValid} isLoading={addLoading || editLoading} onClear={() => (isEditing ? navigate(-1) : resetForm())} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={addLoading || editLoading} onClear={() => (isEditing ? navigate(-1) : resetForm())} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}

@@ -253,6 +253,8 @@ const BillOfLiveProductForm = () => {
   /* ---------------- SUBMIT ---------------- */
 
   const handleSubmit = (values: BillOfLiveProductFormValues) => {
+    delete values.number;
+
     const productDetails: BillOfLiveProductDetail[] = rows.map((r) => ({
       productId: r.id,
       qty: r.qty,
@@ -297,10 +299,10 @@ const BillOfLiveProductForm = () => {
                   <Grid size={12}>
                     <Grid container spacing={2}>
                       <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 4 }} required />
-                      <DependentSelect name="branchId" label="Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4 }} required/>
-                      <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 4 }} required/>
+                      <DependentSelect name="branchId" label="Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4 }} required />
+                      <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 4 }} required />
                       {isEditing && <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 4 }} />}
-                      <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 4 }} options={GenerateOptions(recipeData?.data?.recipe_data || [])} isLoading={recipeLoading || recipeFetching} disabled={!values.companyId} required/>
+                      <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 4 }} options={GenerateOptions(recipeData?.data?.recipe_data || [])} isLoading={recipeLoading || recipeFetching} disabled={!values.companyId} required />
                       <CommonValidationSwitch name="allowReverseCalculation" label="Allow Reverse Calculation" />
                     </Grid>
                   </Grid>

@@ -17,6 +17,8 @@ const SupplierBill = () => {
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetSupplierBillDetails({}, false);
   const { data, isLoading, isFetching } = Queries.useGetSupplierBillDetails(params);
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+  const companyId = advancedFilter?.companyFilter?.[0] || "";
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
   const { mutate: deleteSupplierBill, isPending: deleteSupplierBillLoading } = Mutations.useDeleteSupplierBill();
   const { mutate: editSupplierBill, isPending: editSupplierBillLoading } = Mutations.useEditSupplierBill();
   const summaryData = data?.data?.summary;
@@ -50,10 +52,15 @@ const SupplierBill = () => {
     { label: "Unpaid", value: summaryData?.unpaidAmount || 0 },
   ];
 
-  const filter = [CreateFilter("Payment Status", "statusFilter", advancedFilter, updateAdvancedFilter, PAYMENT_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Payment Status", "statusFilter", advancedFilter, updateAdvancedFilter, PAYMENT_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 }),//
+  ];
 
   const columns: AppGridColDef<SupplierBillBase>[] = [
     CommonObjectNameColumn<SupplierBillBase>("companyId", { headerName: "Company", flex: 1, minWidth: 150 }),
+    CommonObjectNameColumn<SupplierBillBase>("branchId", { headerName: "Branch", flex: 1, minWidth: 150 }),
 
     CommonObjectPropertyColumn<SupplierBillBase>("paymentStatus", "paymentStatus", [], { headerName: "Status", width: 150, type: "status" }),
 

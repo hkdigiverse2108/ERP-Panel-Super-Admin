@@ -21,6 +21,7 @@ const Estimate = () => {
   // Filter Data Queries
   const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
   const companyId = advancedFilter?.companyFilter?.[0];
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
   const { data: customerData, isLoading: customerDataLoading } = Queries.useGetContactDropdown({ typeFilter: "customer", companyFilter: companyId });
 
   const allEstimate = useMemo(() => estimate?.data?.estimate_data?.map((estimate) => ({ ...estimate, id: estimate._id, netAmount: estimate.transactionSummary?.netAmount || 0, taxAmount: estimate.transactionSummary?.taxAmount || 0 })) || [], [estimate]);
@@ -38,6 +39,8 @@ const Estimate = () => {
   const handleAdd = () => navigate(ROUTES.ESTIMATE.ADD_EDIT);
 
   const columns: AppGridColDef<EstimateBase>[] = [
+    CommonObjectPropertyColumn<EstimateBase>("companyId", "companyId", ["name"], { headerName: "Company", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<EstimateBase>("branchId", "branchId", ["name"], { headerName: "Branch", flex: 1, minWidth: 150 }),
     { field: "estimateNo", headerName: "Estimate No", flex: 1, minWidth: 120 },
     CommonObjectPropertyColumn<EstimateBase>("customerId", "customerId", ["firstName", "lastName"], { headerName: "Customer Name", flex: 1, minWidth: 150 }),
     CommonObjectPropertyColumn<EstimateBase>("date", "date", [], { headerName: "Estimate Date", flex: 1, minWidth: 120, type: "date" }),
@@ -74,7 +77,12 @@ const Estimate = () => {
     onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
-  const filter = [CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(companyData?.data), companyDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Customer", "customerFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(customerData?.data), customerDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ESTIMATE_STATUS, false, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(companyData?.data), companyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Customer", "customerFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(customerData?.data), customerDataLoading, { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ESTIMATE_STATUS, false, { xs: 12, sm: 6, md: 3 }),
+  ];
 
   const stats = [
     { label: "All Orders", value: totalRows || 0, color: "primary" },

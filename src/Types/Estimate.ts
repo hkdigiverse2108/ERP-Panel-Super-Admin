@@ -19,7 +19,7 @@ export interface EstimateItem {
   productId: string | ProductBase;
   qty: number;
   freeQty: number;
-  uomId: string | UomBase; 
+  uomId: string | UomBase;
   price: number;
   discount1: number;
   // discount2: number;
@@ -32,6 +32,7 @@ export interface EstimateItem {
 
 export interface EstimateFormValues {
   companyId?: string;
+  branchId?: string;
   date?: string;
   dueDate?: string;
   customerId?: string;
@@ -77,6 +78,10 @@ export interface EstimateApiResponse extends MessageStatus {
 
 export interface EstimateDropdownApiResponse extends MessageStatus {
   data: EstimateBase[];
+}
+
+export interface SingleEstimateApiResponse extends MessageStatus {
+  data: EstimateBase;
 }
 
 /* ===================== NEW UI TYPES ===================== */

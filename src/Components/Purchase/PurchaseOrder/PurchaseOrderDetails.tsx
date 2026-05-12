@@ -5,7 +5,7 @@ import { ORDER_STATUS, TAX_TYPE } from "../../../Data";
 import { useFormikContext } from "formik";
 import type { ContactAddressApi, PurchaseOrderFormValues } from "../../../Types";
 import { useState, useEffect } from "react";
-import { AddressSelectionModal } from "../../Common";
+import { AddressSelectionModal, DependentSelect } from "../../Common";
 import { Queries } from "../../../Api";
 import { GenerateOptions } from "../../../Utils";
 
@@ -68,18 +68,17 @@ const PurchaseOrderDetails = () => {
       </Grid>
 
       <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 2, md: 2 } }}>
+        <DependentSelect params={{ companyFilter: values?.companyId }} name="branchId" label="Branch" query={Queries.useGetBranchDropdown} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12 }} required />
+      </Grid>
+      <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 3, md: 3 } }}>
         <CommonValidationSelect name="supplierId" label="Select Supplier" required isLoading={supplierDataLoading || supplierDataFetching} options={GenerateOptions(suppliers)} grid={{ xs: 12 }} disabled={!values.companyId} />
       </Grid>
 
-      <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 3, md: 3 } }}>
+      <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 4, md: 4 } }}>
         <CommonValidationDatePicker name="orderDate" label="Purchase Order Date" required grid={{ xs: 12 }} />
       </Grid>
 
-      <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 4, md: 4 } }}>
-        <CommonValidationDatePicker name="shippingDate" label="Shipping Date" required grid={{ xs: 12 }} />
-      </Grid>
-
-      <Grid size={{ xs: 12, md: 3 }} container spacing={2} sx={{ order: { xs: 10, md: 5 } }}>
+      <Grid size={{ xs: 12, md: 3 }} container spacing={2} sx={{ order: { xs: 10, md: 4 } }}>
         <Grid size={{ xs: 12, md: 12 }}>
           <Box display="flex" flexDirection="column" gap={0.5}>
             <Typography variant="caption" color="text.secondary" fontWeight={600}>
@@ -116,15 +115,19 @@ const PurchaseOrderDetails = () => {
         </Grid>
       </Grid>
 
-      <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 5, md: 5 } }}>
-        <CommonValidationTextField name="shippingNote" label="Shipping Note" grid={{ xs: 12 }} />
+      <Grid size={{ xs: 12, md: 2 }} sx={{ order: { xs: 5, md: 5 } }}>
+        <CommonValidationDatePicker name="shippingDate" label="Shipping Date" required grid={{ xs: 12 }} />
       </Grid>
 
       <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 6, md: 6 } }}>
+        <CommonValidationTextField name="shippingNote" label="Shipping Note" grid={{ xs: 12 }} />
+      </Grid>
+
+      <Grid size={{ xs: 12, md: 2 }} sx={{ order: { xs: 7, md: 7 } }}>
         <CommonValidationSelect name="taxType" label="Tax Type" required options={TAX_TYPE} grid={{ xs: 12 }} />
       </Grid>
 
-      <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 7, md: 7 } }}>
+      <Grid size={{ xs: 12, md: 2 }} sx={{ order: { xs: 8, md: 8 } }}>
         <CommonValidationSelect name="status" label="Order Status" required options={ORDER_STATUS} grid={{ xs: 12 }} />
       </Grid>
 

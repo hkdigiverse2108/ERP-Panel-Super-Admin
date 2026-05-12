@@ -1,4 +1,5 @@
 import type { BankBase } from "./Bank";
+import type { BranchBase } from "./Branch";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { CompanyBase } from "./Company";
 
@@ -6,6 +7,7 @@ import type { CompanyBase } from "./Company";
 
 export interface BankTransactionFormValues {
   companyId?: string;
+  branchId?: string;
   voucherNo?: string;
   transactionDate?: string;
   transactionType?: "deposit" | "withdrawal" | "transfer";
@@ -24,8 +26,9 @@ export type EditBankTransactionPayload = AddBankTransactionPayload & { bankTrans
 
 /* ===================== BASE MODEL ===================== */
 
-export interface BankTransactionBase extends Omit<BankTransactionFormValues, "fromAccount" | "toAccount" | "companyId">, CommonDataType {
+export interface BankTransactionBase extends Omit<BankTransactionFormValues, "fromAccount" | "toAccount" | "companyId" | "branchId">, CommonDataType {
   companyId: CompanyBase | string;
+  branchId: BranchBase | string;
   fromAccount: BankBase;
   toAccount: BankBase;
 }

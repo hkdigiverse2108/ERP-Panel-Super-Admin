@@ -101,6 +101,8 @@ export const KEYS = {
     ADD: "pos-payment-add",
     EDIT: "pos-payment-edit",
     DELETE: "pos-payment-delete",
+    PENDING_PAYMENT_DROPDOWN: "pos-payment-pending-dropdown",
+    PENDING_CREDIT_DROPDOWN: "pos-credit-pending-dropdown",
   },
   BANK_TRANSACTION: {
     BASE: "bank-transaction",
@@ -209,6 +211,7 @@ export const KEYS = {
     ADD: "supplier-bill-add",
     EDIT: "supplier-bill-edit",
     DELETE: "supplier-bill-delete",
+    DROPDOWN: "supplier-bill-dropdown",
   },
   PURCHASE_DEBIT_NOTE: {
     BASE: "purchase-debit-note",
@@ -272,6 +275,7 @@ export const KEYS = {
     EDIT: "pos-credit-note-edit",
     DELETE: "pos-credit-note-delete",
     REFUND: "pos-credit-note-refund",
+    DROPDOWN: "pos-credit-note-dropdown",
   },
   RETURN_POS_ORDER: {
     BASE: "return-pos-order",

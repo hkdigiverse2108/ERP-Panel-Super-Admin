@@ -18,6 +18,9 @@ const SalesRegister = () => {
 
   const { data: userDropdown, isLoading: userDropdownLoading } = Queries.useGetUserDropdown();
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
+    const companyId = advancedFilter?.companyFilter?.[0] || "";
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, Boolean(companyId));
+
   const { data, isLoading, isFetching } = Queries.useGetPosCashRegister({ ...params, ...queryParams });
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPosCashRegister({}, false);
   const rows = useMemo(() => {
@@ -33,6 +36,7 @@ const SalesRegister = () => {
 
   const columns: AppGridColDef<PosCashRegisterBase>[] = [
     CommonObjectNameColumn<PosCashRegisterBase>("companyId", { headerName: "Company", width: 200 }), //
+    CommonObjectNameColumn<PosCashRegisterBase>("branchId", { headerName: "Branch", width: 200 }),
     CommonObjectPropertyColumn<PosCashRegisterBase>("salesManId", "salesManId", ["fullName"], { headerName: "Sales Man", width: 150 }),
     CommonObjectPropertyColumn<PosCashRegisterBase>("created", "createdAt", [], { headerName: "From Date", width: 100, type: "date" }),
     CommonObjectPropertyColumn<PosCashRegisterBase>("updated", "updatedAt", [], { headerName: "To Date", width: 100, type: "date" }),
@@ -71,6 +75,7 @@ const SalesRegister = () => {
 
   const filter = [
     CreateFilter("Select Company", "companyFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CompanyData?.data), CompanyDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }),
     CreateFilter("Select Salesman", "salesManFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(userDropdown?.data), userDropdownLoading, { xs: 12, sm: 6, md: 3 }),
     CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, SALES_REGISTER_STATUS, false, { xs: 12, sm: 6, md: 3 }),
   ];
@@ -80,7 +85,7 @@ const SalesRegister = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.POS.SALES_REGISTER} maxItems={1} breadcrumbs={BREADCRUMBS.SALES_REGISTER.BASE} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <AdvancedSearch filter={filter}>
+        <AdvancedSearch filter={filter} defaultExpanded>
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <CommonDateRangeSelector value={dateRange} onChange={setDateRange} active="This Month" />
           </Grid>

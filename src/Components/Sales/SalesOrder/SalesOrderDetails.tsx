@@ -9,7 +9,7 @@ import { AddressSelectionModal, DependentSelect } from "../../Common";
 import { Queries } from "../../../Api";
 import { GenerateOptions, DateConfig } from "../../../Utils";
 
-const SalesOrderDetails = () => {
+const SalesOrderDetails = ({ isEditing }: { isEditing: boolean }) => {
   const { values, setFieldValue } = useFormikContext<SalesOrderFormValues>();
   const [modalType, setModalType] = useState<"billing" | "shipping" | null>(null);
 
@@ -19,18 +19,10 @@ const SalesOrderDetails = () => {
 
   const { data: customerData, isLoading: isCustomerLoading, isFetching: isCustomerFetching } = Queries.useGetContactDropdown({ typeFilter: "customer", companyFilter: values?.companyId }, !!values?.companyId);
 
-  const { data: estimateData, isLoading: isEstimateLoading, isFetching: isEstimateFetching } = Queries.useGetEstimateDropdown({ companyFilter: values?.companyId, customerFilter: values?.customerId }, !!values?.companyId && !!values?.customerId);
+  const { data: estimateData, isLoading: isEstimateLoading, isFetching: isEstimateFetching } = Queries.useGetEstimateDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId, customerId: values?.customerId, includeId: values?.selectedEstimateId }, !!values?.companyId && !!values?.customerId && !!values?.branchId);
 
   const { data: salesPersonData, isLoading: isSalesPersonLoading, isFetching: isSalesPersonFetching } = Queries.useGetUserDropdown({ companyFilter: values?.companyId }, !!values?.companyId);
 
-  const estimateOptions = useMemo(() => {
-    const options = GenerateOptions(estimateData?.data || []);
-    const selectedId = values.selectedEstimateId;
-    if (selectedId && !options.some((o) => o.value === selectedId)) {
-      options.push({ label: values.estimateNo || "Selected Estimate", value: selectedId });
-    }
-    return options;
-  }, [estimateData, values.selectedEstimateId, values.estimateNo]);
   const customers = useMemo(() => customerData?.data || [], [customerData]);
   const salesPersonOptions = useMemo(() => GenerateOptions(salesPersonData?.data || []), [salesPersonData]);
 
@@ -182,6 +174,7 @@ const SalesOrderDetails = () => {
       </Grid>
 
       <Grid size={{ xs: 12, md: 9 }} container spacing={2}>
+        <DependentSelect name="branchId" label="Select Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4 }} required />
         <CommonValidationSelect name="customerId" label="Select Customer" required options={GenerateOptions(customers)} disabled={!values.companyId} isLoading={isCustomerLoading || isCustomerFetching} grid={{ xs: 12, md: 4 }} />
 
         <CommonValidationDatePicker name="date" label="Sales Order Date" required grid={{ xs: 12, md: 4 }} />
@@ -194,7 +187,7 @@ const SalesOrderDetails = () => {
 
         <CommonValidationSelect name="salesManId" label="Sales Person" options={salesPersonOptions} disabled={!values.companyId} isLoading={isSalesPersonLoading || isSalesPersonFetching} grid={{ xs: 12, md: 4 }} />
 
-        <CommonValidationSelect name="selectedEstimateId" label="Reference Estimate" options={estimateOptions} disabled={!values.companyId || !values.customerId} isLoading={isEstimateLoading || isEstimateFetching} grid={{ xs: 12, md: 4 }} />
+        <CommonValidationSelect name="selectedEstimateId" label="Reference Estimate" options={GenerateOptions(estimateData?.data || [])} disabled={!values.companyId || !values.branchId || !values.customerId || isEditing} isLoading={isEstimateLoading || isEstimateFetching} grid={{ xs: 12, md: 4 }} />
 
         <CommonValidationSelect name="reverseCharge" label="Reverse Charge" options={REVERSE_CHARGE} grid={{ xs: 12, md: 4 }} />
       </Grid>

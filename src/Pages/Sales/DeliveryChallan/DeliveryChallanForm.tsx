@@ -19,26 +19,27 @@ const DeliveryChallanForm = () => {
   const permission = usePagePermission(PAGE_TITLE.DELIVERY_CHALLAN.BASE);
   const { data } = location.state || {};
 
-  const emptyRow: DeliveryChallanItem = { 
-    productId: "", 
-    qty: 1, 
-    freeQty: 0, 
-    mrp: 0, 
-    price: 0, 
-    discount1: 0, 
-    discountAmount: 0, 
+  const emptyRow: DeliveryChallanItem = {
+    productId: "",
+    qty: 1,
+    freeQty: 0,
+    mrp: 0,
+    price: 0,
+    discount1: 0,
+    discountAmount: 0,
     uomId: "",
     unit: "",
-    taxId: "", 
-    taxAmount: 0, 
-    taxableAmount: 0, 
-    totalAmount: 0 
+    taxId: "",
+    taxAmount: 0,
+    taxableAmount: 0,
+    totalAmount: 0,
   };
 
   const initialValues: DeliveryChallanFormValues = {
     companyId: typeof data?.companyId === "object" ? data.companyId?._id : data?.companyId || "",
+    branchId: typeof data?.branchId === "object" ? data.branchId?._id : data?.branchId || "",
     date: data?.date || DateConfig.utc().toISOString(),
-    dueDate: data?.dueDate || DateConfig.utc().add(1, 'month').toISOString(),
+    dueDate: data?.dueDate || DateConfig.utc().add(1, "month").toISOString(),
     customerId: typeof data?.customerId === "object" ? data.customerId?._id : data?.customerId || "",
     placeOfSupply: data?.placeOfSupply || "",
     billingAddress: typeof data?.billingAddress === "object" ? data.billingAddress?._id : data?.billingAddress || "",
@@ -49,19 +50,23 @@ const DeliveryChallanForm = () => {
     selectedSalesOrderId: data?.salesOrderIds?.map((so: string | { _id: string }) => (typeof so === "object" ? so?._id : so)) || [],
     selectedInvoiceId: data?.invoiceIds?.map((inv: string | { _id: string }) => (typeof inv === "object" ? inv?._id : inv)) || [],
     termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
-    items: data?.items?.length ? data.items.map((i: DeliveryChallanItem) => ({
-      ...emptyRow,
-      ...i,
-      productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
-      taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
-      price: i.price || 0,
-      discount1: i.discount1 || 0,
-    })) : [emptyRow],
-    additionalCharges: data?.additionalCharges?.length ? data.additionalCharges.map((r: AdditionalChargeItem) => ({
-      ...r,
-      chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
-      taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
-    })) : [],
+    items: data?.items?.length
+      ? data.items.map((i: DeliveryChallanItem) => ({
+          ...emptyRow,
+          ...i,
+          productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
+          taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
+          price: i.price || 0,
+          discount1: i.discount1 || 0,
+        }))
+      : [emptyRow],
+    additionalCharges: data?.additionalCharges?.length
+      ? data.additionalCharges.map((r: AdditionalChargeItem) => ({
+          ...r,
+          chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
+          taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
+        }))
+      : [],
     shippingDetails: {
       shippingType: data?.shippingDetails?.shippingType || "delivery",
       shippingDate: data?.shippingDetails?.shippingDate || "",
@@ -133,30 +138,36 @@ const DeliveryChallanForm = () => {
       createdFrom: createdFrom || "",
       salesOrderIds: Array.isArray(selectedSalesOrderId) ? selectedSalesOrderId : [],
       invoiceIds: Array.isArray(selectedInvoiceId) ? selectedInvoiceId : [],
-      items: values.items?.filter((i: DeliveryChallanItem) => i.productId).map((i: DeliveryChallanItem) => ({
-        productId: i.productId,
-        qty: Number(i.qty || 0),
-        freeQty: Number(i.freeQty || 0),
-        uomId: i.uomId || null,
-        unit: i.unit || null,
-        price: Number(i.price || 0),
-        discount1: Number(i.discount1 || 0),
-        taxId: i.taxId || null,
-        tax: Number(i.taxAmount || 0),
-        taxableAmount: Number(i.taxableAmount || 0),
-        totalAmount: Number(i.totalAmount || 0),
-      })),
-      additionalCharges: values.additionalCharges?.filter((r) => r.chargeId).map((r) => ({ 
-        chargeId: r.chargeId, 
-        taxId: r.taxId, 
-        amount: Number(r.amount), 
-        totalAmount: Number(r.totalAmount) 
-      })),
-      shippingDetails: values.shippingDetails ? {
-        ...values.shippingDetails,
-        weight: Number(values.shippingDetails.weight || 0),
-        transporterId: values.shippingDetails.transporterId || null,
-      } as ShippingDetails : undefined,
+      items: values.items
+        ?.filter((i: DeliveryChallanItem) => i.productId)
+        .map((i: DeliveryChallanItem) => ({
+          productId: i.productId,
+          qty: Number(i.qty || 0),
+          freeQty: Number(i.freeQty || 0),
+          uomId: i.uomId || null,
+          unit: i.unit || null,
+          price: Number(i.price || 0),
+          discount1: Number(i.discount1 || 0),
+          taxId: i.taxId || null,
+          tax: Number(i.taxAmount || 0),
+          taxableAmount: Number(i.taxableAmount || 0),
+          totalAmount: Number(i.totalAmount || 0),
+        })),
+      additionalCharges: values.additionalCharges
+        ?.filter((r) => r.chargeId)
+        .map((r) => ({
+          chargeId: r.chargeId,
+          taxId: r.taxId,
+          amount: Number(r.amount),
+          totalAmount: Number(r.totalAmount),
+        })),
+      shippingDetails: values.shippingDetails
+        ? ({
+            ...values.shippingDetails,
+            weight: Number(values.shippingDetails.weight || 0),
+            transporterId: values.shippingDetails.transporterId || null,
+          } as ShippingDetails)
+        : undefined,
       transactionSummary: getCalculatedSummary(values),
     };
 
@@ -181,7 +192,7 @@ const DeliveryChallanForm = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.DELIVERY_CHALLAN[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.DELIVERY_CHALLAN[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<DeliveryChallanFormValues> initialValues={initialValues} validationSchema={DeliveryChallanFormSchema} onSubmit={handleSubmit} enableReinitialize={isEditing} validateOnMount>
-          {({ setFieldValue, dirty, isValid, resetForm }) => (
+          {({ setFieldValue, dirty, resetForm }) => (
             <Form noValidate>
               <CommonSummaryWatcher summaryKey="transactionSummary" priceKey="price" hasAdditionalCharges />
               <Grid container spacing={2}>
@@ -191,7 +202,7 @@ const DeliveryChallanForm = () => {
                   </CommonCard>
 
                   <CommonCard hideDivider grid={{ xs: 12 }}>
-                    <DeliveryChallanTabs emptyRow={emptyRow} />
+                    <DeliveryChallanTabs emptyRow={emptyRow} isEditing={isEditing} />
                   </CommonCard>
 
                   <CommonCard grid={{ xs: 12 }} hideDivider>
@@ -199,15 +210,7 @@ const DeliveryChallanForm = () => {
                   </CommonCard>
                 </Box>
 
-                <CommonBottomActionBar 
-                  save={isEditing} 
-                  clear={!isEditing} 
-                  disabled={!dirty || !isValid} 
-                  isLoading={isEditLoading || isAddLoading} 
-                  onClear={() => resetForm({ values: initialValues })} 
-                  onSave={() => setFieldValue("_submitAction", "save")} 
-                  onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} 
-                />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}

@@ -3,6 +3,7 @@ import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from 
 
 export interface CreditNoteFormValues {
   companyId?: string;
+  branchId?: string;
   type?: string;
   date?: string;
   bankAccountId?: string;

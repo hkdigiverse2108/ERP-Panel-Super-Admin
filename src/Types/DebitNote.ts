@@ -3,6 +3,7 @@ import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from 
 
 export interface DebitNoteFormValues {
   companyId?: string;
+  branchId?: string;
   type?: string;
   bankAccountId?: string;
   date?: string;

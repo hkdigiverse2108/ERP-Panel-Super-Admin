@@ -1,16 +1,6 @@
-import type {
-  AdditionalChargeItem,
-  AddressApi,
-  CommonDataType,
-  MessageStatus,
-  PageState,
-  ShippingDetails,
-  TransactionSummary,
-} from "./Common";
+import type { AdditionalChargeItem, AddressApi, CommonDataType, MessageStatus, PageState, ShippingDetails, TransactionSummary } from "./Common";
 import type { ContactBase } from "./Contacts";
-import type { DeliveryChallanBase } from "./DeliveryChallan";
 import type { ProductBase } from "./Product";
-import type { SalesOrderBase } from "./SalesOrder";
 import type { TaxBase } from "./Tax";
 import type { UserBase } from "./User";
 
@@ -35,6 +25,7 @@ export interface InvoiceItem {
 
 export interface InvoiceBase extends CommonDataType {
   companyId: string;
+  branchId: string;
   invoiceNo: string;
   date: string;
   dueDate: string;
@@ -62,27 +53,17 @@ export interface InvoiceBase extends CommonDataType {
   status: string;
 }
 
-export interface InvoiceFormValues extends Omit<
-  InvoiceBase,
-  | keyof CommonDataType
-  | "invoiceNo"
-  | "customerId"
-  | "salesManId"
-  | "items"
-  | "billingAddress"
-  | "shippingAddress"
-  | "companyId"
-  | "reverseCharge"
-> {
+export interface InvoiceFormValues extends Omit<InvoiceBase, keyof CommonDataType | "invoiceNo" | "customerId" | "salesManId" | "items" | "billingAddress" | "shippingAddress" | "companyId" | "reverseCharge"> {
   companyId: string;
+  branchId: string;
   invoiceNo?: string;
   customerId: string;
   salesManId?: string;
   items: InvoiceItem[];
   billingAddress?: string;
   shippingAddress?: string;
-  selectedSalesOrderId?: string | SalesOrderBase;
-  selectedDeliveryChallanId?: string | DeliveryChallanBase;
+  selectedSalesOrderId?: string[];
+  selectedDeliveryChallanId?: string[];
   reverseCharge?: string;
   _submitAction?: string;
 }

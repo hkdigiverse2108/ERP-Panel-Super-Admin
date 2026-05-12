@@ -32,6 +32,7 @@ const DebitNoteForm = () => {
   const initialValues: DebitNoteFormValues = {
     type: data?.type || "receiver",
     companyId: data?.companyId?._id || "",
+    branchId: data?.branchId?._id || "",
     personName: data?.personName || "",
     date: data?.date || DateConfig.utc().toISOString(),
     bankAccountId: data?.bankAccountId?._id || "",
@@ -99,8 +100,9 @@ const DebitNoteForm = () => {
                 <CommonCard hideDivider grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(companyData?.data)} isLoading={companyLoading} grid={{ xs: 12, md: 4 }} required />
+                    <DependentSelect name="branchId" label="Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="personName" label="Person Name"  grid={{ xs: 12, md: 4 }} />
-                    <DependentSelect name="bankAccountId" label="Bank Account" query={Queries.useGetBankDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} required grid={{ xs: 12, md: 4 }} />
+                    <DependentSelect name="bankAccountId" label="Bank Account" query={Queries.useGetBankDropdown} params={{ companyFilter: values.companyId , branchFilter: values.branchId}} enabled={Boolean(values.companyId)} disabled={!values.companyId || !values.branchId} required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="amount" label="Amount" type="number" grid={{ xs: 12, md: 4 }} required />
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />

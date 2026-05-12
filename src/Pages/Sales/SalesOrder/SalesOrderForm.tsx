@@ -22,6 +22,7 @@ const SalesOrderForm = () => {
 
   const initialValues: SalesOrderFormValues = {
     companyId: typeof data?.companyId === "object" ? data.companyId?._id : data?.companyId || "",
+    branchId: typeof data?.branchId === "object" ? data.branchId?._id : data?.branchId || "",
     date: data?.date || DateConfig.utc().toISOString(),
     dueDate: data?.dueDate || "",
     customerId: typeof data?.customerId === "object" ? data.customerId?._id : data?.customerId || "",
@@ -32,18 +33,22 @@ const SalesOrderForm = () => {
     taxType: data?.taxType || "default",
     reverseCharge: data?.reverseCharge !== undefined ? String(data.reverseCharge) : "false",
     termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
-    items: data?.items?.length ? data.items.map((i: SalesOrderItem) => ({
-      ...emptyRow,
-      ...i,
-      productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
-      uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
-      taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
-    })) : [emptyRow],
-    additionalCharges: data?.additionalCharges?.length ? data.additionalCharges.map((r: AdditionalChargeItem) => ({
-      ...r,
-      chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
-      taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
-    })) : [],
+    items: data?.items?.length
+      ? data.items.map((i: SalesOrderItem) => ({
+          ...emptyRow,
+          ...i,
+          productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
+          uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
+          taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
+        }))
+      : [emptyRow],
+    additionalCharges: data?.additionalCharges?.length
+      ? data.additionalCharges.map((r: AdditionalChargeItem) => ({
+          ...r,
+          chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
+          taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
+        }))
+      : [],
     shippingDetails: {
       shippingType: data?.shippingDetails?.shippingType || "delivery",
       shippingDate: data?.shippingDetails?.shippingDate || "",
@@ -64,8 +69,8 @@ const SalesOrderForm = () => {
       netAmount: data?.transactionSummary?.netAmount || 0,
     },
     status: data?.status || "pending",
-    salesManId: (typeof (data?.salesManId || data?.salesMan || data?.sales_man_id || data?.sales_person_id) === "object" ? (data?.salesManId || data?.salesMan || data?.sales_man_id || data?.sales_person_id)?._id : (data?.salesManId || data?.salesMan || data?.sales_man_id || data?.sales_person_id)) || "",
-    selectedEstimateId: (typeof (data?.estimateId || data?.selectedEstimateId || data?.estimate || data?.estimate_id || data?.selected_estimate_id) === "object" ? (data?.estimateId || data?.selectedEstimateId || data?.estimate || data?.estimate_id || data?.selected_estimate_id)?._id : (data?.estimateId || data?.selectedEstimateId || data?.estimate || data?.estimate_id || data?.selected_estimate_id)) || "",
+    salesManId: (typeof (data?.salesManId || data?.salesMan || data?.sales_man_id || data?.sales_person_id) === "object" ? (data?.salesManId || data?.salesMan || data?.sales_man_id || data?.sales_person_id)?._id : data?.salesManId || data?.salesMan || data?.sales_man_id || data?.sales_person_id) || "",
+    selectedEstimateId: (typeof (data?.estimateId || data?.selectedEstimateId || data?.estimate || data?.estimate_id || data?.selected_estimate_id) === "object" ? (data?.estimateId || data?.selectedEstimateId || data?.estimate || data?.estimate_id || data?.selected_estimate_id)?._id : data?.estimateId || data?.selectedEstimateId || data?.estimate || data?.estimate_id || data?.selected_estimate_id) || "",
     estimateNo: data?.estimateNo || data?.estimateId?.estimateNo || data?.estimate?.estimateNo || "",
     notes: data?.notes || "",
   };
@@ -81,7 +86,7 @@ const SalesOrderForm = () => {
     if (!hasAccess) navigate(-1);
   }, [isEditing, permission, navigate]);
 
-//   const { data: taxData } = Queries.useGetTaxDropdown();
+  //   const { data: taxData } = Queries.useGetTaxDropdown();
 
   const getCalculatedSummary = (values: SalesOrderFormValues) => {
     const itemGross = values.items?.reduce((s: number, r: SalesOrderItem) => s + Number(r.qty || 0) * Number(r.price || 0), 0) || 0;
@@ -114,26 +119,31 @@ const SalesOrderForm = () => {
   };
 
   const handleSubmit = async (values: SalesOrderFormValues, { resetForm }: FormikHelpers<SalesOrderFormValues>) => {
-    const { _submitAction, estimateNo, ...rest } = values;
+    const { _submitAction, ...rest } = values;
+    delete rest.estimateNo;
     const payload: SalesOrderFormValues = {
       ...rest,
-      items: values.items?.filter((i: SalesOrderItem) => i.productId).map((i: SalesOrderItem) => ({
-        productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
-        qty: Number(i.qty || 0),
-        freeQty: Number(i.freeQty || 0),
-        price: Number(i.price || 0),
-        discount1: Number(i.discount1 || 0),
-        taxableAmount: Number(i.taxableAmount || 0),
-        totalAmount: Number(i.totalAmount || 0),
-        uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
-        taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
-      })),
-      additionalCharges: values.additionalCharges?.filter((r) => r.chargeId).map((r: AdditionalChargeItem) => ({
-        chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
-        taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
-        amount: Number(r.amount || 0),
-        totalAmount: Number(r.totalAmount || 0),
-      })),
+      items: values.items
+        ?.filter((i: SalesOrderItem) => i.productId)
+        .map((i: SalesOrderItem) => ({
+          productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
+          qty: Number(i.qty || 0),
+          freeQty: Number(i.freeQty || 0),
+          price: Number(i.price || 0),
+          discount1: Number(i.discount1 || 0),
+          taxableAmount: Number(i.taxableAmount || 0),
+          totalAmount: Number(i.totalAmount || 0),
+          uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
+          taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
+        })),
+      additionalCharges: values.additionalCharges
+        ?.filter((r) => r.chargeId)
+        .map((r: AdditionalChargeItem) => ({
+          chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
+          taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
+          amount: Number(r.amount || 0),
+          totalAmount: Number(r.totalAmount || 0),
+        })),
       transactionSummary: getCalculatedSummary(values),
     };
 
@@ -158,17 +168,17 @@ const SalesOrderForm = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.SALES_ORDER[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.SALES_ORDER[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<SalesOrderFormValues> initialValues={initialValues} validationSchema={SalesOrderFormSchema} onSubmit={handleSubmit} enableReinitialize={isEditing} validateOnMount>
-          {({ setFieldValue, dirty, isValid, resetForm }) => (
+          {({ setFieldValue, dirty, resetForm }) => (
             <Form noValidate>
               <CommonSummaryWatcher summaryKey="transactionSummary" priceKey="price" hasAdditionalCharges />
               <Grid container spacing={2}>
                 <Box sx={{ display: "grid", gap: 2, width: "100%" }}>
                   <CommonCard title="Sales Order Details" grid={{ xs: 12 }}>
-                    <SalesOrderDetails />
+                    <SalesOrderDetails isEditing={isEditing} />
                   </CommonCard>
 
                   <CommonCard hideDivider grid={{ xs: 12 }}>
-                    <SalesOrderTabs emptyRow={emptyRow} />
+                    <SalesOrderTabs emptyRow={emptyRow} isEditing={isEditing} />
                   </CommonCard>
 
                   <CommonCard grid={{ xs: 12 }} hideDivider>
@@ -176,7 +186,7 @@ const SalesOrderForm = () => {
                   </CommonCard>
                 </Box>
 
-                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty || !isValid} isLoading={isEditLoading || isAddLoading} onClear={() => (isEditing ? navigate(-1) : resetForm({ values: initialValues }))} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => (isEditing ? navigate(-1) : resetForm({ values: initialValues }))} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}

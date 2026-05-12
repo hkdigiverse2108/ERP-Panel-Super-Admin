@@ -47,7 +47,7 @@ const StockVerificationForm = () => {
   const [selectedBranch, setSelectedBranch] = useState(updateData?.branchId?._id || (typeof updateData?.branchId === "string" ? updateData?.branchId : ""));
 
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
-  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown();
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: selectedCompany }, Boolean(selectedCompany));
   const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true });
   const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true });
   const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown({ companyFilter: selectedCompany }, Boolean(selectedCompany));
@@ -92,10 +92,14 @@ const StockVerificationForm = () => {
     differenceQty: 0 - (product.qty ?? 0),
     differenceAmount: (product.landingCost ?? 0) * (0 - (product.qty ?? 0)),
   });
-
   useEffect(() => {
     if (productListData?.data?.length) {
-      setRows((prev) => [...prev, ...(productListData?.data?.map((item) => createRowFromProduct(item)) ?? [])]);
+      setRows((prev) => [
+        ...prev,
+        ...productListData.data
+          .filter((item) => !prev.some((r) => r.productId === item._id)) // 👈 skip duplicates
+          .map((item) => createRowFromProduct(item)),
+      ]);
     }
   }, [productListData]);
 
@@ -143,7 +147,6 @@ const StockVerificationForm = () => {
       ...(enterRemark && { remark: enterRemark }),
     };
     const handleSuccess = () => navigate(-1);
-    console.log(payload);
 
     if (isEditing) {
       await editStock({ ...payload, stockVerificationId: updateData?._id }, { onSuccess: handleSuccess });
@@ -203,13 +206,13 @@ const StockVerificationForm = () => {
             {!isEditing && (
               <Grid size={12}>
                 <Formik enableReinitialize initialValues={{ companyId: "", branchId: "", categoryId: "", brandId: "" }} onSubmit={handleSubmit}>
-                  {() => (
+                  {({ values }) => (
                     <Form noValidate>
                       <CompanyWatcher currentCompanyId={selectedCompany} onChange={setSelectedCompany} />
                       <BranchWatcher currentBranchId={selectedBranch} onChange={setSelectedBranch} />
                       <Grid container spacing={2}>
                         <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(CompanyData?.data)} isLoading={CompanyDataLoading} grid={{ xs: 12, md: 2 }} />
-                        <CommonValidationSelect name="branchId" label="Branch" options={GenerateOptions(BranchData?.data)} isLoading={BranchDataLoading} grid={{ xs: 12, md: 2 }} />
+                        <CommonValidationSelect name="branchId" label="Branch" options={GenerateOptions(BranchData?.data)} isLoading={BranchDataLoading} disabled={!values.companyId} grid={{ xs: 12, md: 2 }} />
                         <CommonValidationSelect name="categoryId" label="Category" placeholder="Category Selection" options={GenerateOptions(CategoryData?.data)} isLoading={CategoryDataLoading} grid={{ xs: 12, md: 3 }} />
                         <CommonValidationSelect name="brandId" label="Brand" placeholder="Brand Selection" options={GenerateOptions(BrandsData?.data)} isLoading={BrandsDataLoading} grid={{ xs: 12, md: 3 }} />
 
@@ -232,6 +235,7 @@ const StockVerificationForm = () => {
                   options={GenerateOptions(productData?.data)}
                   grid={{ xs: 12, sm: isEditing ? 3 : 6 }}
                   isLoading={productDataLoading}
+                  disabled={!selectedCompany || !selectedBranch}
                   onChange={(selected: string[]) => {
                     setSearchValue(selected);
                     if (!selected.length) return;

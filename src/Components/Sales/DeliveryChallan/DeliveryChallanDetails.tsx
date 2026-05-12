@@ -15,35 +15,13 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
 
   const { data: companyData, isLoading: isCompanyLoading } = Queries.useGetCompanyDropdown();
   const companyOptions = GenerateOptions(companyData?.data || []);
-  
+
   const { data: paymentTermsData } = Queries.useGetPaymentTermsDropdown();
   const { data: customerData, isLoading: isCustomerLoading, isFetching: isCustomerFetching } = Queries.useGetContactDropdown({ typeFilter: "customer", companyFilter: values?.companyId }, !!values?.companyId);
 
-  const {
-    data: salesOrderData,
-    isLoading: isSalesOrderLoading,
-    isFetching: isSalesOrderFetching,
-  } = Queries.useGetSalesOrderDropdown(
-    {
-      companyFilter: values?.companyId,
-      customerFilter: values?.customerId,
-      ...(isEditing ? {} : { statusFilter: "pending" }),
-    },
-    !!values?.companyId && !!values?.customerId,
-  );
+  const { data: salesOrderData, isLoading: isSalesOrderLoading, isFetching: isSalesOrderFetching } = Queries.useGetSalesOrderDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId, customerId: values?.customerId, includeId: values?.selectedSalesOrderId?.join(","), statusFilter: "pending" }, !!values?.companyId && !!values?.branchId && !!values?.customerId);
 
-  const {
-    data: invoiceData,
-    isLoading: isInvoiceLoading,
-    isFetching: isInvoiceFetching,
-  } = Queries.useGetInvoiceDropdown(
-    {
-      companyFilter: values?.companyId,
-      customerFilter: values?.customerId,
-      ...(isEditing ? {} : { statusFilter: "pending" }),
-    },
-    !!values?.companyId && !!values?.customerId,
-  );
+  const { data: invoiceData, isLoading: isInvoiceLoading, isFetching: isInvoiceFetching } = Queries.useGetInvoiceDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId, customerId: values?.customerId, includeId: values?.selectedInvoiceId?.join(","), statusFilter: "invoiced" }, !!values?.companyId && !!values?.branchId && !!values?.customerId);
 
   const salesOrderOptions = useMemo(() => GenerateOptions(salesOrderData?.data || []), [salesOrderData]);
   const invoiceOptions = useMemo(() => GenerateOptions(invoiceData?.data || []), [invoiceData]);
@@ -206,6 +184,7 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
       </Grid>
 
       <Grid size={{ xs: 12, md: 9 }} container spacing={2}>
+        <DependentSelect name="branchId" label="Select Branch" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4 }} required />
         <CommonValidationSelect name="customerId" label="Select Customer" required options={GenerateOptions(customers)} disabled={!values.companyId} isLoading={isCustomerLoading || isCustomerFetching} grid={{ xs: 12, md: 4 }} />
 
         <CommonValidationDatePicker name="date" label="Delivery Challan Date" required grid={{ xs: 12, md: 4 }} />

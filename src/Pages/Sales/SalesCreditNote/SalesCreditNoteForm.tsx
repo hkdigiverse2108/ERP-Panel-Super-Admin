@@ -1,16 +1,16 @@
-import { Box, Grid, CircularProgress } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import { useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonSummaryWatcher, CommonAdditionalChargeSection } from "../../../Components/Common";
+import { CommonAdditionalChargeSection, CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonSummaryWatcher } from "../../../Components/Common";
+import { SalesCreditNoteDetails, SalesCreditNoteTabs } from "../../../Components/Sales";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AdditionalChargeItem, SalesCreditNoteFormValues, SalesCreditNoteItem } from "../../../Types";
 import { DateConfig, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 import { SalesCreditNoteFormSchema } from "../../../Utils/ValidationSchemas";
-import { SalesCreditNoteDetails, SalesCreditNoteTabs } from "../../../Components/Sales";
 
 const SalesCreditNoteForm = () => {
   const location = useLocation();
@@ -21,19 +21,20 @@ const SalesCreditNoteForm = () => {
   const isEditing = Boolean(routeData?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
 
-  const { data: singleData, isLoading: isSingleLoading } = Queries.useGetSingleSalesCreditNote(routeData?._id);
-  
+  const { data: singleData } = Queries.useGetSingleSalesCreditNote(routeData?._id, Boolean(routeData?._id));
+
   const data = useMemo(() => singleData?.data || routeData, [singleData, routeData]);
 
   const emptyRow: SalesCreditNoteItem = { productId: "", qty: 1, freeQty: 0, uomId: "", price: 0, discount1: 0, taxId: "", tax: 0, total: 0 };
 
   const initialValues: SalesCreditNoteFormValues = useMemo(() => {
     // Robust key mapping is restored because standard keys often differ in API responses
-    const salesManIdValue = data?.salesManId ;
+    const salesManIdValue = data?.salesManId;
     const reasonValue = data?.reason;
 
     return {
       companyId: typeof data?.companyId === "object" ? data.companyId?._id : data?.companyId || "",
+      branchId: typeof data?.branchId === "object" ? data.branchId?._id : data?.branchId || "",
       creditNoteDate: data?.creditNoteDate || DateConfig.utc().toISOString(),
       dueDate: data?.dueDate || "",
       customerId: typeof data?.customerId === "object" ? data.customerId?._id : data?.customerId || "",
@@ -49,18 +50,22 @@ const SalesCreditNoteForm = () => {
       salesManId: typeof salesManIdValue === "object" ? salesManIdValue?._id : salesManIdValue || "",
       salesId: typeof data?.salesId === "object" ? data.salesId?._id : data?.salesId || "",
       termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
-      productDetails: data?.productDetails?.length ? data.productDetails.map((i: SalesCreditNoteItem) => ({
-        ...emptyRow,
-        ...i,
-        productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
-        uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
-        taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
-      })) : [emptyRow],
-      additionalCharges: data?.additionalCharges?.length ? data.additionalCharges.map((r: AdditionalChargeItem) => ({
-        ...r,
-        chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
-        taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
-      })) : [],
+      productDetails: data?.productDetails?.length
+        ? data.productDetails.map((i: SalesCreditNoteItem) => ({
+            ...emptyRow,
+            ...i,
+            productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
+            uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
+            taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
+          }))
+        : [emptyRow],
+      additionalCharges: data?.additionalCharges?.length
+        ? data.additionalCharges.map((r: AdditionalChargeItem) => ({
+            ...r,
+            chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
+            taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
+          }))
+        : [],
       shippingDetails: {
         shippingType: data?.shippingDetails?.shippingType || "delivery",
         shippingDate: data?.shippingDetails?.shippingDate || "",
@@ -96,7 +101,7 @@ const SalesCreditNoteForm = () => {
   const getCalculatedSummary = (values: SalesCreditNoteFormValues) => {
     const itemGross = values.productDetails?.reduce((s: number, r: SalesCreditNoteItem) => s + (Number(r.qty) || 0) * (Number(r.price) || 0), 0) || 0;
     const itemDiscount = values.productDetails?.reduce((s: number, r: SalesCreditNoteItem) => s + (Number(r.discount1) || 0), 0) || 0;
-    
+
     // items taxable = items total - items tax
     const itemTax = values.productDetails?.reduce((s: number, r: SalesCreditNoteItem) => s + (Number(r.tax) || 0), 0) || 0;
     const itemTotal = values.productDetails?.reduce((s: number, r: SalesCreditNoteItem) => s + (Number(r.total) || 0), 0) || 0;
@@ -134,24 +139,28 @@ const SalesCreditNoteForm = () => {
       ...rest,
       // Convert reverseCharge to boolean for the API
       reverseCharge: String(values.reverseCharge) === "true",
-      productDetails: values.productDetails?.filter((i: SalesCreditNoteItem) => i.productId).map((i: SalesCreditNoteItem) => ({
-        productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
-        qty: Number(i.qty || 0),
-        freeQty: Number(i.freeQty || 0),
-        price: Number(i.price || 0),
-        discount1: Number(i.discount1 || 0),
-        tax: Number(i.tax || 0),
-        total: Number(i.total || 0),
-        uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
-        taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
-        unit: i.unit,
-      })),
-      additionalCharges: values.additionalCharges?.filter((r: AdditionalChargeItem) => r.chargeId).map((r: AdditionalChargeItem) => ({
-        chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
-        taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
-        amount: Number(r.amount || 0),
-        totalAmount: Number(r.totalAmount || 0),
-      })),
+      productDetails: values.productDetails
+        ?.filter((i: SalesCreditNoteItem) => i.productId)
+        .map((i: SalesCreditNoteItem) => ({
+          productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
+          qty: Number(i.qty || 0),
+          freeQty: Number(i.freeQty || 0),
+          price: Number(i.price || 0),
+          discount1: Number(i.discount1 || 0),
+          tax: Number(i.tax || 0),
+          total: Number(i.total || 0),
+          uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
+          taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
+          unit: i.unit,
+        })),
+      additionalCharges: values.additionalCharges
+        ?.filter((r: AdditionalChargeItem) => r.chargeId)
+        .map((r: AdditionalChargeItem) => ({
+          chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
+          taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
+          amount: Number(r.amount || 0),
+          totalAmount: Number(r.totalAmount || 0),
+        })),
       summary: summary,
     };
 
@@ -171,24 +180,22 @@ const SalesCreditNoteForm = () => {
     }
   };
 
-  if(isSingleLoading) return <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}><CircularProgress /></Box>
-
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.SALES_CREDIT_NOTE[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.SALES_CREDIT_NOTE[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<SalesCreditNoteFormValues> initialValues={initialValues} validationSchema={SalesCreditNoteFormSchema} onSubmit={handleSubmit} enableReinitialize validateOnMount>
-          {({ setFieldValue, dirty, isValid, resetForm }) => (
+          {({ setFieldValue, dirty, resetForm }) => (
             <Form noValidate>
               <CommonSummaryWatcher summaryKey="summary" itemsKey="productDetails" priceKey="price" taxAmountKey="tax" hasAdditionalCharges />
               <Grid container spacing={2}>
                 <Box sx={{ display: "grid", gap: 2, width: "100%" }}>
                   <CommonCard title="Sales Credit Note Details" grid={{ xs: 12 }}>
-                    <SalesCreditNoteDetails />
+                    <SalesCreditNoteDetails isEditing={isEditing} />
                   </CommonCard>
 
                   <CommonCard hideDivider grid={{ xs: 12 }}>
-                    <SalesCreditNoteTabs emptyRow={emptyRow} />
+                    <SalesCreditNoteTabs emptyRow={emptyRow} isEditing={isEditing} />
                   </CommonCard>
 
                   <CommonCard grid={{ xs: 12 }} hideDivider>
@@ -196,7 +203,7 @@ const SalesCreditNoteForm = () => {
                   </CommonCard>
                 </Box>
 
-                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty || !isValid} isLoading={isEditLoading || isAddLoading} onClear={() => (isEditing ? navigate(-1) : resetForm({ values: initialValues }))} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => (isEditing ? navigate(-1) : resetForm({ values: initialValues }))} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}
