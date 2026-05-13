@@ -107,3 +107,7 @@ export interface ConfirmReceiptStockTransferPayload {
     receivedQty: number;
   }[];
 }
+
+export interface DispatchStockTransferPayload {
+  stockTransferId: string;
+}
