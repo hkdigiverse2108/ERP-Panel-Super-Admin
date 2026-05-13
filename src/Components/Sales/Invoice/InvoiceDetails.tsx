@@ -18,9 +18,9 @@ const InvoiceDetails = ({ isEditing = false }: { isEditing?: boolean }) => {
   const { data: paymentTermsData } = Queries.useGetPaymentTermsDropdown();
   const { data: customerData, isLoading: isCustomerLoading, isFetching: isCustomerFetching } = Queries.useGetContactDropdown({ typeFilter: "customer", companyFilter: values?.companyId }, !!values?.companyId);
 
-  const { data: salesOrderData, isLoading: isSalesOrderLoading, isFetching: isSalesOrderFetching } = Queries.useGetSalesOrderDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId, customerId: values?.customerId, includeId: values?.selectedSalesOrderId?.join(","), statusFilter: "pending" }, !!values?.companyId && !!values?.branchId && !!values?.customerId);
+  const { data: salesOrderData, isLoading: isSalesOrderLoading, isFetching: isSalesOrderFetching } = Queries.useGetSalesOrderDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId, customerId: values?.customerId, ...(isEditing && { includeId: values?.selectedSalesOrderId?.join(",") }), statusFilter: "pending" }, !!values?.companyId && !!values?.branchId && !!values?.customerId);
 
-  const { data: deliveryChallanData, isLoading: isDeliveryChallanLoading, isFetching: isDeliveryChallanFetching } = Queries.useGetDeliveryChallanDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId, customerFilter: values?.customerId, includeId: values?.selectedDeliveryChallanId?.join(","), statusFilter: "delivered" }, !!values?.companyId && !!values?.branchId && !!values?.customerId);
+  const { data: deliveryChallanData, isLoading: isDeliveryChallanLoading, isFetching: isDeliveryChallanFetching } = Queries.useGetDeliveryChallanDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId, customerFilter: values?.customerId, ...(isEditing && { includeId: values?.selectedDeliveryChallanId?.join(",") }), statusFilter: "delivered" }, !!values?.companyId && !!values?.branchId && !!values?.customerId);
 
   const { data: salesPersonData, isLoading: isSalesPersonLoading, isFetching: isSalesPersonFetching } = Queries.useGetUserDropdown({ companyFilter: values?.companyId }, !!values?.companyId);
 

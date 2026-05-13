@@ -19,9 +19,9 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
   const { data: paymentTermsData } = Queries.useGetPaymentTermsDropdown();
   const { data: customerData, isLoading: isCustomerLoading, isFetching: isCustomerFetching } = Queries.useGetContactDropdown({ typeFilter: "customer", companyFilter: values?.companyId }, !!values?.companyId);
 
-  const { data: salesOrderData, isLoading: isSalesOrderLoading, isFetching: isSalesOrderFetching } = Queries.useGetSalesOrderDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId, customerId: values?.customerId, includeId: values?.selectedSalesOrderId?.join(","), statusFilter: "pending" }, !!values?.companyId && !!values?.branchId && !!values?.customerId);
+  const { data: salesOrderData, isLoading: isSalesOrderLoading, isFetching: isSalesOrderFetching } = Queries.useGetSalesOrderDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId, customerId: values?.customerId, ...(isEditing && { includeId: values?.selectedSalesOrderId?.join(",") }), statusFilter: "pending" }, !!values?.companyId && !!values?.branchId && !!values?.customerId);
 
-  const { data: invoiceData, isLoading: isInvoiceLoading, isFetching: isInvoiceFetching } = Queries.useGetInvoiceDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId, customerId: values?.customerId, includeId: values?.selectedInvoiceId?.join(","), statusFilter: "invoiced" }, !!values?.companyId && !!values?.branchId && !!values?.customerId);
+  const { data: invoiceData, isLoading: isInvoiceLoading, isFetching: isInvoiceFetching } = Queries.useGetInvoiceDropdown({ companyFilter: values?.companyId, branchFilter: values?.branchId, customerId: values?.customerId, ...(isEditing && { includeId: values?.selectedInvoiceId?.join(",") }), statusFilter: "invoiced" }, !!values?.companyId && !!values?.branchId && !!values?.customerId);
 
   const salesOrderOptions = useMemo(() => GenerateOptions(salesOrderData?.data || []), [salesOrderData]);
   const invoiceOptions = useMemo(() => GenerateOptions(invoiceData?.data || []), [invoiceData]);

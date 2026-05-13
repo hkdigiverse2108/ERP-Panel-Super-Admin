@@ -148,7 +148,7 @@ const BillSnap = () => {
                   <Box sx={{ width: 80, height: 80, bgcolor: "secondary.light", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", mx: "auto", mb: 2, opacity: 0.7 }}>
                     <CameraAlt sx={{ fontSize: "2rem", color: "text.secondary" }} />
                   </Box>
-                  <input type="file" ref={fileInputRef} onChange={handleImageUpload} accept="image/*" style={{ display: "none" }} />
+                  <input type="file" ref={fileInputRef} onChange={handleImageUpload} accept="image/*" capture="environment" style={{ display: "none" }} />
                   <Typography variant="h6" sx={{ fontWeight: 700 }}>
                     Waiting for Photo...
                   </Typography>
