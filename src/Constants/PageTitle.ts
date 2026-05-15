@@ -1,4 +1,4 @@
-export const  PAGE_TITLE = {
+export const PAGE_TITLE = {
   DASHBOARD: "Dashboard",
   USER: {
     BASE: "User",
@@ -295,9 +295,9 @@ export const  PAGE_TITLE = {
   BILLSNAP: {
     BASE: "BillBuddy AI",
   },
-  REPORT_FORMAT: {
-    BASE: "Report Format",
-    ADD: "Add Report Format",
-    EDIT: "Edit Report Format",
-  },
+  // REPORT_FORMAT: {
+  //   BASE: "Report Format",
+  //   ADD: "Add Report Format",
+  //   EDIT: "Edit Report Format",
+  // },
 } as const;

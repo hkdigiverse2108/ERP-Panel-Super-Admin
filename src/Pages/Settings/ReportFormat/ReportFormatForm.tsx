@@ -56,7 +56,7 @@ const ReportFormatForm = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.REPORT_FORMAT[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.REPORT_FORMAT[pageMode]} />
+      <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.REPORT_FORMAT[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.REPORT_FORMAT[pageMode]} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<ReportFormatFormValues> enableReinitialize initialValues={initialValues} validationSchema={ReportFormatFormSchema} onSubmit={handleSubmit}>
