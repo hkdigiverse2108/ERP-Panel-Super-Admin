@@ -2,7 +2,7 @@ import type { CommonDataType, MessageStatus } from "./Common";
 
 export interface ReportFormat {
   name: string;
-  isSelected: boolean;
+  isSystemDefault: boolean;
   isActive: boolean;
 }
 

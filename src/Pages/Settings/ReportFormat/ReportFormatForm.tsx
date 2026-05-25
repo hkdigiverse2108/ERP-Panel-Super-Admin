@@ -1,15 +1,15 @@
+import { Add } from "@mui/icons-material";
+import { Box, Grid } from "@mui/material";
+import { GridCloseIcon } from "@mui/x-data-grid";
+import { FieldArray, Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations } from "../../../Api";
-import { FieldArray, Form, Formik, type FormikHelpers } from "formik";
-import type { AddReportFormatPayload, EditReportFormatPayload, ReportFormat, ReportFormatFormValues } from "../../../Types";
-import { GetChangedFields, RemoveEmptyFields, ReportFormatFormSchema } from "../../../Utils";
+import { CommonButton, CommonSwitch, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import { Box, Grid } from "@mui/material";
-import { CommonButton, CommonSwitch, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
-import { GridCloseIcon } from "@mui/x-data-grid";
-import { Add } from "@mui/icons-material";
+import type { AddReportFormatPayload, EditReportFormatPayload, ReportFormat, ReportFormatFormValues } from "../../../Types";
+import { RemoveEmptyFields, ReportFormatFormSchema } from "../../../Utils";
 
 const ReportFormatForm = () => {
   const location = useLocation();
@@ -24,15 +24,14 @@ const ReportFormatForm = () => {
 
   const initialValues: ReportFormatFormValues = {
     type: data?.type || "",
-    formats: [
-      ...(data?.formats?.length > 0
+    formats:
+      data?.formats?.length > 0
         ? data?.formats?.map((format: ReportFormat) => ({
-            name: format.name || "",
+            name: format.name,
             isActive: format.isActive ?? true,
-            isSelected: format.isSelected ?? true,
+            isSystemDefault: format.isSystemDefault ?? true,
           }))
-        : [{ name: "", isActive: true, isSelected: true }]),
-    ],
+        : [{ name: "", isActive: true, isSystemDefault: true }],
     isActive: data?.isActive ?? true,
   };
 
@@ -47,8 +46,7 @@ const ReportFormatForm = () => {
     const payload = { ...rest };
 
     if (isEditing) {
-      const changedFields = GetChangedFields(payload, data);
-      editReportFormat({ ...changedFields, reportFormatId: data._id } as EditReportFormatPayload, { onSuccess: handleSuccess });
+      editReportFormat({ ...payload, reportFormatId: data._id } as EditReportFormatPayload, { onSuccess: handleSuccess });
     } else {
       addReportFormat(RemoveEmptyFields(payload) as AddReportFormatPayload, { onSuccess: handleSuccess });
     }
@@ -65,7 +63,7 @@ const ReportFormatForm = () => {
               <Box sx={{ display: "grid", gap: 2 }}>
                 <CommonCard title="Report Format" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonValidationTextField name="type" label="Type" required grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="type" label="Type" required grid={{ xs: 12, md: 4 }} disabled={isEditing} />
                   </Grid>
                 </CommonCard>
 
@@ -85,18 +83,18 @@ const ReportFormatForm = () => {
                                 </Box>
                                 <Box>
                                   <CommonSwitch
-                                    name={`formats.${index}.isSelected`}
+                                    name={`formats.${index}.isSystemDefault`}
                                     label="Is Selected"
-                                    value={values?.formats?.[index]?.isSelected}
+                                    value={values?.formats?.[index]?.isSystemDefault}
                                     onChange={(checked) => {
                                       if (checked) {
                                         const updatedFormats = values.formats?.map((format, fIndex) => ({
                                           ...format,
-                                          isSelected: fIndex === index,
+                                          isSystemDefault: fIndex === index,
                                         }));
                                         setFieldValue("formats", updatedFormats);
                                       } else {
-                                        setFieldValue(`formats.${index}.isSelected`, false);
+                                        setFieldValue(`formats.${index}.isSystemDefault`, false);
                                       }
                                     }}
                                   />
@@ -108,7 +106,7 @@ const ReportFormatForm = () => {
                                       <GridCloseIcon />
                                     </CommonButton>
                                   )}
-                                  <CommonButton type="button" title="Add Format" variant="outlined" size="small" color="primary" sx={{ minWidth: 40, height: 40 }} onClick={() => push({ name: "", isSelected: false, isActive: true })}>
+                                  <CommonButton type="button" title="Add Format" variant="outlined" size="small" color="primary" sx={{ minWidth: 40, height: 40 }} onClick={() => push({ name: "", isSystemDefault: false, isActive: true })}>
                                     <Add />
                                   </CommonButton>
                                 </Box>

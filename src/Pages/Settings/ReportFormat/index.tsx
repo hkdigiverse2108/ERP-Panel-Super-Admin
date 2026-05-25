@@ -16,12 +16,12 @@ const ReportFormat = () => {
 
   const { mutate: deleteReportFormatMutate } = Mutations.useDeleteReportFormat();
   const { mutate: editReportFormat, isPending: isEditLoading } = Mutations.useEditReportFormat();
-  
+
   const allRows = reportFormatData?.data?.map((reportFormat: ReportFormatBase) => ({ ...reportFormat, id: reportFormat._id })) || [];
   const totalRows = reportFormatData?.data?.length || 0;
- 
+
   const permission = usePagePermission(PAGE_TITLE.SETTINGS.REPORT_FORMAT.BASE);
-  
+
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
     deleteReportFormatMutate(rowToDelete?._id as string, {

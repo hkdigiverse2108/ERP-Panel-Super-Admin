@@ -18,10 +18,10 @@ export const URL_KEYS = {
   },
 
   REPORT_FORMAT: {
-    BASE: "/settings/report-format",
-    ALL: "/settings/report-format/all",
-    ADD: "/settings/report-format/add",
-    EDIT: "/settings/report-format/edit",
+    BASE: "/report-format",
+    ALL: "/report-format/all",
+    ADD: "/report-format/add",
+    EDIT: "/report-format/edit",
   },
 
   COMPANY: {
