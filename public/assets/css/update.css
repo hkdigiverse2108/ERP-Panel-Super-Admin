@@ -177,7 +177,7 @@ input[type="number"] {
 .status-in_progress {
   @apply text-white capitalize text-center w-full bg-yellow-500 dark:bg-yellow-600 h-6 leading-6 rounded-sm px-2;
 }
-
+.status-dispatched,
 .status-invoiced,
 .status-invoice_created,
 .status-hold,
