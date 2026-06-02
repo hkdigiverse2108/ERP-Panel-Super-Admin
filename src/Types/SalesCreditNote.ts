@@ -1,12 +1,5 @@
 import type { BranchBase } from "./Branch";
-import type {
-  AdditionalChargeItem,
-  CommonDataType,
-  MessageStatus,
-  PageStatus,
-  ShippingDetails,
-  TransactionSummary,
-} from "./Common";
+import type { AdditionalChargeItem, CommonDataType, MessageStatus, PageStatus, ShippingDetails, TransactionSummary } from "./Common";
 import type { CompanyBase } from "./Company";
 import type { Address, ContactBase } from "./Contacts";
 import type { ProductBase } from "./Product";
@@ -31,6 +24,7 @@ export type SalesCreditNoteProductType = (typeof SALES_CREDIT_NOTE_PRODUCT_TYPE)
 
 export interface SalesCreditNoteItem {
   productId: string | ProductBase;
+  variantId?: string | null;
   qty: number;
   freeQty: number;
   uomId?: string | UomBase;
@@ -73,18 +67,7 @@ export type AddSalesCreditNotePayload = SalesCreditNoteFormValues;
 
 export type EditSalesCreditNotePayload = Partial<SalesCreditNoteFormValues> & { salesCreditNoteId?: string };
 
-export interface SalesCreditNoteBase
-  extends Omit<
-    SalesCreditNoteFormValues,
-    | "customerId"
-    | "companyId"
-    | "branchId"
-    | "termsAndConditionIds"
-    | "additionalCharges"
-    | "billingAddress"
-    | "shippingAddress"
-  >,
-  CommonDataType {
+export interface SalesCreditNoteBase extends Omit<SalesCreditNoteFormValues, "customerId" | "companyId" | "branchId" | "termsAndConditionIds" | "additionalCharges" | "billingAddress" | "shippingAddress">, CommonDataType {
   creditNoteNo: string;
   companyId: CompanyBase;
   branchId: BranchBase;

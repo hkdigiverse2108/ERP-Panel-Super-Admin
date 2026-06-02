@@ -55,6 +55,7 @@ export interface CommonDrawerProps extends Omit<DrawerProps, "anchor" | "title">
 export type SelectOptionType = {
   label: string;
   value: string;
+  variantId?: string;
 };
 
 export interface CommonSelectProps {
@@ -77,6 +78,7 @@ export interface CommonSelectProps {
 
 export interface CommonValidationSelectProps extends Omit<CommonSelectProps, "onChange" | "value"> {
   name: string;
+  syncName?: string;
   onChange?: (value: any) => void | Promise<any>;
 }
 

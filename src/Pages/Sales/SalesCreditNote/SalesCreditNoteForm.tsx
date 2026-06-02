@@ -25,7 +25,7 @@ const SalesCreditNoteForm = () => {
 
   const data = useMemo(() => singleData?.data || routeData, [singleData, routeData]);
 
-  const emptyRow: SalesCreditNoteItem = { productId: "", qty: 1, freeQty: 0, uomId: "", price: 0, discount1: 0, taxId: "", tax: 0, total: 0 };
+  const emptyRow: SalesCreditNoteItem = { productId: "", variantId: "", qty: 1, freeQty: 0, uomId: "", price: 0, discount1: 0, taxId: "", tax: 0, total: 0 };
 
   const initialValues: SalesCreditNoteFormValues = useMemo(() => {
     // Robust key mapping is restored because standard keys often differ in API responses
@@ -143,6 +143,7 @@ const SalesCreditNoteForm = () => {
         ?.filter((i: SalesCreditNoteItem) => i.productId)
         .map((i: SalesCreditNoteItem) => ({
           productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
+          variantId: i.variantId || null,
           qty: Number(i.qty || 0),
           freeQty: Number(i.freeQty || 0),
           price: Number(i.price || 0),

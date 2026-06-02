@@ -18,6 +18,7 @@ import type { UomBase } from "./Uom";
 
 export interface SalesOrderItem {
   productId: string | ProductBase;
+  variantId?: string | null;
   qty: number;
   freeQty: number;
   uomId: string | UomBase;

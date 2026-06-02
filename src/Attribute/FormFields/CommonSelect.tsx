@@ -3,13 +3,15 @@ import { useField, useFormikContext } from "formik";
 import { type FC } from "react";
 import type { CommonSelectProps, CommonValidationSelectProps, SelectOptionType } from "../../Types";
 
-export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, label, required, options, multiple = false, limitTags, size = "small", grid, disabled, readOnly, syncFieldName, isLoading, placeholder, onChange, ...props }) => {
+export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, syncName, label, required, options, multiple = false, limitTags, size = "small", grid, disabled, readOnly, syncFieldName, isLoading, placeholder, onChange, ...props }) => {
   const [field, meta, helpers] = useField<any>({ name });
+  const [variantField] = useField<any>({ name: syncName || "variantId" });
+
   const { setFieldValue } = useFormikContext<any>();
   // Normalize value
   const safeValue = multiple ? (Array.isArray(field.value) ? field.value : []) : (field.value ?? "");
 
-  const valueObjects = multiple ? safeValue?.map((v: string) => options.find((o) => o.value === v)).filter(Boolean) : (options.find((o) => o.value === safeValue) ?? null);
+  const valueObjects = multiple ? safeValue?.map((v: string) => options.find((o) => o.value === v)).filter(Boolean) : syncName ? (options.find((o) => o.value === safeValue && (o.variantId ?? "") === (variantField.value ?? "")) ?? null) : (options.find((o) => o.value === safeValue) ?? null);
 
   const Input = (
     <Autocomplete
@@ -22,7 +24,7 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
       disabled={disabled}
       readOnly={readOnly}
       getOptionLabel={(opt) => opt.label}
-      isOptionEqualToValue={(option, val) => option.value === val.value}
+      isOptionEqualToValue={(option, val) => option.value === val.value && (option.variantId ?? "") === (val.variantId ?? "")}
       onChange={(_, newValues) => {
         if (multiple) {
           const values = (newValues as SelectOptionType[]).map((o) => o.value);
@@ -35,12 +37,13 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
           if (syncFieldName) setFieldValue(syncFieldName, value);
           if (onChange) onChange(value ? [value] : []);
         }
+        if (syncName) setFieldValue(syncName, newValues?.variantId ?? "");
       }}
       onBlur={() => helpers.setTouched(true)}
       clearOnEscape
       disableCloseOnSelect={multiple}
       renderOption={(props, option) => (
-        <li {...props} key={option.value}>
+        <li {...props} key={`${option.value}-${option.variantId}`}>
           {option.label}
         </li>
       )}

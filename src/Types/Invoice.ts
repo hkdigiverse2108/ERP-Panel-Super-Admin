@@ -6,6 +6,7 @@ import type { UserBase } from "./User";
 
 export interface InvoiceItem {
   productId: string | ProductBase;
+  variantId: string | null;
   qty: number;
   freeQty: number;
   mrp?: number;

@@ -14,6 +14,7 @@ import type { UomBase } from "./Uom";
 
 export interface DeliveryChallanItem {
   productId: string | ProductBase;
+  variantId?: string | null;
   qty: number;
   freeQty: number;
   price: number;

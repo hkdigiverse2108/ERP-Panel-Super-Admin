@@ -173,6 +173,31 @@ export const ProductFormSchema = Yup.object({
   masterQty: Validation("number", "Master Quantity", { required: false }),
   // images: Yup.array().of(Yup.mixed().required("Image is required")).min(2, "At least two image is required"),
   isActive: Yup.boolean(),
+
+  variants: Yup.array().of(
+    Yup.object({
+      name: Validation("string", "Name"),
+      sku: Validation("string", "SKU"),
+      attributes: Yup.array().of(
+        Yup.object({
+          key: Yup.string().test("key-required", "Attributes Name is required", function (value) {
+            const { value: attrValue } = this.parent;
+            if (attrValue && !value) return false;
+            return true;
+          }),
+          value: Yup.string().test("value-required", "Attributes Value is required", function (value) {
+            const { key } = this.parent;
+            if (key && !value) return false;
+            return true;
+          }),
+        }),
+      ),
+      mrp: Validation("number", "MRP", { required: false, extraRules: (s) => s.min(0, "MRP must be positive") }),
+      sellingPrice: Validation("number", "Selling Price", { required: false, extraRules: (s) => s.min(0, "Selling Price must be positive") }),
+      purchasePrice: Validation("number", "Purchase Price", { required: false, extraRules: (s) => s.min(0, "Purchase Price must be positive") }),
+      isActive: Validation("boolean", "Is Active"),
+    }),
+  ),
 });
 
 export const CategoryFormSchema = Yup.object({

@@ -74,13 +74,13 @@ const Product = () => {
   const columns: AppGridColDef<ProductBase>[] = [
     CommonObjectNameColumn<ProductBase>("companyId", { headerName: "Company", width: 200 }),
     CommonObjectNameColumn<ProductBase>("branchId", { headerName: "Branch", width: 200 }),
-    { field: "name", headerName: "Name", width: 200 },
+    { field: "name", headerName: "Name", width: 300 },
     CommonObjectNameColumn<ProductBase>("categoryId", { headerName: "Category", width: 200 }),
     CommonObjectNameColumn<ProductBase>("brandId", { headerName: "Brand", width: 200 }),
-    { field: "mrp", headerName: "MRP", width: 150 },
-    { field: "sellingPrice", headerName: "Selling Price", width: 150 },
+    { field: "mrp", headerName: "MRP", width: 100 },
+    { field: "sellingPrice", headerName: "Selling Price", width: 100 },
     { field: "hsnCode", headerName: "HSN", width: 200 },
-    { field: "openingQty", headerName: "Opening Qty", flex: 1, minWidth: 150 },
+    { field: "openingQty", headerName: "Opening Qty", flex: 1, minWidth: 100 },
     CommonObjectPropertyColumn<ProductBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
 
     ...(isRemoveItem
@@ -186,7 +186,7 @@ const Product = () => {
           <Formik initialValues={{ consumptionTypeId: "" }} enableReinitialize validationSchema={ProductItemRemoveFormSchema} onSubmit={handleRemoveItem}>
             <Form noValidate>
               <Grid sx={{ p: 1 }} container spacing={2}>
-                <CommonValidationSelect name="consumptionTypeId" label="Select Type" options={GenerateOptions(consumptionData?.data)} isLoading={consumptionLoading} grid={{ xs: 12}} />
+                <CommonValidationSelect name="consumptionTypeId" label="Select Type" options={GenerateOptions(consumptionData?.data)} isLoading={consumptionLoading} grid={{ xs: 12 }} />
                 <CommonButton type="submit" variant="contained" title="Save" size="medium" loading={isAddLoading} fullWidth grid={{ xs: 12 }} />
               </Grid>
             </Form>

@@ -12,8 +12,19 @@ export interface NutritionInfo {
   _id?: string;
 }
 
+export interface VariantInfo {
+  name?: string;
+  sku?: string;
+  itemCode?: string;
+  attributes?: { key: string; value: string }[];
+  mrp?: number;
+  sellingPrice?: number;
+  purchasePrice?: number;
+  isActive?: boolean;
+}
+
 export interface ProductFormValues {
-  productTypeId?:string
+  productTypeId?: string;
   sku?: string;
   productType?: string;
   name?: string;
@@ -57,6 +68,7 @@ export interface ProductFormValues {
   isActive?: boolean;
   images?: string[];
   _submitAction?: string;
+  variants?: VariantInfo[];
 }
 
 export type AddProductPayload = ProductFormValues;
@@ -79,6 +91,7 @@ export interface ProductBase extends Omit<ProductFormValues, "categoryId" | "sub
   unit?: string;
   qty?: number;
   productTypeId?: ProductTypeBase;
+  variantId?: string;
 }
 
 export interface ProductDataResponse extends PageStatus {

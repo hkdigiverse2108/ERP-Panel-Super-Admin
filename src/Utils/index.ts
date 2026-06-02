@@ -41,6 +41,7 @@ export const GenerateOptions = (
     invoiceNo?: string;
     deliveryChallanNo?: string;
     orderNo?: string | null | undefined;
+    variantId?: string;
   }[],
 ) => {
   if (!data || !Array.isArray(data)) return [];
@@ -56,6 +57,7 @@ export const GenerateOptions = (
           .split(" ")
           .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
           .join(" ") || "",
+      variantId: item.variantId || "",
     };
   });
 };

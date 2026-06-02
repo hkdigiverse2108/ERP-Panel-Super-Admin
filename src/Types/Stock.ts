@@ -4,6 +4,7 @@ export interface StockFormValues {
   companyId?: string;
   branchId?: string;
   productId?: string;
+  variantId?: string;
   uomId?: string;
   purchaseTaxId?: string;
   salesTaxId?: string;

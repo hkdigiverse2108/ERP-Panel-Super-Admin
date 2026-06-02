@@ -21,6 +21,7 @@ const InvoiceForm = () => {
 
   const emptyRow: InvoiceItem = {
     productId: "",
+    variantId: "",
     qty: 1,
     freeQty: 0,
     mrp: 0,
@@ -152,6 +153,7 @@ const InvoiceForm = () => {
         ?.filter((i: InvoiceItem) => i.productId)
         .map((i: InvoiceItem) => ({
           productId: i.productId,
+          variantId: i.variantId || null,
           qty: Number(i.qty || 0),
           freeQty: Number(i.freeQty || 0),
           uomId: i.uomId || null,

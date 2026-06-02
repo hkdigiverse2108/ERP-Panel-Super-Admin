@@ -21,6 +21,7 @@ const DeliveryChallanForm = () => {
 
   const emptyRow: DeliveryChallanItem = {
     productId: "",
+    variantId: "",
     qty: 1,
     freeQty: 0,
     mrp: 0,
@@ -142,6 +143,7 @@ const DeliveryChallanForm = () => {
         ?.filter((i: DeliveryChallanItem) => i.productId)
         .map((i: DeliveryChallanItem) => ({
           productId: i.productId,
+          variantId: i.variantId || null,
           qty: Number(i.qty || 0),
           freeQty: Number(i.freeQty || 0),
           uomId: i.uomId || null,

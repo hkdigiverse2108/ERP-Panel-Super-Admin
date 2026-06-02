@@ -1,5 +1,5 @@
 import ClearIcon from "@mui/icons-material/Clear";
-import { Box, Grid, IconButton } from "@mui/material";
+import { Box, Grid, IconButton, Typography } from "@mui/material";
 import { FieldArray, Form, Formik, useFormikContext, type FormikHelpers, type FormikValues } from "formik";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -11,10 +11,11 @@ import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, PRODUCT_EXPIRY_TYPE, PRODUCT_TYPE_OPTIONS } from "../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
 import { setSelectedFiles, setUploadModal } from "../../../Store/Slices/ModalSlice";
-import type { ImageSyncProps, NutritionInfo, ProductFormValues } from "../../../Types";
+import type { ImageSyncProps, NutritionInfo, ProductFormValues, VariantInfo } from "../../../Types";
 import { DateConfig, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { ProductFormSchema } from "../../../Utils/ValidationSchemas";
 import { usePagePermission } from "../../../Utils/Hooks";
+import AddIcon from "@mui/icons-material/Add";
 
 const ProductForm = () => {
   const location = useLocation();
@@ -32,7 +33,10 @@ const ProductForm = () => {
   const { mutate: editProduct, isPending: isEditLoading } = Mutations.useEditProduct();
 
   const isEditing = Boolean(data?._id);
+  const [isVariants, setVariants] = useState(data?.variants?.length > 0);
   const pageMode = isEditing ? "EDIT" : "ADD";
+
+  const defaultVariants = { name: "", sku: "", attributes: [{ key: "", value: "" }], mrp: 0, sellingPrice: 0, purchasePrice: 0, isActive: true };
 
   const initialValues = useMemo<ProductFormValues>(
     () => ({
@@ -62,6 +66,17 @@ const ProductForm = () => {
       images: data?.images || [],
       isActive: data?.isActive ?? true,
       productTypeId: data?.productTypeId?._id || "",
+      variants: [
+        ...(data?.variants?.map((variants: VariantInfo) => ({
+          name: variants.name,
+          sku: variants.sku,
+          attributes: variants.attributes?.map((attr: { key: string; value: string }) => ({ key: attr.key, value: attr.value })) || [{ key: "", value: "" }],
+          mrp: variants.mrp,
+          sellingPrice: variants.sellingPrice,
+          purchasePrice: variants.purchasePrice,
+          isActive: variants.isActive,
+        })) || [defaultVariants]),
+      ],
     }),
     [data],
   );
@@ -191,6 +206,91 @@ const ProductForm = () => {
                       <CommonValidationTextField name="masterQty" label="master Qty" type="number" grid={{ xs: 12, md: 6 }} />
                       {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                     </Grid>
+                  </CommonCard>
+                  {/* ---------- Variants ---------- */}
+                  <CommonCard
+                    title="Variants"
+                    grid={{ xs: 12 }}
+                    topContent={
+                      isVariants ? (
+                        <CommonButton
+                          title="Clear"
+                          size="small"
+                          color="error"
+                          variant="outlined"
+                          onClick={() => {
+                            setVariants(false);
+                            setFieldValue("variants", []);
+                          }}
+                        />
+                      ) : (
+                        ""
+                      )
+                    }
+                  >
+                    {isVariants ? (
+                      <FieldArray name="variants">
+                        {({ push, remove }) => (
+                          <Box p={2}>
+                            {values?.variants?.map((_, vIndex) => (
+                              <Grid key={vIndex} container spacing={2} sx={{ xs: 12 }} p={1.5} mb={1} className="border border-gray-300 dark:border-gray-600 rounded-sm">
+                                <CommonValidationTextField name={`variants.${vIndex}.name`} label="Name" grid={{ xs: 12, sm: 6, xl: 4 }} required />
+                                <CommonValidationTextField name={`variants.${vIndex}.sku`} label="sku" grid={{ xs: 12, sm: 6, xl: 4 }} required />
+                                <CommonValidationTextField name={`variants.${vIndex}.mrp`} label="mrp" type="number" grid={{ xs: 12, sm: 6, xl: 4 }} />
+                                <CommonValidationTextField name={`variants.${vIndex}.sellingPrice`} label="sellingPrice" type="number" grid={{ xs: 12, sm: 6, xl: 4 }} />
+                                <CommonValidationTextField name={`variants.${vIndex}.purchasePrice`} label="purchasePrice" type="number" grid={{ xs: 12, sm: 6, xl: 4 }} />
+                                <Grid size={12}>
+                                  <FieldArray name={`variants.${vIndex}.attributes`}>
+                                    {({ push, remove }) => (
+                                      <Box className="border border-gray-300 dark:border-gray-600 rounded-sm">
+                                        {values?.variants?.[vIndex]?.attributes?.map((_, attrIndex) => (
+                                          <Grid key={attrIndex} container spacing={2} sx={{ xs: 12 }} p={1.5}>
+                                            <CommonValidationTextField name={`variants.${vIndex}.attributes.${attrIndex}.key`} label="Attributes key" grid={{ xs: 12, sm: 6, xl: 4 }} />
+                                            <CommonValidationTextField name={`variants.${vIndex}.attributes.${attrIndex}.value`} label="Attributes Value" grid={{ xs: 12, sm: 6, xl: 4 }} />
+                                            {(values?.variants?.[vIndex]?.attributes?.length || 0) > 1 && (
+                                              <CommonButton variant="outlined" color="error" size="small" onClick={() => remove(attrIndex)}>
+                                                <ClearIcon />
+                                              </CommonButton>
+                                            )}
+                                            <CommonButton variant="outlined" size="small" onClick={() => push({ key: "", value: "" })}>
+                                              <AddIcon />
+                                            </CommonButton>
+                                          </Grid>
+                                        ))}
+                                      </Box>
+                                    )}
+                                  </FieldArray>
+                                </Grid>
+                                <CommonValidationSwitch name={`variants.${vIndex}.isActive`} label="Is Active" grid={"auto"} />
+                                {(values?.variants?.length || 0) > 1 && (
+                                  <CommonButton variant="outlined" color="error" size="small" onClick={() => remove(vIndex)}>
+                                    <ClearIcon />
+                                  </CommonButton>
+                                )}
+                              </Grid>
+                            ))}
+                            <CommonButton variant="outlined" onClick={() => push(defaultVariants)}>
+                              + Add Variant
+                            </CommonButton>
+                          </Box>
+                        )}
+                      </FieldArray>
+                    ) : (
+                      <Box display={"flex"} flexDirection={"column"} alignItems={"center"} justifyContent={"center"} gap={1} py={2}>
+                        <CommonButton
+                          variant="outlined"
+                          onClick={() => {
+                            setVariants(true);
+                            setFieldValue("variants", [defaultVariants]);
+                          }}
+                        >
+                          Add Variant
+                        </CommonButton>
+                        <Typography variant="subtitle2" color="text.secondary">
+                          Add Variants If This Product Comes In Multiple Versions, Like Different Sizes or Colors.
+                        </Typography>
+                      </Box>
+                    )}
                   </CommonCard>
                   {/* ---------- ACTION BAR ---------- */}
                   <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isAddLoading || isEditLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
