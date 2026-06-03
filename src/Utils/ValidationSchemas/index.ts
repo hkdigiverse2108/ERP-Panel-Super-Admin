@@ -847,7 +847,7 @@ export const PurchaseDebitNoteFormSchema = Yup.object({
 
 export const DiscountFormSchema = Yup.object({
   companyId: Validation("string", "Company"),
-  branchIds: Validation("array", "Branch", { minItems: 1 }),
+  // branchIds: Validation("array", "Branch", { minItems: 1 }),
   title: Validation("string", "Title"),
   discountCode: Validation("string", "Discount Code"),
   autoApply: Validation("boolean", "Auto Apply"),
@@ -868,10 +868,34 @@ export const DiscountFormSchema = Yup.object({
   ),
   // .min(1, "At least one range wise rule is required"),
 
-  categoryIds: RequiredWhen("appliesTo", [DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY], "Category", "array"),
-  productIds: RequiredWhen("appliesTo", [DISCOUNT_APPLY_TO_ENUM.SPECIFIC_PRODUCTS], "Product", "array"),
-  brandIds: RequiredWhen("appliesTo", [DISCOUNT_APPLY_TO_ENUM.SPECIFIC_BRAND], "Brand", "array"),
-  excludedProductIds: RequiredWhen("appliesTo", [DISCOUNT_APPLY_TO_ENUM.SPECIFIC_BRAND, DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY, DISCOUNT_APPLY_TO_ENUM.SPECIFIC_PRODUCTS], "Brand", "array"),
+  categoryIds: Yup.array().when(["discountMode", "appliesTo"], {
+    is: (discountMode: string, appliesTo: string) => discountMode !== DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT && appliesTo === DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY,
+    then: (schema) => schema.min(1, "Category is required").required("Category is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+
+  productIds: Yup.array().when(["discountMode", "appliesTo"], {
+    is: (discountMode: string, appliesTo: string) => discountMode !== DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT && appliesTo === DISCOUNT_APPLY_TO_ENUM.SPECIFIC_PRODUCTS,
+    then: (schema) => schema.min(1, "Product is required").required("Product is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+
+  brandIds: Yup.array().when(["discountMode", "appliesTo"], {
+    is: (discountMode: string, appliesTo: string) => discountMode !== DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT && appliesTo === DISCOUNT_APPLY_TO_ENUM.SPECIFIC_BRAND,
+    then: (schema) => schema.min(1, "Brand is required").required("Brand is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+
+  excludedProductIds: Yup.array().when(["discountMode", "appliesTo"], {
+    is: (discountMode: string, appliesTo: string) => discountMode !== DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT && [DISCOUNT_APPLY_TO_ENUM.SPECIFIC_BRAND, DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY, DISCOUNT_APPLY_TO_ENUM.SPECIFIC_PRODUCTS].includes(appliesTo),
+    then: (schema) => schema.min(1, "Excluded Product is required").required("Excluded Product is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+
+  // categoryIds: RequiredWhen("appliesTo", [DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY], "Category", "array"),
+  // productIds: RequiredWhen("appliesTo", [DISCOUNT_APPLY_TO_ENUM.SPECIFIC_PRODUCTS], "Product", "array"),
+  // brandIds: RequiredWhen("appliesTo", [DISCOUNT_APPLY_TO_ENUM.SPECIFIC_BRAND], "Brand", "array"),
+  // excludedProductIds: RequiredWhen("appliesTo", [DISCOUNT_APPLY_TO_ENUM.SPECIFIC_BRAND, DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY, DISCOUNT_APPLY_TO_ENUM.SPECIFIC_PRODUCTS], "Excluded Product", "array"),
 
   buyXGetY: Yup.object({
     buyQty: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.BUY_X_GET_Y], "Select Quantity", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Select Quantity must be at least 1") }),

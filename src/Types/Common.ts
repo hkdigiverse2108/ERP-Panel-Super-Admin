@@ -62,7 +62,7 @@ export interface CommonSelectProps {
   label?: string;
   options: SelectOptionType[];
   value: string[];
-  onChange: (values: string[]) => void;
+  onChange: (values: string[], options: SelectOptionType | SelectOptionType[] | any) => void;
   multiple?: boolean;
   limitTags?: number;
   size?: "small" | "medium";
@@ -79,7 +79,7 @@ export interface CommonSelectProps {
 export interface CommonValidationSelectProps extends Omit<CommonSelectProps, "onChange" | "value"> {
   name: string;
   syncName?: string;
-  onChange?: (value: any) => void | Promise<any>;
+  onChange?: (values: any, options?: SelectOptionType | SelectOptionType[] | any) => void;
 }
 
 // ************ Select End ***********
@@ -616,6 +616,7 @@ export type ApiOption = {
 };
 
 export type DependentSelectProps<T extends ApiOption, P = string | undefined> = {
+  syncName?: string;
   params?: P;
   name: string;
   label: string;

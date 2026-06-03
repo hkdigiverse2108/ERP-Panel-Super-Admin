@@ -26,7 +26,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
 
   const calculateRowValues = (index: number, isReturn: boolean = false) => {
     const row = isReturn ? values?.returnProductDetails?.item?.[index] : values?.productDetails?.[index];
-    const product = productsData?.data?.find((p: ProductBase) => p._id === row?.productId);
+    const product = productsData?.data?.find((p: ProductBase) => (row?.variantId ? p.variantId === row.variantId : p._id === row?.productId));
 
     if (!product) return { taxableAmount: 0, totalAmount: 0, taxAmount: 0, landingCost: 0, margin: 0, sellingPrice: 0 };
 
@@ -40,7 +40,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
     let taxIncluded = false;
     if (values?.taxType === "tax_inclusive") taxIncluded = true;
     else if (values?.taxType === "tax_exclusive") taxIncluded = false;
-    else taxIncluded = typeof (product)?.isPurchaseTaxIncluding === "boolean" ? (product).isPurchaseTaxIncluding : false;
+    else taxIncluded = typeof product?.isPurchaseTaxIncluding === "boolean" ? product.isPurchaseTaxIncluding : false;
 
     let landingCost = 0;
     let taxAmount = 0;
@@ -85,17 +85,17 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
     const items = values?.productDetails || [];
     items.forEach((item: SupplierBillProductItem, index: number) => {
       if (!item?.productId) return;
-      const product = productsData?.data?.find((p: ProductBase) => p._id === item.productId);
+      const product = productsData?.data?.find((p: ProductBase) => (item.variantId ? p.variantId === item.variantId : p._id === item.productId));
       if (!product) return;
 
-      const isProductChanged = (item)._prevProductId !== item.productId;
+      const isProductChanged = item._prevProductId !== item.productId;
 
       let currentTaxRate = Number(item.tax || 0);
       let currentTaxId = item.taxId || "";
 
       if (isProductChanged || !item.taxId) {
         if (product.purchaseTaxId) {
-          const pTaxId = typeof product.purchaseTaxId === "object" ? (product.purchaseTaxId)?._id : product.purchaseTaxId;
+          const pTaxId = typeof product.purchaseTaxId === "object" ? product.purchaseTaxId?._id : product.purchaseTaxId;
           const tax = taxData?.data?.find((t: TaxBase) => t._id === pTaxId);
           if (tax && tax.percentage !== undefined) {
             currentTaxRate = Number(tax.percentage) || 0;
@@ -118,18 +118,18 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
       let currentUnitCost = Number(item?.unitCost || 0);
 
       if (isProductChanged || taxTypeChanged) {
-        let desiredCost = Number((product)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
+        let desiredCost = Number(product?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
         const taxRate = Number(currentTaxRate) || 0;
-        const isProductInclusive = typeof (product)?.isPurchaseTaxIncluding === "boolean" ? (product).isPurchaseTaxIncluding : false;
+        const isProductInclusive = typeof product?.isPurchaseTaxIncluding === "boolean" ? product.isPurchaseTaxIncluding : false;
 
         if (values?.taxType === "tax_exclusive") {
           desiredCost = isProductInclusive ? desiredCost / (1 + taxRate / 100) : desiredCost;
         } else if (values?.taxType === "tax_inclusive") {
           desiredCost = !isProductInclusive ? desiredCost * (1 + taxRate / 100) : desiredCost;
         } else if (values?.taxType === "out_of_scope") {
-          desiredCost = Number((product)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
+          desiredCost = Number(product?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
         } else {
-          desiredCost = Number((product)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
+          desiredCost = Number(product?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
         }
 
         desiredCost = Number(desiredCost.toFixed(2));
@@ -140,13 +140,13 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
 
         if (isProductChanged) {
           if (item._prevProductId !== item.productId) setFieldValue(`productDetails.${index}._prevProductId`, item.productId);
-          const newMrp = Number((product)?.mrp || 0);
+          const newMrp = Number(product?.mrp || 0);
           if (Number(item.mrp) !== newMrp) setFieldValue(`productDetails.${index}.mrp`, newMrp);
         }
       }
 
       // Ensure unit cost doesn't exceed product's landing cost
-      const maxAllowedCost = Number((product)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
+      const maxAllowedCost = Number(product?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
       if (maxAllowedCost > 0 && currentUnitCost > maxAllowedCost) {
         if (Number(item.unitCost) !== maxAllowedCost) setFieldValue(`productDetails.${index}.unitCost`, maxAllowedCost);
         currentUnitCost = maxAllowedCost;
@@ -167,17 +167,17 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
     const returnItems = values?.returnProductDetails?.item || [];
     returnItems.forEach((item: SupplierBillReturnProductItem, index: number) => {
       if (!item?.productId) return;
-      const product = productsData?.data?.find((p: ProductBase) => p._id === item.productId);
+      const product = productsData?.data?.find((p: ProductBase) => (item.variantId ? p.variantId === item.variantId : p._id === item.productId));
       if (!product) return;
 
-      const isProductChanged = (item)._prevProductId !== item.productId;
+      const isProductChanged = item._prevProductId !== item.productId;
 
       let currentTaxRate = Number(item.tax || 0);
       let currentTaxId = item.taxId || "";
 
       if (isProductChanged || !item.taxId) {
         if (product.purchaseTaxId) {
-          const pTaxId = typeof product.purchaseTaxId === "object" ? (product.purchaseTaxId)?._id : product.purchaseTaxId;
+          const pTaxId = typeof product.purchaseTaxId === "object" ? product.purchaseTaxId?._id : product.purchaseTaxId;
           const tax = taxData?.data?.find((t: TaxBase) => t._id === pTaxId);
           if (tax && tax.percentage !== undefined) {
             currentTaxRate = Number(tax.percentage) || 0;
@@ -199,13 +199,13 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
       let currentUnitCost = Number(item?.unitCost || 0);
 
       if (isProductChanged || taxTypeChanged) {
-        let desiredCost = Number((product)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
+        let desiredCost = Number(product?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
         const taxRate = Number(currentTaxRate) || 0;
-        const isProductInclusive = typeof (product)?.isPurchaseTaxIncluding === "boolean" ? (product).isPurchaseTaxIncluding : false;
+        const isProductInclusive = typeof product?.isPurchaseTaxIncluding === "boolean" ? product.isPurchaseTaxIncluding : false;
 
         if (values?.taxType === "tax_exclusive") desiredCost = isProductInclusive ? desiredCost / (1 + taxRate / 100) : desiredCost;
         else if (values?.taxType === "tax_inclusive") desiredCost = !isProductInclusive ? desiredCost * (1 + taxRate / 100) : desiredCost;
-        else desiredCost = Number((product)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
+        else desiredCost = Number(product?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
 
         desiredCost = Number(desiredCost.toFixed(2));
         if (currentUnitCost !== desiredCost || isProductChanged) {
@@ -218,7 +218,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
         }
       }
 
-      const maxAllowedCost = Number((product)?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
+      const maxAllowedCost = Number(product?.purchasePrice) || Number(product?.landingCost) || Number(product?.mrp) || 0;
       if (maxAllowedCost > 0 && currentUnitCost > maxAllowedCost) {
         if (Number(item.unitCost) !== maxAllowedCost) setFieldValue(`returnProductDetails.item.${index}.unitCost`, maxAllowedCost);
         currentUnitCost = maxAllowedCost;
@@ -281,7 +281,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
                       key: "productId",
                       header: "Product",
                       bodyClass: "min-w-[250px]",
-                      render: (_, index) => <CommonValidationSelect name={`productDetails.${index}.productId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isSupplierSelected} />,
+                      render: (_, index) => <CommonValidationSelect name={`productDetails.${index}.productId`} syncName={`productDetails.${index}.variantId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isSupplierSelected} />,
                     },
                     {
                       key: "qty",
@@ -425,7 +425,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
                       header: "Product Name",
                       headerClass: "text-start",
                       bodyClass: "min-w-[250px] text-start",
-                      render: (_, index) => <CommonValidationSelect name={`returnProductDetails.item.${index}.productId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isSupplierSelected} />,
+                      render: (_, index) => <CommonValidationSelect name={`returnProductDetails.item.${index}.productId`} syncName={`returnProductDetails.item.${index}.variantId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isSupplierSelected} />,
                       footer: "",
                     },
                     {

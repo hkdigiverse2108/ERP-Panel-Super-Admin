@@ -14,17 +14,24 @@ export interface RangeWiseRule {
   discountValue?: number;
 }
 
+export type ProductVariantType = {
+  productId?: string;
+  variantId?: string | null;
+};
+
 export interface BuyXGetY {
   buyQty?: number;
   getQty?: number;
-  getProductIds?: string[];
+  getProductIds?: ProductVariantType[] | [];
+  getVariantIds?: string[] | [];
   getDiscountType?: string;
   getDiscountValue?: number;
 }
 
 export interface ProductAtFixAmount {
   minimumAmount?: number;
-  freeProductIds?: string[];
+  freeProductIds?: ProductVariantType[] | [];
+  freeVariantIds?: string[] | [];
   freeQty?: number;
 }
 
@@ -47,8 +54,10 @@ export interface DiscountFormValues {
   categoryIds?: string[] | [];
   subcategoryIds?: string[] | [];
   brandIds?: string[] | [];
-  productIds?: string[] | [];
-  excludedProductIds?: string[];
+  productIds?: ProductVariantType[];
+  variantIds?: string[];
+  excludedProductIds?: ProductVariantType[];
+  excludedVariantIds?: string[];
   minimumRequirement?: string | null;
   minimumPurchaseAmount?: number | null;
   minimumQuantity?: number | null;

@@ -23,7 +23,6 @@ const RecipeForm = () => {
   const { mutate: editRecipe, isPending: isEditLoading } = Mutations.useEditRecipe();
   const { data: CompanyData, isLoading: CompanyDataLoading } = Queries.useGetCompanyDropdown();
 
-
   // ✅ INITIAL VALUES
   const initialValues: RecipeFormValues = {
     companyId: data?.companyId?._id || "",
@@ -36,12 +35,14 @@ const RecipeForm = () => {
     rawProducts: data?.rawProducts?.length
       ? data.rawProducts.map((item: RawRecipeProduct) => ({
           productId: typeof item.productId === "string" ? item.productId : item.productId?._id || "",
+          variantId: item.variantId || null,
           mrp: item.mrp ?? "",
           useQty: item.useQty ?? "",
         }))
-      : [{ productId: "", mrp: "", useQty: "" }],
+      : [{ productId: "", variantId: null, mrp: "", useQty: "" }],
     finalProducts: {
       productId: data?.finalProducts?.productId?._id || "",
+      variantId: data?.finalProducts?.variantId || null,
       mrp: data?.finalProducts?.mrp ?? "",
       qtyGenerate: data?.finalProducts?.qtyGenerate ?? "",
     },
@@ -49,15 +50,30 @@ const RecipeForm = () => {
   const handleSubmit = async (values: RecipeFormValues, { resetForm }: FormikHelpers<RecipeFormValues>) => {
     const { _submitAction, ...rest } = values;
 
+    const payload = {
+      ...rest,
+      rawProducts: rest.rawProducts
+        ?.filter((i: RawRecipeProduct) => i.productId)
+        .map((i: RawRecipeProduct) => ({
+          ...i,
+          variantId: i?.variantId || null,
+        })),
+      finalProducts: {
+        ...rest.finalProducts,
+        variantId: rest.finalProducts?.variantId || null,
+      },
+    };
+
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
       else navigate(-1);
     };
+
     if (isEditing) {
-      const changedFields = GetChangedFields(rest, data);
+      const changedFields = GetChangedFields(payload, data);
       await editRecipe({ ...changedFields, recipeId: data._id }, { onSuccess: handleSuccess });
     } else {
-      await addRecipe(RemoveEmptyFields(rest), { onSuccess: handleSuccess });
+      await addRecipe(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
     }
   };
 
@@ -90,7 +106,7 @@ const RecipeForm = () => {
                           const rawProducts = values.rawProducts || [];
                           return (
                             <Box key={index} display="flex" flexWrap="wrap" gap={2} sx={{ mb: 2 }}>
-                              <DependentSelect name={`rawProducts.${index}.productId`} label="Product" query={Queries.useGetProductDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} required grid={{ xs: 12, md: 4 }} />
+                              <DependentSelect name={`rawProducts.${index}.productId`} syncName={`rawProducts.${index}.variantId`} label="Product" query={Queries.useGetProductDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} required grid={{ xs: 12, md: 4 }} />
                               <CommonValidationTextField name={`rawProducts.${index}.useQty`} label="Use Qty" type="number" required grid={{ xs: 12, md: 3 }} />
                               <CommonValidationTextField name={`rawProducts.${index}.mrp`} label="MRP" type="number" grid={{ xs: 12, md: 3 }} />
                               <Grid size={{ xs: 12, md: 2 }}>
@@ -101,7 +117,7 @@ const RecipeForm = () => {
                                     </CommonButton>
                                   )}
                                   {index === rawProducts.length - 1 && (
-                                    <CommonButton size="small" variant="outlined" onClick={() => push({ productId: "", mrp: "", useQty: "" })}>
+                                    <CommonButton size="small" variant="outlined" onClick={() => push({ productId: "", variantId: null, mrp: "", useQty: "" })}>
                                       <AddIcon />
                                     </CommonButton>
                                   )}
@@ -118,7 +134,7 @@ const RecipeForm = () => {
                 {/* FINAL PRODUCTS */}
                 <CommonCard title="Final Products">
                   <Box p={2} display="flex" flexWrap="wrap" gap={2}>
-                    <DependentSelect name="finalProducts.productId" label="Product" query={Queries.useGetProductDropdown} params={{ companyFilter: values.companyId, isNewProduct: true }} enabled={Boolean(values.companyId)} disabled={!values.companyId} required grid={{ xs: 12, md: 4 }} />
+                    <DependentSelect name="finalProducts.productId" syncName={`finalProducts.variantId`} label="Product" query={Queries.useGetProductDropdown} params={{ companyFilter: values.companyId, isNewProduct: true }} enabled={Boolean(values.companyId)} disabled={!values.companyId} required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="finalProducts.qtyGenerate" label="Qty Generate" type="number" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="finalProducts.mrp" label="MRP" type="number" grid={{ xs: 12, md: 4 }} />
                   </Box>

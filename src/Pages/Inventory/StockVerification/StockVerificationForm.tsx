@@ -65,6 +65,7 @@ const StockVerificationForm = () => {
       setRows(
         updateData?.items?.map((item) => ({
           productId: item.productId._id ?? item.productId,
+          variantId: item.variantId || null,
           name: item.productId.name ?? "",
           landingCost: item.landingCost,
           price: item.price,
@@ -82,6 +83,7 @@ const StockVerificationForm = () => {
 
   const createRowFromProduct = (product: ProductBase): StockVerificationRow => ({
     productId: product._id,
+    variantId: product?.variantId || null,
     name: product.name ?? "",
     landingCost: product.landingCost ?? 0,
     price: product.purchasePrice ?? 0,
@@ -97,7 +99,7 @@ const StockVerificationForm = () => {
       setRows((prev) => [
         ...prev,
         ...productListData.data
-          .filter((item) => !prev.some((r) => r.productId === item._id)) // 👈 skip duplicates
+          .filter((item) => !prev.some((r) => (r.variantId ? r.variantId === item.variantId : r.productId === item._id))) // 👈 skip duplicates
           .map((item) => createRowFromProduct(item)),
       ]);
     }
@@ -106,7 +108,7 @@ const StockVerificationForm = () => {
   const updateRow = (id: string, data: Partial<StockVerificationRow>) => {
     setRows((prev) =>
       prev.map((r) => {
-        if (r.productId !== id) return r;
+        if (r.variantId ? r.variantId !== id : r.productId !== id) return r;
 
         const updated = { ...r, ...data };
         const differenceQty = updated?.physicalQty - updated?.systemQty;
@@ -117,7 +119,8 @@ const StockVerificationForm = () => {
     );
   };
 
-  const removeRow = (id: string) => setRows((prev) => prev.filter((r) => r.productId !== id));
+  const removeRow = (id: string) => setRows((prev) => prev.filter((r) => (r.variantId ? r.variantId !== id : r.productId !== id)));
+
   const totalDifferenceQty = rows.reduce((sum, r) => sum + r?.physicalQty, 0);
 
   const totalDifferenceAmount = rows.reduce((sum, r) => sum + r?.differenceAmount, 0);
@@ -127,6 +130,7 @@ const StockVerificationForm = () => {
   const handleStockSubmit = async () => {
     const items = rows.map((r) => ({
       productId: r.productId,
+      variantId: r?.variantId || null,
       landingCost: r.landingCost,
       price: r.price,
       mrp: r.mrp,
@@ -167,7 +171,7 @@ const StockVerificationForm = () => {
       key: "physicalQty",
       header: "Physical Qty",
       bodyClass: "min-w-32 w-35",
-      render: (row) => <CommonTextField type="number" value={row.physicalQty || 0} onChange={(e) => updateRow(row.productId, { physicalQty: Number(e) })} maxDigits={5} />,
+      render: (row) => <CommonTextField type="number" value={row.physicalQty || 0} onChange={(e) => updateRow(row.variantId ? row.variantId : row.productId, { physicalQty: Number(e) })} maxDigits={5} />,
       footer: () => totalDifferenceQty,
     },
     { key: "differenceQty", header: "Difference Qty", bodyClass: "min-w-32 w-35" },
@@ -176,7 +180,7 @@ const StockVerificationForm = () => {
       key: "action",
       header: "Action",
       render: (row) => (
-        <CommonButton variant="outlined" size="small" color="error" sx={{ minWidth: 40 }} onClick={() => removeRow(row.productId)}>
+        <CommonButton variant="outlined" size="small" color="error" sx={{ minWidth: 40 }} onClick={() => removeRow(row.variantId ? row.variantId : row.productId)}>
           <ClearIcon />
         </CommonButton>
       ),
@@ -186,7 +190,7 @@ const StockVerificationForm = () => {
   const CommonTableOption = {
     isLoading: productListLoading,
     data: rows,
-    rowKey: (row: StockVerificationRow) => row.productId,
+    rowKey: (row: StockVerificationRow) => (row.variantId ? row.variantId : row.productId),
     columns: columns,
     getRowClass: () => "bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark",
     showFooter: true,
@@ -236,24 +240,25 @@ const StockVerificationForm = () => {
                   grid={{ xs: 12, sm: isEditing ? 3 : 6 }}
                   isLoading={productDataLoading}
                   disabled={!selectedCompany || !selectedBranch}
-                  onChange={(selected: string[]) => {
+                  onChange={(selected: string[], item) => {
                     setSearchValue(selected);
                     if (!selected.length) return;
 
-                    const product = productData?.data.find((p) => p._id === selected[0]);
+                    const product = productData?.data.find((p) => (item.variantId ? p.variantId === item.variantId : p._id === selected[0]));
                     if (!product) return;
 
                     setRows((prev) => {
-                      const existing = prev.find((r) => r.productId === product._id);
+                      const existing = prev.find((r) => (product.variantId ? r.variantId === product.variantId : r.productId === product._id));
 
                       if (existing) {
                         return prev.map((r) => {
-                          return r.productId === product._id ? { ...r } : r;
+                          return (product.variantId ? r.variantId === product.variantId : r.productId === product._id) ? { ...r } : r;
                         });
                       }
 
                       return [createRowFromProduct(product), ...prev];
                     });
+                    setSearchValue([]);
                   }}
                 />
                 <CommonTextField label="Enter Remark" placeholder="Enter Remark" grid={{ xs: 12, sm: isEditing ? 12 : 6 }} value={enterRemark} onChange={(e) => setEnterRemark(e)} multiline />

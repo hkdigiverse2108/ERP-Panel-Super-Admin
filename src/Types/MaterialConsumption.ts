@@ -6,6 +6,7 @@ import type { ProductBase } from "./Product";
 
 export interface MaterialConsumptionRow {
   productId: string;
+  variantId?: string | null;
   qty: number;
   price: number;
   totalPrice: number;
@@ -31,7 +32,7 @@ export type AddMaterialConsumptionPayload = MaterialConsumptionFormValues;
 
 export type EditMaterialConsumptionPayload = MaterialConsumptionFormValues & { materialConsumptionId?: string };
 
-export interface MaterialConsumptionBase extends Omit<MaterialConsumptionFormValues, "companyId" | "branchId" | "items"| "consumptionTypeId">, CommonDataType {
+export interface MaterialConsumptionBase extends Omit<MaterialConsumptionFormValues, "companyId" | "branchId" | "items" | "consumptionTypeId">, CommonDataType {
   companyId: CompanyBase;
   branchId: BranchBase;
   consumptionTypeId?: ConsumptionTypeBase;

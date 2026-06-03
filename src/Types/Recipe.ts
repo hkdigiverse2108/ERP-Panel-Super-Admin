@@ -4,6 +4,7 @@ import type { ProductBase } from "./Product";
 export interface RecipeProductItem {
   itemCode?: string | null;
   productId?: string | ProductBase;
+  variantId?: string | null;
   mrp?: number;
 }
 export interface RawRecipeProduct extends RecipeProductItem {
@@ -37,7 +38,6 @@ export interface RecipeFormValues {
 export type AddRecipePayload = RecipeFormValues;
 
 export type EditRecipePayload = AddRecipePayload & { recipeId: string };
-
 
 export interface RecipeBase extends Omit<RecipeFormValues, "productId">, CommonDataType {
   productId: ProductBase;

@@ -24,7 +24,7 @@ const PurchaseDebitNoteForm = () => {
   const { data: singleData, isLoading: isSingleLoading } = Queries.useGetSinglePurchaseDebitNote(routeData?._id);
   const data = useMemo(() => singleData?.data || routeData, [singleData, routeData]);
 
-  const emptyRow: PurchaseDebitNoteProductItem = { productId: "", qty: 1, unitCost: 0, discount1: 0, taxId: "", tax: 0, total: 0 };
+  const emptyRow: PurchaseDebitNoteProductItem = { productId: "", variantId: "", qty: 1, unitCost: 0, discount1: 0, taxId: "", tax: 0, total: 0 };
 
   const initialValues: PurchaseDebitNoteFormValues = useMemo(() => {
     return {
@@ -95,27 +95,33 @@ const PurchaseDebitNoteForm = () => {
     const payload: PurchaseDebitNoteFormValues = {
       ...rest,
       reverseCharge: String(values.reverseCharge) === "true",
-      productDetails: rest.productDetails?.filter((i: PurchaseDebitNoteProductItem) => i.productId).map((i: PurchaseDebitNoteProductItem) => ({
-        productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
-        qty: Number(i.qty || 0),
-        unit: i.unit,
-        uomId: i.uomId,
-        unitCost: Number(i.unitCost || 0),
-        mrp: Number(i.mrp || 0),
-        sellingPrice: Number(i.sellingPrice || 0),
-        discount1: Number(i.discount1 || 0),
-        tax: Number(i.tax || 0),
-        taxId: i.taxId,
-        landingCost: Number(i.landingCost || 0),
-        margin: Number(i.margin || 0),
-        total: Number(i.total || 0),
-      })),
-      additionalCharges: rest.additionalCharges?.filter((r: AdditionalChargeItem) => r.chargeId).map((r: AdditionalChargeItem) => ({
-        chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
-        taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
-        amount: Number(r.amount || 0),
-        totalAmount: Number(r.totalAmount || 0),
-      })) || [],
+      productDetails: rest.productDetails
+        ?.filter((i: PurchaseDebitNoteProductItem) => i.productId)
+        .map((i: PurchaseDebitNoteProductItem) => ({
+          productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
+          variantId: i.variantId || null,
+          qty: Number(i.qty || 0),
+          unit: i.unit,
+          uomId: i.uomId,
+          unitCost: Number(i.unitCost || 0),
+          mrp: Number(i.mrp || 0),
+          sellingPrice: Number(i.sellingPrice || 0),
+          discount1: Number(i.discount1 || 0),
+          tax: Number(i.tax || 0),
+          taxId: i.taxId,
+          landingCost: Number(i.landingCost || 0),
+          margin: Number(i.margin || 0),
+          total: Number(i.total || 0),
+        })),
+      additionalCharges:
+        rest.additionalCharges
+          ?.filter((r: AdditionalChargeItem) => r.chargeId)
+          .map((r: AdditionalChargeItem) => ({
+            chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
+            taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
+            amount: Number(r.amount || 0),
+            totalAmount: Number(r.totalAmount || 0),
+          })) || [],
       summary: {
         flatDiscount: Number(rest.summary?.flatDiscount || 0),
         grossAmount: Number(rest.summary?.grossAmount || 0),
@@ -124,7 +130,7 @@ const PurchaseDebitNoteForm = () => {
         taxAmount: Number(rest.summary?.taxAmount || 0),
         roundOff: Number(rest.summary?.roundOff || 0),
         netAmount: Number(rest.summary?.netAmount || 0),
-      }
+      },
     };
 
     const handleSuccess = () => {
@@ -140,7 +146,12 @@ const PurchaseDebitNoteForm = () => {
     }
   };
 
-  if (isSingleLoading) return <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}><CircularProgress /></Box>;
+  if (isSingleLoading)
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+        <CircularProgress />
+      </Box>
+    );
 
   return (
     <>

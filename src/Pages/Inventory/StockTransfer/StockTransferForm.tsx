@@ -35,10 +35,11 @@ const StockTransferForm = () => {
       requestedToBranchId: typeof data?.requestedToBranchId === "object" ? data.requestedToBranchId?._id : data?.requestedToBranchId || "",
       requestNote: data?.requestNote || "",
       isActive: data?.isActive !== undefined ? data.isActive : true,
-      items: (data?.items || [{ productId: "", requestedQty: 0, price: 0, qty: 0 }]).map((item: any) => ({
+      items: (data?.items || [{ productId: "", variantId: null, requestedQty: 0, price: 0, qty: 0 }]).map((item: any) => ({
         ...item,
         qty: item.productId?.qty || 0,
         productId: typeof item.productId === "object" ? item.productId?._id : item.productId,
+        variantId: item.variantId || null,
       })),
     };
   }, [stockTransferData, updateData]);
@@ -48,6 +49,7 @@ const StockTransferForm = () => {
       ...values,
       items: values.items.map((item: any) => ({
         productId: item.productId,
+        variantId: item.variantId || null,
         requestedQty: Number(item.requestedQty),
         price: Number(item.price),
       })),
@@ -60,7 +62,7 @@ const StockTransferForm = () => {
     }
   };
 
-  const emptyRow = { productId: "", requestedQty: 0, price: 0, qty: 0 };
+  const emptyRow = { productId: "", variantId: null, requestedQty: 0, price: 0, qty: 0 };
 
   return (
     <>
@@ -128,13 +130,14 @@ const StockTransferForm = () => {
                                 render: (_, index) => (
                                   <CommonValidationSelect
                                     name={`items.${index}.productId`}
+                                    syncName={`items.${index}.variantId`}
                                     label="Select Product"
                                     options={GenerateOptions(productsData?.data)}
                                     isLoading={productsLoading}
                                     required
                                     disabled={!values.requestedToBranchId}
-                                    onChange={(val) => {
-                                      const product = productsData?.data?.find((p: any) => p._id === val[0]);
+                                    onChange={(val, opt) => {
+                                      const product = productsData?.data.find((p: any) => (opt?.variantId ? p.variantId === opt.variantId : p._id === val[0]));
                                       if (product) {
                                         setFieldValue(`items.${index}.price`, product.landingCost || 0);
                                         setFieldValue(`items.${index}.qty`, product.qty || 0);
@@ -147,7 +150,11 @@ const StockTransferForm = () => {
                               {
                                 key: "qty",
                                 header: "Avail. Qty",
-                                render: (_, index) => <Typography variant="body2" sx={{ fontWeight: 500 }}>{values.items[index]?.qty || 0}</Typography>,
+                                render: (_, index) => (
+                                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                    {values.items[index]?.qty || 0}
+                                  </Typography>
+                                ),
                                 bodyClass: "w-30",
                               },
                               {

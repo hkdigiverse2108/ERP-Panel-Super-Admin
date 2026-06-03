@@ -44,6 +44,7 @@ const MaterialConsumptionForm = () => {
 
   const createRowFromProduct = (product: ProductBase): MaterialConsumptionItem => ({
     productId: product._id,
+    variantId: product?.variantId || null,
     name: product.name ?? "",
     qty: 1,
     price: product.purchasePrice ?? 0,
@@ -51,10 +52,10 @@ const MaterialConsumptionForm = () => {
   });
 
   const updateRow = (id: string, patch: Partial<MaterialConsumptionItem>) => {
-    setRows((prev) => prev.map((r) => (r.productId === id ? { ...r, ...patch, totalPrice: (patch.price ?? r.price) * (patch.qty ?? r.qty) } : r)));
+    setRows((prev) => prev.map((r) => ((r.variantId ? r.variantId === id : r.productId === id) ? { ...r, ...patch, totalPrice: (patch.price ?? r.price) * (patch.qty ?? r.qty) } : r)));
   };
 
-  const removeRow = (id: string) => setRows((prev) => prev.filter((r) => r.productId !== id));
+  const removeRow = (id: string) => setRows((prev) => prev.filter((r) => (r.variantId ? r.variantId !== id : r.productId !== id)));
 
   const calculateTotals = (rows: MaterialConsumptionRow[]) => ({
     totalQty: rows.reduce((s, r) => s + r.qty, 0),
@@ -71,22 +72,23 @@ const MaterialConsumptionForm = () => {
           isLoading={productLoading}
           disabled={!id}
           value={productId}
-          onChange={(e) => {
+          onChange={(e, item) => {
             setProductId(e);
             if (!e.length) return;
-            const product = productData?.data.find((p) => p._id === e[0]);
+            const product = productData?.data.find((p) => (item.variantId ? p.variantId === item.variantId : p._id === e[0]));
             if (!product) return;
             setRows((prev) => {
-              const existing = prev.find((r) => r.productId === product._id);
+              const existing = prev.find((r) => (product.variantId ? r.variantId === product.variantId : r.productId === product._id));
               if (existing) {
                 return prev.map((r) => {
                   const qty = r.qty + 1;
                   const totalPrice = (r.price ?? 0) * qty;
-                  return r.productId === product._id ? { ...r, qty, totalPrice } : r;
+                  return r.productId === product._id && r.variantId === product.variantId ? { ...r, qty, totalPrice } : r;
                 });
               }
               return [createRowFromProduct(product), ...prev];
             });
+            setProductId([]);
           }}
           grid={{ xs: 12, md: 6 }}
         />
@@ -98,6 +100,7 @@ const MaterialConsumptionForm = () => {
     const { _submitAction, ...rest } = values;
     const items = rows.map((r) => ({
       productId: r.productId,
+      variantId: r.variantId || null,
       price: r.price,
       qty: r.qty,
       totalPrice: r.totalPrice,
@@ -119,6 +122,7 @@ const MaterialConsumptionForm = () => {
       setRows(
         data?.items?.map((item) => ({
           productId: item.productId._id,
+          variantId: item.variantId || null,
           name: item.productId.name ?? "",
           price: item.price,
           qty: item.qty,
@@ -175,16 +179,16 @@ const MaterialConsumptionForm = () => {
                           <tbody>
                             {rows.map((row, i) => {
                               return (
-                                <tr key={row.productId} className="text-center bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark text-gray-600 dark:text-gray-300">
+                                <tr key={row.variantId ? row.variantId : row.productId} className="text-center bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark text-gray-600 dark:text-gray-300">
                                   <td className="p-2 text-center">{i + 1}</td>
                                   <td className="p-2 min-w-60 w-100 text-start">{row?.name}</td>
                                   <td className="p-2 min-w-35 w-60">
-                                    <CommonTextField type="number" value={row.qty} onChange={(e) => updateRow(row.productId, { qty: Number(e) })} />
+                                    <CommonTextField type="number" value={row.qty} onChange={(e) => updateRow(row.variantId ? row.variantId : row.productId, { qty: Number(e) })} />
                                   </td>
                                   <td className="p-2">{row.price}</td>
                                   <td className="p-2">{row.totalPrice}</td>
                                   <td className="p-2">
-                                    <CommonButton color="error" variant="outlined" size="small" onClick={() => removeRow(row.productId)}>
+                                    <CommonButton color="error" variant="outlined" size="small" onClick={() => removeRow(row.variantId ? row.variantId : row.productId)}>
                                       <ClearIcon />
                                     </CommonButton>
                                   </td>

@@ -14,6 +14,7 @@ export type BillSupplier = ContactBase & { name?: string };
 
 export interface SupplierBillProductItem {
   productId?: ProductBase | string;
+  variantId?: null | string;
   _prevProductId?: string;
   qty?: number;
   freeQty?: number;
@@ -43,6 +44,7 @@ export interface SupplierBillProductDetails {
 
 export interface SupplierBillReturnProductItem {
   productId?: ProductBase | string;
+  variantId?: null | string;
   _prevProductId?: string;
   qty?: number;
   uomId?: string | UomBase;

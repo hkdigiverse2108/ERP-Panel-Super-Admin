@@ -10,8 +10,23 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
   const { setFieldValue } = useFormikContext<any>();
   // Normalize value
   const safeValue = multiple ? (Array.isArray(field.value) ? field.value : []) : (field.value ?? "");
+  const safeVariantValue = Array.isArray(variantField.value) ? variantField.value : variantField.value ? [variantField.value] : [];
 
-  const valueObjects = multiple ? safeValue?.map((v: string) => options.find((o) => o.value === v)).filter(Boolean) : syncName ? (options.find((o) => o.value === safeValue && (o.variantId ?? "") === (variantField.value ?? "")) ?? null) : (options.find((o) => o.value === safeValue) ?? null);
+  // const valueObjects = multiple //
+  //   ? syncName
+  //     ? [...safeValue, ...safeVariantValue].map((v: string) => options.find((o) => o.value === v && (o.variantId ?? "") === (v ?? ""))).filter(Boolean)
+  //     : safeValue?.map((v: string) => options.find((o) => o.value === v)).filter(Boolean)
+  //   : syncName
+  //     ? (options.find((o) => o.value === safeValue && (o.variantId ?? "") === (variantField.value ?? "")) ?? null)
+  //     : (options.find((o) => o.value === safeValue) ?? null);
+
+  const valueObjects = multiple //
+    ? syncName
+      ? safeValue.map((value: string, index: number) => options.find((o) => o.value === value && (o.variantId ?? "") === (safeVariantValue[index] ?? ""))).filter(Boolean)
+      : safeValue.map((v: string) => options.find((o) => o.value === v)).filter(Boolean)
+    : syncName
+      ? (options.find((o) => o.value === safeValue && (o.variantId ?? "") === (variantField.value ?? "")) ?? null)
+      : (options.find((o) => o.value === safeValue) ?? null);
 
   const Input = (
     <Autocomplete
@@ -28,16 +43,18 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
       onChange={(_, newValues) => {
         if (multiple) {
           const values = (newValues as SelectOptionType[]).map((o) => o.value);
+          const variantIds = (newValues as SelectOptionType[]).map((o) => o.variantId);
           helpers.setValue(values);
           if (syncFieldName) setFieldValue(syncFieldName, values);
-          if (onChange) onChange(values);
+          if (onChange) onChange(values, newValues as SelectOptionType[]);
+          if (syncName) setFieldValue(syncName, variantIds);
         } else {
           const value = (newValues as SelectOptionType | null)?.value ?? "";
           helpers.setValue(value);
           if (syncFieldName) setFieldValue(syncFieldName, value);
-          if (onChange) onChange(value ? [value] : []);
+          if (onChange) onChange(value ? [value] : [], newValues as SelectOptionType);
+          if (syncName) setFieldValue(syncName, newValues?.variantId ?? "");
         }
-        if (syncName) setFieldValue(syncName, newValues?.variantId ?? "");
       }}
       onBlur={() => helpers.setTouched(true)}
       clearOnEscape
@@ -72,10 +89,13 @@ export const CommonSelect: FC<CommonSelectProps> = ({ label, options = [], value
       isOptionEqualToValue={(option, val) => option.value === val.value}
       onChange={(_, newValue) => {
         if (multiple) {
-          onChange((newValue as SelectOptionType[]).map((o) => o.value));
+          onChange(
+            (newValue as SelectOptionType[]).map((o) => o.value),
+            newValue as SelectOptionType[],
+          );
         } else {
           const item = newValue as SelectOptionType | null;
-          onChange(item ? [item.value] : []);
+          onChange(item ? [item.value] : [], item as SelectOptionType);
         }
       }}
       clearOnEscape
