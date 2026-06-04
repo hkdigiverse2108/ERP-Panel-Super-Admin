@@ -41,7 +41,7 @@ export const GenerateOptions = (
     invoiceNo?: string;
     deliveryChallanNo?: string;
     orderNo?: string | null | undefined;
-    productId?: string;
+    productId?: any;
   }[],
 ) => {
   if (!data || !Array.isArray(data)) return [];
