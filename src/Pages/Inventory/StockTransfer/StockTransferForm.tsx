@@ -38,8 +38,8 @@ const StockTransferForm = () => {
       items: (data?.items || [{ productId: "", variantId: null, requestedQty: 0, price: 0, qty: 0 }]).map((item: any) => ({
         ...item,
         qty: item.productId?.qty || 0,
-        productId: typeof item.productId === "object" ? item.productId?._id : item.productId,
-        variantId: item.variantId || null,
+        productId: item?.variantId ? item.variantId : typeof item.productId === "object" ? item.productId._id : item.productId,
+        variantId: item?.variantId ? (typeof item.productId === "object" ? item.productId._id : item.productId) : null,
       })),
     };
   }, [stockTransferData, updateData]);
@@ -48,8 +48,8 @@ const StockTransferForm = () => {
     const payload = {
       ...values,
       items: values.items.map((item: any) => ({
-        productId: item.productId,
-        variantId: item.variantId || null,
+        productId: item?.variantId ? item.variantId : typeof item.productId === "object" ? item.productId._id : item.productId,
+        variantId: item?.variantId ? (typeof item.productId === "object" ? item.productId._id : item.productId) : null,
         requestedQty: Number(item.requestedQty),
         price: Number(item.price),
       })),
@@ -69,7 +69,7 @@ const StockTransferForm = () => {
       <CommonBreadcrumbs title={id ? PAGE_TITLE.INVENTORY.STOCK_TRANSFER.EDIT : PAGE_TITLE.INVENTORY.STOCK_TRANSFER.ADD} breadcrumbs={id ? BREADCRUMBS.STOCK_TRANSFER.EDIT : BREADCRUMBS.STOCK_TRANSFER.ADD} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik initialValues={initialValues} validationSchema={StockTransferFormSchema} onSubmit={handleSubmit} enableReinitialize validateOnMount>
-          {({ values, setFieldValue, dirty, isValid }) => {
+          {({ values, setFieldValue, dirty }) => {
             const { data: fromBranchData, isLoading: fromBranchLoading } = Queries.useGetBranchDropdown({ companyFilter: values.companyId }, !!values.companyId);
             const { data: toBranchData, isLoading: toBranchLoading } = Queries.useGetBranchDropdown({ companyFilter: values.companyId }, !!values.companyId);
             const { data: productsData, isLoading: productsLoading } = Queries.useGetProductDropdown({ branchFilter: values.requestedToBranchId }, !!values.requestedToBranchId);
@@ -136,8 +136,8 @@ const StockTransferForm = () => {
                                     isLoading={productsLoading}
                                     required
                                     disabled={!values.requestedToBranchId}
-                                    onChange={(val, opt) => {
-                                      const product = productsData?.data.find((p: any) => (opt?.variantId ? p.variantId === opt.variantId : p._id === val[0]));
+                                    onChange={(val) => {
+                                      const product = productsData?.data.find((p: any) => p._id === val[0]);
                                       if (product) {
                                         setFieldValue(`items.${index}.price`, product.landingCost || 0);
                                         setFieldValue(`items.${index}.qty`, product.qty || 0);
@@ -178,7 +178,7 @@ const StockTransferForm = () => {
                     </CommonCard>
                   </Box>
 
-                  <CommonBottomActionBar save={true} isLoading={isAddLoading || isEditLoading} disabled={!dirty || !isValid} />
+                  <CommonBottomActionBar save={true} isLoading={isAddLoading || isEditLoading} disabled={!dirty} />
                 </Grid>
               </Form>
             );

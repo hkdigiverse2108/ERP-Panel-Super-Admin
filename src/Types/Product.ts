@@ -92,7 +92,7 @@ export interface ProductBase extends Omit<ProductFormValues, "categoryId" | "sub
   unit?: string;
   qty?: number;
   productTypeId?: ProductTypeBase;
-  variantId?: string;
+  productId?: string;
 }
 
 export interface ProductDataResponse extends PageStatus {

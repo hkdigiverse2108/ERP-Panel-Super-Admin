@@ -46,7 +46,8 @@ const PurchaseDebitNoteForm = () => {
       productDetails: (data?.productDetails || [emptyRow]).map((i: PurchaseDebitNoteProductItem) => ({
         ...emptyRow,
         ...i,
-        productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
+        productId: i?.variantId ? i.variantId : typeof i.productId === "object" ? i.productId._id : i.productId,
+        variantId: i?.variantId ? (typeof i.productId === "object" ? i.productId._id : i.productId) : null,
         uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
         taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
       })),
@@ -98,8 +99,8 @@ const PurchaseDebitNoteForm = () => {
       productDetails: rest.productDetails
         ?.filter((i: PurchaseDebitNoteProductItem) => i.productId)
         .map((i: PurchaseDebitNoteProductItem) => ({
-          productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
-          variantId: i.variantId || null,
+          productId: i?.variantId ? i.variantId : typeof i.productId === "object" ? i.productId._id : i.productId,
+          variantId: i?.variantId ? (typeof i.productId === "object" ? i.productId._id : i.productId) : null,
           qty: Number(i.qty || 0),
           unit: i.unit,
           uomId: i.uomId,

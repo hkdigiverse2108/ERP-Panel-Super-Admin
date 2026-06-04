@@ -28,14 +28,14 @@ const DiscountForm = () => {
   // const branchIds = data?.branchIds?.map((branch: BranchBase) => branch?._id) || [];
   const categoryIds = data?.categoryIds?.map((category: CategoryBase) => category?._id) || [];
   const brandIds = data?.brandIds?.map((brand: BrandBase) => brand?._id) || [];
-  const productIds = data?.productIds?.map((product: { productId: ProductBase }) => product?.productId?._id) || [];
-  const variantIds = data?.productIds?.map((product: { variantId: string }) => product?.variantId) || [];
-  const excludedProductIds = data?.excludedProductIds?.map((product: { productId: ProductBase }) => product?.productId?._id) || [];
-  const excludedVariantIds = data?.excludedProductIds?.map((product: { variantId: string }) => product?.variantId) || [];
-  const getProductIds = data?.buyXGetY?.getProductIds?.map((product: { productId: ProductBase }) => product?.productId?._id) || [];
-  const getVariantIds = data?.buyXGetY?.getVariantIds?.map((product: { variantId: string }) => product?.variantId) || [];
-  const freeProductIds = data?.productAtFixAmount?.freeProductIds?.map((product: { productId: ProductBase }) => product?.productId?._id) || [];
-  const freeVariantIds = data?.productAtFixAmount?.freeVariantIds?.map((product: { variantId: string }) => product?.variantId) || [];
+  const productIds = data?.productIds?.map((product: { productId: ProductBase; variantId: string }) => (product?.variantId ? product?.variantId : product?.productId?._id)) || [];
+  const variantIds = data?.productIds?.map((product: { productId: ProductBase; variantId: string }) => (product?.variantId ? product?.productId?._id : product?.variantId)) || [];
+  const excludedProductIds = data?.excludedProductIds?.map((product: { productId: ProductBase; variantId: string }) => (product?.variantId ? product?.variantId : product?.productId?._id)) || [];
+  const excludedVariantIds = data?.excludedProductIds?.map((product: { productId: ProductBase; variantId: string }) => (product?.variantId ? product?.productId?._id : product?.variantId)) || [];
+  const getProductIds = data?.buyXGetY?.getProductIds?.map((product: { productId: ProductBase; variantId: string }) => (product?.variantId ? product?.variantId : product?.productId?._id)) || [];
+  const getVariantIds = data?.buyXGetY?.getVariantIds?.map((product: { productId: ProductBase; variantId: string }) => (product?.variantId ? product?.productId?._id : product?.variantId)) || [];
+  const freeProductIds = data?.productAtFixAmount?.freeProductIds?.map((product: { productId: ProductBase; variantId: string }) => (product?.variantId ? product?.variantId : product?.productId?._id)) || [];
+  const freeVariantIds = data?.productAtFixAmount?.freeVariantIds?.map((product: { productId: ProductBase; variantId: string }) => (product?.variantId ? product?.productId?._id : null)) || [];
 
   const appliesTo = data?.discountApplicable === DISCOUNT_APPLICABLE_ENUM.PRODUCT_WISE ? DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY : null;
 
@@ -131,8 +131,17 @@ const DiscountForm = () => {
                   appliesTo: rest?.appliesTo,
                   categoryIds: rest?.appliesTo === DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY ? rest?.categoryIds : [],
                   brandIds: rest?.appliesTo === DISCOUNT_APPLY_TO_ENUM.SPECIFIC_BRAND ? rest?.brandIds : [],
-                  productIds: rest?.appliesTo === DISCOUNT_APPLY_TO_ENUM.SPECIFIC_PRODUCTS ? (rest?.productIds || []).map((productId, index) => ({ productId, variantId: rest?.variantIds?.[index] || null })) : [],
-                  excludedProductIds: (rest?.excludedProductIds || []).map((productId, index) => ({ productId, variantId: rest?.excludedVariantIds?.[index] || null })),
+                  productIds:
+                    rest?.appliesTo === DISCOUNT_APPLY_TO_ENUM.SPECIFIC_PRODUCTS
+                      ? (rest?.productIds || []).map((productId, index) => ({
+                          productId: rest?.variantIds?.[index] ? rest?.variantIds?.[index] : productId,
+                          variantId: rest?.variantIds?.[index] ? productId : null,
+                        }))
+                      : [],
+                  excludedProductIds: (rest?.excludedProductIds || []).map((productId, index) => ({
+                    productId: rest?.excludedVariantIds?.[index] ? rest?.excludedVariantIds?.[index] : productId,
+                    variantId: rest?.excludedVariantIds?.[index] ? productId : null,
+                  })),
                 }
               : {
                   appliesTo: null,
@@ -146,7 +155,10 @@ const DiscountForm = () => {
               ? {
                   buyXGetY: {
                     buyQty: rest?.buyXGetY?.buyQty,
-                    getProductIds: (rest?.buyXGetY?.getProductIds || []).map((productId, index) => ({ productId, variantId: rest?.buyXGetY?.getVariantIds?.[index] || null })),
+                    getProductIds: (rest?.buyXGetY?.getProductIds || []).map((productId, index) => ({
+                      productId: rest?.buyXGetY?.getVariantIds?.[index] ? rest?.buyXGetY?.getVariantIds?.[index] : productId,
+                      variantId: rest?.buyXGetY?.getVariantIds?.[index] ? productId : null,
+                    })),
                     getQty: rest?.buyXGetY?.getQty,
                   },
                 }
@@ -155,7 +167,10 @@ const DiscountForm = () => {
               ? {
                   productAtFixAmount: {
                     minimumAmount: rest?.productAtFixAmount?.minimumAmount,
-                    freeProductIds: (rest?.productAtFixAmount?.freeProductIds || []).map((productId, index) => ({ productId: productId, variantId: rest?.productAtFixAmount?.freeVariantIds?.[index] || null })),
+                    freeProductIds: (rest?.productAtFixAmount?.freeProductIds || []).map((productId, index) => ({
+                      productId: rest?.productAtFixAmount?.freeVariantIds?.[index] ? rest?.productAtFixAmount?.freeVariantIds?.[index] : productId,
+                      variantId: rest?.productAtFixAmount?.freeVariantIds?.[index] ? productId : null,
+                    })),
                     freeQty: rest?.productAtFixAmount?.freeQty,
                   },
                 }

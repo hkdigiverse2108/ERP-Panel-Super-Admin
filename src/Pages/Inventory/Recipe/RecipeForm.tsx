@@ -34,15 +34,15 @@ const RecipeForm = () => {
     isActive: data?.isActive ?? true,
     rawProducts: data?.rawProducts?.length
       ? data.rawProducts.map((item: RawRecipeProduct) => ({
-          productId: typeof item.productId === "string" ? item.productId : item.productId?._id || "",
-          variantId: item.variantId || null,
+          productId: item?.variantId ? item.variantId : typeof item.productId === "object" ? item.productId._id : item.productId,
+          variantId: item?.variantId ? (typeof item.productId === "object" ? item.productId._id : item.productId) : null,
           mrp: item.mrp ?? "",
           useQty: item.useQty ?? "",
         }))
       : [{ productId: "", variantId: null, mrp: "", useQty: "" }],
     finalProducts: {
-      productId: data?.finalProducts?.productId?._id || "",
-      variantId: data?.finalProducts?.variantId || null,
+      productId: data?.finalProducts?.variantId ? data?.finalProducts?.variantId : typeof data?.finalProducts?.productId === "object" ? data?.finalProducts?.productId._id : data?.finalProducts?.productId || "",
+      variantId: data?.finalProducts?.variantId ? (typeof data?.finalProducts?.productId === "object" ? data?.finalProducts?.productId._id : data?.finalProducts?.productId) : null,
       mrp: data?.finalProducts?.mrp ?? "",
       qtyGenerate: data?.finalProducts?.qtyGenerate ?? "",
     },
@@ -56,11 +56,13 @@ const RecipeForm = () => {
         ?.filter((i: RawRecipeProduct) => i.productId)
         .map((i: RawRecipeProduct) => ({
           ...i,
-          variantId: i?.variantId || null,
+          productId: i?.variantId ? i.variantId : typeof i.productId === "object" ? i.productId._id : i.productId,
+          variantId: i?.variantId ? (typeof i.productId === "object" ? i.productId._id : i.productId) : null,
         })),
       finalProducts: {
         ...rest.finalProducts,
-        variantId: rest.finalProducts?.variantId || null,
+        productId: rest.finalProducts?.variantId ? rest.finalProducts?.variantId : (typeof rest.finalProducts?.productId === "object" ? rest.finalProducts?.productId._id : rest.finalProducts?.productId) || "",
+        variantId: rest.finalProducts?.variantId ? (typeof rest.finalProducts?.productId === "object" ? rest.finalProducts?.productId._id : rest.finalProducts?.productId) : null,
       },
     };
 

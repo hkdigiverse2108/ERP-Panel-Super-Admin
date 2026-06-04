@@ -55,7 +55,8 @@ const DeliveryChallanForm = () => {
       ? data.items.map((i: DeliveryChallanItem) => ({
           ...emptyRow,
           ...i,
-          productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
+          productId: i?.variantId ? i.variantId : typeof i.productId === "object" ? i.productId._id : i.productId,
+          variantId: i?.variantId ? (typeof i.productId === "object" ? i.productId._id : i.productId) : null,
           taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
           price: i.price || 0,
           discount1: i.discount1 || 0,
@@ -142,8 +143,8 @@ const DeliveryChallanForm = () => {
       items: values.items
         ?.filter((i: DeliveryChallanItem) => i.productId)
         .map((i: DeliveryChallanItem) => ({
-          productId: i.productId,
-          variantId: i.variantId || null,
+          productId: i?.variantId ? i.variantId : typeof i.productId === "object" ? i.productId._id : i.productId,
+          variantId: i?.variantId ? (typeof i.productId === "object" ? i.productId._id : i.productId) : null,
           qty: Number(i.qty || 0),
           freeQty: Number(i.freeQty || 0),
           uomId: i.uomId || null,

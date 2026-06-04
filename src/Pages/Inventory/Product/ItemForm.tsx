@@ -83,16 +83,22 @@ const ItemForm = () => {
     sellingPrice: null,
     sellingMargin: null,
     qty: null,
+    quickPick: false,
   };
 
   const handleSubmit = async (values: StockFormValues, { resetForm }: FormikHelpers<StockFormValues>) => {
     const { _submitAction, ...rest } = values;
 
+    const payload = {
+      ...rest,
+      productId: rest?.variantId ? rest.variantId : rest.productId,
+      variantId: rest?.variantId ? rest.productId : null,
+    };
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
       else navigate(-1);
     };
-    await addStock(RemoveEmptyFields(rest), { onSuccess: handleSuccess });
+    await addStock(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
   };
 
   useEffect(() => {
@@ -128,6 +134,7 @@ const ItemForm = () => {
                       <CommonValidationTextField name="sellingDiscount" label="selling Discount" type="number" grid={{ xs: 12, sm: 6, xl: 4 }} disabled={!values.salesTaxId} />
                       <CommonValidationTextField name="sellingPrice" label="Selling Price" type="number" grid={{ xs: 12, sm: 6, xl: 4 }} disabled />
                       <CommonValidationTextField name="sellingMargin" label="selling Margin" type="number" grid={{ xs: 12, sm: 6, xl: 4 }} disabled />
+                      <CommonValidationSwitch name="quickPick" label="Quick Pick" grid={"auto"} />
                     </Grid>
                   </CommonCard>
 

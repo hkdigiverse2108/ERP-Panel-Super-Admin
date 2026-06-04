@@ -54,12 +54,12 @@ const SupplierBillForm = () => {
 
     productDetails: (data?.productDetails || [])?.length
       ? (data?.productDetails || []).map((i: SupplierBillProductItem) => {
-          const pId = typeof i.productId === "object" ? i.productId?._id : i.productId;
           return {
             ...emptyRow,
             ...i,
-            productId: pId,
-            _prevProductId: pId,
+            productId: i?.variantId ? i.variantId : typeof i.productId === "object" ? i.productId._id : i.productId,
+            variantId: i?.variantId ? (typeof i.productId === "object" ? i.productId._id : i.productId) : null,
+            _prevProductId: i?.variantId ? i.variantId : typeof i.productId === "object" ? i.productId._id : i.productId,
             uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
             taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
           };
@@ -68,12 +68,12 @@ const SupplierBillForm = () => {
     returnProductDetails: {
       item: (data?.returnProductDetails?.item || [])?.length
         ? (data?.returnProductDetails?.item || []).map((i: SupplierBillReturnProductItem) => {
-            const pId = typeof i.productId === "object" ? i.productId?._id : i.productId;
             return {
               ...emptyReturnRow,
               ...i,
-              productId: pId,
-              _prevProductId: pId,
+              productId: i?.variantId ? i.variantId : typeof i.productId === "object" ? i.productId._id : i.productId,
+              variantId: i?.variantId ? (typeof i.productId === "object" ? i.productId._id : i.productId) : null,
+              _prevProductId: i?.variantId ? i.variantId : typeof i.productId === "object" ? i.productId._id : i.productId,
               uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
               taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
             };
@@ -115,8 +115,8 @@ const SupplierBillForm = () => {
     const payload = {
       ...rest,
       productDetails: rest.productDetails?.map((item: SupplierBillProductItem) => ({
-        productId: typeof item.productId === "object" ? item.productId?._id : item.productId,
-        variantId: item.variantId || null,
+        productId: item?.variantId ? item.variantId : typeof item.productId === "object" ? item.productId._id : item.productId,
+        variantId: item?.variantId ? (typeof item.productId === "object" ? item.productId._id : item.productId) : null,
         qty: Number(item.qty || 0),
         freeQty: Number(item.freeQty || 0),
         mrp: Number(item.mrp || 0),
@@ -136,8 +136,8 @@ const SupplierBillForm = () => {
         item: rest.returnProductDetails?.item
           ?.filter((i) => i.productId)
           .map((item: SupplierBillReturnProductItem) => ({
-            productId: typeof item.productId === "object" ? item.productId?._id : item.productId,
-            variantId: item.variantId || null,
+            productId: item?.variantId ? item.variantId : typeof item.productId === "object" ? item.productId._id : item.productId,
+            variantId: item?.variantId ? (typeof item.productId === "object" ? item.productId._id : item.productId) : null,
             qty: Number(item.qty || 0),
             uomId: typeof item.uomId === "object" ? item.uomId?._id : item.uomId,
             unit: String(item.unit || ""),

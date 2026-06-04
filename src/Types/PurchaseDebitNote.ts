@@ -10,7 +10,7 @@ import type { BranchBase } from "./Branch";
 
 export interface PurchaseDebitNoteProductItem {
   productId?: ProductBase | string;
-  variantId: string | null;
+  variantId?: string | null;
   _prevProductId?: string;
   qty?: number;
   freeQty?: number;

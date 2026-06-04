@@ -55,7 +55,7 @@ export interface CommonDrawerProps extends Omit<DrawerProps, "anchor" | "title">
 export type SelectOptionType = {
   label: string;
   value: string;
-  variantId?: string;
+  productId?: string;
 };
 
 export interface CommonSelectProps {

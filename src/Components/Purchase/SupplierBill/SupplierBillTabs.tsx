@@ -26,7 +26,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
 
   const calculateRowValues = (index: number, isReturn: boolean = false) => {
     const row = isReturn ? values?.returnProductDetails?.item?.[index] : values?.productDetails?.[index];
-    const product = productsData?.data?.find((p: ProductBase) => (row?.variantId ? p.variantId === row.variantId : p._id === row?.productId));
+    const product = productsData?.data?.find((p: ProductBase) => p._id === row?.productId);
 
     if (!product) return { taxableAmount: 0, totalAmount: 0, taxAmount: 0, landingCost: 0, margin: 0, sellingPrice: 0 };
 
@@ -85,7 +85,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
     const items = values?.productDetails || [];
     items.forEach((item: SupplierBillProductItem, index: number) => {
       if (!item?.productId) return;
-      const product = productsData?.data?.find((p: ProductBase) => (item.variantId ? p.variantId === item.variantId : p._id === item.productId));
+      const product = productsData?.data?.find((p: ProductBase) => p._id === item.productId);
       if (!product) return;
 
       const isProductChanged = item._prevProductId !== item.productId;
@@ -167,7 +167,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
     const returnItems = values?.returnProductDetails?.item || [];
     returnItems.forEach((item: SupplierBillReturnProductItem, index: number) => {
       if (!item?.productId) return;
-      const product = productsData?.data?.find((p: ProductBase) => (item.variantId ? p.variantId === item.variantId : p._id === item.productId));
+      const product = productsData?.data?.find((p: ProductBase) => p._id === item.productId);
       if (!product) return;
 
       const isProductChanged = item._prevProductId !== item.productId;

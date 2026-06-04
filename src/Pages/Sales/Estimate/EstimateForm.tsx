@@ -40,7 +40,8 @@ const EstimateForm = () => {
       ? data.items.map((i: EstimateItem) => ({
           ...emptyRow,
           ...i,
-          productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
+          productId: i?.variantId ? i.variantId : typeof i.productId === "object" ? i.productId?._id : i.productId,
+          variantId: i?.variantId ? (typeof i.productId === "object" ? i.productId?._id : i.productId) : null,
           uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
           taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
         }))
@@ -143,7 +144,8 @@ const EstimateForm = () => {
         ?.filter((i: EstimateItem) => i.productId)
         .map((i: EstimateItem) => ({
           ...i,
-          variantId: i?.variantId || null,
+          productId: i?.variantId ? i.variantId : i.productId,
+          variantId: i?.variantId ? (typeof i.productId === "object" ? i.productId._id : i.productId) : null,
           qty: Number(i.qty || 0),
           freeQty: Number(i.freeQty || 0),
           price: Number(i.price || 0),

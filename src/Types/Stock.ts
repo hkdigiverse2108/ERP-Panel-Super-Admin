@@ -4,7 +4,7 @@ export interface StockFormValues {
   companyId?: string;
   branchId?: string;
   productId?: string;
-  variantId?: string;
+  variantId?: string | null;
   uomId?: string;
   purchaseTaxId?: string;
   salesTaxId?: string;
@@ -18,6 +18,7 @@ export interface StockFormValues {
   sellingMargin?: number | null;
   qty?: number | null;
   isActive?: boolean;
+  quickPick?: boolean;
   _submitAction?: string;
 }
 

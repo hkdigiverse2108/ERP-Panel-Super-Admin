@@ -5,28 +5,20 @@ import type { CommonSelectProps, CommonValidationSelectProps, SelectOptionType }
 
 export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, syncName, label, required, options, multiple = false, limitTags, size = "small", grid, disabled, readOnly, syncFieldName, isLoading, placeholder, onChange, ...props }) => {
   const [field, meta, helpers] = useField<any>({ name });
-  const [variantField] = useField<any>({ name: syncName || "variantId" });
+  // const [variantField] = useField<any>({ name: syncName || "variantId" });
 
   const { setFieldValue } = useFormikContext<any>();
   // Normalize value
   const safeValue = multiple ? (Array.isArray(field.value) ? field.value : []) : (field.value ?? "");
-  const safeVariantValue = Array.isArray(variantField.value) ? variantField.value : variantField.value ? [variantField.value] : [];
-
-  // const valueObjects = multiple //
-  //   ? syncName
-  //     ? [...safeValue, ...safeVariantValue].map((v: string) => options.find((o) => o.value === v && (o.variantId ?? "") === (v ?? ""))).filter(Boolean)
-  //     : safeValue?.map((v: string) => options.find((o) => o.value === v)).filter(Boolean)
-  //   : syncName
-  //     ? (options.find((o) => o.value === safeValue && (o.variantId ?? "") === (variantField.value ?? "")) ?? null)
-  //     : (options.find((o) => o.value === safeValue) ?? null);
+  // const safeVariantValue = Array.isArray(variantField.value) ? variantField.value : variantField.value ? [variantField.value] : [];
 
   const valueObjects = multiple //
-    ? syncName
-      ? safeValue.map((value: string, index: number) => options.find((o) => o.value === value && (o.variantId ?? "") === (safeVariantValue[index] ?? ""))).filter(Boolean)
-      : safeValue.map((v: string) => options.find((o) => o.value === v)).filter(Boolean)
-    : syncName
-      ? (options.find((o) => o.value === safeValue && (o.variantId ?? "") === (variantField.value ?? "")) ?? null)
-      : (options.find((o) => o.value === safeValue) ?? null);
+    ? // ? syncName
+      // ? safeValue.map((value: string, index: number) => options.find((o) => o.value === value && (o.variantId ?? "") === (safeVariantValue[index] ?? ""))).filter(Boolean)
+      safeValue.map((v: string) => options.find((o) => o.value === v)).filter(Boolean)
+    : // : syncName
+      // ? (options.find((o) => o.value === safeValue && (o.variantId ?? "") === (variantField.value ?? "")) ?? null)
+      (options.find((o) => o.value === safeValue) ?? null);
 
   const Input = (
     <Autocomplete
@@ -39,11 +31,11 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
       disabled={disabled}
       readOnly={readOnly}
       getOptionLabel={(opt) => opt.label}
-      isOptionEqualToValue={(option, val) => option.value === val.value && (option.variantId ?? "") === (val.variantId ?? "")}
+      isOptionEqualToValue={(option, val) => option.value === val.value}
       onChange={(_, newValues) => {
         if (multiple) {
           const values = (newValues as SelectOptionType[]).map((o) => o.value);
-          const variantIds = (newValues as SelectOptionType[]).map((o) => o.variantId);
+          const variantIds = (newValues as SelectOptionType[]).map((o) => o.productId);
           helpers.setValue(values);
           if (syncFieldName) setFieldValue(syncFieldName, values);
           if (onChange) onChange(values, newValues as SelectOptionType[]);
@@ -53,14 +45,14 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
           helpers.setValue(value);
           if (syncFieldName) setFieldValue(syncFieldName, value);
           if (onChange) onChange(value ? [value] : [], newValues as SelectOptionType);
-          if (syncName) setFieldValue(syncName, newValues?.variantId ?? "");
+          if (syncName) setFieldValue(syncName, newValues?.productId ?? "");
         }
       }}
       onBlur={() => helpers.setTouched(true)}
       clearOnEscape
       disableCloseOnSelect={multiple}
       renderOption={(props, option) => (
-        <li {...props} key={`${option.value}-${option.variantId}`}>
+        <li {...props} key={`${option.value}-${option.productId}`}>
           {option.label}
         </li>
       )}
