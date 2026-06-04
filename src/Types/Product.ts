@@ -13,6 +13,7 @@ export interface NutritionInfo {
 }
 
 export interface VariantInfo {
+  _id?: string;
   name?: string;
   sku?: string;
   itemCode?: string;

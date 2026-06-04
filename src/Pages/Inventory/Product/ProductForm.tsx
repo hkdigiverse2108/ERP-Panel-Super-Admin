@@ -68,6 +68,7 @@ const ProductForm = () => {
       productTypeId: data?.productTypeId?._id || "",
       variants: [
         ...(data?.variants?.map((variants: VariantInfo) => ({
+          _id: variants._id || "",
           name: variants.name,
           sku: variants.sku,
           attributes: variants.attributes?.map((attr: { key: string; value: string }) => ({ key: attr.key, value: attr.value })) || [{ key: "", value: "" }],
