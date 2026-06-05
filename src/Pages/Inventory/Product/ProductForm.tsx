@@ -76,7 +76,7 @@ const ProductForm = () => {
           sellingPrice: variants.sellingPrice,
           purchasePrice: variants.purchasePrice,
           isActive: variants.isActive,
-        })) || [defaultVariants]),
+        })) || []),
       ],
     }),
     [data],
