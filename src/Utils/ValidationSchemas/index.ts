@@ -196,6 +196,7 @@ export const ProductFormSchema = Yup.object({
       sellingPrice: Validation("number", "Selling Price", { required: false, extraRules: (s) => s.min(0, "Selling Price must be positive") }),
       purchasePrice: Validation("number", "Purchase Price", { required: false, extraRules: (s) => s.min(0, "Purchase Price must be positive") }),
       isActive: Validation("boolean", "Is Active"),
+      packQty: Validation("number", "Pack Quantity", { required: true, extraRules: (s) => s.min(1, "Pack Qty must be at least 1") }),
     }),
   ),
 });

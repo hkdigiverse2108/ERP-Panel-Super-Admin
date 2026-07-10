@@ -97,6 +97,7 @@ import SpecialForm from "../Pages/Inventory/Specials/SpecialForm";
 import Credentials from "../Pages/Settings/Credentials";
 import CredentialForm from "../Pages/Settings/Credentials/CredentialForm";
 import BillSnap from "../Pages/Settings/BillSnap";
+import WhatsAppSetting from "../Pages/Settings/WhatsAppSetting";
 import StockTransfer from "../Pages/Inventory/StockTransfer";
 import StockTransferForm from "../Pages/Inventory/StockTransfer/StockTransferForm";
 import StockTransferDetails from "../Pages/Inventory/StockTransfer/StockTransferDetails";
@@ -257,6 +258,7 @@ export const PageRoutes = [
   { path: ROUTES.CREDENTIALS.BASE, name: PAGE_TITLE.CREDENTIALS.BASE, element: <Credentials /> },
   { path: ROUTES.CREDENTIALS.ADD_EDIT, name: PAGE_TITLE.CREDENTIALS.BASE, element: <CredentialForm /> },
   { path: ROUTES.BILLSNAP.BASE, name: PAGE_TITLE.BILLSNAP.BASE, element: <BillSnap /> },
+  { path: ROUTES.WHATSAPP.BASE, name: PAGE_TITLE.WHATSAPP.BASE, element: <WhatsAppSetting /> },
 
   { path: ROUTES.STOCK_TRANSFER.BASE, name: PAGE_TITLE.INVENTORY.STOCK_TRANSFER.BASE, element: <StockTransfer /> },
   { path: ROUTES.STOCK_TRANSFER.ADD_EDIT, name: PAGE_TITLE.INVENTORY.STOCK_TRANSFER.BASE, element: <StockTransferForm /> },

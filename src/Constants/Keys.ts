@@ -404,4 +404,13 @@ export const KEYS = {
     CONFIRM_RECEIPT: "stock-transfer-confirm-receipt",
     DISPATCH: "stock-transfer-dispatch",
   },
+  META_WHATSAPP: {
+    BASE: "meta-whatsapp",
+    ACCOUNT: "meta-whatsapp-account",
+    TEMPLATE: "meta-whatsapp-template",
+    LOGS: "meta-whatsapp-logs",
+    TEMPLATE_DELETE: "meta-whatsapp-template-delete",
+    SEND_POS_BILL: "meta-whatsapp-send-pos-bill",
+    SEND_CONTACTS: "meta-whatsapp-send-contacts",
+  },
 };

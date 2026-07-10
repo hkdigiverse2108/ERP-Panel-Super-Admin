@@ -109,6 +109,7 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.SETTINGS.PAYMENT_TERMS.BASE, path: ROUTES.PAYMENT_TERMS.BASE },
       { name: PAGE_TITLE.CREDENTIALS.BASE, path: ROUTES.CREDENTIALS.BASE },
       { name: PAGE_TITLE.BILLSNAP.BASE, path: ROUTES.BILLSNAP.BASE },
+      { name: PAGE_TITLE.WHATSAPP.BASE, path: ROUTES.WHATSAPP.BASE },
     ],
   },
 ];

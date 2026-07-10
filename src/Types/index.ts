@@ -58,3 +58,4 @@ export * from "./PaymentTerms";
 export * from "./Specials";
 export * from "./Credentials";
 export * from "./ReportFormat";
+export * from "./MetaWhatsApp";

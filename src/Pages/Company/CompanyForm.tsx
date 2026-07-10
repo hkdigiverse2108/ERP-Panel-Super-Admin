@@ -96,6 +96,7 @@ const CompanyForm = () => {
     planEndDate: data?.planEndDate || "",
 
     enableFeedbackModule: data?.enableFeedbackModule === true || data?.enableFeedbackModule === "true",
+    enableWhatsApp: data?.enableWhatsApp === true || data?.enableWhatsApp === "true",
     allowRoundOff: data?.allowRoundOff === true || data?.allowRoundOff === "true",
     logo: data?.logo || null,
     waterMark: data?.waterMark || null,
@@ -239,7 +240,8 @@ const CompanyForm = () => {
                     <CommonValidationTextField name="decimalPoint" label="Decimal Point" grid={{ xs: 12, md: 4 }} />
 
                     <CommonValidationSwitch name="allowRoundOff" label="Allow Round Off" grid={{ xs: 12 }} />
-                    <CommonValidationSwitch name="enableFeedbackModule" label="Enable Feedback Module" grid={{ xs: 12 }} />
+                    <CommonValidationSwitch name="enableFeedbackModule" label="Enable Feedback Module" grid={{ xs: 12, md: 6 }} />
+                    <CommonValidationSwitch name="enableWhatsApp" label="Enable WhatsApp Messaging" grid={{ xs: 12, md: 6 }} />
                   </Grid>
                 </CommonCard>
 

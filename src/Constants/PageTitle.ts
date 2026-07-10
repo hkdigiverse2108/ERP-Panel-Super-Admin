@@ -295,4 +295,7 @@ export const PAGE_TITLE = {
   BILLSNAP: {
     BASE: "BillBuddy AI",
   },
+  WHATSAPP: {
+    BASE: "WhatsApp",
+  },
 } as const;

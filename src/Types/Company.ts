@@ -38,6 +38,7 @@ export interface CompanyFormValues {
   currency?: string;
 
   enableFeedbackModule?: boolean;
+  enableWhatsApp?: boolean;
   allowRoundOff?: boolean;
   logo?: string;
   waterMark?: string;

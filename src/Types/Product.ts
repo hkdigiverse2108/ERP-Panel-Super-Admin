@@ -22,6 +22,7 @@ export interface VariantInfo {
   sellingPrice?: number;
   purchasePrice?: number;
   isActive?: boolean;
+  packQty?: number;
 }
 
 export interface ProductFormValues {

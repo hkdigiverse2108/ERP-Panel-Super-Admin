@@ -453,4 +453,16 @@ export const URL_KEYS = {
     CONFIRM_RECEIPT: "/stock-transfer/confirm-receipt",
     DISPATCH: "/stock-transfer/dispatch",
   },
+  META_WHATSAPP: {
+    BASE: "/meta-whatsapp",
+    ACCOUNT_ALL: "/meta-whatsapp/account/all",
+    ACCOUNT_SAVE: "/meta-whatsapp/account",
+    TEMPLATE_ALL: "/meta-whatsapp/template/all",
+    TEMPLATE_CREATE: "/meta-whatsapp/template/create",
+    TEMPLATE_SYNC: "/meta-whatsapp/template/sync",
+    TEMPLATE_DELETE: "/meta-whatsapp/template",
+    SEND_POS_BILL: "/meta-whatsapp/send/pos-bill",
+    SEND_CONTACTS: "/meta-whatsapp/send/contacts",
+    LOGS: "/meta-whatsapp/logs/all",
+  },
 } as const;

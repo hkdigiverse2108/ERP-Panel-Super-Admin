@@ -229,4 +229,5 @@ export const ROUTES = {
   BILLSNAP: {
     BASE: "/billsnap",
   },
+  WHATSAPP: { BASE: "/settings/whatsapp" },
 } as const;

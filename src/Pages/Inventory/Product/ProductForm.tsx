@@ -36,7 +36,7 @@ const ProductForm = () => {
   const [isVariants, setVariants] = useState(data?.variants?.length > 0);
   const pageMode = isEditing ? "EDIT" : "ADD";
 
-  const defaultVariants = { name: "", sku: "", attributes: [{ key: "", value: "" }], mrp: 0, sellingPrice: 0, purchasePrice: 0, isActive: true };
+  const defaultVariants = { name: "", sku: "", attributes: [{ key: "", value: "" }], mrp: 0, sellingPrice: 0, purchasePrice: 0, isActive: true, packQty: 1 };
 
   const initialValues = useMemo<ProductFormValues>(
     () => ({
@@ -76,6 +76,7 @@ const ProductForm = () => {
           sellingPrice: variants.sellingPrice,
           purchasePrice: variants.purchasePrice,
           isActive: variants.isActive,
+          packQty: variants.packQty ?? 1,
         })) || []),
       ],
     }),
@@ -240,6 +241,7 @@ const ProductForm = () => {
                                 <CommonValidationTextField name={`variants.${vIndex}.mrp`} label="mrp" type="number" grid={{ xs: 12, sm: 6, xl: 4 }} />
                                 <CommonValidationTextField name={`variants.${vIndex}.sellingPrice`} label="sellingPrice" type="number" grid={{ xs: 12, sm: 6, xl: 4 }} />
                                 <CommonValidationTextField name={`variants.${vIndex}.purchasePrice`} label="purchasePrice" type="number" grid={{ xs: 12, sm: 6, xl: 4 }} />
+                                <CommonValidationTextField name={`variants.${vIndex}.packQty`} label={`Pack Qty${data?.uomId?.name ? ` (${data.uomId.name})` : ""}`} type="number" grid={{ xs: 12, sm: 6, xl: 4 }} required />
                                 <Grid size={12}>
                                   <FieldArray name={`variants.${vIndex}.attributes`}>
                                     {({ push, remove }) => (
