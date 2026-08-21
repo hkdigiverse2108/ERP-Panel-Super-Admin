@@ -74,37 +74,38 @@ export const SigninSchema = Yup.object({
   password: Validation("string", "Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
 });
 
-export const UserFormSchema = Yup.object({
-  // ---------- BASIC DETAILS ----------
-  companyId: Validation("string", "Company Name"),
-  fullName: Validation("string", "FullName"),
-  username: Validation("string", "Username"),
-  designation: Validation("string", "Designation", { required: false }),
-  role: Validation("string", "Role"),
-  phoneNo: PhoneValidation(),
-  email: Validation("string", "Email", { required: true, extraRules: (s) => s.trim().email("Invalid email address") }),
-  branchId: Validation("string", "Branch Name"),
-  panNumber: Validation("string", "PAN Number", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
-  password: Validation("string", "Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
+export const UserFormSchema = (isEditing?: boolean) =>
+  Yup.object({
+    // ---------- BASIC DETAILS ----------
+    companyId: Validation("string", "Company Name", { required: !isEditing }),
+    fullName: Validation("string", "FullName"),
+    username: Validation("string", "Username"),
+    designation: Validation("string", "Designation", { required: false }),
+    role: Validation("string", "Role", { required: !isEditing }),
+    phoneNo: PhoneValidation(),
+    email: Validation("string", "Email", { required: true, extraRules: (s) => s.trim().email("Invalid email address") }),
+    branchId: Validation("string", "Branch Name", { required: !isEditing }),
+    panNumber: Validation("string", "PAN Number", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
+    password: Validation("string", "Password", { required: !isEditing, extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
 
-  // ---------- ADDRESS ----------
-  address: Yup.object({
-    address: Validation("string", "Address"),
-    country: Validation("string", "Country"),
-    state: Validation("string", "State"),
-    city: Validation("string", "City"),
-    pinCode: Validation("number", "Pin Code"),
-  }).nullable(),
+    // ---------- ADDRESS ----------
+    address: Yup.object({
+      address: Validation("string", "Address"),
+      country: Validation("string", "Country"),
+      state: Validation("string", "State"),
+      city: Validation("string", "City"),
+      pinCode: Validation("number", "Pin Code"),
+    }).nullable(),
 
-  // ---------- SALARY ----------
-  wages: Validation("number", "Wages", { required: false }).nullable(),
-  commission: Validation("number", "Commission", { required: false }).nullable(),
-  extraWages: Validation("number", "Extra Wages", { required: false }).nullable(),
-  target: Validation("number", "Target", { required: false }).nullable(),
+    // ---------- SALARY ----------
+    wages: Validation("number", "Wages", { required: false }).nullable(),
+    commission: Validation("number", "Commission", { required: false }).nullable(),
+    extraWages: Validation("number", "Extra Wages", { required: false }).nullable(),
+    target: Validation("number", "Target", { required: false }).nullable(),
 
-  // ---------- STATUS ----------
-  isActive: Yup.boolean(),
-});
+    // ---------- STATUS ----------
+    isActive: Yup.boolean(),
+  });
 
 //----------- Branch ----------
 export const BranchFormSchema = Yup.object({

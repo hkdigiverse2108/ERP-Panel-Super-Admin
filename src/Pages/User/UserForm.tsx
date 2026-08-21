@@ -41,9 +41,9 @@ const UserForm = () => {
     email: data?.email || "",
     profileImage: data?.profileImage || null,
     panNumber: data?.panNumber || "",
-    role: data?.role?._id || "",
-    branchId: data?.branchId?._id || "",
-    companyId: data?.companyId?._id || "",
+    role: data?.role?._id || (typeof data?.role === "string" ? data?.role : ""),
+    branchId: data?.branchId?._id || (typeof data?.branchId === "string" ? data?.branchId : ""),
+    companyId: data?.companyId?._id || (typeof data?.companyId === "string" ? data?.companyId : ""),
     password: data?.showPassword || "",
     userType: data?.userType || "admin",
     address: {
@@ -116,7 +116,7 @@ const UserForm = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.USER[pageMode]} maxItems={4} breadcrumbs={BREADCRUMBS.USER[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 4 }, mb: 8 }}>
-        <Formik<UserFormValues> enableReinitialize initialValues={initialValues} validationSchema={UserFormSchema} onSubmit={handleSubmit}>
+        <Formik<UserFormValues> enableReinitialize initialValues={initialValues} validationSchema={UserFormSchema(isEditing)} onSubmit={handleSubmit}>
           {({ resetForm, setFieldValue, dirty, values }) => (
             <Form noValidate>
               <FormikImageSync activeKey={activeImageKey} clearActiveKey={() => setActiveImageKey(null)} />
@@ -124,15 +124,15 @@ const UserForm = () => {
                 {/* BASIC DETAILS */}
                 <CommonCard title="Basic Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(companyData?.data)} isLoading={companyDataLoading} grid={{ xs: 12, md: 4 }} required/>
-                    <DependentSelect name="branchId" label="Branch Name" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4 }} required/>
+                    <CommonValidationSelect name="companyId" label="Company" options={GenerateOptions(companyData?.data)} isLoading={companyDataLoading} grid={{ xs: 12, md: 4 }} required={!isEditing} />
+                    <DependentSelect name="branchId" label="Branch Name" query={Queries.useGetBranchDropdown} params={{ companyFilter: values.companyId }} enabled={Boolean(values.companyId)} disabled={!values.companyId} grid={{ xs: 12, md: 4 }} required={!isEditing} />
                     <CommonValidationTextField name="designation" label="User designation" grid={{ xs: 12, md: 4 }} />
-                    <DependentSelect name="role" label="role Name" query={Queries.useGetRoleDropdown} params={{ companyFilter: values.companyId }} grid={{ xs: 12, md: 4 }} required />
+                    <DependentSelect name="role" label="role Name" query={Queries.useGetRoleDropdown} params={{ companyFilter: values.companyId }} grid={{ xs: 12, md: 4 }} required={!isEditing} />
                     <CommonValidationTextField name="fullName" label="Full Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="username" label="User Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationTextField name="password" label="Password" type="password" showPasswordToggle required grid={{ xs: 10, md: 4 }} />
+                    <CommonValidationTextField name="password" label="Password" type="password" showPasswordToggle required={!isEditing} grid={{ xs: 10, md: 4 }} />
                     <CommonValidationTextField name="panNumber" label="PAN No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="userType" label="User Type" required options={USER_TYPE} grid={{ xs: 12, md: 4 }} />
                   </Grid>
